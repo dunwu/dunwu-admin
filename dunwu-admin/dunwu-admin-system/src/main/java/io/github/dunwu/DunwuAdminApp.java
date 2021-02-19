@@ -40,10 +40,10 @@ import org.springframework.web.bind.annotation.RestController;
 @SpringBootApplication
 @EnableTransactionManagement
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
-public class AppRun {
+public class DunwuAdminApp {
 
     public static void main(String[] args) {
-        SpringApplication.run(AppRun.class, args);
+        SpringApplication.run(DunwuAdminApp.class, args);
     }
 
     @Bean
@@ -67,4 +67,5 @@ public class AppRun {
     public String index() {
         return "Backend service started successfully";
     }
+
 }
