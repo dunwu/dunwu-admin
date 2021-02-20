@@ -28,7 +28,7 @@ import io.github.dunwu.modules.system.service.dto.RoleSmallDto;
 import io.github.dunwu.modules.system.service.dto.UserDto;
 import io.github.dunwu.modules.system.service.dto.UserQueryCriteria;
 import io.github.dunwu.modules.system.service.mapstruct.UserMapper;
-import io.github.dunwu.utils.*;
+import io.github.dunwu.util.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;

@@ -17,7 +17,7 @@ package io.github.dunwu.modules.system.domain;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import io.github.dunwu.base.BaseEntity;
-import io.github.dunwu.utils.enums.DataScopeEnum;
+import io.github.dunwu.util.enums.DataScopeEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;

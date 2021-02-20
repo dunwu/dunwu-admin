@@ -18,7 +18,7 @@ package io.github.dunwu.modules.security.config.bean;
 import com.wf.captcha.*;
 import com.wf.captcha.base.Captcha;
 import io.github.dunwu.exception.BadConfigurationException;
-import io.github.dunwu.utils.StringUtils;
+import io.github.dunwu.util.StringUtils;
 import lombok.Data;
 
 import java.awt.*;

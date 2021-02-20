@@ -20,7 +20,7 @@ import io.github.dunwu.modules.mnt.domain.Deploy;
 import io.github.dunwu.modules.mnt.domain.DeployHistory;
 import io.github.dunwu.modules.mnt.service.DeployService;
 import io.github.dunwu.modules.mnt.service.dto.DeployQueryCriteria;
-import io.github.dunwu.utils.FileUtil;
+import io.github.dunwu.util.FileUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

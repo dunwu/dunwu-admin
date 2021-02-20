@@ -24,7 +24,7 @@ import cn.hutool.extra.template.TemplateUtil;
 import io.github.dunwu.domain.vo.EmailVo;
 import io.github.dunwu.exception.BadRequestException;
 import io.github.dunwu.modules.system.service.VerifyService;
-import io.github.dunwu.utils.RedisUtils;
+import io.github.dunwu.util.RedisUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

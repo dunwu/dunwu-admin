@@ -22,7 +22,7 @@ import io.github.dunwu.domain.vo.EmailVo;
 import io.github.dunwu.exception.BadRequestException;
 import io.github.dunwu.repository.EmailRepository;
 import io.github.dunwu.service.EmailService;
-import io.github.dunwu.utils.EncryptUtils;
+import io.github.dunwu.util.EncryptUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;

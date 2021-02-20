@@ -15,7 +15,7 @@
  */
 package io.github.dunwu.config;
 
-import io.github.dunwu.utils.SecurityUtils;
+import io.github.dunwu.util.SecurityUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 

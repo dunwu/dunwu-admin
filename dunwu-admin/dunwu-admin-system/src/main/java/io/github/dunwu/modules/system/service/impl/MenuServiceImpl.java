@@ -32,7 +32,7 @@ import io.github.dunwu.modules.system.service.dto.MenuDto;
 import io.github.dunwu.modules.system.service.dto.MenuQueryCriteria;
 import io.github.dunwu.modules.system.service.dto.RoleSmallDto;
 import io.github.dunwu.modules.system.service.mapstruct.MenuMapper;
-import io.github.dunwu.utils.*;
+import io.github.dunwu.util.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;

@@ -15,7 +15,7 @@
  */
 package io.github.dunwu.domain;
 
-import io.github.dunwu.utils.GenUtil;
+import io.github.dunwu.util.GenUtil;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -23,7 +23,7 @@ import io.github.dunwu.modules.system.service.RoleService;
 import io.github.dunwu.modules.system.service.dto.RoleDto;
 import io.github.dunwu.modules.system.service.dto.RoleQueryCriteria;
 import io.github.dunwu.modules.system.service.dto.RoleSmallDto;
-import io.github.dunwu.utils.SecurityUtils;
+import io.github.dunwu.util.SecurityUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

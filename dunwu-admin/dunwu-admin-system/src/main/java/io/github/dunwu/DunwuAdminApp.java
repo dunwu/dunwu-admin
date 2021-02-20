@@ -1,7 +1,7 @@
 package io.github.dunwu;
 
 import io.github.dunwu.annotation.rest.AnonymousGetMapping;
-import io.github.dunwu.utils.SpringContextHolder;
+import io.github.dunwu.util.SpringContextHolder;
 import io.swagger.annotations.Api;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

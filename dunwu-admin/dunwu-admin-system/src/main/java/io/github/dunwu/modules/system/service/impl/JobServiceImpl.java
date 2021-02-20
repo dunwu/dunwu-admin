@@ -24,7 +24,7 @@ import io.github.dunwu.modules.system.service.JobService;
 import io.github.dunwu.modules.system.service.dto.JobDto;
 import io.github.dunwu.modules.system.service.dto.JobQueryCriteria;
 import io.github.dunwu.modules.system.service.mapstruct.JobMapper;
-import io.github.dunwu.utils.*;
+import io.github.dunwu.util.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;

@@ -20,7 +20,7 @@ import io.github.dunwu.domain.LocalStorage;
 import io.github.dunwu.exception.BadRequestException;
 import io.github.dunwu.service.LocalStorageService;
 import io.github.dunwu.service.dto.LocalStorageQueryCriteria;
-import io.github.dunwu.utils.FileUtil;
+import io.github.dunwu.util.FileUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

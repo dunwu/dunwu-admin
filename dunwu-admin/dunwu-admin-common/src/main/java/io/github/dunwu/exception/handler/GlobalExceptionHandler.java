@@ -18,7 +18,7 @@ package io.github.dunwu.exception.handler;
 import io.github.dunwu.exception.BadRequestException;
 import io.github.dunwu.exception.EntityExistException;
 import io.github.dunwu.exception.EntityNotFoundException;
-import io.github.dunwu.utils.ThrowableUtil;
+import io.github.dunwu.util.ThrowableUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;

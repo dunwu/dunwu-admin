@@ -23,7 +23,7 @@ import io.github.dunwu.modules.security.security.TokenConfigurer;
 import io.github.dunwu.modules.security.security.TokenProvider;
 import io.github.dunwu.modules.security.service.OnlineUserService;
 import io.github.dunwu.modules.security.service.UserCacheClean;
-import io.github.dunwu.utils.enums.RequestMethodEnum;
+import io.github.dunwu.util.enums.RequestMethodEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;

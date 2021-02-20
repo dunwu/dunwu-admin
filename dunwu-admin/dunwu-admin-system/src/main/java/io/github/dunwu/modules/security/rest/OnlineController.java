@@ -16,7 +16,7 @@
 package io.github.dunwu.modules.security.rest;
 
 import io.github.dunwu.modules.security.service.OnlineUserService;
-import io.github.dunwu.utils.EncryptUtils;
+import io.github.dunwu.util.EncryptUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

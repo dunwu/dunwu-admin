@@ -24,7 +24,7 @@ import io.github.dunwu.service.LocalStorageService;
 import io.github.dunwu.service.dto.LocalStorageDto;
 import io.github.dunwu.service.dto.LocalStorageQueryCriteria;
 import io.github.dunwu.service.mapstruct.LocalStorageMapper;
-import io.github.dunwu.utils.*;
+import io.github.dunwu.util.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

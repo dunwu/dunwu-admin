@@ -24,7 +24,7 @@ import io.github.dunwu.modules.quartz.repository.QuartzLogRepository;
 import io.github.dunwu.modules.quartz.service.QuartzJobService;
 import io.github.dunwu.modules.quartz.service.dto.JobQueryCriteria;
 import io.github.dunwu.modules.quartz.utils.QuartzManage;
-import io.github.dunwu.utils.*;
+import io.github.dunwu.util.*;
 import lombok.RequiredArgsConstructor;
 import org.quartz.CronExpression;
 import org.springframework.data.domain.Pageable;

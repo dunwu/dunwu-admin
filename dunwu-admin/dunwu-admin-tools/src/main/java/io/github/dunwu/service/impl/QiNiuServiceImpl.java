@@ -31,7 +31,7 @@ import io.github.dunwu.repository.QiNiuConfigRepository;
 import io.github.dunwu.repository.QiniuContentRepository;
 import io.github.dunwu.service.QiNiuService;
 import io.github.dunwu.service.dto.QiniuQueryCriteria;
-import io.github.dunwu.utils.*;
+import io.github.dunwu.util.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;

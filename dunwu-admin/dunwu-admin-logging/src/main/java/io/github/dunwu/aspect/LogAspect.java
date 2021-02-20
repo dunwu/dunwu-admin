@@ -17,10 +17,10 @@ package io.github.dunwu.aspect;
 
 import io.github.dunwu.domain.Log;
 import io.github.dunwu.service.LogService;
-import io.github.dunwu.utils.RequestHolder;
-import io.github.dunwu.utils.SecurityUtils;
-import io.github.dunwu.utils.StringUtils;
-import io.github.dunwu.utils.ThrowableUtil;
+import io.github.dunwu.util.RequestHolder;
+import io.github.dunwu.util.SecurityUtils;
+import io.github.dunwu.util.StringUtils;
+import io.github.dunwu.util.ThrowableUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;

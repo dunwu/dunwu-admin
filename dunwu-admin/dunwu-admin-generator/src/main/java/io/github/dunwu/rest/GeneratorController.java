@@ -19,7 +19,7 @@ import io.github.dunwu.domain.ColumnInfo;
 import io.github.dunwu.exception.BadRequestException;
 import io.github.dunwu.service.GenConfigService;
 import io.github.dunwu.service.GeneratorService;
-import io.github.dunwu.utils.PageUtil;
+import io.github.dunwu.util.PageUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

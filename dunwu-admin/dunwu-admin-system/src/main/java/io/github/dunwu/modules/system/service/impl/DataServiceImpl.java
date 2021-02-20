@@ -21,7 +21,7 @@ import io.github.dunwu.modules.system.service.DeptService;
 import io.github.dunwu.modules.system.service.RoleService;
 import io.github.dunwu.modules.system.service.dto.RoleSmallDto;
 import io.github.dunwu.modules.system.service.dto.UserDto;
-import io.github.dunwu.utils.enums.DataScopeEnum;
+import io.github.dunwu.util.enums.DataScopeEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;

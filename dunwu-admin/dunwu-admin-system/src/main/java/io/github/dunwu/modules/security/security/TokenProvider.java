@@ -19,7 +19,7 @@ import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import io.github.dunwu.modules.security.config.bean.SecurityProperties;
-import io.github.dunwu.utils.RedisUtils;
+import io.github.dunwu.util.RedisUtils;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

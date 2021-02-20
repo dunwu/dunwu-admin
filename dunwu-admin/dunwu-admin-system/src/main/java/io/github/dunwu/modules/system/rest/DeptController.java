@@ -22,7 +22,7 @@ import io.github.dunwu.modules.system.domain.Dept;
 import io.github.dunwu.modules.system.service.DeptService;
 import io.github.dunwu.modules.system.service.dto.DeptDto;
 import io.github.dunwu.modules.system.service.dto.DeptQueryCriteria;
-import io.github.dunwu.utils.PageUtil;
+import io.github.dunwu.util.PageUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

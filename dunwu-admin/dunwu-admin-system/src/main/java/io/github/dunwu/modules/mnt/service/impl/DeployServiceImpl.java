@@ -36,7 +36,7 @@ import io.github.dunwu.modules.mnt.util.ScpClientUtil;
 import io.github.dunwu.modules.mnt.websocket.MsgType;
 import io.github.dunwu.modules.mnt.websocket.SocketMsg;
 import io.github.dunwu.modules.mnt.websocket.WebSocketServer;
-import io.github.dunwu.utils.*;
+import io.github.dunwu.util.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

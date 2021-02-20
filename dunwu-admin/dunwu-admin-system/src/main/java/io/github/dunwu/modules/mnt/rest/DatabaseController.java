@@ -22,7 +22,7 @@ import io.github.dunwu.modules.mnt.service.DatabaseService;
 import io.github.dunwu.modules.mnt.service.dto.DatabaseDto;
 import io.github.dunwu.modules.mnt.service.dto.DatabaseQueryCriteria;
 import io.github.dunwu.modules.mnt.util.SqlUtils;
-import io.github.dunwu.utils.FileUtil;
+import io.github.dunwu.util.FileUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

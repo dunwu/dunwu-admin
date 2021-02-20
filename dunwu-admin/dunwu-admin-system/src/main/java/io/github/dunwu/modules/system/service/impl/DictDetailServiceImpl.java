@@ -23,7 +23,7 @@ import io.github.dunwu.modules.system.service.DictDetailService;
 import io.github.dunwu.modules.system.service.dto.DictDetailDto;
 import io.github.dunwu.modules.system.service.dto.DictDetailQueryCriteria;
 import io.github.dunwu.modules.system.service.mapstruct.DictDetailMapper;
-import io.github.dunwu.utils.*;
+import io.github.dunwu.util.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;

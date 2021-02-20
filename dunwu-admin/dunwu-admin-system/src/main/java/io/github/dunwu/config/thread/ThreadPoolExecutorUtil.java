@@ -15,7 +15,7 @@
  */
 package io.github.dunwu.config.thread;
 
-import io.github.dunwu.utils.SpringContextHolder;
+import io.github.dunwu.util.SpringContextHolder;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;

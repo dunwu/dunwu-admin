@@ -24,7 +24,7 @@ import io.github.dunwu.service.LogService;
 import io.github.dunwu.service.dto.LogQueryCriteria;
 import io.github.dunwu.service.mapstruct.LogErrorMapper;
 import io.github.dunwu.service.mapstruct.LogSmallMapper;
-import io.github.dunwu.utils.*;
+import io.github.dunwu.util.*;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;

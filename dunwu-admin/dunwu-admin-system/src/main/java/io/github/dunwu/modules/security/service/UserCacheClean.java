@@ -16,7 +16,7 @@
 
 package io.github.dunwu.modules.security.service;
 
-import io.github.dunwu.utils.StringUtils;
+import io.github.dunwu.util.StringUtils;
 import org.springframework.stereotype.Component;
 
 /**

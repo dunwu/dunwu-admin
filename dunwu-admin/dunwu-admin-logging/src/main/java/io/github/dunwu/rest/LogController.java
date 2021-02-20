@@ -18,7 +18,7 @@ package io.github.dunwu.rest;
 import io.github.dunwu.annotation.Log;
 import io.github.dunwu.service.LogService;
 import io.github.dunwu.service.dto.LogQueryCriteria;
-import io.github.dunwu.utils.SecurityUtils;
+import io.github.dunwu.util.SecurityUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
