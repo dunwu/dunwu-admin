@@ -15,7 +15,7 @@
  */
 package io.github.dunwu.modules.system.rest;
 
-import io.github.dunwu.annotation.Log;
+import io.github.dunwu.modules.log.annotation.Log;
 import io.github.dunwu.exception.BadRequestException;
 import io.github.dunwu.modules.system.domain.Dict;
 import io.github.dunwu.modules.system.service.DictService;

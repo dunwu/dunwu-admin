@@ -16,7 +16,7 @@
 package io.github.dunwu.modules.system.rest;
 
 import cn.hutool.core.collection.CollectionUtil;
-import io.github.dunwu.annotation.Log;
+import io.github.dunwu.modules.log.annotation.Log;
 import io.github.dunwu.config.RsaProperties;
 import io.github.dunwu.exception.BadRequestException;
 import io.github.dunwu.modules.system.domain.User;

@@ -13,11 +13,11 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package io.github.dunwu.service.mapstruct;
+package io.github.dunwu.modules.log.service.mapstruct;
 
 import io.github.dunwu.base.BaseMapper;
-import io.github.dunwu.domain.Log;
-import io.github.dunwu.service.dto.LogSmallDTO;
+import io.github.dunwu.modules.log.domain.Log;
+import io.github.dunwu.modules.log.service.dto.LogSmallDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 

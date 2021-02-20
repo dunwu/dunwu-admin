@@ -13,17 +13,17 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package io.github.dunwu.service.impl;
+package io.github.dunwu.modules.log.service.impl;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
-import io.github.dunwu.domain.Log;
-import io.github.dunwu.repository.LogRepository;
-import io.github.dunwu.service.LogService;
-import io.github.dunwu.service.dto.LogQueryCriteria;
-import io.github.dunwu.service.mapstruct.LogErrorMapper;
-import io.github.dunwu.service.mapstruct.LogSmallMapper;
+import io.github.dunwu.modules.log.domain.Log;
+import io.github.dunwu.modules.log.service.LogService;
+import io.github.dunwu.modules.log.service.mapstruct.LogErrorMapper;
+import io.github.dunwu.modules.log.service.mapstruct.LogSmallMapper;
+import io.github.dunwu.modules.log.repository.LogRepository;
+import io.github.dunwu.modules.log.service.dto.LogQueryCriteria;
 import io.github.dunwu.util.*;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -82,7 +82,8 @@ public class LogServiceImpl implements LogService {
 
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
-        io.github.dunwu.annotation.Log aopLog = method.getAnnotation(io.github.dunwu.annotation.Log.class);
+        io.github.dunwu.modules.log.annotation.Log aopLog = method.getAnnotation(
+            io.github.dunwu.modules.log.annotation.Log.class);
 
         // 方法路径
         String methodName = joinPoint.getTarget().getClass().getName() + "." + signature.getName() + "()";

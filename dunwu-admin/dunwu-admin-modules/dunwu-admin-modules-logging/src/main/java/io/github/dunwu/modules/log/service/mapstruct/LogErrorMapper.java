@@ -13,28 +13,19 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package io.github.dunwu.service.dto;
+package io.github.dunwu.modules.log.service.mapstruct;
 
-import io.github.dunwu.annotation.Query;
-import lombok.Data;
-
-import java.sql.Timestamp;
-import java.util.List;
+import io.github.dunwu.base.BaseMapper;
+import io.github.dunwu.modules.log.domain.Log;
+import io.github.dunwu.modules.log.service.dto.LogErrorDTO;
+import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
 
 /**
- * 日志查询类
  * @author Zheng Jie
- * @date 2019-6-4 09:23:07
+ * @date 2019-5-22
  */
-@Data
-public class LogQueryCriteria {
+@Mapper(componentModel = "spring",unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface LogErrorMapper extends BaseMapper<LogErrorDTO, Log> {
 
-    @Query(blurry = "username,description,address,requestIp,method,params")
-    private String blurry;
-
-    @Query
-    private String logType;
-
-    @Query(type = Query.Type.BETWEEN)
-    private List<Timestamp> createTime;
 }

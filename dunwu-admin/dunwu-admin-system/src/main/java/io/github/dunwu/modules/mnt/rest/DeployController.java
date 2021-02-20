@@ -15,7 +15,7 @@
  */
 package io.github.dunwu.modules.mnt.rest;
 
-import io.github.dunwu.annotation.Log;
+import io.github.dunwu.modules.log.annotation.Log;
 import io.github.dunwu.modules.mnt.domain.Deploy;
 import io.github.dunwu.modules.mnt.domain.DeployHistory;
 import io.github.dunwu.modules.mnt.service.DeployService;

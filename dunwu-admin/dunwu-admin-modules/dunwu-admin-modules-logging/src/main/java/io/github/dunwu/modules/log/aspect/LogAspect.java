@@ -13,10 +13,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package io.github.dunwu.aspect;
+package io.github.dunwu.modules.log.aspect;
 
-import io.github.dunwu.domain.Log;
-import io.github.dunwu.service.LogService;
+import io.github.dunwu.modules.log.domain.Log;
+import io.github.dunwu.modules.log.service.LogService;
 import io.github.dunwu.util.RequestHolder;
 import io.github.dunwu.util.SecurityUtils;
 import io.github.dunwu.util.StringUtils;
@@ -52,7 +52,7 @@ public class LogAspect {
     /**
      * 配置切入点
      */
-    @Pointcut("@annotation(io.github.dunwu.annotation.Log)")
+    @Pointcut("@annotation(io.github.dunwu.modules.log.annotation.Log)")
     public void logPointcut() {
         // 该方法无方法体,主要为了让同类中其他方法使用此切入点
     }

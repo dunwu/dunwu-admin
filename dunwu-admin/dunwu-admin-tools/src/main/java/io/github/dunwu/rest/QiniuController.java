@@ -15,7 +15,7 @@
  */
 package io.github.dunwu.rest;
 
-import io.github.dunwu.annotation.Log;
+import io.github.dunwu.modules.log.annotation.Log;
 import io.github.dunwu.domain.QiniuConfig;
 import io.github.dunwu.domain.QiniuContent;
 import io.github.dunwu.service.QiNiuService;

@@ -15,7 +15,7 @@
  */
 package io.github.dunwu.modules.quartz.rest;
 
-import io.github.dunwu.annotation.Log;
+import io.github.dunwu.modules.log.annotation.Log;
 import io.github.dunwu.exception.BadRequestException;
 import io.github.dunwu.modules.quartz.domain.QuartzJob;
 import io.github.dunwu.modules.quartz.service.QuartzJobService;

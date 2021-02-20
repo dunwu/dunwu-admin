@@ -17,7 +17,7 @@
 
   <modules>
     <module>dunwu-admin-common</module>
-    <module>dunwu-admin-logging</module>
+    <module>dunwu-admin-modules</module>
     <module>dunwu-admin-system</module>
     <module>dunwu-admin-tools</module>
     <module>dunwu-admin-generator</module>

@@ -13,19 +13,29 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package io.github.dunwu.annotation;
+package io.github.dunwu.modules.log.service.dto;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import lombok.Data;
+
+import java.io.Serializable;
+import java.sql.Timestamp;
 
 /**
  * @author Zheng Jie
- * @date 2018-11-24
+ * @date 2019-5-22
  */
-@Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Log {
-    String value() default "";
+@Data
+public class LogSmallDTO implements Serializable {
+
+    private String description;
+
+    private String requestIp;
+
+    private Long time;
+
+    private String address;
+
+    private String browser;
+
+    private Timestamp createTime;
 }

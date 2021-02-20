@@ -16,7 +16,7 @@
 package io.github.dunwu.rest;
 
 import io.github.dunwu.annotation.AnonymousAccess;
-import io.github.dunwu.annotation.Log;
+import io.github.dunwu.modules.log.annotation.Log;
 import io.github.dunwu.annotation.rest.AnonymousGetMapping;
 import io.github.dunwu.domain.AlipayConfig;
 import io.github.dunwu.domain.vo.TradeVo;

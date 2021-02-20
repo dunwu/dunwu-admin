@@ -13,10 +13,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package io.github.dunwu.service;
+package io.github.dunwu.modules.log.service;
 
-import io.github.dunwu.domain.Log;
-import io.github.dunwu.service.dto.LogQueryCriteria;
+import io.github.dunwu.modules.log.domain.Log;
+import io.github.dunwu.modules.log.service.dto.LogQueryCriteria;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
