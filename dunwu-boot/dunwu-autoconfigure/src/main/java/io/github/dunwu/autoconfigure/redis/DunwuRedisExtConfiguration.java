@@ -10,7 +10,6 @@ import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -20,12 +19,11 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
  * @since 2020-03-16
  */
 @Configuration
-@ConditionalOnClass(RedisConnectionFactory.class)
+@ConditionalOnClass({ RedisConnectionFactory.class, RedisHelper.class })
 @AutoConfigureAfter(RedisAutoConfiguration.class)
 public class DunwuRedisExtConfiguration {
 
     @Bean("stringObjectRedisTemplate")
-    @ConditionalOnClass(RedisOperations.class)
     public RedisTemplate<String, Object> stringObjectRedisTemplate(RedisConnectionFactory factory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(factory);
@@ -52,7 +50,6 @@ public class DunwuRedisExtConfiguration {
     }
 
     @Bean
-    @ConditionalOnClass(RedisOperations.class)
     public RedisHelper redisHelper(RedisTemplate<String, Object> redisTemplate) {
         return new RedisHelper(redisTemplate);
     }

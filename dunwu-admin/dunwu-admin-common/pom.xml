@@ -13,7 +13,6 @@
     </properties>
 
     <artifactId>dunwu-admin-common</artifactId>
-    <name>公共模块</name>
 
     <dependencies>
         <!--工具包-->

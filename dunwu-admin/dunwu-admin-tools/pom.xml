@@ -10,7 +10,6 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>dunwu-admin-tools</artifactId>
-    <name>工具模块</name>
 
     <properties>
         <mail.version>1.4.7</mail.version>
