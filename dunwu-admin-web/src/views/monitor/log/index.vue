@@ -30,6 +30,12 @@
           </el-form>
         </template>
       </el-table-column>
+      <el-table-column prop="logType" label="日志级别" align="center">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.logType === 'ERROR'" type="danger">{{ scope.row.logType }}</el-tag>
+          <el-tag v-else type="primary">{{ scope.row.logType }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="username" label="用户名" />
       <el-table-column prop="requestIp" label="IP" />
       <el-table-column :show-overflow-tooltip="true" prop="address" label="IP来源" />
@@ -51,7 +57,7 @@
 
 <script>
 import Search from './search'
-import { delAllInfo } from '@/api/monitor/log'
+import { delAllInfo } from './api'
 import CRUD, { presenter } from '@crud/crud'
 import crudOperation from '@crud/CRUD.operation'
 import pagination from '@crud/Pagination'
@@ -60,7 +66,7 @@ export default {
   name: 'Log',
   components: { Search, crudOperation, pagination },
   cruds() {
-    return CRUD({ title: '日志', url: 'api/logs' })
+    return CRUD({ title: '日志', url: 'api/log' })
   },
   mixins: [presenter()],
   created() {

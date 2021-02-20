@@ -1,21 +1,6 @@
-/*
- *  Copyright 2019-2020 Zheng Jie
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
 package io.github.dunwu.modules.log.aspect;
 
-import io.github.dunwu.modules.log.domain.Log;
+import io.github.dunwu.modules.log.entity.LogRecord;
 import io.github.dunwu.modules.log.service.LogService;
 import io.github.dunwu.util.RequestHolder;
 import io.github.dunwu.util.SecurityUtils;
@@ -33,17 +18,18 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @author Zheng Jie
- * @date 2018-11-24
+ * {@link io.github.dunwu.modules.log.annotation.Log} 注解的处理器
+ *
+ * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
+ * @since 2020-04-09
  */
-@Component
-@Aspect
 @Slf4j
+@Aspect
+@Component
 public class LogAspect {
 
     private final LogService logService;
-
-    ThreadLocal<Long> currentTime = new ThreadLocal<>();
+    private final ThreadLocal<Long> currentTime = new ThreadLocal<>();
 
     public LogAspect(LogService logService) {
         this.logService = logService;
@@ -67,10 +53,10 @@ public class LogAspect {
         Object result;
         currentTime.set(System.currentTimeMillis());
         result = joinPoint.proceed();
-        Log log = new Log("INFO",System.currentTimeMillis() - currentTime.get());
+        LogRecord log = new LogRecord("INFO", System.currentTimeMillis() - currentTime.get());
         currentTime.remove();
         HttpServletRequest request = RequestHolder.getHttpServletRequest();
-        logService.save(getUsername(), StringUtils.getBrowser(request), StringUtils.getIp(request),joinPoint, log);
+        logService.save(getUsername(), StringUtils.getBrowser(request), StringUtils.getIp(request), joinPoint, log);
         return result;
     }
 
@@ -78,22 +64,24 @@ public class LogAspect {
      * 配置异常通知
      *
      * @param joinPoint join point for advice
-     * @param e exception
+     * @param e         exception
      */
     @AfterThrowing(pointcut = "logPointcut()", throwing = "e")
     public void logAfterThrowing(JoinPoint joinPoint, Throwable e) {
-        Log log = new Log("ERROR",System.currentTimeMillis() - currentTime.get());
+        LogRecord log = new LogRecord("ERROR", System.currentTimeMillis() - currentTime.get());
         currentTime.remove();
         log.setExceptionDetail(ThrowableUtil.getStackTrace(e).getBytes());
         HttpServletRequest request = RequestHolder.getHttpServletRequest();
-        logService.save(getUsername(), StringUtils.getBrowser(request), StringUtils.getIp(request), (ProceedingJoinPoint)joinPoint, log);
+        logService.save(getUsername(), StringUtils.getBrowser(request), StringUtils.getIp(request),
+            (ProceedingJoinPoint) joinPoint, log);
     }
 
     public String getUsername() {
         try {
             return SecurityUtils.getCurrentUsername();
-        }catch (Exception e){
+        } catch (Exception e) {
             return "";
         }
     }
+
 }
