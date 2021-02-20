@@ -1,4 +1,4 @@
-import { initData, download } from '@/api/data'
+import { initData, exportList } from '@/api/data'
 import { parseTime, downloadFile } from '@/utils/index'
 import Vue from 'vue'
 
@@ -47,7 +47,7 @@ function CRUD(options) {
       add: true,
       edit: true,
       del: true,
-      download: true,
+      exportList: true,
       reset: true
     },
     // 自定义一些扩展属性
@@ -329,7 +329,7 @@ function CRUD(options) {
      */
     doExport() {
       crud.downloadLoading = true
-      download(crud.url + '/download', crud.getQueryParams()).then(result => {
+      exportList(crud.url + '/export', crud.getQueryParams()).then(result => {
         downloadFile(result, crud.title + '数据', 'xlsx')
         crud.downloadLoading = false
       }).catch(() => {

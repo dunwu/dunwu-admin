@@ -54,7 +54,7 @@ public class MenuController {
     private static final String ENTITY_NAME = "menu";
 
     @ApiOperation("导出菜单数据")
-    @GetMapping(value = "/download")
+    @GetMapping(value = "export")
     @PreAuthorize("@el.check('menu:list')")
     public void download(HttpServletResponse response, MenuQueryCriteria criteria) throws Exception {
         menuService.download(menuService.queryAll(criteria, false), response);

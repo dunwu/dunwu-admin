@@ -65,7 +65,7 @@ public class QiniuController {
     }
 
     @ApiOperation("导出数据")
-    @GetMapping(value = "/download")
+    @GetMapping(value = "export")
     public void download(HttpServletResponse response, QiniuQueryCriteria criteria) throws IOException {
         qiNiuService.downloadList(qiNiuService.queryAll(criteria), response);
     }

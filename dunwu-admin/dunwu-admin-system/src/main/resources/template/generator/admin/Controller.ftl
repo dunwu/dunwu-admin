@@ -45,7 +45,7 @@ public class ${className}Controller {
 
     @Log("导出数据")
     @ApiOperation("导出数据")
-    @GetMapping(value = "/download")
+    @GetMapping(value = "export")
     @PreAuthorize("@el.check('${changeClassName}:list')")
     public void download(HttpServletResponse response, ${className}QueryCriteria criteria) throws IOException {
         ${changeClassName}Service.download(${changeClassName}Service.queryAll(criteria), response);

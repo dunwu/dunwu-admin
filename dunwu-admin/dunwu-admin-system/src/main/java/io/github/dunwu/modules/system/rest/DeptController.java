@@ -49,7 +49,7 @@ public class DeptController {
     private static final String ENTITY_NAME = "dept";
 
     @ApiOperation("导出部门数据")
-    @GetMapping(value = "/download")
+    @GetMapping(value = "export")
     @PreAuthorize("@el.check('dept:list')")
     public void download(HttpServletResponse response, DeptQueryCriteria criteria) throws Exception {
         deptService.download(deptService.queryAll(criteria, false), response);

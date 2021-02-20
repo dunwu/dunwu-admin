@@ -48,7 +48,7 @@ public class DictController {
     private static final String ENTITY_NAME = "dict";
 
     @ApiOperation("导出字典数据")
-    @GetMapping(value = "/download")
+    @GetMapping(value = "export")
     @PreAuthorize("@el.check('dict:list')")
     public void download(HttpServletResponse response, DictQueryCriteria criteria) throws IOException {
         dictService.download(dictService.queryAll(criteria), response);

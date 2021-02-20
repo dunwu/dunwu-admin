@@ -8,7 +8,7 @@ export function initData(url, params) {
   })
 }
 
-export function download(url, params) {
+export function exportList(url, params) {
   return request({
     url: url + '?' + qs.stringify(params, { indices: false }),
     method: 'get',

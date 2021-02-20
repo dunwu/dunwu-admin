@@ -54,7 +54,7 @@ public class DatabaseController {
     private final DatabaseService databaseService;
 
 	@ApiOperation("导出数据库数据")
-	@GetMapping(value = "/download")
+	@GetMapping(value = "export")
 	@PreAuthorize("@el.check('database:list')")
 	public void download(HttpServletResponse response, DatabaseQueryCriteria criteria) throws IOException {
 		databaseService.download(databaseService.queryAll(criteria), response);

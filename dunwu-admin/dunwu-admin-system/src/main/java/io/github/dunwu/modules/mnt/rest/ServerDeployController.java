@@ -46,7 +46,7 @@ public class ServerDeployController {
     private final ServerDeployService serverDeployService;
 
     @ApiOperation("导出服务器数据")
-    @GetMapping(value = "/download")
+    @GetMapping(value = "export")
     @PreAuthorize("@el.check('serverDeploy:list')")
     public void download(HttpServletResponse response, ServerDeployQueryCriteria criteria) throws IOException {
         serverDeployService.download(serverDeployService.queryAll(criteria), response);

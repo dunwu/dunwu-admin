@@ -49,7 +49,7 @@ public class OnlineController {
     }
 
     @ApiOperation("导出数据")
-    @GetMapping(value = "/download")
+    @GetMapping(value = "export")
     @PreAuthorize("@el.check()")
     public void download(HttpServletResponse response, String filter) throws IOException {
         onlineUserService.download(onlineUserService.getAll(filter), response);

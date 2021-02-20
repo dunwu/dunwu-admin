@@ -85,7 +85,7 @@ public class LogController {
 
     @Log("导出 SysLog 数据")
     @ApiOperation("导出 SysLog 数据")
-    @GetMapping(value = "/download")
+    @GetMapping(value = "export")
     @PreAuthorize("@el.check()")
     public void exportData(HttpServletResponse response, LogQuery query, Pageable pageable) throws IOException {
         Page<LogDto> pageResult = dao.pojoPageByQuery(query, pageable, LogDto.class);

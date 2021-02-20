@@ -48,7 +48,7 @@ public class JobController {
     private static final String ENTITY_NAME = "job";
 
     @ApiOperation("导出岗位数据")
-    @GetMapping(value = "/download")
+    @GetMapping(value = "export")
     @PreAuthorize("@el.check('job:list')")
     public void download(HttpServletResponse response, JobQueryCriteria criteria) throws IOException {
         jobService.download(jobService.queryAll(criteria), response);

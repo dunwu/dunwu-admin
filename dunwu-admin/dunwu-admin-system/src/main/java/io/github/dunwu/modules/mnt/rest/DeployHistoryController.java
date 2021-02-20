@@ -44,7 +44,7 @@ public class DeployHistoryController {
     private final DeployHistoryService deployhistoryService;
 
     @ApiOperation("导出部署历史数据")
-    @GetMapping(value = "/download")
+    @GetMapping(value = "export")
     @PreAuthorize("@el.check('deployHistory:list')")
     public void download(HttpServletResponse response, DeployHistoryQueryCriteria criteria) throws IOException {
         deployhistoryService.download(deployhistoryService.queryAll(criteria), response);

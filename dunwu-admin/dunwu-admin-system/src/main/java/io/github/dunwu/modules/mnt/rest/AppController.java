@@ -46,7 +46,7 @@ public class AppController {
     private final AppService appService;
 
     @ApiOperation("导出应用数据")
-    @GetMapping(value = "/download")
+    @GetMapping(value = "export")
     @PreAuthorize("@el.check('app:list')")
     public void download(HttpServletResponse response, AppQueryCriteria criteria) throws IOException {
         appService.download(appService.queryAll(criteria), response);

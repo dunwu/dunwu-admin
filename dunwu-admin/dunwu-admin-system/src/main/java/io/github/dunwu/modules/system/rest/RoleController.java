@@ -63,7 +63,7 @@ public class RoleController {
     }
 
     @ApiOperation("导出角色数据")
-    @GetMapping(value = "/download")
+    @GetMapping(value = "export")
     @PreAuthorize("@el.check('role:list')")
     public void download(HttpServletResponse response, RoleQueryCriteria criteria) throws IOException {
         roleService.download(roleService.queryAll(criteria), response);
