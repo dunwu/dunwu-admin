@@ -63,13 +63,13 @@
     =========================================================================== -->
 
     <!--普通日志输出到控制台-->
-    <root level="info">
+    <root level="INFO">
         <appender-ref ref="ConsoleAppender" />
         <appender-ref ref="AsyncAppender" />
     </root>
 
     <!-- 业务日志 -->
-    <logger name="io.github.dunwu" level="INFO" additivity="false">
+    <logger name="io.github.dunwu" level="DEBUG" additivity="false">
         <appender-ref ref="ConsoleAppender" />
         <appender-ref ref="AsyncAppender" />
     </logger>
