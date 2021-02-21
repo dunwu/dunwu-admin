@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
  * @since 2020-05-24
  */
 @RestController
-@RequestMapping("/sys/job")
+@RequestMapping("/api/sys/job")
 @Api(tags = "SysJobController")
 @RequiredArgsConstructor
 public class SysJobController {

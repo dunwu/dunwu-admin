@@ -6,7 +6,13 @@
       <crudOperation :permission="permission" />
     </div>
     <!--表格渲染-->
-    <el-table ref="table" v-loading="crud.loading" :data="crud.data" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
+    <el-table
+      ref="table"
+      v-loading="crud.loading"
+      :data="crud.data"
+      style="width: 100%;"
+      @selection-change="crud.selectionChangeHandler"
+    >
       <el-table-column type="selection" width="55" />
       <el-table-column prop="name" label="名称" />
       <el-table-column prop="jobSort" label="排序">
@@ -27,17 +33,14 @@
       <el-table-column prop="createTime" label="创建日期" />
       <!--   编辑与删除   -->
       <el-table-column
-        v-if="checkPer(['admin','job:edit','job:del'])"
+        v-if="checkPer(['admin', 'job:edit', 'job:del'])"
         label="操作"
         width="130px"
         align="center"
         fixed="right"
       >
         <template slot-scope="scope">
-          <udOperation
-            :data="scope.row"
-            :permission="permission"
-          />
+          <udOperation :data="scope.row" :permission="permission" />
         </template>
       </el-table-column>
     </el-table>
@@ -86,25 +89,30 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(() => {
-        // eslint-disable-next-line no-undef
-        crudJob.edit(data).then(() => {
-          // eslint-disable-next-line no-undef
-          this.crud.notify(this.dict.label.job_status[val] + '成功', 'success')
-        }).catch(err => {
-          data.enabled = !data.enabled
-          console.log(err.data.message)
-        })
-      }).catch(() => {
-        data.enabled = !data.enabled
       })
+        .then(() => {
+          // eslint-disable-next-line no-undef
+          crudJob
+            .edit(data)
+            .then(() => {
+              // eslint-disable-next-line no-undef
+              this.crud.notify(this.dict.label.job_status[val] + '成功', 'success')
+            })
+            .catch(err => {
+              data.enabled = !data.enabled
+              console.log(err.data.message)
+            })
+        })
+        .catch(() => {
+          data.enabled = !data.enabled
+        })
     }
   }
 }
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
- ::v-deep .el-input-number .el-input__inner {
-    text-align: left;
-  }
+::v-deep .el-input-number .el-input__inner {
+  text-align: left;
+}
 </style>
