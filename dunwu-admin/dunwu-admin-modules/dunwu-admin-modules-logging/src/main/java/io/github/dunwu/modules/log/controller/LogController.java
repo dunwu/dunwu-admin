@@ -1,4 +1,4 @@
-package io.github.dunwu.modules.log.rest;
+package io.github.dunwu.modules.log.controller;
 
 import io.github.dunwu.modules.log.annotation.Log;
 import io.github.dunwu.modules.log.dao.LogRecordDao;
@@ -39,7 +39,7 @@ public class LogController {
     @Log("清空数据")
     @DeleteMapping("clear")
     @ApiOperation(value = "根据 ID 批量删除 SysLog 记录")
-    @PreAuthorize("@el.check()")
+    @PreAuthorize("@exp.check()")
     public ResponseEntity<Object> clear() {
         List<LogRecord> list = dao.list();
         Set<Long> ids = list.stream().map(LogRecord::getId).collect(Collectors.toSet());
@@ -49,27 +49,27 @@ public class LogController {
     @Log("批量删除数据")
     @DeleteMapping
     @ApiOperation(value = "根据 ID 批量删除 SysLog 记录")
-    @PreAuthorize("@el.check()")
+    @PreAuthorize("@exp.check()")
     public ResponseEntity<Object> delete(@RequestBody Set<String> ids) {
         return new ResponseEntity<>(dao.removeByIds(ids), HttpStatus.ACCEPTED);
     }
 
     @GetMapping("{id}")
     @ApiOperation(value = "根据 ID 查询 SysLog 记录")
-    @PreAuthorize("@el.check()")
+    @PreAuthorize("@exp.check()")
     public ResponseEntity<Object> getById(@PathVariable String id) {
         return new ResponseEntity<>(dao.getById(id), HttpStatus.OK);
     }
 
     @GetMapping("count")
     @ApiOperation(value = "根据 entity 条件，查询 SysLog 总记录数")
-    @PreAuthorize("@el.check()")
+    @PreAuthorize("@exp.check()")
     public ResponseEntity<Object> count(LogQuery query) {
         return new ResponseEntity<>(dao.countByQuery(query), HttpStatus.OK);
     }
 
     @GetMapping("page")
-    @PreAuthorize("@el.check()")
+    @PreAuthorize("@exp.check()")
     @ApiOperation(value = "根据 query 和 pageable 条件，分页查询 SysLog 记录")
     public ResponseEntity<Object> page(LogQuery query, Pageable pageable) {
         Page<LogDto> page = dao.pojoPageByQuery(query, pageable, LogDto.class);
@@ -78,7 +78,7 @@ public class LogController {
 
     @GetMapping
     @ApiOperation(value = "根据 query 和 pageable 条件，分页查询 SysLog 记录")
-    @PreAuthorize("@el.check()")
+    @PreAuthorize("@exp.check()")
     public ResponseEntity<Object> view(LogQuery query, Pageable pageable) {
         return new ResponseEntity<>(dao.pojoPageByQuery(query, pageable, LogDto.class), HttpStatus.OK);
     }
@@ -86,7 +86,7 @@ public class LogController {
     @Log("导出 SysLog 数据")
     @ApiOperation("导出 SysLog 数据")
     @GetMapping(value = "export")
-    @PreAuthorize("@el.check()")
+    @PreAuthorize("@exp.check()")
     public void exportData(HttpServletResponse response, LogQuery query, Pageable pageable) throws IOException {
         Page<LogDto> pageResult = dao.pojoPageByQuery(query, pageable, LogDto.class);
         dao.exportData(pageResult.getContent(), response);
