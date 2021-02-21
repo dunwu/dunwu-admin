@@ -34,8 +34,6 @@ public class SysJobDaoImpl extends BaseExtDaoImpl<SysJobMapper, SysJob> implemen
             map.put("备注", item.getNote());
             map.put("创建者", item.getCreateBy());
             map.put("更新者", item.getUpdateBy());
-            map.put("创建时间", item.getCreateTime());
-            map.put("更新时间", item.getUpdateTime());
             mapList.add(map);
         }
         ServletUtil.downloadExcel(mapList, response);

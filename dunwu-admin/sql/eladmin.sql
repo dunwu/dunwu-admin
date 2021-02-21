@@ -280,8 +280,10 @@ DROP TABLE IF EXISTS `sys_job`;
 CREATE TABLE `sys_job` (
   `job_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `name` varchar(255) NOT NULL COMMENT '岗位名称',
+  `weight` int(5) DEFAULT NULL COMMENT '排序',
+  `dept_id` bigint(20) DEFAULT NULL COMMENT '部门ID',
   `enabled` bit(1) NOT NULL COMMENT '岗位状态',
-  `job_sort` int(5) DEFAULT NULL COMMENT '排序',
+  `note` varchar(255) DEFAULT NULL COMMENT '备注',
   `create_by` varchar(255) DEFAULT NULL COMMENT '创建者',
   `update_by` varchar(255) DEFAULT NULL COMMENT '更新者',
   `create_time` datetime DEFAULT NULL COMMENT '创建日期',
@@ -295,10 +297,10 @@ CREATE TABLE `sys_job` (
 -- Records of sys_job
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_job` VALUES (8, '人事专员', b'1', 3, NULL, NULL, '2019-03-29 14:52:28', NULL);
-INSERT INTO `sys_job` VALUES (10, '产品经理', b'1', 4, NULL, NULL, '2019-03-29 14:55:51', NULL);
-INSERT INTO `sys_job` VALUES (11, '全栈开发', b'1', 2, NULL, 'admin', '2019-03-31 13:39:30', '2020-05-05 11:33:43');
-INSERT INTO `sys_job` VALUES (12, '软件测试', b'1', 5, NULL, 'admin', '2019-03-31 13:39:43', '2020-05-10 19:56:26');
+INSERT INTO `sys_job` VALUES (8, '人事专员', 3, NULL, b'1', NULL, 'admin', 'admin', '2019-03-29 14:52:28', NULL);
+INSERT INTO `sys_job` VALUES (10, '产品经理', 4, NULL, b'1', NULL, 'admin', 'admin', '2019-03-29 14:55:51', NULL);
+INSERT INTO `sys_job` VALUES (11, '全栈开发', 2, NULL, b'1', NULL, 'admin', 'admin', '2019-03-31 13:39:30', '2020-05-05 11:33:43');
+INSERT INTO `sys_job` VALUES (12, '软件测试', 5, NULL, b'1', NULL, 'admin', 'admin', '2019-03-31 13:39:43', '2020-05-10 19:56:26');
 COMMIT;
 
 -- ----------------------------
@@ -639,6 +641,18 @@ INSERT INTO `sys_roles_menus` VALUES (82, 2);
 INSERT INTO `sys_roles_menus` VALUES (83, 2);
 INSERT INTO `sys_roles_menus` VALUES (116, 2);
 COMMIT;
+
+-- ----------------------------
+-- Table structure for sys_jobs_roles
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_job_role`;
+CREATE TABLE `sys_job_role` (
+    `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `job_id` bigint(20) NOT NULL COMMENT '岗位ID',
+    `role_id` bigint(20) NOT NULL COMMENT '角色ID',
+    PRIMARY KEY (`id`) USING BTREE,
+    UNIQUE KEY `uk_sys_job_role` (`job_id`,`role_id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='系统岗位/角色关系表';
 
 -- ----------------------------
 -- Table structure for sys_user

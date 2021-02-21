@@ -144,7 +144,8 @@ public class UserServiceImpl implements UserService {
         user.setRoles(resources.getRoles());
         // todo 添加部门
         // user.setDept(resources.getDept());
-        user.setJobs(resources.getJobs());
+        // todo 添加职业
+        // user.setJobs(resources.getJobs());
         user.setPhone(resources.getPhone());
         user.setNickName(resources.getNickName());
         user.setGender(resources.getGender());

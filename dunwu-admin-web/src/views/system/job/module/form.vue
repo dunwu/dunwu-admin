@@ -11,9 +11,9 @@
       <el-form-item label="名称" prop="name">
         <el-input v-model="form.name" style="width: 370px;" />
       </el-form-item>
-      <el-form-item label="排序" prop="jobSort">
+      <el-form-item label="排序" prop="weight">
         <el-input-number
-          v-model.number="form.jobSort"
+          v-model.number="form.weight"
           :min="0"
           :max="999"
           controls-position="right"
@@ -43,7 +43,7 @@ import { form } from '@crud/crud'
 const defaultForm = {
   id: null,
   name: '',
-  jobSort: 999,
+  weight: 999,
   enabled: true
 }
 export default {
@@ -58,7 +58,7 @@ export default {
     return {
       rules: {
         name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
-        jobSort: [{ required: true, message: '请输入序号', trigger: 'blur', type: 'number' }]
+        weight: [{ required: true, message: '请输入序号', trigger: 'blur', type: 'number' }]
       }
     }
   }

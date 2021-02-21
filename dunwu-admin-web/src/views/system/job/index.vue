@@ -15,9 +15,9 @@
     >
       <el-table-column type="selection" width="55" />
       <el-table-column prop="name" label="名称" />
-      <el-table-column prop="jobSort" label="排序">
+      <el-table-column prop="weight" label="排序">
         <template slot-scope="scope">
-          {{ scope.row.jobSort }}
+          {{ scope.row.weight }}
         </template>
       </el-table-column>
       <el-table-column prop="status" label="状态" align="center">
@@ -65,8 +65,8 @@ export default {
   cruds() {
     return CRUD({
       title: '岗位',
-      url: 'api/job',
-      sort: ['jobSort,asc', 'id,desc'],
+      url: 'api/sys/job',
+      sort: ['weight,asc', 'id,desc'],
       crudMethod: { ...crudJob }
     })
   },

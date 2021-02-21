@@ -32,11 +32,10 @@ public class SysJob implements Serializable {
 
     @ApiModelProperty(value = "ID")
     @NotNull(groups = EditCheck.class)
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "job_id", type = IdType.AUTO)
     private Long id;
 
     @ApiModelProperty(value = "部门ID")
-    @NotNull(groups = { AddCheck.class, EditCheck.class })
     private Long deptId;
 
     @ApiModelProperty(value = "岗位名称")
