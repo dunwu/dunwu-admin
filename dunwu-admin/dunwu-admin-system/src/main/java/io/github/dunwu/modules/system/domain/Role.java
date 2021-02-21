@@ -31,6 +31,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  * 角色
+ *
  * @author Zheng Jie
  * @date 2018-11-22
  */
@@ -42,7 +43,7 @@ public class Role extends BaseEntity implements Serializable {
 
     @Id
     @Column(name = "role_id")
-    @NotNull(groups = {Update.class})
+    @NotNull(groups = { Update.class })
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ApiModelProperty(value = "ID", hidden = true)
     private Long id;
@@ -54,17 +55,10 @@ public class Role extends BaseEntity implements Serializable {
 
     @ManyToMany
     @JoinTable(name = "sys_roles_menus",
-            joinColumns = {@JoinColumn(name = "role_id",referencedColumnName = "role_id")},
-            inverseJoinColumns = {@JoinColumn(name = "menu_id",referencedColumnName = "menu_id")})
+        joinColumns = { @JoinColumn(name = "role_id", referencedColumnName = "role_id") },
+        inverseJoinColumns = { @JoinColumn(name = "menu_id", referencedColumnName = "menu_id") })
     @ApiModelProperty(value = "菜单", hidden = true)
     private Set<Menu> menus;
-
-    @ManyToMany
-    @JoinTable(name = "sys_roles_depts",
-            joinColumns = {@JoinColumn(name = "role_id",referencedColumnName = "role_id")},
-            inverseJoinColumns = {@JoinColumn(name = "dept_id",referencedColumnName = "dept_id")})
-    @ApiModelProperty(value = "部门", hidden = true)
-    private Set<Dept> depts;
 
     @NotBlank
     @ApiModelProperty(value = "名称", hidden = true)
@@ -96,4 +90,5 @@ public class Role extends BaseEntity implements Serializable {
     public int hashCode() {
         return Objects.hash(id);
     }
+
 }

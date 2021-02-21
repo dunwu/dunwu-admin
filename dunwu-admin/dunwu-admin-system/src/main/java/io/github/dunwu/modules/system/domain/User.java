@@ -36,7 +36,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Getter
 @Setter
-@Table(name="sys_user")
+@Table(name = "sys_user")
 public class User extends BaseEntity implements Serializable {
 
     @Id
@@ -49,21 +49,19 @@ public class User extends BaseEntity implements Serializable {
     @ManyToMany
     @ApiModelProperty(value = "用户角色")
     @JoinTable(name = "sys_users_roles",
-            joinColumns = {@JoinColumn(name = "user_id",referencedColumnName = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "role_id",referencedColumnName = "role_id")})
+        joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "user_id") },
+        inverseJoinColumns = { @JoinColumn(name = "role_id", referencedColumnName = "role_id") })
     private Set<Role> roles;
 
     @ManyToMany
     @ApiModelProperty(value = "用户岗位")
     @JoinTable(name = "sys_users_jobs",
-            joinColumns = {@JoinColumn(name = "user_id",referencedColumnName = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "job_id",referencedColumnName = "job_id")})
+        joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "user_id") },
+        inverseJoinColumns = { @JoinColumn(name = "job_id", referencedColumnName = "job_id") })
     private Set<Job> jobs;
 
-    @OneToOne
-    @JoinColumn(name = "dept_id")
-    @ApiModelProperty(value = "用户部门")
-    private Dept dept;
+    @Column(name = "dept_id")
+    private Long deptId;
 
     @NotBlank
     @Column(unique = true)
@@ -86,7 +84,7 @@ public class User extends BaseEntity implements Serializable {
     @ApiModelProperty(value = "用户性别")
     private String gender;
 
-    @ApiModelProperty(value = "头像真实名称",hidden = true)
+    @ApiModelProperty(value = "头像真实名称", hidden = true)
     private String avatarName;
 
     @ApiModelProperty(value = "头像存储的路径", hidden = true)
@@ -116,11 +114,12 @@ public class User extends BaseEntity implements Serializable {
         }
         User user = (User) o;
         return Objects.equals(id, user.id) &&
-                Objects.equals(username, user.username);
+            Objects.equals(username, user.username);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, username);
     }
+
 }

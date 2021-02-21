@@ -15,13 +15,16 @@
  */
 package io.github.dunwu.modules.system.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import io.github.dunwu.config.FileProperties;
 import io.github.dunwu.exception.EntityExistException;
 import io.github.dunwu.exception.EntityNotFoundException;
 import io.github.dunwu.modules.security.service.OnlineUserService;
 import io.github.dunwu.modules.security.service.UserCacheClean;
 import io.github.dunwu.modules.system.domain.User;
+import io.github.dunwu.modules.system.entity.dto.SysDeptDto;
 import io.github.dunwu.modules.system.repository.UserRepository;
+import io.github.dunwu.modules.system.service.SysDeptService;
 import io.github.dunwu.modules.system.service.UserService;
 import io.github.dunwu.modules.system.service.dto.JobSmallDto;
 import io.github.dunwu.modules.system.service.dto.RoleSmallDto;
@@ -60,16 +63,27 @@ public class UserServiceImpl implements UserService {
     private final RedisUtils redisUtils;
     private final UserCacheClean userCacheClean;
     private final OnlineUserService onlineUserService;
+    private final SysDeptService deptService;
 
     @Override
     public Object queryAll(UserQueryCriteria criteria, Pageable pageable) {
-        Page<User> page = userRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder), pageable);
-        return PageUtil.toPage(page.map(userMapper::toDto));
+        Page<User> page = userRepository.findAll(
+            (root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder),
+            pageable);
+        Page<UserDto> userPage = page.map(userMapper::toDto);
+        if (CollectionUtil.isNotEmpty(userPage.getContent())) {
+            userPage.getContent().forEach(i -> {
+                SysDeptDto sysDeptDto = deptService.pojoById(i.getDeptId());
+                i.setDept(sysDeptDto);
+            });
+        }
+        return PageUtil.toPage(userPage);
     }
 
     @Override
     public List<UserDto> queryAll(UserQueryCriteria criteria) {
-        List<User> users = userRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder));
+        List<User> users = userRepository.findAll(
+            (root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder));
         return userMapper.toDto(users);
     }
 
@@ -121,14 +135,15 @@ public class UserServiceImpl implements UserService {
             redisUtils.del(CacheKey.ROLE_AUTH + resources.getId());
         }
         // 如果用户被禁用，则清除用户登录信息
-        if(!resources.getEnabled()){
+        if (!resources.getEnabled()) {
             onlineUserService.kickOutForUsername(resources.getUsername());
         }
         user.setUsername(resources.getUsername());
         user.setEmail(resources.getEmail());
         user.setEnabled(resources.getEnabled());
         user.setRoles(resources.getRoles());
-        user.setDept(resources.getDept());
+        // todo 添加部门
+        // user.setDept(resources.getDept());
         user.setJobs(resources.getJobs());
         user.setPhone(resources.getPhone());
         user.setNickName(resources.getNickName());
@@ -246,4 +261,5 @@ public class UserServiceImpl implements UserService {
     private void flushCache(String username) {
         userCacheClean.cleanUserCache(username);
     }
+
 }

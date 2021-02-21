@@ -194,8 +194,9 @@ CREATE TABLE `sys_dept` (
   `pid` bigint(20) DEFAULT NULL COMMENT '上级部门',
   `sub_count` int(5) DEFAULT 0 COMMENT '子部门数目',
   `name` varchar(255) NOT NULL COMMENT '名称',
-  `dept_sort` int(5) DEFAULT 999 COMMENT '排序',
+  `weight` int(5) DEFAULT 999 COMMENT '排序',
   `enabled` bit(1) NOT NULL COMMENT '状态',
+  `note` varchar(255) DEFAULT NULL COMMENT '备注',
   `create_by` varchar(255) DEFAULT NULL COMMENT '创建者',
   `update_by` varchar(255) DEFAULT NULL COMMENT '更新者',
   `create_time` datetime DEFAULT NULL COMMENT '创建日期',
@@ -209,13 +210,13 @@ CREATE TABLE `sys_dept` (
 -- Records of sys_dept
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_dept` VALUES (2, 7, 1, '研发部', 3, b'1', 'admin', 'admin', '2019-03-25 09:15:32', '2020-08-02 14:48:47');
-INSERT INTO `sys_dept` VALUES (5, 7, 0, '运维部', 4, b'1', 'admin', 'admin', '2019-03-25 09:20:44', '2020-05-17 14:27:27');
-INSERT INTO `sys_dept` VALUES (6, 8, 0, '测试部', 6, b'1', 'admin', 'admin', '2019-03-25 09:52:18', '2020-06-08 11:59:21');
-INSERT INTO `sys_dept` VALUES (7, NULL, 2, '华南分部', 0, b'1', 'admin', 'admin', '2019-03-25 11:04:50', '2020-06-08 12:08:56');
-INSERT INTO `sys_dept` VALUES (8, NULL, 2, '华北分部', 1, b'1', 'admin', 'admin', '2019-03-25 11:04:53', '2020-05-14 12:54:00');
-INSERT INTO `sys_dept` VALUES (15, 8, 0, 'UI部门', 7, b'1', 'admin', 'admin', '2020-05-13 22:56:53', '2020-05-14 12:54:13');
-INSERT INTO `sys_dept` VALUES (17, 2, 0, '研发一组', 999, b'1', 'admin', 'admin', '2020-08-02 14:49:07', '2020-08-02 14:49:07');
+INSERT INTO `sys_dept` VALUES (2, 7, 1, '研发部', 3, b'1', NULL, 'admin', 'admin', '2019-03-25 09:15:32', '2020-08-02 14:48:47');
+INSERT INTO `sys_dept` VALUES (5, 7, 0, '运维部', 4, b'1', NULL, 'admin', 'admin', '2019-03-25 09:20:44', '2020-05-17 14:27:27');
+INSERT INTO `sys_dept` VALUES (6, 8, 0, '测试部', 6, b'1', NULL, 'admin', 'admin', '2019-03-25 09:52:18', '2020-06-08 11:59:21');
+INSERT INTO `sys_dept` VALUES (7, NULL, 2, '华南分部', 0, b'1', NULL, 'admin', 'admin', '2019-03-25 11:04:50', '2020-06-08 12:08:56');
+INSERT INTO `sys_dept` VALUES (8, NULL, 2, '华北分部', 1, b'1', NULL, 'admin', 'admin', '2019-03-25 11:04:53', '2020-05-14 12:54:00');
+INSERT INTO `sys_dept` VALUES (15, 8, 0, 'UI部门', 7, b'1', NULL, 'admin', 'admin', '2020-05-13 22:56:53', '2020-05-14 12:54:13');
+INSERT INTO `sys_dept` VALUES (17, 2, 0, '研发一组', 999, b'1', NULL, 'admin', 'admin', '2020-08-02 14:49:07', '2020-08-02 14:49:07');
 COMMIT;
 
 -- ----------------------------

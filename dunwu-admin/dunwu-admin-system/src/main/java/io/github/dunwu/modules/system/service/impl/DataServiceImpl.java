@@ -15,10 +15,11 @@
  */
 package io.github.dunwu.modules.system.service.impl;
 
-import io.github.dunwu.modules.system.domain.Dept;
+import cn.hutool.core.collection.CollectionUtil;
+import io.github.dunwu.modules.system.entity.dto.SysDeptDto;
 import io.github.dunwu.modules.system.service.DataService;
-import io.github.dunwu.modules.system.service.DeptService;
 import io.github.dunwu.modules.system.service.RoleService;
+import io.github.dunwu.modules.system.service.SysDeptService;
 import io.github.dunwu.modules.system.service.dto.RoleSmallDto;
 import io.github.dunwu.modules.system.service.dto.UserDto;
 import io.github.dunwu.util.enums.DataScopeEnum;
@@ -41,10 +42,11 @@ import java.util.*;
 public class DataServiceImpl implements DataService {
 
     private final RoleService roleService;
-    private final DeptService deptService;
+    private final SysDeptService deptService;
 
     /**
      * 用户角色改变时需清理缓存
+     *
      * @param user /
      * @return /
      */
@@ -74,19 +76,21 @@ public class DataServiceImpl implements DataService {
 
     /**
      * 获取自定义的数据权限
+     *
      * @param deptIds 部门ID
-     * @param role 角色
+     * @param role    角色
      * @return 数据权限ID
      */
-    public Set<Long> getCustomize(Set<Long> deptIds, RoleSmallDto role){
-        Set<Dept> depts = deptService.findByRoleId(role.getId());
-        for (Dept dept : depts) {
+    public Set<Long> getCustomize(Set<Long> deptIds, RoleSmallDto role) {
+        List<SysDeptDto> sysDeptDtos = deptService.pojoListByRoleId(role.getId());
+        for (SysDeptDto dept : sysDeptDtos) {
             deptIds.add(dept.getId());
-            List<Dept> deptChildren = deptService.findByPid(dept.getId());
-            if (deptChildren != null && deptChildren.size() != 0) {
-                deptIds.addAll(deptService.getDeptChildren(deptChildren));
+            Set<Long> childrenDeptIds = deptService.getChildrenDeptIds(dept.getId());
+            if (CollectionUtil.isNotEmpty(childrenDeptIds)) {
+                deptIds.addAll(childrenDeptIds);
             }
         }
         return deptIds;
     }
+
 }

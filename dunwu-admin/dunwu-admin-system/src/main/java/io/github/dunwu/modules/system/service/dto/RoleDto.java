@@ -16,6 +16,7 @@
 package io.github.dunwu.modules.system.service.dto;
 
 import io.github.dunwu.base.BaseDTO;
+import io.github.dunwu.modules.system.entity.dto.SysDeptDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,7 +36,7 @@ public class RoleDto extends BaseDTO implements Serializable {
 
     private Set<MenuDto> menus;
 
-    private Set<DeptDto> depts;
+    private Set<SysDeptDto> depts;
 
     private String name;
 

@@ -17,6 +17,7 @@ package io.github.dunwu.modules.system.service.dto;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import io.github.dunwu.base.BaseDTO;
+import io.github.dunwu.modules.system.entity.dto.SysDeptDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,7 +39,7 @@ public class UserDto extends BaseDTO implements Serializable {
 
     private Set<JobSmallDto> jobs;
 
-    private DeptSmallDto dept;
+    private SysDeptDto dept;
 
     private Long deptId;
 
@@ -65,4 +66,5 @@ public class UserDto extends BaseDTO implements Serializable {
     private Boolean isAdmin = false;
 
     private Date pwdResetTime;
+
 }
