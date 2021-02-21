@@ -115,7 +115,7 @@ public class TreeUtil {
             }
 
             for (T it : list) {
-                if (it.getPid().equals(parentNode.getId())) {
+                if (ObjectUtil.equal(it.getPid(), parentNode.getId())) {
                     if (parentNode.getChildren() == null) {
                         parentNode.setChildren(new ArrayList<>());
                     }
@@ -128,6 +128,7 @@ public class TreeUtil {
                 List<T> children;
 
                 children = parentNode.getChildren().stream().sorted(comparator).collect(Collectors.toList());
+                parentNode.setHasChildren(true);
                 parentNode.setChildren(children);
             }
         }

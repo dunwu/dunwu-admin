@@ -33,10 +33,10 @@ public abstract class BaseRecordEntity implements Serializable {
     protected String note;
 
     @ApiModelProperty(value = "创建者")
-    protected Long creator;
+    protected Long createBy;
 
     @ApiModelProperty(value = "更新者")
-    protected Long updater;
+    protected Long updateBy;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @ApiModelProperty(value = "创建时间")

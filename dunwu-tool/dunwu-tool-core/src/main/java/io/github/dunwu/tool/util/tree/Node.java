@@ -85,6 +85,10 @@ public interface Node<T> extends Comparable<Node<T>> {
      */
     Node<T> setSort(SORT sort);
 
+    boolean isHasChildren();
+
+    Node<T> setHasChildren(boolean hasChildren);
+
     Collection<T> getChildren();
 
     Node<T> setChildren(Collection<T> children);

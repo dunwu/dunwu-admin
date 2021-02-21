@@ -19,6 +19,7 @@ public class TreeNodeConfig {
     // 用于排序的字段，也可以将其设为 id、name 这样的可以用于排序的字段
     private String weightKey = "weight";
     private String sortKey = "sort";
+    private String hasChildrenKey = "hasChildren";
     private String childrenKey = "children";
     // 可以配置递归深度 从0开始计算 默认此配置为空,即不限制
     private Integer deep;
@@ -101,6 +102,26 @@ public class TreeNodeConfig {
      */
     public TreeNodeConfig setNameKey(String nameKey) {
         this.nameKey = nameKey;
+        return this;
+    }
+
+    /**
+     * 获取是否有子点对应的名称
+     *
+     * @return 是否有子点对应的名称
+     */
+    public String getHasChildrenKey() {
+        return this.hasChildrenKey;
+    }
+
+    /**
+     * 设置是否有子点对应的名称
+     *
+     * @param hasChildrenKey 是否有子点对应的名称
+     * @return this
+     */
+    public TreeNodeConfig setHasChildrenKey(String hasChildrenKey) {
+        this.hasChildrenKey = hasChildrenKey;
         return this;
     }
 

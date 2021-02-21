@@ -37,6 +37,14 @@ public class TreeNode implements Node<TreeNode> {
      */
     private SORT sort = SORT.DESC;
 
+    /**
+     * 是否存在孩子节点
+     */
+    private boolean hasChildren = false;
+
+    /**
+     * 孩子节点
+     */
     private Collection<TreeNode> children;
 
     /**
@@ -124,6 +132,17 @@ public class TreeNode implements Node<TreeNode> {
     @Override
     public TreeNode setSort(SORT sort) {
         this.sort = sort;
+        return this;
+    }
+
+    @Override
+    public boolean isHasChildren() {
+        return hasChildren;
+    }
+
+    @Override
+    public TreeNode setHasChildren(boolean hasChildren) {
+        this.hasChildren = hasChildren;
         return this;
     }
 

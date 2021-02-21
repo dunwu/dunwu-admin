@@ -159,6 +159,17 @@ public class Tree extends LinkedHashMap<String, Object> implements Node<Tree> {
     }
 
     @Override
+    public boolean isHasChildren() {
+        return (boolean) this.get(treeNodeConfig.getHasChildrenKey());
+    }
+
+    @Override
+    public Tree setHasChildren(boolean hasChildren) {
+        this.put(treeNodeConfig.getHasChildrenKey(), hasChildren);
+        return this;
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public Collection<Tree> getChildren() {
         return (Collection<Tree>) this.get(treeNodeConfig.getChildrenKey());
