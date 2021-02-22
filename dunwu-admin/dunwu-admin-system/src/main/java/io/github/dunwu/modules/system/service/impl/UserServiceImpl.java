@@ -187,7 +187,10 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             throw new EntityNotFoundException(User.class, "name", userName);
         } else {
-            return userMapper.toDto(user);
+            UserDto userDto = userMapper.toDto(user);
+            SysDeptDto sysDeptDto = deptService.pojoById(user.getDeptId());
+            userDto.setDept(sysDeptDto);
+            return userDto;
         }
     }
 
