@@ -171,10 +171,7 @@ export default {
         edit: ['admin', 'dept:edit'],
         del: ['admin', 'dept:del']
       },
-      enabledTypeOptions: [
-        { key: 'true', display_name: '正常' },
-        { key: 'false', display_name: '禁用' }
-      ]
+      enabledTypeOptions: [{ key: 'true', display_name: '正常' }, { key: 'false', display_name: '禁用' }]
     }
   },
   methods: {
