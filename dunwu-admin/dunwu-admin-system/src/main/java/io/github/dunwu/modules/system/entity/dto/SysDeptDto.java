@@ -59,11 +59,10 @@ public class SysDeptDto implements Serializable {
     @ApiModelProperty(value = "标签")
     private String label;
 
+    @ApiModelProperty(value = "是否有子部门")
     private boolean hasChildren;
 
-    /**
-     * 用于存储树形结构
-     */
+    @ApiModelProperty(value = "子部门")
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Collection<SysDeptDto> children;
 

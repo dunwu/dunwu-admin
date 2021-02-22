@@ -26,8 +26,12 @@ public class SysMenuQuery implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @QueryField(blurry = { "name", "path", "component" }, type = QueryField.QueryType.LIKE)
+    @QueryField(blurry = { "name", "title", "path", "component" }, type = QueryField.QueryType.LIKE)
     private String blurry;
+
+    @ApiModelProperty(value = "上级菜单ID")
+    @QueryField
+    private Long pid;
 
     @ApiModelProperty(value = "更新时间")
     @QueryField(type = QueryField.QueryType.BETWEEN)

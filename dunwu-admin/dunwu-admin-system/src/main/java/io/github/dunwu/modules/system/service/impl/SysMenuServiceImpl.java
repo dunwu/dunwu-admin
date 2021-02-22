@@ -62,22 +62,22 @@ public class SysMenuServiceImpl extends ServiceImpl implements SysMenuService {
 
     @Override
     public Page<SysMenuDto> pojoPageByQuery(Object query, Pageable pageable) {
-        return menuDao.pojoPageByQuery(query, pageable, SysMenuDto.class);
+        return menuDao.pojoPageByQuery(query, pageable, this::doToVo);
     }
 
     @Override
     public List<SysMenuDto> pojoListByQuery(Object query) {
-        return menuDao.pojoListByQuery(query, SysMenuDto.class);
+        return menuDao.pojoListByQuery(query, this::doToVo);
     }
 
     @Override
     public SysMenuDto pojoById(Serializable id) {
-        return menuDao.pojoById(id, SysMenuDto.class);
+        return menuDao.pojoById(id, this::doToVo);
     }
 
     @Override
     public SysMenuDto pojoByQuery(Object query) {
-        return menuDao.pojoByQuery(query, SysMenuDto.class);
+        return menuDao.pojoByQuery(query, this::doToVo);
     }
 
     @Override
@@ -87,13 +87,13 @@ public class SysMenuServiceImpl extends ServiceImpl implements SysMenuService {
 
     @Override
     public void exportByIds(Collection<Serializable> ids, HttpServletResponse response) throws IOException {
-        List<SysMenuDto> list = menuDao.pojoListByIds(ids, SysMenuDto.class);
+        List<SysMenuDto> list = menuDao.pojoListByIds(ids, this::doToVo);
         menuDao.exportDtoList(list, response);
     }
 
     @Override
     public void exportPageData(Object query, Pageable pageable, HttpServletResponse response) throws IOException {
-        Page<SysMenuDto> page = menuDao.pojoPageByQuery(query, pageable, SysMenuDto.class);
+        Page<SysMenuDto> page = menuDao.pojoPageByQuery(query, pageable, this::doToVo);
         menuDao.exportDtoList(page.getContent(), response);
     }
 
@@ -105,6 +105,11 @@ public class SysMenuServiceImpl extends ServiceImpl implements SysMenuService {
     @Override
     public Map<String, Object> treeListMap(Object query) {
         Collection<SysMenuDto> list = pojoListByQuery(query);
+        return buildTreeList(list);
+    }
+
+    @Override
+    public Map<String, Object> buildTreeList(Collection<SysMenuDto> list) {
         Collection<SysMenuDto> trees = menuDao.buildTreeList(list);
         Map<String, Object> map = new HashMap<>(2);
         map.put("content", trees);
@@ -123,33 +128,45 @@ public class SysMenuServiceImpl extends ServiceImpl implements SysMenuService {
         }
 
         List<SysMenu> list = menuDao.listByIds(menuIds);
-        List<SysMenu> filterList = list.stream().filter(i -> StrUtil.isNotBlank(i.getPath()))
-            .collect(Collectors.toList());
-        return BeanUtil.toBeanList(filterList, SysMenuDto.class);
+        return list.stream()
+                   .filter(i -> StrUtil.isNotBlank(i.getPath()))
+                   .map(this::doToVo)
+                   .collect(Collectors.toList());
     }
 
     @Override
     public List<MenuVo> buildMenuListForCurrentUser() {
-        List<MenuVo> finalMenuList = new ArrayList<>();
         Long userId = SecurityUtil.getCurrentUserId();
-
         List<SysRoleDto> roles = roleService.pojoListByUserId(userId);
         if (CollectionUtil.isEmpty(roles)) {
-            return finalMenuList;
+            return new ArrayList<>();
         }
 
-        Set<Long> roleIds = roles.stream().map(SysRoleDto::getId).collect(Collectors.toSet());
+        Set<Long> roleIds = roles.stream()
+                                 .filter(Objects::nonNull)
+                                 .map(SysRoleDto::getId)
+                                 .collect(Collectors.toSet());
         if (CollectionUtil.isEmpty(roleIds)) {
-            return finalMenuList;
+            return new ArrayList<>();
         }
 
         List<SysMenuDto> menuList = pojoListByRoleIds(roleIds);
         if (CollectionUtil.isEmpty(menuList)) {
-            return finalMenuList;
+            return new ArrayList<>();
         }
 
         Collection<SysMenuDto> menuDtos = menuDao.buildTreeList(menuList);
         return menuDao.buildFrontMenus(menuDtos);
+    }
+
+    public SysMenuDto doToVo(SysMenu model) {
+        if (model == null) {
+            return null;
+        }
+
+        SysMenuDto dto = BeanUtil.toBean(model, SysMenuDto.class);
+        dto.setLabel(dto.getName());
+        return dto;
     }
 
 }

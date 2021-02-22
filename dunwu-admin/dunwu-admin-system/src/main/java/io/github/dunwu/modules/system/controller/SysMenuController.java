@@ -4,6 +4,8 @@ import io.github.dunwu.data.validator.annotation.AddCheck;
 import io.github.dunwu.data.validator.annotation.EditCheck;
 import io.github.dunwu.modules.log.annotation.Log;
 import io.github.dunwu.modules.system.entity.SysMenu;
+import io.github.dunwu.modules.system.entity.dto.SysMenuDto;
+import io.github.dunwu.modules.system.entity.query.SysDeptQuery;
 import io.github.dunwu.modules.system.entity.query.SysMenuQuery;
 import io.github.dunwu.modules.system.service.SysMenuService;
 import io.swagger.annotations.Api;
@@ -18,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.*;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -28,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
  * @since 2020-05-24
  */
 @RestController
-@RequestMapping("/sys/menu")
+@RequestMapping("api/sys/menu")
 @Api(tags = "SysMenuController")
 @RequiredArgsConstructor
 public class SysMenuController {
@@ -99,10 +101,14 @@ public class SysMenuController {
     @PreAuthorize("@exp.check('menu:view')")
     @ApiOperation("根据 query 条件，查询匹配条件的 SysMenuDto 列表")
     public ResponseEntity<Object> list(SysMenuQuery query) {
-        return new ResponseEntity<>(service.pojoListByQuery(query), HttpStatus.OK);
+        List<SysMenuDto> list = service.pojoListByQuery(query);
+        Map<String, Object> map = new HashMap<>(2);
+        map.put("content", list);
+        map.put("totalElements", list.size());
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
-    @GetMapping("export")
+    @GetMapping("export/list")
     @PreAuthorize("@exp.check('menu:view')")
     @ApiOperation("根据 ID 集合批量导出 SysMenuDto 列表数据")
     public void exportByIds(@RequestBody Collection<Serializable> ids, HttpServletResponse response)
@@ -110,14 +116,14 @@ public class SysMenuController {
         service.exportByIds(ids, response);
     }
 
-    @GetMapping("export/page")
+    @GetMapping("export")
     @PreAuthorize("@exp.check('menu:view')")
     @ApiOperation("根据 query 和 pageable 条件批量导出 SysMenuDto 列表数据")
     public void exportPageData(SysMenuQuery query, Pageable pageable, HttpServletResponse response) throws IOException {
         service.exportPageData(query, pageable, response);
     }
 
-    @GetMapping(value = "/tree")
+    @GetMapping(value = "tree")
     @PreAuthorize("@exp.check('menu:view','role:view')")
     @ApiOperation("返回全部的菜单")
     public ResponseEntity<Object> treeList() {
@@ -128,6 +134,29 @@ public class SysMenuController {
     @GetMapping(value = "build")
     public ResponseEntity<Object> menuListForCurrentUser() {
         return new ResponseEntity<>(service.buildMenuListForCurrentUser(), HttpStatus.OK);
+    }
+
+    @ApiOperation("查询部门:根据ID获取同级与上级数据")
+    @PostMapping("superior")
+    @PreAuthorize("@exp.check('dept:list')")
+    public ResponseEntity<Object> getSuperior(@RequestBody List<Long> ids) {
+        Collection<SysMenuDto> menus = new ArrayList<>();
+        for (Long id : ids) {
+            SysMenuDto menuDto = service.pojoById(id);
+            if (menuDto != null && menuDto.getPid() != null) {
+                // 获取上级菜单
+                SysMenuDto parentDept = service.pojoById(menuDto.getPid());
+                menus.add(parentDept);
+
+                // 获取所有同级菜单
+                SysMenuQuery query = new SysMenuQuery();
+                query.setPid(menuDto.getPid());
+                Collection<SysMenuDto> list = service.pojoListByQuery(query);
+                menus.addAll(list);
+            }
+        }
+        Map<String, Object> stringObjectMap = new HashMap<>(service.buildTreeList(menus));
+        return new ResponseEntity<>(stringObjectMap, HttpStatus.OK);
     }
 
 }

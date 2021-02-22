@@ -212,7 +212,7 @@ export default {
   name: 'Menu',
   components: { Treeselect, IconSelect, crudOperation, rrOperation, udOperation, DateRangePicker },
   cruds() {
-    return CRUD({ title: '菜单', url: 'api/menus', crudMethod: { ...crudMenu }})
+    return CRUD({ title: '菜单', url: 'api/sys/menu', crudMethod: { ...crudMenu }})
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   data() {
@@ -246,28 +246,31 @@ export default {
       const params = { pid: tree.id }
       setTimeout(() => {
         crudMenu.getMenus(params).then(res => {
+          console.log('getMenus', params, res)
           resolve(res.content)
         })
       }, 100)
     },
     getSupDepts(id) {
+      console.log('getSupDepts id', id)
       crudMenu.getMenuSuperior(id).then(res => {
-        const children = res.map(function(obj) {
-          if (!obj.leaf && !obj.children) {
-            obj.children = null
-          }
+        const children = res.content.map(function(obj) {
+          // if (obj.hasChildren && !obj.children) {
+          //   obj.children = null
+          // }
           return obj
         })
         this.menus = [{ id: 0, label: '顶级类目', children: children }]
       })
     },
     loadMenus({ action, parentNode, callback }) {
+      console.log('loadMenus action', action)
       if (action === LOAD_CHILDREN_OPTIONS) {
         crudMenu.getMenusTree(parentNode.id).then(res => {
           parentNode.children = res.map(function(obj) {
-            if (!obj.leaf) {
-              obj.children = null
-            }
+            // if (obj.hasChildren) {
+            //   obj.children = null
+            // }
             return obj
           })
           setTimeout(() => {

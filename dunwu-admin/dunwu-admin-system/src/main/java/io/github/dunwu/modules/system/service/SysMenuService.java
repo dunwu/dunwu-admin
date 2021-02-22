@@ -57,7 +57,7 @@ public interface SysMenuService extends IService {
     /**
      * 根据 query 和 pageable 分页查询 {@link SysMenuDto}
      *
-     * @param query    查询条件，根据 query 中的 {@link QueryField} 注解自动组装查询条件
+     * @param query    查询条件，根据 query 中的 {@link io.github.dunwu.data.core.annotation.QueryField} 注解自动组装查询条件
      * @param pageable 分页查询条件
      * @return {@link Page <SysMenuDto>}
      */
@@ -66,7 +66,7 @@ public interface SysMenuService extends IService {
     /**
      * 根据 query 查询 {@link SysMenuDto} 列表
      *
-     * @param query 查询条件，根据 query 中的 {@link QueryField} 注解自动组装查询条件
+     * @param query 查询条件，根据 query 中的 {@link io.github.dunwu.data.core.annotation.QueryField} 注解自动组装查询条件
      * @return {@link List<SysMenuDto>}
      */
     List<SysMenuDto> pojoListByQuery(Object query);
@@ -82,7 +82,7 @@ public interface SysMenuService extends IService {
     /**
      * 根据 query 查询 {@link SysMenuDto}
      *
-     * @param query 查询条件，根据 query 中的 {@link QueryField} 注解自动组装查询条件
+     * @param query 查询条件，根据 query 中的 {@link io.github.dunwu.data.core.annotation.QueryField} 注解自动组装查询条件
      * @return {@link List<SysMenuDto>}
      */
     SysMenuDto pojoByQuery(Object query);
@@ -90,7 +90,7 @@ public interface SysMenuService extends IService {
     /**
      * 根据 query 查询满足条件的记录数
      *
-     * @param query 查询条件，根据 query 中的 {@link QueryField} 注解自动组装查询条件
+     * @param query 查询条件，根据 query 中的 {@link io.github.dunwu.data.core.annotation.QueryField} 注解自动组装查询条件
      * @return {@link Integer}
      */
     Integer countByQuery(Object query);
@@ -106,7 +106,7 @@ public interface SysMenuService extends IService {
     /**
      * 根据 query 和 pageable 查询 {@link SysMenuDto} 列表，并导出 excel 表单
      *
-     * @param query    查询条件，根据 query 中的 {@link QueryField} 注解自动组装查询条件
+     * @param query    查询条件，根据 query 中的 {@link io.github.dunwu.data.core.annotation.QueryField} 注解自动组装查询条件
      * @param pageable 分页查询条件
      * @param response {@link HttpServletResponse} 实体
      */
@@ -115,6 +115,8 @@ public interface SysMenuService extends IService {
     Object treeObject();
 
     Map<String, Object> treeListMap(Object query);
+
+    Map<String, Object> buildTreeList(Collection<SysMenuDto> list);
 
     List<SysMenuDto> pojoListByRoleIds(Collection<Long> roleIds);
 

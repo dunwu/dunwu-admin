@@ -1,5 +1,6 @@
 package io.github.dunwu.modules.system.dao.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -10,6 +11,7 @@ import io.github.dunwu.modules.system.dao.mapper.SysMenuMapper;
 import io.github.dunwu.modules.system.entity.SysMenu;
 import io.github.dunwu.modules.system.entity.dto.SysMenuDto;
 import io.github.dunwu.modules.system.entity.vo.MenuVo;
+import io.github.dunwu.tool.util.tree.Node;
 import io.github.dunwu.tool.util.tree.TreeNodeConfig;
 import io.github.dunwu.tool.util.tree.TreeUtil;
 import io.github.dunwu.web.util.ServletUtil;
@@ -49,8 +51,6 @@ public class SysMenuDaoImpl extends BaseExtDaoImpl<SysMenuMapper, SysMenu> imple
             map.put("备注", item.getNote());
             map.put("创建者", item.getCreateBy());
             map.put("更新者", item.getUpdateBy());
-            map.put("创建时间", item.getCreateTime());
-            map.put("更新时间", item.getUpdateTime());
             mapList.add(map);
         }
         ServletUtil.downloadExcel(mapList, response);
@@ -61,6 +61,8 @@ public class SysMenuDaoImpl extends BaseExtDaoImpl<SysMenuMapper, SysMenu> imple
         TreeNodeConfig treeNodeConfig = new TreeNodeConfig();
         treeNodeConfig.setPidKey("pid");
         treeNodeConfig.setDeep(10);
+        treeNodeConfig.setSortKey("weight");
+        treeNodeConfig.setSort(Node.SORT.ASC);
         return TreeUtil.build(list, 0L, treeNodeConfig, SysMenuDto.class);
     }
 
@@ -91,28 +93,28 @@ public class SysMenuDaoImpl extends BaseExtDaoImpl<SysMenuMapper, SysMenu> imple
                 continue;
             }
 
-            List<SysMenuDto> menuDtoList = entity.getChildren();
+            Collection<SysMenuDto> children = entity.getChildren();
             MenuVo menuVo = new MenuVo();
             menuVo.setName(
                 ObjectUtil.isNotEmpty(entity.getComponentName()) ? entity.getComponentName() : entity.getName());
             // 一级目录需要加斜杠，不然会报警告
-            menuVo.setPath(entity.getPid() == 0 ? "/" + entity.getPath() : entity.getPath());
+            menuVo.setPath(entity.getPid() == null ? "/" + entity.getPath() : entity.getPath());
             menuVo.setHidden(entity.getHidden());
             // 如果不是外链
             if (!entity.getIFrame()) {
-                if (entity.getPid() == 0) {
+                if (entity.getPid() == null) {
                     menuVo.setComponent(StrUtil.isEmpty(entity.getComponent()) ? "Layout" : entity.getComponent());
                 } else if (!StrUtil.isEmpty(entity.getComponent())) {
                     menuVo.setComponent(entity.getComponent());
                 }
             }
-            menuVo.setMeta(new MenuVo.MenuMetaVo(entity.getName(), entity.getIcon(), !entity.getCache()));
-            if (menuDtoList != null && menuDtoList.size() != 0) {
+            menuVo.setMeta(new MenuVo.MenuMetaVo(entity.getTitle(), entity.getIcon(), !entity.getCache()));
+            if (CollectionUtil.isNotEmpty(children)) {
                 menuVo.setAlwaysShow(true);
                 menuVo.setRedirect("noredirect");
-                menuVo.setChildren(buildFrontMenus(menuDtoList));
+                menuVo.setChildren(buildFrontMenus(children));
                 // 处理是一级菜单并且没有子菜单的情况
-            } else if (entity.getPid() == 0) {
+            } else if (entity.getPid() == null) {
                 MenuVo menuVo1 = new MenuVo();
                 menuVo1.setMeta(menuVo.getMeta());
                 // 非外链

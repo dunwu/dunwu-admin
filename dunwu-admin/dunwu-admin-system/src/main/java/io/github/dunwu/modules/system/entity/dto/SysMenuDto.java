@@ -9,6 +9,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -29,6 +30,9 @@ public class SysMenuDto implements Serializable, Comparable<SysMenuDto> {
 
     @ApiModelProperty(value = "上级菜单ID")
     private Long pid;
+
+    @ApiModelProperty(value = "菜单标题")
+    private String title;
 
     @ApiModelProperty(value = "菜单名称")
     private String name;
@@ -83,8 +87,15 @@ public class SysMenuDto implements Serializable, Comparable<SysMenuDto> {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime updateTime;
 
+    @ApiModelProperty(value = "标签")
+    private String label;
+
+    @ApiModelProperty(value = "是否有子菜单")
+    private boolean hasChildren;
+
+    @ApiModelProperty(value = "子菜单")
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<SysMenuDto> children;
+    private Collection<SysMenuDto> children;
 
     @Override
     public int compareTo(SysMenuDto o) {

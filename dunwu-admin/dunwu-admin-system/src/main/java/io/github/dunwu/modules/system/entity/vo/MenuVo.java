@@ -1,6 +1,7 @@
 package io.github.dunwu.modules.system.entity.vo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -30,6 +31,10 @@ public class MenuVo implements Serializable {
     private Boolean alwaysShow;
 
     private MenuMetaVo meta;
+
+    private String label;
+
+    private boolean hasChildren;
 
     private List<MenuVo> children;
 

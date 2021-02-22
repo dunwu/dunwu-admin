@@ -36,6 +36,9 @@ public class SysMenu implements Serializable {
     @ApiModelProperty(value = "上级菜单ID")
     private Long pid;
 
+    @ApiModelProperty(value = "菜单标题")
+    private String title;
+
     @ApiModelProperty(value = "菜单名称")
     private String name;
 
