@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
  * @since 2020-05-24
  */
 @RestController
-@RequestMapping("/sys/role")
+@RequestMapping("/api/sys/role")
 @Api(tags = "SysRoleController")
 @RequiredArgsConstructor
 public class SysRoleController {
