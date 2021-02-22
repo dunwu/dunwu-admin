@@ -2,7 +2,7 @@ package io.github.dunwu.modules.system.controller;
 
 import io.github.dunwu.data.validator.annotation.AddCheck;
 import io.github.dunwu.data.validator.annotation.EditCheck;
-import io.github.dunwu.modules.log.annotation.Log;
+import io.github.dunwu.modules.monitor.annotation.Log;
 import io.github.dunwu.modules.system.entity.SysDept;
 import io.github.dunwu.modules.system.entity.dto.SysDeptDto;
 import io.github.dunwu.modules.system.entity.dto.SysDeptRelationDto;

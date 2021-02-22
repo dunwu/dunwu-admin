@@ -3,7 +3,7 @@ package io.github.dunwu.modules.system.controller;
 import cn.hutool.core.lang.Dict;
 import io.github.dunwu.data.validator.annotation.AddCheck;
 import io.github.dunwu.data.validator.annotation.EditCheck;
-import io.github.dunwu.modules.log.annotation.Log;
+import io.github.dunwu.modules.monitor.annotation.Log;
 import io.github.dunwu.modules.system.entity.SysRole;
 import io.github.dunwu.modules.system.entity.dto.SysRoleDto;
 import io.github.dunwu.modules.system.entity.query.SysRoleQuery;

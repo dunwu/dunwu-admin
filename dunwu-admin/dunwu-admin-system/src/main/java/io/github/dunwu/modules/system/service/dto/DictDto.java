@@ -15,7 +15,7 @@
  */
 package io.github.dunwu.modules.system.service.dto;
 
-import io.github.dunwu.base.BaseDTO;
+import io.github.dunwu.base.BaseDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,7 +28,7 @@ import java.util.List;
 */
 @Getter
 @Setter
-public class DictDto extends BaseDTO implements Serializable {
+public class DictDto extends BaseDto implements Serializable {
 
     private Long id;
 

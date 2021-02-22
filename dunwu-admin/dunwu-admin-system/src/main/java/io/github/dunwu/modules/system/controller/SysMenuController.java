@@ -2,10 +2,9 @@ package io.github.dunwu.modules.system.controller;
 
 import io.github.dunwu.data.validator.annotation.AddCheck;
 import io.github.dunwu.data.validator.annotation.EditCheck;
-import io.github.dunwu.modules.log.annotation.Log;
+import io.github.dunwu.modules.monitor.annotation.Log;
 import io.github.dunwu.modules.system.entity.SysMenu;
 import io.github.dunwu.modules.system.entity.dto.SysMenuDto;
-import io.github.dunwu.modules.system.entity.query.SysDeptQuery;
 import io.github.dunwu.modules.system.entity.query.SysMenuQuery;
 import io.github.dunwu.modules.system.service.SysMenuService;
 import io.swagger.annotations.Api;

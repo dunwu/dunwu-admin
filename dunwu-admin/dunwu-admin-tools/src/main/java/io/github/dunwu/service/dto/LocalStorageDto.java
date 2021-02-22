@@ -15,7 +15,7 @@
  */
 package io.github.dunwu.service.dto;
 
-import io.github.dunwu.base.BaseDTO;
+import io.github.dunwu.base.BaseDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,7 +27,7 @@ import java.io.Serializable;
 */
 @Getter
 @Setter
-public class LocalStorageDto extends BaseDTO implements Serializable {
+public class LocalStorageDto extends BaseDto implements Serializable {
 
     private Long id;
 

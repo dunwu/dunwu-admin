@@ -1,18 +1,17 @@
 <template>
-  <div v-loading="!show" element-loading-text="数据加载中..." :style="!show ? 'height: 500px' : 'height: 100%'" class="app-container">
+  <div
+    v-loading="!show"
+    element-loading-text="数据加载中..."
+    :style="!show ? 'height: 500px' : 'height: 100%'"
+    class="app-container"
+  >
     <div v-if="show">
       <el-card class="box-card">
         <div style="color: #666;font-size: 13px;">
           <svg-icon icon-class="system" style="margin-right: 5px" />
-          <span>
-            系统：{{ data.sys.os }}
-          </span>
-          <span>
-            IP：{{ data.sys.ip }}
-          </span>
-          <span>
-            项目已不间断运行：{{ data.sys.day }}
-          </span>
+          <span>系统：{{ data.sys.os }}</span>
+          <span>IP：{{ data.sys.ip }}</span>
+          <span>项目已不间断运行：{{ data.sys.day }}</span>
           <i class="el-icon-refresh" style="margin-left: 40px" @click="init" />
         </div>
       </el-card>
@@ -48,15 +47,9 @@
             <div class="title">内存使用率</div>
             <el-tooltip placement="top-end">
               <div slot="content" style="font-size: 12px;">
-                <div style="padding: 3px;">
-                  总量：{{ data.memory.total }}
-                </div>
-                <div style="padding: 3px">
-                  已使用：{{ data.memory.used }}
-                </div>
-                <div style="padding: 3px">
-                  空闲：{{ data.memory.available }}
-                </div>
+                <div style="padding: 3px;">总量：{{ data.memory.total }}</div>
+                <div style="padding: 3px">已使用：{{ data.memory.used }}</div>
+                <div style="padding: 3px">空闲：{{ data.memory.available }}</div>
               </div>
               <div class="content">
                 <el-progress type="dashboard" :percentage="parseFloat(data.memory.usageRate)" />
@@ -68,15 +61,9 @@
             <div class="title">交换区使用率</div>
             <el-tooltip placement="top-end">
               <div slot="content" style="font-size: 12px;">
-                <div style="padding: 3px;">
-                  总量：{{ data.swap.total }}
-                </div>
-                <div style="padding: 3px">
-                  已使用：{{ data.swap.used }}
-                </div>
-                <div style="padding: 3px">
-                  空闲：{{ data.swap.available }}
-                </div>
+                <div style="padding: 3px;">总量：{{ data.swap.total }}</div>
+                <div style="padding: 3px">已使用：{{ data.swap.used }}</div>
+                <div style="padding: 3px">空闲：{{ data.swap.available }}</div>
               </div>
               <div class="content">
                 <el-progress type="dashboard" :percentage="parseFloat(data.swap.usageRate)" />
@@ -89,12 +76,8 @@
             <div class="content">
               <el-tooltip placement="top-end">
                 <div slot="content" style="font-size: 12px;">
-                  <div style="padding: 3px">
-                    总量：{{ data.disk.total }}
-                  </div>
-                  <div style="padding: 3px">
-                    空闲：{{ data.disk.available }}
-                  </div>
+                  <div style="padding: 3px">总量：{{ data.disk.total }}</div>
+                  <div style="padding: 3px">空闲：{{ data.disk.available }}</div>
                 </div>
                 <div class="content">
                   <el-progress type="dashboard" :percentage="parseFloat(data.disk.usageRate)" />
@@ -148,7 +131,7 @@ export default {
     return {
       show: false,
       monitor: null,
-      url: 'api/monitor',
+      url: 'api/monitor/server',
       data: {},
       cpuInfo: {
         tooltip: {
@@ -165,23 +148,25 @@ export default {
           max: 100,
           interval: 20
         },
-        series: [{
-          data: [],
-          type: 'line',
-          areaStyle: {
-            normal: {
-              color: 'rgb(32, 160, 255)' // 改变区域颜色
-            }
-          },
-          itemStyle: {
-            normal: {
-              color: '#6fbae1',
-              lineStyle: {
-                color: '#6fbae1' // 改变折线颜色
+        series: [
+          {
+            data: [],
+            type: 'line',
+            areaStyle: {
+              normal: {
+                color: 'rgb(32, 160, 255)' // 改变区域颜色
+              }
+            },
+            itemStyle: {
+              normal: {
+                color: '#6fbae1',
+                lineStyle: {
+                  color: '#6fbae1' // 改变折线颜色
+                }
               }
             }
           }
-        }]
+        ]
       },
       memoryInfo: {
         tooltip: {
@@ -198,23 +183,25 @@ export default {
           max: 100,
           interval: 20
         },
-        series: [{
-          data: [],
-          type: 'line',
-          areaStyle: {
-            normal: {
-              color: 'rgb(32, 160, 255)' // 改变区域颜色
-            }
-          },
-          itemStyle: {
-            normal: {
-              color: '#6fbae1',
-              lineStyle: {
-                color: '#6fbae1' // 改变折线颜色
+        series: [
+          {
+            data: [],
+            type: 'line',
+            areaStyle: {
+              normal: {
+                color: 'rgb(32, 160, 255)' // 改变区域颜色
+              }
+            },
+            itemStyle: {
+              normal: {
+                color: '#6fbae1',
+                lineStyle: {
+                  color: '#6fbae1' // 改变折线颜色
+                }
               }
             }
           }
-        }]
+        ]
       }
     }
   },
@@ -251,41 +238,44 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
- ::v-deep .box-card {
-    margin-bottom: 5px;
-    span {
-      margin-right: 28px;
-    }
-    .el-icon-refresh {
-      margin-right: 10px;
-      float: right;
-      cursor:pointer;
-    }
+::v-deep .box-card {
+  margin-bottom: 5px;
+  span {
+    margin-right: 28px;
   }
-  .cpu, .memory, .swap, .disk  {
-    width: 20%;
-    float: left;
-    padding-bottom: 20px;
-    margin-right: 5%;
+  .el-icon-refresh {
+    margin-right: 10px;
+    float: right;
+    cursor: pointer;
   }
- .title {
-   text-align: center;
-   font-size: 15px;
-   font-weight: 500;
-   color: #999;
-   margin-bottom: 16px;
- }
- .footer {
-    text-align: center;
-    font-size: 15px;
-    font-weight: 500;
-    color: #999;
-    margin-top: -5px;
-    margin-bottom: 10px;
-  }
-  .content {
-    text-align: center;
-    margin-top: 5px;
-    margin-bottom: 5px;
-  }
+}
+.cpu,
+.memory,
+.swap,
+.disk {
+  width: 20%;
+  float: left;
+  padding-bottom: 20px;
+  margin-right: 5%;
+}
+.title {
+  text-align: center;
+  font-size: 15px;
+  font-weight: 500;
+  color: #999;
+  margin-bottom: 16px;
+}
+.footer {
+  text-align: center;
+  font-size: 15px;
+  font-weight: 500;
+  color: #999;
+  margin-top: -5px;
+  margin-bottom: 10px;
+}
+.content {
+  text-align: center;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
 </style>

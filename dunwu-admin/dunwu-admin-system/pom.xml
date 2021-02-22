@@ -88,12 +88,7 @@
       <version>0.1.55</version>
     </dependency>
 
-    <!-- 获取系统信息 -->
-    <dependency>
-      <groupId>com.github.oshi</groupId>
-      <artifactId>oshi-core</artifactId>
-      <version>5.3.6</version>
-    </dependency>
+
   </dependencies>
 
   <!-- 打包 -->

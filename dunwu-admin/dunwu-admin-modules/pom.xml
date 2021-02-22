@@ -14,6 +14,6 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>dunwu-admin-modules-logging</module>
+    <module>dunwu-admin-modules-monitor</module>
   </modules>
 </project>

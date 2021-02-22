@@ -15,7 +15,7 @@
  */
 package io.github.dunwu.modules.mnt.service.dto;
 
-import io.github.dunwu.base.BaseDTO;
+import io.github.dunwu.base.BaseDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,7 +27,7 @@ import java.io.Serializable;
 */
 @Getter
 @Setter
-public class AppDto extends BaseDTO implements Serializable {
+public class AppDto extends BaseDto implements Serializable {
 
 	/**
 	 * 应用编号

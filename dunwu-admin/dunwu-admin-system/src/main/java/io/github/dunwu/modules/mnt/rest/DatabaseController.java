@@ -15,7 +15,7 @@
  */
 package io.github.dunwu.modules.mnt.rest;
 
-import io.github.dunwu.modules.log.annotation.Log;
+import io.github.dunwu.modules.monitor.annotation.Log;
 import io.github.dunwu.exception.BadRequestException;
 import io.github.dunwu.modules.mnt.domain.Database;
 import io.github.dunwu.modules.mnt.service.DatabaseService;

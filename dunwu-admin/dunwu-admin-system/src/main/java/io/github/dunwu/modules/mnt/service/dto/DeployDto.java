@@ -16,7 +16,7 @@
 package io.github.dunwu.modules.mnt.service.dto;
 
 import cn.hutool.core.collection.CollectionUtil;
-import io.github.dunwu.base.BaseDTO;
+import io.github.dunwu.base.BaseDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 */
 @Getter
 @Setter
-public class DeployDto extends BaseDTO implements Serializable {
+public class DeployDto extends BaseDto implements Serializable {
 
 	/**
 	 * 部署编号
