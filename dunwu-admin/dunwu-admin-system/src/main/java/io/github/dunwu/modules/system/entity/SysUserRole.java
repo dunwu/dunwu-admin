@@ -2,6 +2,7 @@ package io.github.dunwu.modules.system.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -20,6 +21,7 @@ import java.io.Serializable;
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value = "SysUserRole", description = "系统用户角色关联信息")
+@TableName(value = "sys_users_roles")
 public class SysUserRole implements Serializable {
 
     private static final long serialVersionUID = 1L;

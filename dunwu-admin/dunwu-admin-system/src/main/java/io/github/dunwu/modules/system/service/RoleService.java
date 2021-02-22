@@ -16,10 +16,10 @@
 package io.github.dunwu.modules.system.service;
 
 import io.github.dunwu.modules.system.domain.Role;
+import io.github.dunwu.modules.system.entity.dto.SysUserDto;
 import io.github.dunwu.modules.system.service.dto.RoleDto;
 import io.github.dunwu.modules.system.service.dto.RoleQueryCriteria;
 import io.github.dunwu.modules.system.service.dto.RoleSmallDto;
-import io.github.dunwu.modules.system.service.dto.UserDto;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -120,7 +120,7 @@ public interface RoleService {
      * @param user 用户信息
      * @return 权限信息
      */
-    List<GrantedAuthority> mapToGrantedAuthorities(UserDto user);
+    List<GrantedAuthority> mapToGrantedAuthorities(SysUserDto user);
 
     /**
      * 验证是否被用户关联

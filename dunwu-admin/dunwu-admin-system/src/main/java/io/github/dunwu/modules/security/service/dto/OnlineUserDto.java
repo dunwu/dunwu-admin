@@ -38,7 +38,7 @@ public class OnlineUserDto {
     /**
      * 昵称
      */
-    private String nickName;
+    private String nickname;
 
     /**
      * 岗位

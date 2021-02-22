@@ -19,16 +19,17 @@ import io.github.dunwu.exception.BadRequestException;
 import io.github.dunwu.exception.EntityNotFoundException;
 import io.github.dunwu.modules.security.config.bean.LoginProperties;
 import io.github.dunwu.modules.security.service.dto.JwtUserDto;
-import io.github.dunwu.modules.system.service.DataService;
+import io.github.dunwu.modules.system.entity.dto.SysUserDto;
 import io.github.dunwu.modules.system.service.RoleService;
-import io.github.dunwu.modules.system.service.UserService;
-import io.github.dunwu.modules.system.service.dto.UserDto;
+import io.github.dunwu.modules.system.service.SysDeptService;
+import io.github.dunwu.modules.system.service.SysUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -38,10 +39,12 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequiredArgsConstructor
 @Service("userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
-    private final UserService userService;
+
+    private final SysUserService userService;
+    private final SysDeptService deptService;
     private final RoleService roleService;
-    private final DataService dataService;
     private final LoginProperties loginProperties;
+
     public void setEnableCache(boolean enableCache) {
         this.loginProperties.setCacheEnable(enableCache);
     }
@@ -62,9 +65,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             searchDb = false;
         }
         if (searchDb) {
-            UserDto user;
+            SysUserDto user;
             try {
-                user = userService.findByName(username);
+                user = userService.pojoByUsername(username);
             } catch (EntityNotFoundException e) {
                 // SpringSecurity会自动转换UsernameNotFoundException为BadCredentialsException
                 throw new UsernameNotFoundException("", e);
@@ -75,14 +78,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 if (!user.getEnabled()) {
                     throw new BadRequestException("账号未激活！");
                 }
-                jwtUserDto = new JwtUserDto(
-                        user,
-                        dataService.getDeptIds(user),
-                        roleService.mapToGrantedAuthorities(user)
-                );
+
+                Set<Long> deptIds = deptService.getChildrenDeptIds(user.getDeptId());
+                jwtUserDto = new JwtUserDto(user, deptIds, roleService.mapToGrantedAuthorities(user));
                 userDtoCache.put(username, jwtUserDto);
             }
         }
         return jwtUserDto;
     }
+
 }

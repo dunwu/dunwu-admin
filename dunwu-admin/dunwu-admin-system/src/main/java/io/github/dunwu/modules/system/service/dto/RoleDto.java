@@ -44,7 +44,7 @@ public class RoleDto extends BaseDTO implements Serializable {
 
     private Integer level;
 
-    private String description;
+    private String note;
 
     @Override
     public boolean equals(Object o) {

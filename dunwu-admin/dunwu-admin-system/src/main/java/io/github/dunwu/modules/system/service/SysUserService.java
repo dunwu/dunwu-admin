@@ -4,13 +4,17 @@ import io.github.dunwu.data.core.annotation.QueryField;
 import io.github.dunwu.data.mybatis.IService;
 import io.github.dunwu.modules.system.entity.SysUser;
 import io.github.dunwu.modules.system.entity.dto.SysUserDto;
+import io.github.dunwu.modules.system.entity.vo.UserPassVo;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -100,7 +104,7 @@ public interface SysUserService extends IService {
      * @param ids      id 列表
      * @param response {@link HttpServletResponse} 实体
      */
-    void exportByIds(Collection<Serializable> ids, HttpServletResponse response) throws IOException;
+    void exportList(Collection<Serializable> ids, HttpServletResponse response) throws IOException;
 
     /**
      * 根据 query 和 pageable 查询 {@link SysUserDto} 列表，并导出 excel 表单
@@ -109,7 +113,9 @@ public interface SysUserService extends IService {
      * @param pageable 分页查询条件
      * @param response {@link HttpServletResponse} 实体
      */
-    void exportPageData(Object query, Pageable pageable, HttpServletResponse response) throws IOException;
+    void exportPage(Object query, Pageable pageable, HttpServletResponse response) throws IOException;
+
+    // ==========================================================================
 
     Long saveUserRelatedRecords(SysUserDto dto);
 
@@ -117,6 +123,36 @@ public interface SysUserService extends IService {
 
     SysUserDto pojoByUsername(String username);
 
-    SysUserDto toDto(SysUser user);
+    @Transactional(rollbackFor = Exception.class)
+    void updateCenter(SysUserDto entity);
+
+    @Transactional(rollbackFor = Exception.class)
+    void updatePass(UserPassVo passVo) throws Exception;
+
+    /**
+     * 根据菜单查询用户
+     *
+     * @param menuId 菜单ID
+     * @return /
+     */
+    List<SysUser> findByMenuId(Long menuId);
+
+    /**
+     * 根据角色查询用户
+     *
+     * @param roleId /
+     * @return /
+     */
+    @Select("SELECT u.* FROM sys_user u, sys_users_roles r WHERE u.user_id = r.user_id AND r.role_id = #{roleId}")
+    List<SysUser> findByRoleId(Long roleId);
+
+    /**
+     * 根据角色查询
+     *
+     * @param roleIds /
+     * @return /
+     */
+    @Select("SELECT count(1) FROM sys_user u, sys_users_roles r WHERE u.user_id = r.user_id AND r.role_id in #{roleIds}")
+    int countByRoles(Set<Long> roleIds);
 
 }

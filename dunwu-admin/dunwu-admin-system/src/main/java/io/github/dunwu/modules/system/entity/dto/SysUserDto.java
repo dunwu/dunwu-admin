@@ -41,10 +41,10 @@ public class SysUserDto implements Serializable {
     private String email;
 
     @ApiModelProperty(value = "手机号")
-    private String mobile;
+    private String phone;
 
     @ApiModelProperty(value = "性别")
-    private String sex;
+    private String gender;
 
     @ApiModelProperty(value = "头像")
     private String avatar;
@@ -55,12 +55,9 @@ public class SysUserDto implements Serializable {
     @ApiModelProperty(value = "岗位ID")
     private Long jobId;
 
-    @ApiModelProperty(value = "是否删除")
-    private Boolean deleted;
-
     @ApiModelProperty(value = "最后修改密码的日期")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private LocalDateTime lastPasswordResetTime;
+    private LocalDateTime pwdResetTime;
 
     @ApiModelProperty(value = "用户所属角色集合", hidden = true)
     private List<SysRoleDto> roles;
@@ -73,9 +70,6 @@ public class SysUserDto implements Serializable {
 
     @ApiModelProperty(value = "状态")
     private Boolean enabled;
-
-    @ApiModelProperty(value = "备注")
-    private String note;
 
     @ApiModelProperty(value = "创建者")
     private String createBy;
@@ -90,5 +84,7 @@ public class SysUserDto implements Serializable {
     @ApiModelProperty(value = "更新时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime updateTime;
+
+    private Boolean isAdmin = false;
 
 }

@@ -21,14 +21,14 @@ import io.github.dunwu.exception.EntityExistException;
 import io.github.dunwu.modules.security.service.UserCacheClean;
 import io.github.dunwu.modules.system.domain.Menu;
 import io.github.dunwu.modules.system.domain.Role;
-import io.github.dunwu.modules.system.domain.User;
+import io.github.dunwu.modules.system.entity.SysUser;
+import io.github.dunwu.modules.system.entity.dto.SysUserDto;
 import io.github.dunwu.modules.system.repository.RoleRepository;
-import io.github.dunwu.modules.system.repository.UserRepository;
 import io.github.dunwu.modules.system.service.RoleService;
+import io.github.dunwu.modules.system.service.SysUserService;
 import io.github.dunwu.modules.system.service.dto.RoleDto;
 import io.github.dunwu.modules.system.service.dto.RoleQueryCriteria;
 import io.github.dunwu.modules.system.service.dto.RoleSmallDto;
-import io.github.dunwu.modules.system.service.dto.UserDto;
 import io.github.dunwu.modules.system.service.mapstruct.RoleMapper;
 import io.github.dunwu.modules.system.service.mapstruct.RoleSmallMapper;
 import io.github.dunwu.util.*;
@@ -61,7 +61,7 @@ public class RoleServiceImpl implements RoleService {
     private final RoleMapper roleMapper;
     private final RoleSmallMapper roleSmallMapper;
     private final RedisUtils redisUtils;
-    private final UserRepository userRepository;
+    private final SysUserService userService;
     private final UserCacheClean userCacheClean;
 
     @Override
@@ -72,12 +72,15 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public List<RoleDto> queryAll(RoleQueryCriteria criteria) {
-        return roleMapper.toDto(roleRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder)));
+        return roleMapper.toDto(roleRepository.findAll(
+            (root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder)));
     }
 
     @Override
     public Object queryAll(RoleQueryCriteria criteria, Pageable pageable) {
-        Page<Role> page = roleRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder), pageable);
+        Page<Role> page = roleRepository.findAll(
+            (root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder),
+            pageable);
         return PageUtil.toPage(page.map(roleMapper::toDto));
     }
 
@@ -111,7 +114,7 @@ public class RoleServiceImpl implements RoleService {
             throw new EntityExistException(Role.class, "username", resources.getName());
         }
         role.setName(resources.getName());
-        role.setDescription(resources.getDescription());
+        role.setNote(resources.getNote());
         role.setDataScope(resources.getDataScope());
         // TODO 添加部门
         // role.setDepts(resources.getDepts());
@@ -124,7 +127,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public void updateMenu(Role resources, RoleDto roleDTO) {
         Role role = roleMapper.toEntity(roleDTO);
-        List<User> users = userRepository.findByRoleId(role.getId());
+        List<SysUser> users = userService.findByRoleId(role.getId());
         // 更新菜单
         role.setMenus(resources.getMenus());
         delCaches(resources.getId(), users);
@@ -167,20 +170,20 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Cacheable(key = "'auth:' + #p0.id")
-    public List<GrantedAuthority> mapToGrantedAuthorities(UserDto user) {
+    public List<GrantedAuthority> mapToGrantedAuthorities(SysUserDto user) {
         Set<String> permissions = new HashSet<>();
         // 如果是管理员直接返回
         if (user.getIsAdmin()) {
             permissions.add("admin");
             return permissions.stream().map(SimpleGrantedAuthority::new)
-                    .collect(Collectors.toList());
+                              .collect(Collectors.toList());
         }
         Set<Role> roles = roleRepository.findByUserId(user.getId());
         permissions = roles.stream().flatMap(role -> role.getMenus().stream())
-                .filter(menu -> StringUtils.isNotBlank(menu.getPermission()))
-                .map(Menu::getPermission).collect(Collectors.toSet());
+                           .filter(menu -> StringUtils.isNotBlank(menu.getPermission()))
+                           .map(Menu::getPermission).collect(Collectors.toSet());
         return permissions.stream().map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+                          .collect(Collectors.toList());
     }
 
     @Override
@@ -190,7 +193,7 @@ public class RoleServiceImpl implements RoleService {
             Map<String, Object> map = new LinkedHashMap<>();
             map.put("角色名称", role.getName());
             map.put("角色级别", role.getLevel());
-            map.put("描述", role.getDescription());
+            map.put("描述", role.getNote());
             map.put("创建日期", role.getCreateTime());
             list.add(map);
         }
@@ -199,7 +202,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public void verification(Set<Long> ids) {
-        if (userRepository.countByRoles(ids) > 0) {
+        if (userService.countByRoles(ids) > 0) {
             throw new BadRequestException("所选角色存在用户关联，请解除关联再试！");
         }
     }
@@ -211,17 +214,19 @@ public class RoleServiceImpl implements RoleService {
 
     /**
      * 清理缓存
+     *
      * @param id /
      */
-    public void delCaches(Long id, List<User> users) {
-        users = CollectionUtil.isEmpty(users) ? userRepository.findByRoleId(id) : users;
+    public void delCaches(Long id, List<SysUser> users) {
+        users = CollectionUtil.isEmpty(users) ? userService.findByRoleId(id) : users;
         if (CollectionUtil.isNotEmpty(users)) {
             users.forEach(item -> userCacheClean.cleanUserCache(item.getUsername()));
-            Set<Long> userIds = users.stream().map(User::getId).collect(Collectors.toSet());
+            Set<Long> userIds = users.stream().map(SysUser::getId).collect(Collectors.toSet());
             redisUtils.delByKeys(CacheKey.DATA_USER, userIds);
             redisUtils.delByKeys(CacheKey.MENU_USER, userIds);
             redisUtils.delByKeys(CacheKey.ROLE_AUTH, userIds);
         }
         redisUtils.del(CacheKey.ROLE_ID + id);
     }
+
 }

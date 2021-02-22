@@ -28,9 +28,8 @@ public class SysRoleDaoImpl extends BaseExtDaoImpl<SysRoleMapper, SysRole> imple
             Map<String, Object> map = new LinkedHashMap<>();
             map.put("角色ID", item.getId());
             map.put("角色名称", item.getName());
-            map.put("数据范围", item.getScope());
+            map.put("数据范围", item.getDataScope());
             map.put("角色级别", item.getLevel());
-            map.put("权限表达式", item.getPermission());
             map.put("状态", item.getEnabled());
             map.put("备注", item.getNote());
             map.put("创建者", item.getCreateBy());

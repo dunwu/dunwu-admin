@@ -30,20 +30,17 @@ public class SysRole implements Serializable {
 
     @ApiModelProperty(value = "角色ID")
     @NotNull(groups = EditCheck.class)
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "role_id", type = IdType.AUTO)
     private Long id;
 
     @ApiModelProperty(value = "角色名称")
     private String name;
 
     @ApiModelProperty(value = "数据范围")
-    private String scope;
+    private String dataScope;
 
     @ApiModelProperty(value = "角色级别")
     private Integer level;
-
-    @ApiModelProperty(value = "权限表达式")
-    private String permission;
 
     @ApiModelProperty(value = "状态")
     private Boolean enabled;

@@ -9,9 +9,9 @@
           <div>
             <div style="text-align: center">
               <div class="el-upload">
-                <!--                <img :src="user.avatarName ? baseApi + '/avatar/' + user.avatarName : Avatar" title="点击上传头像" class="avatar" @click="toggleShow">-->
+                <!--                <img :src="user.avatar ? baseApi + '/avatar/' + user.avatar : Avatar" title="点击上传头像" class="avatar" @click="toggleShow">-->
                 <img
-                  :src="user.avatarPath ? user.avatarPath : Avatar"
+                  :src="user.avatar ? user.avatar : Avatar"
                   title="点击上传头像"
                   class="avatar"
                   @click="toggleShow"
@@ -35,7 +35,7 @@
               <li>
                 <svg-icon icon-class="user1" />
                 用户昵称
-                <div class="user-right">{{ user.nickName }}</div>
+                <div class="user-right">{{ user.nickname }}</div>
               </li>
               <li>
                 <svg-icon icon-class="dept" />
@@ -77,8 +77,8 @@
                 size="small"
                 label-width="65px"
               >
-                <el-form-item label="昵称" prop="nickName">
-                  <el-input v-model="form.nickName" style="width: 35%" />
+                <el-form-item label="昵称" prop="nickname">
+                  <el-input v-model="form.nickname" style="width: 35%" />
                   <span style="color: #C0C0C0;margin-left: 10px;">用户昵称不作为登录使用</span>
                 </el-form-item>
                 <el-form-item label="手机号" prop="phone">
@@ -177,7 +177,7 @@ export default {
       },
       form: {},
       rules: {
-        nickName: [
+        nickname: [
           { required: true, message: '请输入用户昵称', trigger: 'blur' },
           { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
         ],
@@ -189,7 +189,7 @@ export default {
     ...mapGetters(['user', 'updateAvatarApi', 'baseApi'])
   },
   created() {
-    this.form = { id: this.user.id, nickName: this.user.nickName, gender: this.user.gender, phone: this.user.phone }
+    this.form = { id: this.user.id, nickname: this.user.nickname, gender: this.user.gender, phone: this.user.phone }
     store.dispatch('GetInfo').then(() => {})
   },
   methods: {

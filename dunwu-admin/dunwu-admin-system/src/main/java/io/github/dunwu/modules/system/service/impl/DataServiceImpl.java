@@ -1,27 +1,12 @@
-/*
- *  Copyright 2019-2020 Zheng Jie
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
 package io.github.dunwu.modules.system.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import io.github.dunwu.modules.system.entity.dto.SysDeptDto;
+import io.github.dunwu.modules.system.entity.dto.SysUserDto;
 import io.github.dunwu.modules.system.service.DataService;
 import io.github.dunwu.modules.system.service.RoleService;
 import io.github.dunwu.modules.system.service.SysDeptService;
 import io.github.dunwu.modules.system.service.dto.RoleSmallDto;
-import io.github.dunwu.modules.system.service.dto.UserDto;
 import io.github.dunwu.util.enums.DataScopeEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
@@ -52,7 +37,7 @@ public class DataServiceImpl implements DataService {
      */
     @Override
     @Cacheable(key = "'user:' + #p0.id")
-    public List<Long> getDeptIds(UserDto user) {
+    public List<Long> getDeptIds(SysUserDto user) {
         // 用于存储部门id
         Set<Long> deptIds = new HashSet<>();
         // 查询用户角色

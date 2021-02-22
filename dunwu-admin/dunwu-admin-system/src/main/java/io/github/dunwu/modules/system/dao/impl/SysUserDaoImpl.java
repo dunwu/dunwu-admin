@@ -30,19 +30,14 @@ public class SysUserDaoImpl extends BaseExtDaoImpl<SysUserMapper, SysUser> imple
             map.put("昵称", item.getNickname());
             map.put("用户名", item.getUsername());
             map.put("邮箱", item.getEmail());
-            map.put("手机号", item.getMobile());
-            map.put("性别", item.getSex());
+            map.put("手机号", item.getPhone());
+            map.put("性别", item.getGender());
             map.put("头像", item.getAvatar());
             map.put("部门ID", item.getDeptId());
             map.put("岗位ID", item.getJobId());
-            map.put("是否删除", item.getDeleted());
             map.put("状态", item.getEnabled());
-            map.put("备注", item.getNote());
             map.put("创建者", item.getCreateBy());
             map.put("更新者", item.getUpdateBy());
-            map.put("创建时间", item.getCreateTime());
-            map.put("更新时间", item.getUpdateTime());
-            map.put("最后修改密码的日期", item.getLastPasswordResetTime());
             mapList.add(map);
         }
         ServletUtil.downloadExcel(mapList, response);

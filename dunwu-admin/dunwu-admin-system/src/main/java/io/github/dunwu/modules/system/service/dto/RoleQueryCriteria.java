@@ -28,7 +28,7 @@ import java.util.List;
 @Data
 public class RoleQueryCriteria {
 
-    @Query(blurry = "name,description")
+    @Query(blurry = "name,note")
     private String blurry;
 
     @Query(type = Query.Type.BETWEEN)

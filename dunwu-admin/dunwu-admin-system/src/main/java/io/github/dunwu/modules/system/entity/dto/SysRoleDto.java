@@ -30,13 +30,10 @@ public class SysRoleDto implements Serializable {
     private String name;
 
     @ApiModelProperty(value = "数据范围")
-    private String scope;
+    private String dataScope;
 
     @ApiModelProperty(value = "角色级别")
     private Integer level;
-
-    @ApiModelProperty(value = "权限表达式")
-    private String permission;
 
     @ApiModelProperty(value = "权限表达式")
     private List<SysMenuDto> menus;

@@ -48,10 +48,10 @@ public class Role extends BaseEntity implements Serializable {
     @ApiModelProperty(value = "ID", hidden = true)
     private Long id;
 
-    @JSONField(serialize = false)
-    @ManyToMany(mappedBy = "roles")
-    @ApiModelProperty(value = "用户", hidden = true)
-    private Set<User> users;
+    // @JSONField(serialize = false)
+    // @ManyToMany(mappedBy = "roles")
+    // @ApiModelProperty(value = "用户", hidden = true)
+    // private Set<User> users;
 
     @ManyToMany
     @JoinTable(name = "sys_roles_menus",
@@ -72,7 +72,7 @@ public class Role extends BaseEntity implements Serializable {
     private Integer level = 3;
 
     @ApiModelProperty(value = "描述")
-    private String description;
+    private String note;
 
     @Override
     public boolean equals(Object o) {

@@ -31,7 +31,7 @@ public class SysUser implements Serializable {
 
     @ApiModelProperty(value = "用户ID")
     @NotNull(groups = EditCheck.class)
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "user_id", type = IdType.AUTO)
     private Long id;
 
     @ApiModelProperty(value = "昵称")
@@ -47,10 +47,10 @@ public class SysUser implements Serializable {
     private String email;
 
     @ApiModelProperty(value = "手机号")
-    private String mobile;
+    private String phone;
 
     @ApiModelProperty(value = "性别")
-    private String sex;
+    private String gender;
 
     @ApiModelProperty(value = "头像")
     private String avatar;
@@ -61,18 +61,12 @@ public class SysUser implements Serializable {
     @ApiModelProperty(value = "岗位ID")
     private Long jobId;
 
-    @ApiModelProperty(value = "是否删除")
-    private Boolean deleted;
-
     @ApiModelProperty(value = "最后修改密码的日期")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private LocalDateTime lastPasswordResetTime;
+    private LocalDateTime pwdResetTime;
 
     @ApiModelProperty(value = "状态")
     private Boolean enabled;
-
-    @ApiModelProperty(value = "备注")
-    private String note;
 
     @JsonIgnore
     @ApiModelProperty(value = "创建者")
@@ -84,10 +78,16 @@ public class SysUser implements Serializable {
 
     @JsonIgnore
     @ApiModelProperty(value = "创建时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime createTime;
 
     @JsonIgnore
     @ApiModelProperty(value = "更新时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime updateTime;
+
+    // TODO 后面应把这个字段移除到其他表
+    @JsonIgnore
+    private Boolean isAdmin;
 
 }
