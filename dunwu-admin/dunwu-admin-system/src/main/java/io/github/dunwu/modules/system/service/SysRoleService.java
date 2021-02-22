@@ -5,8 +5,11 @@ import io.github.dunwu.data.mybatis.IService;
 import io.github.dunwu.modules.system.entity.SysRole;
 import io.github.dunwu.modules.system.entity.dto.SysMenuDto;
 import io.github.dunwu.modules.system.entity.dto.SysRoleDto;
+import io.github.dunwu.modules.system.entity.dto.SysUserDto;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -116,6 +119,8 @@ public interface SysRoleService extends IService {
 
     List<SysRoleDto> pojoListByJobId(Long jobId);
 
+    List<SysRoleDto> pojoListByMenuIds(Collection<Long> menuIds);
+
     SysRoleDto toDto(SysRole obj);
 
     boolean updateMenusByRoleId(Long roleId, List<SysMenuDto> menus);
@@ -125,5 +130,8 @@ public interface SysRoleService extends IService {
     void checkRoleLevel(Integer level);
 
     Integer getRoleLevel();
+
+    @Cacheable(key = "'auth:' + #p0.id")
+    List<GrantedAuthority> mapToGrantedAuthorities(SysUserDto user);
 
 }

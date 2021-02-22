@@ -64,8 +64,8 @@
         <el-form-item v-if="form.type.toString() !== '2'" label="路由地址" prop="path">
           <el-input v-model="form.path" placeholder="路由地址" style="width: 178px;" />
         </el-form-item>
-        <el-form-item label="菜单排序" prop="menuSort">
-          <el-input-number v-model.number="form.menuSort" :min="0" :max="999" controls-position="right" style="width: 178px;" />
+        <el-form-item label="菜单排序" prop="weight">
+          <el-input-number v-model.number="form.weight" :min="0" :max="999" controls-position="right" style="width: 178px;" />
         </el-form-item>
         <el-form-item v-show="!form.iframe && form.type.toString() === '1'" label="组件名称" prop="componentName">
           <el-input v-model="form.componentName" style="width: 178px;" placeholder="匹配组件内Name字段" />
@@ -108,9 +108,9 @@
           <svg-icon :icon-class="scope.row.icon ? scope.row.icon : ''" />
         </template>
       </el-table-column>
-      <el-table-column prop="menuSort" align="center" label="排序">
+      <el-table-column prop="weight" align="center" label="排序">
         <template slot-scope="scope">
-          {{ scope.row.menuSort }}
+          {{ scope.row.weight }}
         </template>
       </el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="permission" label="权限标识" />
@@ -160,7 +160,7 @@ import udOperation from '@crud/UD.operation'
 import DateRangePicker from '@/components/DateRangePicker'
 
 // crud交由presenter持有
-const defaultForm = { id: null, title: null, menuSort: 999, path: null, component: null, componentName: null, iframe: false, roles: [], pid: 0, icon: null, cache: false, hidden: false, type: 0, permission: null }
+const defaultForm = { id: null, title: null, weight: 999, path: null, component: null, componentName: null, iframe: false, roles: [], pid: 0, icon: null, cache: false, hidden: false, type: 0, permission: null }
 export default {
   name: 'Menu',
   components: { Treeselect, IconSelect, crudOperation, rrOperation, udOperation, DateRangePicker },

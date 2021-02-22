@@ -41,7 +41,7 @@ public class MenuDto extends BaseDTO implements Serializable {
 
     private String title;
 
-    private Integer menuSort;
+    private Integer weight;
 
     private String path;
 

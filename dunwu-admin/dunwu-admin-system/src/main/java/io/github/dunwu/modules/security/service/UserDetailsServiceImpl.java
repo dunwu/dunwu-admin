@@ -20,8 +20,8 @@ import io.github.dunwu.exception.EntityNotFoundException;
 import io.github.dunwu.modules.security.config.bean.LoginProperties;
 import io.github.dunwu.modules.security.service.dto.JwtUserDto;
 import io.github.dunwu.modules.system.entity.dto.SysUserDto;
-import io.github.dunwu.modules.system.service.RoleService;
 import io.github.dunwu.modules.system.service.SysDeptService;
+import io.github.dunwu.modules.system.service.SysRoleService;
 import io.github.dunwu.modules.system.service.SysUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -42,7 +42,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final SysUserService userService;
     private final SysDeptService deptService;
-    private final RoleService roleService;
+    private final SysRoleService roleService;
     private final LoginProperties loginProperties;
 
     public void setEnableCache(boolean enableCache) {

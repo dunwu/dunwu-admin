@@ -2,11 +2,11 @@ package io.github.dunwu.modules.system.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import io.github.dunwu.modules.system.entity.dto.SysDeptDto;
+import io.github.dunwu.modules.system.entity.dto.SysRoleDto;
 import io.github.dunwu.modules.system.entity.dto.SysUserDto;
 import io.github.dunwu.modules.system.service.DataService;
-import io.github.dunwu.modules.system.service.RoleService;
 import io.github.dunwu.modules.system.service.SysDeptService;
-import io.github.dunwu.modules.system.service.dto.RoleSmallDto;
+import io.github.dunwu.modules.system.service.SysRoleService;
 import io.github.dunwu.util.enums.DataScopeEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
@@ -26,7 +26,7 @@ import java.util.*;
 @CacheConfig(cacheNames = "data")
 public class DataServiceImpl implements DataService {
 
-    private final RoleService roleService;
+    private final SysRoleService roleService;
     private final SysDeptService deptService;
 
     /**
@@ -41,9 +41,9 @@ public class DataServiceImpl implements DataService {
         // 用于存储部门id
         Set<Long> deptIds = new HashSet<>();
         // 查询用户角色
-        List<RoleSmallDto> roleSet = roleService.findByUsersId(user.getId());
+        List<SysRoleDto> roles = roleService.pojoListByUserId(user.getId());
         // 获取对应的部门ID
-        for (RoleSmallDto role : roleSet) {
+        for (SysRoleDto role : roles) {
             DataScopeEnum dataScopeEnum = DataScopeEnum.find(role.getDataScope());
             switch (Objects.requireNonNull(dataScopeEnum)) {
                 case THIS_LEVEL:
@@ -66,7 +66,7 @@ public class DataServiceImpl implements DataService {
      * @param role    角色
      * @return 数据权限ID
      */
-    public Set<Long> getCustomize(Set<Long> deptIds, RoleSmallDto role) {
+    public Set<Long> getCustomize(Set<Long> deptIds, SysRoleDto role) {
         List<SysDeptDto> sysDeptDtos = deptService.pojoListByRoleId(role.getId());
         for (SysDeptDto dept : sysDeptDtos) {
             deptIds.add(dept.getId());

@@ -104,7 +104,7 @@ public class SysRoleController {
         return new ResponseEntity<>(service.pojoListByQuery(query), HttpStatus.OK);
     }
 
-    @GetMapping("export")
+    @GetMapping("export/list")
     @PreAuthorize("@exp.check('role:view')")
     @ApiOperation("根据 ID 集合批量导出 SysRoleDto 列表数据")
     public void exportByIds(@RequestBody Collection<Serializable> ids, HttpServletResponse response)
@@ -112,21 +112,21 @@ public class SysRoleController {
         service.exportByIds(ids, response);
     }
 
-    @GetMapping("export/page")
+    @GetMapping("export")
     @PreAuthorize("@exp.check('role:view')")
     @ApiOperation("根据 query 和 pageable 条件批量导出 SysRoleDto 列表数据")
     public void exportPageData(SysRoleQuery query, Pageable pageable, HttpServletResponse response) throws IOException {
         service.exportPageData(query, pageable, response);
     }
 
-    @PutMapping(value = "/menu")
+    @PutMapping(value = "menu")
     @PreAuthorize("@exp.check('role:edit')")
     @ApiOperation("修改角色菜单")
     public ResponseEntity<Object> saveMenus(@RequestBody SysRoleDto pojo) {
         return new ResponseEntity<>(service.updateMenusByRoleId(pojo.getId(), pojo.getMenus()), HttpStatus.ACCEPTED);
     }
 
-    @GetMapping(value = "/level")
+    @GetMapping(value = "level")
     @ApiOperation("获取用户级别")
     public ResponseEntity<Object> getLevel() {
         return new ResponseEntity<>(Dict.create().set("level", service.getRoleLevel()), HttpStatus.OK);

@@ -19,18 +19,19 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import io.github.dunwu.exception.BadRequestException;
 import io.github.dunwu.exception.EntityExistException;
+import io.github.dunwu.modules.system.dao.SysRoleMenuDao;
 import io.github.dunwu.modules.system.domain.Menu;
-import io.github.dunwu.modules.system.domain.Role;
 import io.github.dunwu.modules.system.domain.vo.MenuMetaVo;
 import io.github.dunwu.modules.system.domain.vo.MenuVo;
+import io.github.dunwu.modules.system.entity.SysRoleMenu;
 import io.github.dunwu.modules.system.entity.SysUser;
+import io.github.dunwu.modules.system.entity.dto.SysRoleDto;
 import io.github.dunwu.modules.system.repository.MenuRepository;
 import io.github.dunwu.modules.system.service.MenuService;
-import io.github.dunwu.modules.system.service.RoleService;
+import io.github.dunwu.modules.system.service.SysRoleService;
 import io.github.dunwu.modules.system.service.SysUserService;
 import io.github.dunwu.modules.system.service.dto.MenuDto;
 import io.github.dunwu.modules.system.service.dto.MenuQueryCriteria;
-import io.github.dunwu.modules.system.service.dto.RoleSmallDto;
 import io.github.dunwu.modules.system.service.mapstruct.MenuMapper;
 import io.github.dunwu.util.*;
 import lombok.RequiredArgsConstructor;
@@ -55,14 +56,16 @@ import javax.servlet.http.HttpServletResponse;
 public class MenuServiceImpl implements MenuService {
 
     private final MenuRepository menuRepository;
-    private final SysUserService userService;
     private final MenuMapper menuMapper;
-    private final RoleService roleService;
+    private final SysRoleMenuDao roleMenuDao;
+    private final SysUserService userService;
+    private final SysRoleService roleService;
+
     private final RedisUtils redisUtils;
 
     @Override
     public List<MenuDto> queryAll(MenuQueryCriteria criteria, Boolean isQuery) throws Exception {
-        Sort sort = Sort.by(Sort.Direction.ASC, "menuSort");
+        Sort sort = Sort.by(Sort.Direction.ASC, "weight");
         if (isQuery) {
             criteria.setPidIsNull(true);
             List<Field> fields = QueryHelp.getAllFields(criteria.getClass(), new ArrayList<>());
@@ -100,8 +103,8 @@ public class MenuServiceImpl implements MenuService {
     @Override
     @Cacheable(key = "'user:' + #p0")
     public List<MenuDto> findByUser(Long currentUserId) {
-        List<RoleSmallDto> roles = roleService.findByUsersId(currentUserId);
-        Set<Long> roleIds = roles.stream().map(RoleSmallDto::getId).collect(Collectors.toSet());
+        List<SysRoleDto> roles = roleService.pojoListByUserId(currentUserId);
+        Set<Long> roleIds = roles.stream().map(SysRoleDto::getId).collect(Collectors.toSet());
         LinkedHashSet<Menu> menus = menuRepository.findByRoleIdsAndTypeNot(roleIds, 2);
         return menus.stream().map(menuMapper::toDto).collect(Collectors.toList());
     }
@@ -176,7 +179,7 @@ public class MenuServiceImpl implements MenuService {
         menu.setIcon(resources.getIcon());
         menu.setIFrame(resources.getIFrame());
         menu.setPid(resources.getPid());
-        menu.setMenuSort(resources.getMenuSort());
+        menu.setWeight(resources.getWeight());
         menu.setCache(resources.getCache());
         menu.setHidden(resources.getHidden());
         menu.setComponentName(resources.getComponentName());
@@ -208,7 +211,14 @@ public class MenuServiceImpl implements MenuService {
         for (Menu menu : menuSet) {
             // 清理缓存
             delCaches(menu.getId());
-            roleService.untiedMenu(menu.getId());
+            SysRoleMenu query = new SysRoleMenu();
+            query.setMenuId(menu.getId());
+            List<SysRoleMenu> roleMenus = roleMenuDao.listByQuery(query);
+            Set<Long> ids = roleMenus.stream()
+                                     .filter(Objects::nonNull)
+                                     .map(SysRoleMenu::getId)
+                                     .collect(Collectors.toSet());
+            roleMenuDao.removeByIds(ids);
             menuRepository.deleteById(menu.getId());
             updateSubCnt(menu.getPid());
         }
@@ -356,10 +366,8 @@ public class MenuServiceImpl implements MenuService {
         redisUtils.del(CacheKey.MENU_ID + id);
         redisUtils.delByKeys(CacheKey.MENU_USER, users.stream().map(SysUser::getId).collect(Collectors.toSet()));
         // 清除 Role 缓存
-        List<Role> roles = roleService.findInMenuId(new ArrayList<Long>() {{
-            add(id);
-        }});
-        redisUtils.delByKeys(CacheKey.ROLE_ID, roles.stream().map(Role::getId).collect(Collectors.toSet()));
+        List<SysRoleDto> roles = roleService.pojoListByMenuIds(Collections.singleton(id));
+        redisUtils.delByKeys(CacheKey.ROLE_ID, roles.stream().map(SysRoleDto::getId).collect(Collectors.toSet()));
     }
 
 }

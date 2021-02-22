@@ -44,10 +44,10 @@ public class Menu extends BaseEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JSONField(serialize = false)
-    @ManyToMany(mappedBy = "menus")
-    @ApiModelProperty(value = "菜单角色")
-    private Set<Role> roles;
+    // @JSONField(serialize = false)
+    // @ManyToMany(mappedBy = "menus")
+    // @ApiModelProperty(value = "菜单角色")
+    // private Set<Role> roles;
 
     @ApiModelProperty(value = "菜单标题")
     private String title;
@@ -57,7 +57,7 @@ public class Menu extends BaseEntity implements Serializable {
     private String componentName;
 
     @ApiModelProperty(value = "排序")
-    private Integer menuSort = 999;
+    private Integer weight = 999;
 
     @ApiModelProperty(value = "组件路径")
     private String component;

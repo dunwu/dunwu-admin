@@ -30,7 +30,7 @@ public class SysMenu implements Serializable {
 
     @ApiModelProperty(value = "ID")
     @NotNull(groups = EditCheck.class)
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "menu_id", type = IdType.AUTO)
     private Long id;
 
     @ApiModelProperty(value = "上级菜单ID")
@@ -51,8 +51,8 @@ public class SysMenu implements Serializable {
     @ApiModelProperty(value = "组件")
     private String component;
 
-    @ApiModelProperty(value = "组件名称")
-    private String componentName;
+    // @ApiModelProperty(value = "组件名称")
+    // private String componentName;
 
     @ApiModelProperty(value = "权限")
     private String permission;
@@ -69,11 +69,11 @@ public class SysMenu implements Serializable {
     @ApiModelProperty(value = "是否隐藏")
     private Boolean hidden;
 
-    @ApiModelProperty(value = "状态")
-    private Boolean enabled;
-
-    @ApiModelProperty(value = "备注")
-    private String note;
+    // @ApiModelProperty(value = "状态")
+    // private Boolean enabled;
+    //
+    // @ApiModelProperty(value = "备注")
+    // private String note;
 
     @JsonIgnore
     @ApiModelProperty(value = "创建者")

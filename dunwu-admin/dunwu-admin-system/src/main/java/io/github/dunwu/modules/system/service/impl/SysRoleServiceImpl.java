@@ -1,12 +1,13 @@
 package io.github.dunwu.modules.system.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import io.github.dunwu.data.core.DataException;
 import io.github.dunwu.data.mybatis.ServiceImpl;
 import io.github.dunwu.modules.security.exception.AuthException;
 import io.github.dunwu.modules.security.service.SecurityUtil;
+import io.github.dunwu.modules.security.service.UserCacheClean;
 import io.github.dunwu.modules.system.dao.*;
 import io.github.dunwu.modules.system.entity.*;
 import io.github.dunwu.modules.system.entity.dto.SysDeptDto;
@@ -16,10 +17,16 @@ import io.github.dunwu.modules.system.entity.dto.SysUserDto;
 import io.github.dunwu.modules.system.service.SysRoleService;
 import io.github.dunwu.modules.system.service.SysUserService;
 import io.github.dunwu.tool.bean.BeanUtil;
+import io.github.dunwu.util.CacheKey;
+import io.github.dunwu.util.RedisUtils;
+import io.github.dunwu.util.StringUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +44,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = "role")
 public class SysRoleServiceImpl extends ServiceImpl implements SysRoleService {
 
     private final SysUserService userService;
@@ -49,9 +57,15 @@ public class SysRoleServiceImpl extends ServiceImpl implements SysRoleService {
     private final SysRoleMenuDao roleMenuDao;
     private final SysRoleDeptDao roleDeptDao;
 
+    private final RedisUtils redisUtils;
+    private final UserCacheClean userCacheClean;
+
     @Override
     public boolean save(SysRole entity) {
         checkRoleLevel(entity.getLevel());
+        if (entity.getEnabled() == null) {
+            entity.setEnabled(true);
+        }
         return roleDao.save(entity);
     }
 
@@ -76,12 +90,7 @@ public class SysRoleServiceImpl extends ServiceImpl implements SysRoleService {
             return true;
         }
 
-        for (Serializable id : ids) {
-            if (removeById(id)) {
-                throw new DataException("批量删除数据失败");
-            }
-        }
-        return true;
+        return roleDao.removeByIds(ids);
     }
 
     @Override
@@ -95,6 +104,7 @@ public class SysRoleServiceImpl extends ServiceImpl implements SysRoleService {
     }
 
     @Override
+    @Cacheable(key = "'id:' + #p0")
     public SysRoleDto pojoById(Serializable id) {
         return roleDao.pojoById(id, this::toDto);
     }
@@ -155,6 +165,18 @@ public class SysRoleServiceImpl extends ServiceImpl implements SysRoleService {
     }
 
     @Override
+    public List<SysRoleDto> pojoListByMenuIds(Collection<Long> menuIds) {
+        LambdaQueryWrapper<SysRoleMenu> wrapper =
+            new QueryWrapper<SysRoleMenu>().lambda().in(SysRoleMenu::getMenuId, menuIds);
+        List<SysRoleMenu> roleMenus = roleMenuDao.list(wrapper);
+        List<Long> roleIds = roleMenus.stream()
+                                      .filter(Objects::nonNull)
+                                      .map(SysRoleMenu::getRoleId)
+                                      .collect(Collectors.toList());
+        return roleDao.pojoListByIds(roleIds, SysRoleDto.class);
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean updateMenusByRoleId(Long roleId, List<SysMenuDto> menus) {
 
@@ -171,7 +193,7 @@ public class SysRoleServiceImpl extends ServiceImpl implements SysRoleService {
 
         roleMenuDao.removeByIds(oldIds);
         Set<SysRoleMenu> roleMenuSet = newIds.stream().map(menuId -> new SysRoleMenu(roleId, menuId))
-            .collect(Collectors.toSet());
+                                             .collect(Collectors.toSet());
         return roleMenuDao.saveBatch(roleMenuSet);
     }
 
@@ -191,7 +213,7 @@ public class SysRoleServiceImpl extends ServiceImpl implements SysRoleService {
 
         jobRoleDao.removeByIds(oldRoleIds);
         Set<SysJobRole> jobRoleSet = roleIds.stream().map(roleId -> new SysJobRole(jobId, roleId))
-            .collect(Collectors.toSet());
+                                            .collect(Collectors.toSet());
         return jobRoleDao.saveBatch(jobRoleSet);
     }
 
@@ -260,6 +282,42 @@ public class SysRoleServiceImpl extends ServiceImpl implements SysRoleService {
             return null;
         }
         return Collections.min(levels);
+    }
+
+    @Override
+    @Cacheable(key = "'auth:' + #p0.id")
+    public List<GrantedAuthority> mapToGrantedAuthorities(SysUserDto user) {
+        Set<String> permissions = new HashSet<>();
+        // 如果是管理员直接返回
+        if (user.getIsAdmin()) {
+            permissions.add("admin");
+            return permissions.stream().map(SimpleGrantedAuthority::new)
+                              .collect(Collectors.toList());
+        }
+
+        List<SysRoleDto> roles = pojoListByUserId(user.getId());
+        permissions = roles.stream().flatMap(role -> role.getMenus().stream())
+                           .filter(menu -> StringUtils.isNotBlank(menu.getPermission()))
+                           .map(SysMenuDto::getPermission).collect(Collectors.toSet());
+        return permissions.stream().map(SimpleGrantedAuthority::new)
+                          .collect(Collectors.toList());
+    }
+
+    /**
+     * 清理缓存
+     *
+     * @param id /
+     */
+    public void delCaches(Long id, List<SysUser> users) {
+        users = CollectionUtil.isEmpty(users) ? userService.findByRoleId(id) : users;
+        if (CollectionUtil.isNotEmpty(users)) {
+            users.forEach(item -> userCacheClean.cleanUserCache(item.getUsername()));
+            Set<Long> userIds = users.stream().map(SysUser::getId).collect(Collectors.toSet());
+            redisUtils.delByKeys(CacheKey.DATA_USER, userIds);
+            redisUtils.delByKeys(CacheKey.MENU_USER, userIds);
+            redisUtils.delByKeys(CacheKey.ROLE_AUTH, userIds);
+        }
+        redisUtils.del(CacheKey.ROLE_ID + id);
     }
 
 }
