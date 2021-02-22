@@ -74,7 +74,7 @@ import crudDict from '@/api/system/dict'
 import CRUD, { presenter, header, form } from '@crud/crud'
 import crudOperation from '@crud/CRUD.operation'
 import pagination from '@crud/Pagination'
-import rrOperation from '@crud/RR.operation'
+import rrOperation from '@crud/Query.operation'
 import udOperation from '@crud/UD.operation'
 
 const defaultForm = { id: null, name: null, description: null, dictDetails: [] }

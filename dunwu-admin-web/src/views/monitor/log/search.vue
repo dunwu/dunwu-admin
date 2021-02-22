@@ -15,7 +15,7 @@
 
 <script>
 import { header } from '@crud/crud'
-import rrOperation from '@crud/RR.operation'
+import rrOperation from '@crud/Query.operation'
 import DateRangePicker from '@/components/DateRangePicker'
 export default {
   components: { rrOperation, DateRangePicker },

@@ -1,4 +1,7 @@
-<!--分页-->
+<!--
+  - CRUD 之 分页组件
+  -->
+
 <template>
   <el-pagination
     :page-size.sync="page.size"
@@ -10,6 +13,7 @@
     @current-change="crud.pageChangeHandler"
   />
 </template>
+
 <script>
 import { pagination } from '@crud/crud'
 export default {

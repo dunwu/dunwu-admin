@@ -55,7 +55,7 @@
 import { generator, sync } from '@/api/generator/generator'
 import { downloadFile } from '@/utils/index'
 import CRUD, { presenter, header } from '@crud/crud'
-import rrOperation from '@crud/RR.operation'
+import rrOperation from '@crud/Query.operation'
 import crudOperation from '@crud/CRUD.operation'
 import pagination from '@crud/Pagination'
 
