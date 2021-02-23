@@ -1,18 +1,18 @@
 <!--
-  - CRUD 之 查询组件
+  - 【公共按钮组件】搜索+重置
   -->
 
 <!--搜索与重置-->
 <template>
   <span>
-    <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="crud.toQuery">
+    <el-button class="filter-item" size="mini" type="primary" icon="el-icon-search" @click="crud.toQuery">
       搜索
     </el-button>
     <el-button
       v-if="crud.optShow.reset"
       class="filter-item"
       size="mini"
-      type="warning"
+      type="primary"
       icon="el-icon-refresh-left"
       @click="crud.resetQuery()"
     >
