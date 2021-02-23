@@ -46,7 +46,7 @@ public class ${className}Controller {
     @Log("导出数据")
     @ApiOperation("导出数据")
     @GetMapping(value = "export")
-    @PreAuthorize("@exp.check('${changeClassName}:list')")
+    @PreAuthorize("@exp.check('${changeClassName}:view')")
     public void download(HttpServletResponse response, ${className}QueryCriteria criteria) throws IOException {
         ${changeClassName}Service.download(${changeClassName}Service.queryAll(criteria), response);
     }
@@ -54,7 +54,7 @@ public class ${className}Controller {
     @GetMapping
     @Log("查询${apiAlias}")
     @ApiOperation("查询${apiAlias}")
-    @PreAuthorize("@exp.check('${changeClassName}:list')")
+    @PreAuthorize("@exp.check('${changeClassName}:view')")
     public ResponseEntity<Object> query(${className}QueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(${changeClassName}Service.queryAll(criteria,pageable),HttpStatus.OK);
     }

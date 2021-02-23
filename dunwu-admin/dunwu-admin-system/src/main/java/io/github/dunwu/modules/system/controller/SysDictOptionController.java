@@ -68,42 +68,42 @@ public class SysDictOptionController {
     }
 
     @GetMapping
-    @PreAuthorize("@exp.check('dict:list')")
+    @PreAuthorize("@exp.check('dict:view')")
     @ApiOperation("查询 SysDictOptionDto 记录")
     public ResponseEntity<Object> view(SysDictOptionQuery query, Pageable pageable) {
         return page(query, pageable);
     }
 
     @GetMapping("page")
-    @PreAuthorize("@exp.check('dict:list')")
+    @PreAuthorize("@exp.check('dict:view')")
     @ApiOperation("根据 query 和 pageable 条件，分页查询 SysDictOptionDto 记录")
     public ResponseEntity<Object> page(SysDictOptionQuery query, Pageable pageable) {
         return new ResponseEntity<>(service.pojoPageByQuery(query, pageable), HttpStatus.OK);
     }
 
     @GetMapping("{id}")
-    @PreAuthorize("@exp.check('dict:list')")
+    @PreAuthorize("@exp.check('dict:view')")
     @ApiOperation("根据 ID 查询 SysDictOption 记录")
     public ResponseEntity<Object> getById(@PathVariable Serializable id) {
         return new ResponseEntity<>(service.pojoById(id), HttpStatus.OK);
     }
 
     @GetMapping("count")
-    @PreAuthorize("@exp.check('dict:list')")
+    @PreAuthorize("@exp.check('dict:view')")
     @ApiOperation("根据 query 条件，查询匹配条件的总记录数")
     public ResponseEntity<Object> count(SysDictOptionQuery query) {
         return new ResponseEntity<>(service.countByQuery(query), HttpStatus.OK);
     }
 
     @GetMapping("list")
-    @PreAuthorize("@exp.check('dict:list')")
+    @PreAuthorize("@exp.check('dict:view')")
     @ApiOperation("根据 query 条件，查询匹配条件的 SysDictOptionDto 列表")
     public ResponseEntity<Object> list(SysDictOptionQuery query) {
         return new ResponseEntity<>(service.pojoListByQuery(query), HttpStatus.OK);
     }
 
     @GetMapping("export")
-    @PreAuthorize("@exp.check('dict:list')")
+    @PreAuthorize("@exp.check('dict:view')")
     @ApiOperation("根据 ID 集合批量导出 SysDictOptionDto 列表数据")
     public void exportByIds(@RequestBody Collection<Serializable> ids, HttpServletResponse response)
         throws IOException {
@@ -111,7 +111,7 @@ public class SysDictOptionController {
     }
 
     @GetMapping("export/page")
-    @PreAuthorize("@exp.check('dict:list')")
+    @PreAuthorize("@exp.check('dict:view')")
     @ApiOperation("根据 query 和 pageable 条件批量导出 SysDictOptionDto 列表数据")
     public void exportPageData(SysDictOptionQuery query, Pageable pageable, HttpServletResponse response)
         throws IOException {

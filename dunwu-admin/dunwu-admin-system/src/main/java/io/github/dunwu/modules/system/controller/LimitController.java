@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package io.github.dunwu.modules.system.rest;
+package io.github.dunwu.modules.system.controller;
 
 import io.github.dunwu.annotation.Limit;
 import io.github.dunwu.annotation.rest.AnonymousGetMapping;

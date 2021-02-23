@@ -49,14 +49,14 @@ public class LocalStorageController {
 
     @ApiOperation("查询文件")
     @GetMapping
-    @PreAuthorize("@exp.check('storage:list')")
+    @PreAuthorize("@exp.check('storage:view')")
     public ResponseEntity<Object> query(LocalStorageQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(localStorageService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
     @ApiOperation("导出数据")
     @GetMapping(value = "export")
-    @PreAuthorize("@exp.check('storage:list')")
+    @PreAuthorize("@exp.check('storage:view')")
     public void download(HttpServletResponse response, LocalStorageQueryCriteria criteria) throws IOException {
         localStorageService.download(localStorageService.queryAll(criteria), response);
     }

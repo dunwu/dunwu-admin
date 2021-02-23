@@ -70,42 +70,42 @@ public class SysDeptController {
     }
 
     @GetMapping
-    @PreAuthorize("@exp.check('dept:list')")
+    @PreAuthorize("@exp.check('dept:view')")
     @ApiOperation("根据 query 条件，返回 SysDeptDto 树形列表")
     public ResponseEntity<Object> view(SysDeptQuery query, Pageable pageable) {
         return new ResponseEntity<>(service.treeListMap(query), HttpStatus.OK);
     }
 
     @GetMapping("page")
-    @PreAuthorize("@exp.check('dept:list')")
+    @PreAuthorize("@exp.check('dept:view')")
     @ApiOperation("根据 query 和 pageable 条件，分页查询 SysDeptDto 记录")
     public ResponseEntity<Object> page(SysDeptQuery query, Pageable pageable) {
         return new ResponseEntity<>(service.pojoPageByQuery(query, pageable), HttpStatus.OK);
     }
 
     @GetMapping("{id}")
-    @PreAuthorize("@exp.check('dept:list')")
+    @PreAuthorize("@exp.check('dept:view')")
     @ApiOperation("根据 ID 查询 SysDept 记录")
     public ResponseEntity<Object> getById(@PathVariable Serializable id) {
         return new ResponseEntity<>(service.pojoById(id), HttpStatus.OK);
     }
 
     @GetMapping("count")
-    @PreAuthorize("@exp.check('dept:list')")
+    @PreAuthorize("@exp.check('dept:view')")
     @ApiOperation("根据 query 条件，查询匹配条件的总记录数")
     public ResponseEntity<Object> count(SysDeptQuery query) {
         return new ResponseEntity<>(service.countByQuery(query), HttpStatus.OK);
     }
 
     @GetMapping("list")
-    @PreAuthorize("@exp.check('dept:list')")
+    @PreAuthorize("@exp.check('dept:view')")
     @ApiOperation("根据 query 条件，查询匹配条件的 SysDeptDto 列表")
     public ResponseEntity<Object> list(SysDeptQuery query) {
         return new ResponseEntity<>(service.pojoListByQuery(query), HttpStatus.OK);
     }
 
     @GetMapping("export")
-    @PreAuthorize("@exp.check('dept:list')")
+    @PreAuthorize("@exp.check('dept:view')")
     @ApiOperation("根据 ID 集合批量导出 SysDeptDto 列表数据")
     public void exportByIds(@RequestBody Collection<Serializable> ids, HttpServletResponse response)
         throws IOException {
@@ -113,7 +113,7 @@ public class SysDeptController {
     }
 
     @GetMapping("export/page")
-    @PreAuthorize("@exp.check('dept:list')")
+    @PreAuthorize("@exp.check('dept:view')")
     @ApiOperation("根据 query 和 pageable 条件批量导出 SysDeptDto 列表数据")
     public void exportPageData(SysDeptQuery query, Pageable pageable, HttpServletResponse response) throws IOException {
         service.exportPageData(query, pageable, response);
@@ -129,7 +129,7 @@ public class SysDeptController {
 
     @ApiOperation("查询部门:根据ID获取同级与上级数据")
     @PostMapping("superior")
-    @PreAuthorize("@exp.check('dept:list')")
+    @PreAuthorize("@exp.check('dept:view')")
     public ResponseEntity<Object> getSuperior(@RequestBody List<Long> ids) {
         Collection<SysDeptDto> depts = new ArrayList<>();
         for (Long id : ids) {

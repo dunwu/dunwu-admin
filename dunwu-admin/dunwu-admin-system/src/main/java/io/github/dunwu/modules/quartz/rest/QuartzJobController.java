@@ -51,28 +51,28 @@ public class QuartzJobController {
 
     @ApiOperation("查询定时任务")
     @GetMapping
-    @PreAuthorize("@exp.check('timing:list')")
+    @PreAuthorize("@exp.check('timing:view')")
     public ResponseEntity<Object> query(JobQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(quartzJobService.queryAll(criteria,pageable), HttpStatus.OK);
     }
 
     @ApiOperation("导出任务数据")
     @GetMapping(value = "export")
-    @PreAuthorize("@exp.check('timing:list')")
+    @PreAuthorize("@exp.check('timing:view')")
     public void download(HttpServletResponse response, JobQueryCriteria criteria) throws IOException {
         quartzJobService.download(quartzJobService.queryAll(criteria), response);
     }
 
     @ApiOperation("导出日志数据")
     @GetMapping(value = "/logs/download")
-    @PreAuthorize("@exp.check('timing:list')")
+    @PreAuthorize("@exp.check('timing:view')")
     public void downloadLog(HttpServletResponse response, JobQueryCriteria criteria) throws IOException {
         quartzJobService.downloadLog(quartzJobService.queryAllLog(criteria), response);
     }
 
     @ApiOperation("查询任务执行日志")
     @GetMapping(value = "/logs")
-    @PreAuthorize("@exp.check('timing:list')")
+    @PreAuthorize("@exp.check('timing:view')")
     public ResponseEntity<Object> queryJobLog(JobQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(quartzJobService.queryAllLog(criteria,pageable), HttpStatus.OK);
     }

@@ -45,14 +45,14 @@ public class DeployHistoryController {
 
     @ApiOperation("导出部署历史数据")
     @GetMapping(value = "export")
-    @PreAuthorize("@exp.check('deployHistory:list')")
+    @PreAuthorize("@exp.check('deployHistory:view')")
     public void download(HttpServletResponse response, DeployHistoryQueryCriteria criteria) throws IOException {
         deployhistoryService.download(deployhistoryService.queryAll(criteria), response);
     }
 
     @ApiOperation(value = "查询部署历史")
     @GetMapping
-	@PreAuthorize("@exp.check('deployHistory:list')")
+	@PreAuthorize("@exp.check('deployHistory:view')")
     public ResponseEntity<Object> query(DeployHistoryQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(deployhistoryService.queryAll(criteria,pageable),HttpStatus.OK);
     }

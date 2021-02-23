@@ -55,14 +55,14 @@ public class DatabaseController {
 
 	@ApiOperation("导出数据库数据")
 	@GetMapping(value = "export")
-	@PreAuthorize("@exp.check('database:list')")
+	@PreAuthorize("@exp.check('database:view')")
 	public void download(HttpServletResponse response, DatabaseQueryCriteria criteria) throws IOException {
 		databaseService.download(databaseService.queryAll(criteria), response);
 	}
 
     @ApiOperation(value = "查询数据库")
     @GetMapping
-	@PreAuthorize("@exp.check('database:list')")
+	@PreAuthorize("@exp.check('database:view')")
     public ResponseEntity<Object> query(DatabaseQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(databaseService.queryAll(criteria,pageable),HttpStatus.OK);
     }

@@ -47,14 +47,14 @@ public class AppController {
 
     @ApiOperation("导出应用数据")
     @GetMapping(value = "export")
-    @PreAuthorize("@exp.check('app:list')")
+    @PreAuthorize("@exp.check('app:view')")
     public void download(HttpServletResponse response, AppQueryCriteria criteria) throws IOException {
         appService.download(appService.queryAll(criteria), response);
     }
 
     @ApiOperation(value = "查询应用")
     @GetMapping
-	@PreAuthorize("@exp.check('app:list')")
+	@PreAuthorize("@exp.check('app:view')")
     public ResponseEntity<Object> query(AppQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(appService.queryAll(criteria,pageable),HttpStatus.OK);
     }

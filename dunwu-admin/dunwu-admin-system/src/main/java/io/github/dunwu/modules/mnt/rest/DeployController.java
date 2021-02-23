@@ -57,14 +57,14 @@ public class DeployController {
 
 	@ApiOperation("导出部署数据")
 	@GetMapping(value = "export")
-	@PreAuthorize("@exp.check('database:list')")
+	@PreAuthorize("@exp.check('database:view')")
 	public void download(HttpServletResponse response, DeployQueryCriteria criteria) throws IOException {
 		deployService.download(deployService.queryAll(criteria), response);
 	}
 
     @ApiOperation(value = "查询部署")
     @GetMapping
-	@PreAuthorize("@exp.check('deploy:list')")
+	@PreAuthorize("@exp.check('deploy:view')")
     public ResponseEntity<Object> query(DeployQueryCriteria criteria, Pageable pageable){
     	return new ResponseEntity<>(deployService.queryAll(criteria,pageable),HttpStatus.OK);
     }

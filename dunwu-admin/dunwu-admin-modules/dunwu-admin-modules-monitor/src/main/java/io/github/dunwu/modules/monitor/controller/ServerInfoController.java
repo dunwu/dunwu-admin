@@ -25,7 +25,7 @@ public class ServerInfoController {
 
     @GetMapping
     @ApiOperation("查询服务监控")
-    @PreAuthorize("@exp.check('monitor:list')")
+    @PreAuthorize("@exp.check('monitor:view')")
     public ResponseEntity<Object> query() {
         return new ResponseEntity<>(serverService.getServers(), HttpStatus.OK);
     }

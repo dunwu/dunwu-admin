@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @RestController
 @RequestMapping("/api/sys/dict")
-@Api(tags = "SysDictController")
+@Api(tags = "系统：字典管理")
 @RequiredArgsConstructor
 public class SysDictController {
 
@@ -70,7 +70,7 @@ public class SysDictController {
     }
 
     @GetMapping
-    @PreAuthorize("@exp.check('dict:list')")
+    @PreAuthorize("@exp.check('dict:view')")
     @ApiOperation("查询 SysDictDto 记录")
     public ResponseEntity<Object> view(SysDictQuery query,
         @PageableDefault(sort = { "weight" }, direction = Sort.Direction.ASC) Pageable pageable) {
@@ -78,7 +78,7 @@ public class SysDictController {
     }
 
     @GetMapping("page")
-    @PreAuthorize("@exp.check('dict:list')")
+    @PreAuthorize("@exp.check('dict:view')")
     @ApiOperation("根据 query 和 pageable 条件，分页查询 SysDictDto 记录")
     public ResponseEntity<Object> page(SysDictQuery query,
         @PageableDefault(sort = { "weight" }, direction = Sort.Direction.ASC) Pageable pageable) {
@@ -86,28 +86,28 @@ public class SysDictController {
     }
 
     @GetMapping("{id}")
-    @PreAuthorize("@exp.check('dict:list')")
+    @PreAuthorize("@exp.check('dict:view')")
     @ApiOperation("根据 ID 查询 SysDict 记录")
     public ResponseEntity<Object> getById(@PathVariable Serializable id) {
         return new ResponseEntity<>(service.pojoById(id), HttpStatus.OK);
     }
 
     @GetMapping("count")
-    @PreAuthorize("@exp.check('dict:list')")
+    @PreAuthorize("@exp.check('dict:view')")
     @ApiOperation("根据 query 条件，查询匹配条件的总记录数")
     public ResponseEntity<Object> count(SysDictQuery query) {
         return new ResponseEntity<>(service.countByQuery(query), HttpStatus.OK);
     }
 
     @GetMapping("list")
-    @PreAuthorize("@exp.check('dict:list')")
+    @PreAuthorize("@exp.check('dict:view')")
     @ApiOperation("根据 query 条件，查询匹配条件的 SysDictDto 列表")
     public ResponseEntity<Object> list(SysDictQuery query) {
         return new ResponseEntity<>(service.pojoListByQuery(query), HttpStatus.OK);
     }
 
     @GetMapping("export/list")
-    @PreAuthorize("@exp.check('dict:list')")
+    @PreAuthorize("@exp.check('dict:view')")
     @ApiOperation("根据 ID 集合批量导出 SysDictDto 列表数据")
     public void exportByIds(@RequestBody Collection<Serializable> ids, HttpServletResponse response)
         throws IOException {
@@ -115,7 +115,7 @@ public class SysDictController {
     }
 
     @GetMapping("export")
-    @PreAuthorize("@exp.check('dict:list')")
+    @PreAuthorize("@exp.check('dict:view')")
     @ApiOperation("根据 query 和 pageable 条件批量导出 SysDictDto 列表数据")
     public void exportPageData(SysDictQuery query, Pageable pageable, HttpServletResponse response) throws IOException {
         service.exportPageData(query, pageable, response);

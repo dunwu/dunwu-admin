@@ -137,7 +137,7 @@ public class SysMenuController {
 
     @ApiOperation("查询部门:根据ID获取同级与上级数据")
     @PostMapping("superior")
-    @PreAuthorize("@exp.check('dept:list')")
+    @PreAuthorize("@exp.check('dept:view')")
     public ResponseEntity<Object> getSuperior(@RequestBody List<Long> ids) {
         Collection<SysMenuDto> menus = new ArrayList<>();
         for (Long id : ids) {
