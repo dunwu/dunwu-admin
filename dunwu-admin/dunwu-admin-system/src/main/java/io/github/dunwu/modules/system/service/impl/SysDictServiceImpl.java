@@ -10,6 +10,10 @@ import io.github.dunwu.modules.system.entity.dto.SysDictDto;
 import io.github.dunwu.modules.system.entity.dto.SysDictOptionDto;
 import io.github.dunwu.modules.system.service.SysDictService;
 import io.github.dunwu.tool.bean.BeanUtil;
+import io.github.dunwu.util.CacheKey;
+import io.github.dunwu.util.RedisUtils;
+import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,15 +35,13 @@ import javax.servlet.http.HttpServletResponse;
  * @since 2020-05-24
  */
 @Service
+@RequiredArgsConstructor
+@CacheConfig(cacheNames = "dict")
 public class SysDictServiceImpl extends ServiceImpl implements SysDictService {
 
     private final SysDictDao sysDictDao;
     private final SysDictOptionDao sysDictOptionDao;
-
-    public SysDictServiceImpl(SysDictDao sysDictDao, SysDictOptionDao sysDictOptionDao) {
-        this.sysDictDao = sysDictDao;
-        this.sysDictOptionDao = sysDictOptionDao;
-    }
+    private final RedisUtils redisUtils;
 
     @Override
     public boolean save(SysDict entity) {
@@ -123,6 +125,10 @@ public class SysDictServiceImpl extends ServiceImpl implements SysDictService {
             sysDictDto.setOptions(options);
         }
         return sysDictDto;
+    }
+
+    public void delCaches(SysDict dict) {
+        redisUtils.del(CacheKey.DICT_NAME + dict.getName());
     }
 
 }

@@ -34,9 +34,6 @@ public class SysDictOptionDto implements Serializable {
     @ApiModelProperty(value = "字典项名称")
     private String name;
 
-    @ApiModelProperty(value = "权重")
-    private Integer weight;
-
     @ApiModelProperty(value = "状态")
     private Boolean enabled;
 

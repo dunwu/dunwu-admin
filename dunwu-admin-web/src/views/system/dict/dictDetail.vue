@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="query.dictName === ''">
+    <div v-if="query.dictId === null">
       <div class="my-code">点击字典查看详情</div>
     </div>
     <div v-else>
@@ -9,7 +9,7 @@
         <div v-if="crud.props.searchToggle">
           <!-- 搜索 -->
           <el-input
-            v-model="query.label"
+            v-model="query.code"
             clearable
             size="small"
             placeholder="输入字典标签查询"
@@ -30,20 +30,11 @@
         width="500px"
       >
         <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
-          <el-form-item label="字典标签" prop="label">
-            <el-input v-model="form.label" style="width: 370px;" />
+          <el-form-item label="字典标签" prop="code">
+            <el-input v-model="form.code" style="width: 370px;" />
           </el-form-item>
-          <el-form-item label="字典值" prop="value">
-            <el-input v-model="form.value" style="width: 370px;" />
-          </el-form-item>
-          <el-form-item label="排序" prop="dictSort">
-            <el-input-number
-              v-model.number="form.dictSort"
-              :min="0"
-              :max="999"
-              controls-position="right"
-              style="width: 370px;"
-            />
+          <el-form-item label="字典值" prop="name">
+            <el-input v-model="form.name" style="width: 370px;" />
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -60,12 +51,12 @@
         style="width: 100%;"
         @selection-change="crud.selectionChangeHandler"
       >
-        <el-table-column label="所属字典">
-          {{ query.dictName }}
-        </el-table-column>
-        <el-table-column prop="label" label="字典标签" />
-        <el-table-column prop="value" label="字典值" />
-        <el-table-column prop="dictSort" label="排序" />
+        <!--        <el-table-column label="所属字典">-->
+        <!--          {{ query.dictId }}-->
+        <!--        </el-table-column>-->
+        <el-table-column prop="code" label="字典标签" />
+        <el-table-column prop="name" label="字典值" />
+        <el-table-column prop="weight" label="排序" />
         <el-table-column
           v-if="checkPer(['admin', 'dict:edit', 'dict:del'])"
           label="操作"
@@ -91,7 +82,7 @@ import pagination from '@crud/Pagination'
 import rrOperation from '@crud/Query.operation'
 import udOperation from '@crud/UD.operation'
 
-const defaultForm = { id: null, label: null, value: null, dictSort: 999 }
+const defaultForm = { id: null, code: null, name: null, weight: 999 }
 
 export default {
   components: { pagination, rrOperation, udOperation },
@@ -99,9 +90,9 @@ export default {
     return [
       CRUD({
         title: '字典详情',
-        url: 'api/dictDetail',
-        query: { dictName: '' },
-        sort: ['dictSort,asc', 'id,desc'],
+        url: 'api/sys/dict/option',
+        query: { dictId: null },
+        sort: ['id,desc'],
         crudMethod: { ...crudDictDetail },
         optShow: {
           add: true,
@@ -124,9 +115,8 @@ export default {
     return {
       dictId: null,
       rules: {
-        label: [{ required: true, message: '请输入字典标签', trigger: 'blur' }],
-        value: [{ required: true, message: '请输入字典值', trigger: 'blur' }],
-        dictSort: [{ required: true, message: '请输入序号', trigger: 'blur', type: 'number' }]
+        code: [{ required: true, message: '请输入字典标签', trigger: 'blur' }],
+        name: [{ required: true, message: '请输入字典值', trigger: 'blur' }]
       },
       permission: {
         add: ['admin', 'dict:add'],

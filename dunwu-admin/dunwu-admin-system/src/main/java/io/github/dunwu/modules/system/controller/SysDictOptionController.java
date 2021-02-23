@@ -28,8 +28,8 @@ import javax.servlet.http.HttpServletResponse;
  * @since 2020-05-24
  */
 @RestController
-@RequestMapping("/sys/dict/option")
-@Api(tags = "SysDictOptionController")
+@RequestMapping("api/sys/dict/option")
+@Api(tags = "系统：字典选项管理")
 @RequiredArgsConstructor
 public class SysDictOptionController {
 

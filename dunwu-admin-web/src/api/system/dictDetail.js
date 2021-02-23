@@ -7,20 +7,7 @@ export function get(dictName) {
     size: 9999
   }
   return request({
-    url: 'api/dictDetail',
-    method: 'get',
-    params
-  })
-}
-
-export function getDictMap(dictName) {
-  const params = {
-    dictName,
-    page: 0,
-    size: 9999
-  }
-  return request({
-    url: 'api/dictDetail/map',
+    url: 'api/sys/dict/option',
     method: 'get',
     params
   })
@@ -28,7 +15,7 @@ export function getDictMap(dictName) {
 
 export function add(data) {
   return request({
-    url: 'api/dictDetail',
+    url: 'api/sys/dict/option',
     method: 'post',
     data
   })
@@ -36,14 +23,14 @@ export function add(data) {
 
 export function del(id) {
   return request({
-    url: 'api/dictDetail/' + id,
+    url: 'api/sys/dict/option/' + id,
     method: 'delete'
   })
 }
 
 export function edit(data) {
   return request({
-    url: 'api/dictDetail',
+    url: 'api/sys/dict/option',
     method: 'put',
     data
   })

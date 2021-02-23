@@ -33,7 +33,6 @@ public class SysDictOptionDaoImpl extends BaseExtDaoImpl<SysDictOptionMapper, Sy
             map.put("所属字典ID", item.getDictId());
             map.put("字典项编码", item.getCode());
             map.put("字典项名称", item.getName());
-            map.put("权重", item.getWeight());
             map.put("状态", item.getEnabled());
             map.put("备注", item.getNote());
             map.put("创建者", item.getCreateBy());

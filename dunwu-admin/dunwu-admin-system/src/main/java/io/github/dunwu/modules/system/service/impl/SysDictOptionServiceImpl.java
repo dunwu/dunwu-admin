@@ -5,6 +5,7 @@ import io.github.dunwu.modules.system.dao.SysDictOptionDao;
 import io.github.dunwu.modules.system.entity.SysDictOption;
 import io.github.dunwu.modules.system.entity.dto.SysDictOptionDto;
 import io.github.dunwu.modules.system.service.SysDictOptionService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,13 +23,10 @@ import javax.servlet.http.HttpServletResponse;
  * @since 2020-05-24
  */
 @Service
+@RequiredArgsConstructor
 public class SysDictOptionServiceImpl extends ServiceImpl implements SysDictOptionService {
 
     private final SysDictOptionDao dao;
-
-    public SysDictOptionServiceImpl(SysDictOptionDao dao) {
-        this.dao = dao;
-    }
 
     @Override
     public boolean save(SysDictOption entity) {
@@ -77,13 +75,13 @@ public class SysDictOptionServiceImpl extends ServiceImpl implements SysDictOpti
 
     @Override
     public void exportByIds(Collection<Serializable> ids, HttpServletResponse response) throws IOException {
-    List<SysDictOptionDto> list = dao.pojoListByIds(ids, SysDictOptionDto.class);
+        List<SysDictOptionDto> list = dao.pojoListByIds(ids, SysDictOptionDto.class);
         dao.exportDtoList(list, response);
     }
 
     @Override
     public void exportPageData(Object query, Pageable pageable, HttpServletResponse response) throws IOException {
-    Page<SysDictOptionDto> page = dao.pojoPageByQuery(query, pageable, SysDictOptionDto.class);
+        Page<SysDictOptionDto> page = dao.pojoPageByQuery(query, pageable, SysDictOptionDto.class);
         dao.exportDtoList(page.getContent(), response);
     }
 

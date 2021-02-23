@@ -10,11 +10,14 @@
       width="500px"
     >
       <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
+        <el-form-item label="字典编码" prop="code">
+          <el-input v-model="form.code" style="width: 370px;" />
+        </el-form-item>
         <el-form-item label="字典名称" prop="name">
           <el-input v-model="form.name" style="width: 370px;" />
         </el-form-item>
         <el-form-item label="描述">
-          <el-input v-model="form.description" style="width: 370px;" />
+          <el-input v-model="form.note" style="width: 370px;" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -54,8 +57,9 @@
             @current-change="handleCurrentChange"
           >
             <el-table-column type="selection" width="55" />
+            <el-table-column :show-overflow-tooltip="true" prop="code" label="编码" />
             <el-table-column :show-overflow-tooltip="true" prop="name" label="名称" />
-            <el-table-column :show-overflow-tooltip="true" prop="description" label="描述" />
+            <el-table-column :show-overflow-tooltip="true" prop="note" label="描述" />
             <el-table-column
               v-if="checkPer(['admin', 'dict:edit', 'dict:del'])"
               label="操作"
@@ -78,7 +82,7 @@
           <div slot="header" class="clearfix">
             <span>字典详情</span>
             <el-button
-              v-if="checkPer(['admin', 'dict:add']) && this.$refs.dictDetail && this.$refs.dictDetail.query.dictName"
+              v-if="checkPer(['admin', 'dict:add']) && this.$refs.dictDetail && this.$refs.dictDetail.query.dictId"
               class="filter-item"
               size="mini"
               style="float: right;padding: 4px 10px"
@@ -105,18 +109,18 @@ import pagination from '@crud/Pagination'
 import rrOperation from '@crud/Query.operation'
 import udOperation from '@crud/UD.operation'
 
-const defaultForm = { id: null, name: null, description: null, dictDetails: [] }
+const defaultForm = { id: null, name: null, note: null, enabled: true, dictDetails: [] }
 
 export default {
   name: 'Dict',
   components: { crudOperation, pagination, rrOperation, udOperation, dictDetail },
   cruds() {
-    return [CRUD({ title: '字典', url: 'api/dict', crudMethod: { ...crudDict }})]
+    return [CRUD({ title: '字典', url: 'api/sys/dict', crudMethod: { ...crudDict }})]
   },
   mixins: [presenter(), header(), form(defaultForm)],
   data() {
     return {
-      queryTypeOptions: [{ key: 'name', display_name: '字典名称' }, { key: 'description', display_name: '描述' }],
+      queryTypeOptions: [{ key: 'name', display_name: '字典名称' }, { key: 'note', display_name: '描述' }],
       rules: {
         name: [{ required: true, message: '请输入名称', trigger: 'blur' }]
       },
@@ -131,14 +135,14 @@ export default {
     // 获取数据前设置好接口地址
     [CRUD.HOOK.beforeRefresh]() {
       if (this.$refs.dictDetail) {
-        this.$refs.dictDetail.query.dictName = ''
+        this.$refs.dictDetail.query.dictId = null
       }
       return true
     },
     // 选中字典后，设置字典详情数据
     handleCurrentChange(val) {
       if (val) {
-        this.$refs.dictDetail.query.dictName = val.name
+        this.$refs.dictDetail.query.dictId = val.id
         this.$refs.dictDetail.dictId = val.id
         this.$refs.dictDetail.crud.toQuery()
       }

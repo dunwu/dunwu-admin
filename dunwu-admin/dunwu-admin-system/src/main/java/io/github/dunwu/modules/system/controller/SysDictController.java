@@ -10,6 +10,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -70,14 +72,16 @@ public class SysDictController {
     @GetMapping
     @PreAuthorize("@exp.check('dict:list')")
     @ApiOperation("查询 SysDictDto 记录")
-    public ResponseEntity<Object> view(SysDictQuery query, Pageable pageable) {
+    public ResponseEntity<Object> view(SysDictQuery query,
+        @PageableDefault(sort = { "weight" }, direction = Sort.Direction.ASC) Pageable pageable) {
         return page(query, pageable);
     }
 
     @GetMapping("page")
     @PreAuthorize("@exp.check('dict:list')")
     @ApiOperation("根据 query 和 pageable 条件，分页查询 SysDictDto 记录")
-    public ResponseEntity<Object> page(SysDictQuery query, Pageable pageable) {
+    public ResponseEntity<Object> page(SysDictQuery query,
+        @PageableDefault(sort = { "weight" }, direction = Sort.Direction.ASC) Pageable pageable) {
         return new ResponseEntity<>(service.pojoPageByQuery(query, pageable), HttpStatus.OK);
     }
 
@@ -102,7 +106,7 @@ public class SysDictController {
         return new ResponseEntity<>(service.pojoListByQuery(query), HttpStatus.OK);
     }
 
-    @GetMapping("export")
+    @GetMapping("export/list")
     @PreAuthorize("@exp.check('dict:list')")
     @ApiOperation("根据 ID 集合批量导出 SysDictDto 列表数据")
     public void exportByIds(@RequestBody Collection<Serializable> ids, HttpServletResponse response)
@@ -110,7 +114,7 @@ public class SysDictController {
         service.exportByIds(ids, response);
     }
 
-    @GetMapping("export/page")
+    @GetMapping("export")
     @PreAuthorize("@exp.check('dict:list')")
     @ApiOperation("根据 query 和 pageable 条件批量导出 SysDictDto 列表数据")
     public void exportPageData(SysDictQuery query, Pageable pageable, HttpServletResponse response) throws IOException {

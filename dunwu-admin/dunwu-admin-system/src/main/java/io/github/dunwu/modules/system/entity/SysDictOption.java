@@ -9,7 +9,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import org.hibernate.validator.constraints.Range;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -45,16 +44,6 @@ public class SysDictOption implements Serializable {
     @NotNull
     @ApiModelProperty(value = "字典项名称")
     private String name;
-
-    @Range(min = 1, max = 999)
-    @ApiModelProperty(value = "权重")
-    private Integer weight;
-
-    @ApiModelProperty(value = "状态")
-    private Boolean enabled;
-
-    @ApiModelProperty(value = "备注")
-    private String note;
 
     @JsonIgnore
     @ApiModelProperty(value = "创建者")
