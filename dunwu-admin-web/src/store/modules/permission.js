@@ -27,13 +27,15 @@ const permission = {
   }
 }
 
-export const filterAsyncRouter = (routers, isRewrite = false) => { // 遍历后台传来的路由字符串，转换为组件对象
+export const filterAsyncRouter = (routers, isRewrite = false) => {
+  // 遍历后台传来的路由字符串，转换为组件对象
   return routers.filter(router => {
     if (isRewrite && router.children) {
       router.children = filterChildren(router.children)
     }
     if (router.component) {
-      if (router.component === 'Layout') { // Layout组件特殊处理
+      if (router.component === 'Layout') {
+        // Layout组件特殊处理
         router.component = Layout
       } else if (router.component === 'ParentView') {
         router.component = ParentView
@@ -70,8 +72,8 @@ function filterChildren(childrenMap) {
   return children
 }
 
-export const loadView = (view) => {
-  return (resolve) => require([`@/views/${view}`], resolve)
+export const loadView = view => {
+  return resolve => require([`@/views/${view}`], resolve)
 }
 
 export default permission

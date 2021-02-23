@@ -30,40 +30,46 @@ const user = {
     Login({ commit }, userInfo) {
       const rememberMe = userInfo.rememberMe
       return new Promise((resolve, reject) => {
-        login(userInfo.username, userInfo.password, userInfo.code, userInfo.uuid).then(res => {
-          setToken(res.token, rememberMe)
-          commit('SET_TOKEN', res.token)
-          setUserInfo(res.user, commit)
-          // 第一次加载菜单时用到， 具体见 src 目录下的 permission.js
-          commit('SET_LOAD_MENUS', true)
-          resolve()
-        }).catch(error => {
-          reject(error)
-        })
+        login(userInfo.username, userInfo.password, userInfo.code, userInfo.uuid)
+          .then(res => {
+            setToken(res.token, rememberMe)
+            commit('SET_TOKEN', res.token)
+            setUserInfo(res.user, commit)
+            // 第一次加载菜单时用到， 具体见 src 目录下的 permission.js
+            commit('SET_LOAD_MENUS', true)
+            resolve()
+          })
+          .catch(error => {
+            reject(error)
+          })
       })
     },
 
     // 获取用户信息
     GetInfo({ commit }) {
       return new Promise((resolve, reject) => {
-        getInfo().then(res => {
-          setUserInfo(res, commit)
-          resolve(res)
-        }).catch(error => {
-          reject(error)
-        })
+        getInfo()
+          .then(res => {
+            setUserInfo(res, commit)
+            resolve(res)
+          })
+          .catch(error => {
+            reject(error)
+          })
       })
     },
     // 登出
     LogOut({ commit }) {
       return new Promise((resolve, reject) => {
-        logout().then(res => {
-          logOut(commit)
-          resolve()
-        }).catch(error => {
-          logOut(commit)
-          reject(error)
-        })
+        logout()
+          .then(res => {
+            logOut(commit)
+            resolve()
+          })
+          .catch(error => {
+            logOut(commit)
+            reject(error)
+          })
       })
     },
 
@@ -75,7 +81,7 @@ const user = {
   }
 }
 
-export const logOut = (commit) => {
+export const logOut = commit => {
   commit('SET_TOKEN', '')
   commit('SET_ROLES', [])
   removeToken()
