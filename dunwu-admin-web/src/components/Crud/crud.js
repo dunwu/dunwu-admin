@@ -376,13 +376,13 @@ function CRUD(options) {
       }
     },
     // 当前页改变
-    pageChangeHandler(e) {
-      crud.page.page = e
+    pageChangeHandler(val) {
+      crud.page.page = val
       crud.refresh()
     },
     // 每页条数改变
-    sizeChangeHandler(e) {
-      crud.page.size = e
+    sizeChangeHandler(val) {
+      crud.page.size = val
       crud.page.page = 1
       crud.refresh()
     },

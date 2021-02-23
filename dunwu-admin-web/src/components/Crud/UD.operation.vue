@@ -1,14 +1,18 @@
 <template>
   <div>
+    <!--列表行记录操作按钮 - 编辑-->
     <el-button
       v-permission="permission.edit"
       :loading="crud.status.cu === 2"
       :disabled="disabledEdit"
       size="mini"
-      type="primary"
-      icon="el-icon-edit"
+      type="text"
       @click="crud.toEdit(data)"
-    />
+    >
+      编辑
+    </el-button>
+    <el-divider direction="vertical" />
+    <!--列表行记录操作按钮 - 删除-->
     <el-popover
       v-model="pop"
       v-permission="permission.del"
@@ -30,14 +34,9 @@
           确定
         </el-button>
       </div>
-      <el-button
-        slot="reference"
-        :disabled="disabledDle"
-        type="danger"
-        icon="el-icon-delete"
-        size="mini"
-        @click="toDelete"
-      />
+      <el-button slot="reference" :disabled="disabledDle" size="mini" type="text" @click="toDelete">
+        删除
+      </el-button>
     </el-popover>
   </div>
 </template>

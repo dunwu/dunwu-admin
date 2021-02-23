@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @RestController
 @RequestMapping("api/sys/menu")
-@Api(tags = "SysMenuController")
+@Api(tags = "系统：菜单管理")
 @RequiredArgsConstructor
 public class SysMenuController {
 

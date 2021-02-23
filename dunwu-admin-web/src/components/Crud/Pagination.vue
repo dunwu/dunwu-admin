@@ -1,5 +1,5 @@
 <!--
-  - CRUD 之 分页组件
+  - 【公共按钮组件】分页按钮
   -->
 
 <template>
@@ -8,7 +8,7 @@
     :total="page.total"
     :current-page.sync="page.page"
     style="margin-top: 8px;"
-    layout="total, prev, pager, next, sizes"
+    layout="total, sizes, prev, pager, next, jumper"
     @size-change="crud.sizeChangeHandler($event)"
     @current-change="crud.pageChangeHandler"
   />

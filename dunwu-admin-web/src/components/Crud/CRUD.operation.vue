@@ -24,7 +24,7 @@
         :disabled="crud.selections.length !== 1"
         @click="crud.toEdit(crud.selections[0])"
       >
-        修改
+        编辑
       </el-button>
       <el-button
         v-if="crud.optShow.exportList"

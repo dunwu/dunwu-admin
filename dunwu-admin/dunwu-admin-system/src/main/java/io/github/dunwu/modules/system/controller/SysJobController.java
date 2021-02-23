@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @RestController
 @RequestMapping("/api/sys/job")
-@Api(tags = "SysJobController")
+@Api(tags = "系统：岗位管理")
 @RequiredArgsConstructor
 public class SysJobController {
 
