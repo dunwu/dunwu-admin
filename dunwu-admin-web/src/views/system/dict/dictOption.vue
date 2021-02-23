@@ -51,12 +51,8 @@
         style="width: 100%;"
         @selection-change="crud.selectionChangeHandler"
       >
-        <!--        <el-table-column label="所属字典">-->
-        <!--          {{ query.dictId }}-->
-        <!--        </el-table-column>-->
         <el-table-column prop="code" label="字典标签" />
         <el-table-column prop="name" label="字典值" />
-        <el-table-column prop="weight" label="排序" />
         <el-table-column
           v-if="checkPer(['admin', 'dict:edit', 'dict:del'])"
           label="操作"
@@ -76,13 +72,13 @@
 </template>
 
 <script>
-import crudDictDetail from '@/api/system/dictDetail'
+import crudDictOption from '@/api/system/dictOption'
 import CRUD, { presenter, header, form } from '@crud/crud'
 import pagination from '@crud/Pagination'
 import rrOperation from '@crud/Query.operation'
 import udOperation from '@crud/UD.operation'
 
-const defaultForm = { id: null, code: null, name: null, weight: 999 }
+const defaultForm = { id: null, code: null, name: null }
 
 export default {
   components: { pagination, rrOperation, udOperation },
@@ -93,7 +89,7 @@ export default {
         url: 'api/sys/dict/option',
         query: { dictId: null },
         sort: ['id,desc'],
-        crudMethod: { ...crudDictDetail },
+        crudMethod: { ...crudDictOption },
         optShow: {
           add: true,
           edit: true,

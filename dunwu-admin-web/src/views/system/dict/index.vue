@@ -82,18 +82,18 @@
           <div slot="header" class="clearfix">
             <span>字典详情</span>
             <el-button
-              v-if="checkPer(['admin', 'dict:add']) && this.$refs.dictDetail && this.$refs.dictDetail.query.dictId"
+              v-if="checkPer(['admin', 'dict:add']) && this.$refs.dictOption && this.$refs.dictOption.query.dictId"
               class="filter-item"
               size="mini"
               style="float: right;padding: 4px 10px"
               type="primary"
               icon="el-icon-plus"
-              @click="$refs.dictDetail && $refs.dictDetail.crud.toAdd()"
+              @click="$refs.dictOption && $refs.dictOption.crud.toAdd()"
             >
               新增
             </el-button>
           </div>
-          <dictDetail ref="dictDetail" :permission="permission" />
+          <dictOption ref="dictOption" :permission="permission" />
         </el-card>
       </el-col>
     </el-row>
@@ -101,7 +101,7 @@
 </template>
 
 <script>
-import dictDetail from './dictDetail'
+import dictOption from './dictOption'
 import crudDict from '@/api/system/dict'
 import CRUD, { presenter, header, form } from '@crud/crud'
 import crudOperation from '@crud/CRUD.operation'
@@ -109,11 +109,11 @@ import pagination from '@crud/Pagination'
 import rrOperation from '@crud/Query.operation'
 import udOperation from '@crud/UD.operation'
 
-const defaultForm = { id: null, name: null, note: null, enabled: true, dictDetails: [] }
+const defaultForm = { id: null, name: null, note: null, enabled: true, dictOptions: [] }
 
 export default {
   name: 'Dict',
-  components: { crudOperation, pagination, rrOperation, udOperation, dictDetail },
+  components: { crudOperation, pagination, rrOperation, udOperation, dictOption },
   cruds() {
     return [CRUD({ title: '字典', url: 'api/sys/dict', crudMethod: { ...crudDict }})]
   },
@@ -134,17 +134,17 @@ export default {
   methods: {
     // 获取数据前设置好接口地址
     [CRUD.HOOK.beforeRefresh]() {
-      if (this.$refs.dictDetail) {
-        this.$refs.dictDetail.query.dictId = null
+      if (this.$refs.dictOption) {
+        this.$refs.dictOption.query.dictId = null
       }
       return true
     },
     // 选中字典后，设置字典详情数据
     handleCurrentChange(val) {
       if (val) {
-        this.$refs.dictDetail.query.dictId = val.id
-        this.$refs.dictDetail.dictId = val.id
-        this.$refs.dictDetail.crud.toQuery()
+        this.$refs.dictOption.query.dictId = val.id
+        this.$refs.dictOption.dictId = val.id
+        this.$refs.dictOption.crud.toQuery()
       }
     }
   }
