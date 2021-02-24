@@ -240,8 +240,8 @@ CREATE TABLE `sys_dict` (
     `id`     BIGINT(20)   NOT NULL AUTO_INCREMENT COMMENT 'ID',
     `code`        VARCHAR(255) NOT NULL COMMENT '字典编码',
     `name`        VARCHAR(255) NOT NULL COMMENT '字典名称',
-    `enabled`     BIT(1)       NOT NULL COMMENT '岗位状态',
-    `note`        VARCHAR(255) DEFAULT NULL COMMENT '描述',
+    `enabled`     BIT(1)       NOT NULL COMMENT '状态',
+    `note`        VARCHAR(255) DEFAULT NULL COMMENT '备注',
     `create_by`   VARCHAR(255) DEFAULT NULL COMMENT '创建者',
     `update_by`   VARCHAR(255) DEFAULT NULL COMMENT '更新者',
     `create_time` DATETIME     DEFAULT NULL COMMENT '创建时间',
@@ -258,11 +258,11 @@ CREATE TABLE `sys_dict` (
 -- ----------------------------
 BEGIN;
 INSERT INTO `sys_dict`
-VALUES (1, 'user_status', 'user_status', b'1', '用户状态', 'admin', NULL, '2019-10-27 20:31:36', NULL);
+VALUES (1, 'user_status', '用户状态', b'1', '用户状态', 'admin', NULL, '2019-10-27 20:31:36', NULL);
 INSERT INTO `sys_dict`
-VALUES (2, 'dept_status', 'dept_status', b'1', '部门状态', 'admin', NULL, '2019-10-27 20:31:36', NULL);
+VALUES (2, 'dept_status', '部门状态', b'1', '部门状态', 'admin', NULL, '2019-10-27 20:31:36', NULL);
 INSERT INTO `sys_dict`
-VALUES (3, 'job_status', 'job_status', b'1', '岗位状态', 'admin', NULL, '2019-10-27 20:31:36', NULL);
+VALUES (3, 'job_status', '岗位状态', b'1', '岗位状态', 'admin', NULL, '2019-10-27 20:31:36', NULL);
 COMMIT;
 
 -- ----------------------------
@@ -291,17 +291,17 @@ CREATE TABLE `sys_dict_option` (
 -- ----------------------------
 BEGIN;
 INSERT INTO `sys_dict_option`
-VALUES (1, 1, '激活', 'true', 'admin', NULL, '2019-10-27 20:31:36', NULL);
+VALUES (1, 1, 'true', '激活', 'admin', NULL, '2019-10-27 20:31:36', NULL);
 INSERT INTO `sys_dict_option`
-VALUES (2, 1, '禁用', 'false', 'admin', NULL, NULL, NULL);
+VALUES (2, 1, 'false', '禁用', 'admin', NULL, NULL, NULL);
 INSERT INTO `sys_dict_option`
-VALUES (3, 2, '启用', 'true', 'admin', NULL, NULL, NULL);
+VALUES (3, 2, 'true', '启用', 'admin', NULL, NULL, NULL);
 INSERT INTO `sys_dict_option`
-VALUES (4, 2, '停用', 'false', 'admin', NULL, '2019-10-27 20:31:36', NULL);
+VALUES (4, 2, 'false', '停用', 'admin', NULL, '2019-10-27 20:31:36', NULL);
 INSERT INTO `sys_dict_option`
-VALUES (5, 3, '启用', 'true', 'admin', NULL, NULL, NULL);
+VALUES (5, 3, 'true', '启用', 'admin', NULL, NULL, NULL);
 INSERT INTO `sys_dict_option`
-VALUES (6, 3, '停用', 'false', 'admin', NULL, '2019-10-27 20:31:36', NULL);
+VALUES (6, 3, 'false', '停用', 'admin', NULL, '2019-10-27 20:31:36', NULL);
 COMMIT;
 
 -- ----------------------------
@@ -559,7 +559,7 @@ CREATE TABLE `sys_role` (
     `level`       INT(255)     DEFAULT NULL COMMENT '角色级别',
     `data_scope`  VARCHAR(255) DEFAULT NULL COMMENT '数据权限',
     `enabled`     BIT(1)       NOT NULL COMMENT '岗位状态',
-    `note`        VARCHAR(255) DEFAULT NULL COMMENT '描述',
+    `note`        VARCHAR(255) DEFAULT NULL COMMENT '备注',
     `create_by`   VARCHAR(255) DEFAULT NULL COMMENT '创建者',
     `update_by`   VARCHAR(255) DEFAULT NULL COMMENT '更新者',
     `create_time` DATETIME     DEFAULT NULL COMMENT '创建时间',

@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { get as getDictOption } from '@/api/system/dictOption'
+import { getDicts } from '@/api/system/dict'
 
 export default class Dict {
   constructor(dict) {
@@ -16,7 +16,7 @@ export default class Dict {
       Vue.set(this.dict.label, n, {})
       Vue.set(this.dict, n, [])
       ps.push(
-        getDictOption(n).then(data => {
+        getDicts(n).then(data => {
           this.dict[n].splice(0, 0, ...data.content)
           data.content.forEach(d => {
             Vue.set(this.dict.dict[n], d.value, d)

@@ -32,9 +32,6 @@ public class SysDictDto implements Serializable {
     @ApiModelProperty(value = "字典名称")
     private String name;
 
-    @ApiModelProperty(value = "字典项")
-    private List<SysDictOptionDto> options;
-
     @ApiModelProperty(value = "状态")
     private Boolean enabled;
 
@@ -54,5 +51,8 @@ public class SysDictDto implements Serializable {
     @ApiModelProperty(value = "更新时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime updateTime;
+
+    @ApiModelProperty(value = "字典项")
+    private List<SysDictOptionDto> options;
 
 }

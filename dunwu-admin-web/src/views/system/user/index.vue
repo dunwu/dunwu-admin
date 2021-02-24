@@ -50,9 +50,9 @@
             >
               <el-option
                 v-for="item in enabledTypeOptions"
-                :key="item.key"
-                :label="item.display_name"
-                :value="item.key"
+                :key="item.code"
+                :label="item.name"
+                :value="item.code"
               />
             </el-select>
             <rrOperation />
@@ -255,7 +255,7 @@ export default {
         edit: ['admin', 'user:edit'],
         del: ['admin', 'user:del']
       },
-      enabledTypeOptions: [{ key: 'true', display_name: '激活' }, { key: 'false', display_name: '锁定' }],
+      enabledTypeOptions: [{ code: 'true', name: '激活' }, { code: 'false', name: '锁定' }],
       rules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },

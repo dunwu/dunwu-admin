@@ -12,7 +12,7 @@
             v-model="query.code"
             clearable
             size="small"
-            placeholder="输入字典标签查询"
+            placeholder="输入字典编码查询"
             style="width: 200px;"
             class="filter-item"
             @keyup.enter.native="toQuery"
@@ -30,10 +30,10 @@
         width="500px"
       >
         <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
-          <el-form-item label="字典标签" prop="code">
+          <el-form-item label="字典编码" prop="code">
             <el-input v-model="form.code" style="width: 370px;" />
           </el-form-item>
-          <el-form-item label="字典值" prop="name">
+          <el-form-item label="字典名称" prop="name">
             <el-input v-model="form.name" style="width: 370px;" />
           </el-form-item>
         </el-form>
@@ -51,8 +51,8 @@
         style="width: 100%;"
         @selection-change="crud.selectionChangeHandler"
       >
-        <el-table-column prop="code" label="字典标签" />
-        <el-table-column prop="name" label="字典值" />
+        <el-table-column prop="code" label="字典编码" />
+        <el-table-column prop="name" label="字典名称" />
         <el-table-column
           v-if="checkPer(['admin', 'dict:edit', 'dict:del'])"
           label="操作"
@@ -111,8 +111,8 @@ export default {
     return {
       dictId: null,
       rules: {
-        code: [{ required: true, message: '请输入字典标签', trigger: 'blur' }],
-        name: [{ required: true, message: '请输入字典值', trigger: 'blur' }]
+        code: [{ required: true, message: '请输入字典编码', trigger: 'blur' }],
+        name: [{ required: true, message: '请输入字典名称', trigger: 'blur' }]
       },
       permission: {
         add: ['admin', 'dict:add'],

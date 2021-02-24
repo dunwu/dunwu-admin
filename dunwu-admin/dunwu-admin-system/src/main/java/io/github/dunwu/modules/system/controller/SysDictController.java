@@ -73,7 +73,7 @@ public class SysDictController {
     @PreAuthorize("@exp.check('dict:view')")
     @ApiOperation("查询 SysDictDto 记录")
     public ResponseEntity<Object> view(SysDictQuery query,
-        @PageableDefault(sort = { "weight" }, direction = Sort.Direction.ASC) Pageable pageable) {
+        @PageableDefault(sort = { "name" }, direction = Sort.Direction.ASC) Pageable pageable) {
         return page(query, pageable);
     }
 
@@ -81,7 +81,7 @@ public class SysDictController {
     @PreAuthorize("@exp.check('dict:view')")
     @ApiOperation("根据 query 和 pageable 条件，分页查询 SysDictDto 记录")
     public ResponseEntity<Object> page(SysDictQuery query,
-        @PageableDefault(sort = { "weight" }, direction = Sort.Direction.ASC) Pageable pageable) {
+        @PageableDefault(sort = { "name" }, direction = Sort.Direction.ASC) Pageable pageable) {
         return new ResponseEntity<>(service.pojoPageByQuery(query, pageable), HttpStatus.OK);
     }
 
