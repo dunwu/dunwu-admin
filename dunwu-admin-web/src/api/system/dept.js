@@ -51,13 +51,13 @@ export function treeList(params) {
   })
 }
 
-export function getDeptSuperior(ids) {
-  const data = ids.length || ids.length === 0 ? ids : Array.of(ids)
+export function superiorTreeList(idList) {
+  const ids = idList.length || idList.length === 0 ? idList : Array.of(idList)
   return request({
     url: 'api/sys/dept/superior',
-    method: 'get',
-    data
+    method: 'post',
+    data: ids
   })
 }
 
-export default { add, edit, del, treeList, getDeptSuperior }
+export default { add, edit, del, treeList, superiorTreeList }

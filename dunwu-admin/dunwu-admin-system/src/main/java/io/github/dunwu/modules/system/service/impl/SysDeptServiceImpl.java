@@ -146,9 +146,9 @@ public class SysDeptServiceImpl extends ServiceImpl implements SysDeptService {
     }
 
     @Override
-    public Map<String, Object> treeListMap(Object query) {
+    public Collection<SysDeptDto> treeList(Object query) {
         Collection<SysDeptDto> list = pojoListByQuery(query);
-        return buildTreeList(list);
+        return deptDao.buildTreeList(list);
     }
 
     @Override
@@ -156,7 +156,7 @@ public class SysDeptServiceImpl extends ServiceImpl implements SysDeptService {
         Collection<SysDeptDto> trees = deptDao.buildTreeList(list);
         Map<String, Object> map = new HashMap<>(2);
         map.put("content", trees);
-        map.put("totalElements", list.size());
+        map.put("totalElements", trees.size());
         return map;
     }
 

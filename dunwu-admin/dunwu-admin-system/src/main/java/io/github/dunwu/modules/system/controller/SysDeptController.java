@@ -118,15 +118,15 @@ public class SysDeptController {
     @ApiOperation("根据 query 条件，返回 SysDeptDto 树形列表")
     @GetMapping("treeList")
     public ResponseEntity<Object> treeList(SysDeptQuery query) {
-        return new ResponseEntity<>(service.treeListMap(query), HttpStatus.OK);
+        return new ResponseEntity<>(service.treeList(query), HttpStatus.OK);
     }
 
     @ApiOperation("查询部门:根据ID获取同级与上级数据")
     @PreAuthorize("@exp.check('dept:view')")
-    @GetMapping("superior")
-    public ResponseEntity<Object> superiorList(Collection<Long> ids) {
+    @PostMapping("superior")
+    public ResponseEntity<Object> superiorTreeList(@RequestBody Collection<Serializable> ids) {
         Collection<SysDeptDto> depts = new ArrayList<>();
-        for (Long id : ids) {
+        for (Serializable id : ids) {
             SysDeptDto sysDeptDto = service.pojoById(id);
             if (sysDeptDto == null) {
                 continue;

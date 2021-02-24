@@ -1,5 +1,6 @@
 package io.github.dunwu.modules.system.dao.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.github.dunwu.data.core.annotation.Dao;
 import io.github.dunwu.data.mybatis.BaseExtDaoImpl;
@@ -16,6 +17,7 @@ import io.github.dunwu.web.util.ServletUtil;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -49,11 +51,16 @@ public class SysDeptDaoImpl extends BaseExtDaoImpl<SysDeptMapper, SysDept> imple
 
     @Override
     public Collection<SysDeptDto> buildTreeList(Collection<SysDeptDto> list) {
+        if (CollectionUtil.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+
         TreeNodeConfig treeNodeConfig = new TreeNodeConfig();
         treeNodeConfig.setWeightKey("id");
         treeNodeConfig.setPidKey("pid");
         treeNodeConfig.setSort(Node.SORT.ASC);
         treeNodeConfig.setDeep(10);
+        list = list.stream().filter(Objects::nonNull).collect(Collectors.toList());
         return TreeUtil.build(list, 0L, treeNodeConfig, SysDeptDto.class);
     }
 

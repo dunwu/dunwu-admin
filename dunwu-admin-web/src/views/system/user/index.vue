@@ -357,16 +357,16 @@ export default {
       setTimeout(() => {
         crudDept.treeList(params).then(res => {
           if (resolve) {
-            resolve(res.content)
+            resolve(res)
           } else {
-            this.deptDatas = res.content
+            this.deptDatas = res
           }
         })
       }, 100)
     },
     getDepts() {
       crudDept.treeList({ enabled: true }).then(res => {
-        this.depts = res.content.map(function(obj) {
+        this.depts = res.map(function(obj) {
           if (obj.hasChildren) {
             obj.children = null
           }
@@ -375,7 +375,7 @@ export default {
       })
     },
     getSupDepts(deptId) {
-      crudDept.getDeptSuperior(deptId).then(res => {
+      crudDept.superiorTreeList(deptId).then(res => {
         const date = res.content
         this.buildDepts(date)
         this.depts = date
@@ -395,7 +395,7 @@ export default {
     loadDepts({ action, parentNode, callback }) {
       if (action === LOAD_CHILDREN_OPTIONS) {
         crudDept.treeList({ enabled: true, pid: parentNode.id }).then(res => {
-          parentNode.children = res.content.map(function(obj) {
+          parentNode.children = res.map(function(obj) {
             if (obj.hasChildren) {
               obj.children = null
             }

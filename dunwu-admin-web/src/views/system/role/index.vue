@@ -136,8 +136,8 @@
 </template>
 
 <script>
-import crudRoles from '@/api/system/role'
-import { treeList, getDeptSuperior } from '@/api/system/dept'
+import crudRole from '@/api/system/role'
+import crudDept from '@/api/system/dept'
 import { getMenusTree, getChild } from '@/api/system/menu'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
 import rrOperation from '@crud/Query.operation'
@@ -154,7 +154,7 @@ export default {
   name: 'Role',
   components: { Treeselect, pagination, crudOperation, rrOperation, udOperation, DateRangePicker },
   cruds() {
-    return CRUD({ title: '角色', url: 'api/sys/role', sort: 'level,asc', crudMethod: { ...crudRoles }})
+    return CRUD({ title: '角色', url: 'api/sys/role', sort: 'level,asc', crudMethod: { ...crudRole }})
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   data() {
@@ -181,7 +181,7 @@ export default {
     }
   },
   created() {
-    crudRoles.getLevel().then(data => {
+    crudRole.getLevel().then(data => {
       this.level = data.level
     })
   },
@@ -278,7 +278,7 @@ export default {
         const menu = { id: id }
         role.menus.push(menu)
       })
-      crudRoles
+      crudRole
         .editMenu(role)
         .then(() => {
           this.crud.notify('保存成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
@@ -293,7 +293,7 @@ export default {
     // 改变数据
     update() {
       // 无刷新更新 表格数据
-      crudRoles.get(this.currentId).then(res => {
+      crudRole.get(this.currentId).then(res => {
         for (let i = 0; i < this.crud.data.length; i++) {
           if (res.id === this.crud.data[i].id) {
             this.crud.data[i] = res
@@ -304,7 +304,7 @@ export default {
     },
     // 获取部门数据
     getDepts() {
-      treeList({ enabled: true }).then(res => {
+      crudDept.treeList({ enabled: true }).then(res => {
         this.depts = res.content.map(function(obj) {
           if (obj.hasChildren) {
             obj.children = null
@@ -318,7 +318,7 @@ export default {
       depts.forEach(dept => {
         ids.push(dept.id)
       })
-      getDeptSuperior(ids).then(res => {
+      crudDept.superiorTreeList(ids).then(res => {
         const date = res.content
         this.buildDepts(date)
         this.depts = date
@@ -337,7 +337,7 @@ export default {
     // 获取弹窗内部门数据
     loadDepts({ action, parentNode, callback }) {
       if (action === LOAD_CHILDREN_OPTIONS) {
-        treeList({ enabled: true, pid: parentNode.id }).then(res => {
+        crudDept.treeList({ enabled: true, pid: parentNode.id }).then(res => {
           parentNode.children = res.content.map(function(obj) {
             if (obj.hasChildren) {
               obj.children = null

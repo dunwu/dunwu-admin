@@ -58,8 +58,13 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="状态" prop="enabled">
-          <el-radio v-for="item in dict.dept_status" :key="item.id" v-model="form.enabled" :label="item.value">
-            {{ item.label }}
+          <el-radio
+            v-for="item in dict['dept_status'].options"
+            :key="item.id"
+            v-model="form.enabled"
+            :label="item.name"
+          >
+            {{ item.name }}
           </el-radio>
         </el-form-item>
         <el-form-item label="备注" prop="note">
@@ -77,8 +82,15 @@
             :load-options="loadDepts"
             :options="depts"
             style="width: 370px;"
-            placeholder="选择上级类目"
-          />
+            :searchable="false"
+            :show-count="true"
+            :default-expand-level="1"
+          >
+            <label slot="option-label" slot-scope="{ node, shouldShowCount, count, labelClassName, countClassName }" :class="labelClassName">
+              {{ node.label }}
+              <span v-if="shouldShowCount" :class="countClassName">({{ count }})</span>
+            </label>
+          </treeselect>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -145,7 +157,7 @@ import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
 import DateRangePicker from '@/components/DateRangePicker'
 
-const defaultForm = { id: null, name: null, isTop: '1', subCount: 0, pid: null, weight: 999, enabled: 'true' }
+const defaultForm = { id: null, name: null, isTop: '1', subCount: 0, pid: 0, weight: 999, enabled: 'true' }
 export default {
   name: 'Dept',
   components: { Treeselect, crudOperation, rrOperation, udOperation, DateRangePicker },
@@ -153,6 +165,7 @@ export default {
     return CRUD({
       title: '部门',
       url: 'api/sys/dept',
+      tableType: 'tree',
       crudMethod: { ...crudDept }
     })
   },
@@ -171,7 +184,10 @@ export default {
         edit: ['admin', 'dept:edit'],
         del: ['admin', 'dept:del']
       },
-      enabledTypeOptions: [{ key: 'true', display_name: '正常' }, { key: 'false', display_name: '禁用' }]
+      enabledTypeOptions: [
+        { key: 'true', display_name: '正常' },
+        { key: 'false', display_name: '禁用' }
+      ]
     }
   },
   methods: {
@@ -179,13 +195,13 @@ export default {
       const params = { pid: tree.id }
       setTimeout(() => {
         crudDept.treeList(params).then(res => {
-          resolve(res.content)
+          resolve(res)
         })
       }, 100)
     },
     // 新增与编辑前做的操作
     [CRUD.HOOK.afterToCU](crud, form) {
-      if (form.pid !== null) {
+      if (form.pid !== 0) {
         form.isTop = '0'
       } else if (form.id !== null) {
         form.isTop = '1'
@@ -198,7 +214,7 @@ export default {
       }
     },
     getSupDepts(id) {
-      crudDept.getDeptSuperior(id).then(res => {
+      crudDept.superiorTreeList(id).then(res => {
         const depts = res.content
         this.buildDepts(depts)
         this.depts = depts
@@ -216,7 +232,7 @@ export default {
     },
     getDepts() {
       crudDept.treeList({ enabled: true }).then(res => {
-        this.depts = res.content.map(function(obj) {
+        this.depts = res.map(function(obj) {
           return obj
         })
       })
@@ -225,7 +241,7 @@ export default {
     loadDepts({ action, parentNode, callback }) {
       if (action === LOAD_CHILDREN_OPTIONS) {
         crudDept.treeList({ enabled: true, pid: parentNode.id }).then(res => {
-          parentNode.children = res.content.map(function(obj) {
+          parentNode.children = res.map(function(obj) {
             return obj
           })
           setTimeout(() => {
@@ -236,7 +252,7 @@ export default {
     },
     // 提交前的验证
     [CRUD.HOOK.afterValidateCU]() {
-      if (this.form.pid !== null && this.form.pid === this.form.id) {
+      if (this.form.pid !== 0 && this.form.pid === this.form.id) {
         this.$message({
           message: '上级部门不能为空',
           type: 'warning'
@@ -244,7 +260,7 @@ export default {
         return false
       }
       if (this.form.isTop === '1') {
-        this.form.pid = null
+        this.form.pid = 0
       }
       return true
     },

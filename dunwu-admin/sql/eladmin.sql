@@ -194,7 +194,7 @@ CREATE TABLE `mnt_server` (
 DROP TABLE IF EXISTS `sys_dept`;
 CREATE TABLE `sys_dept` (
     `id`          BIGINT(20)   NOT NULL AUTO_INCREMENT COMMENT 'ID',
-    `pid`         BIGINT(20)   DEFAULT NULL COMMENT '上级部门',
+    `pid`         BIGINT(20)   DEFAULT 0 COMMENT '上级部门',
     `sub_count`   INT(5)       DEFAULT 0 COMMENT '子部门数目',
     `name`        VARCHAR(255) NOT NULL COMMENT '名称',
     `weight`      INT(5)       DEFAULT 999 COMMENT '排序',
@@ -223,9 +223,9 @@ VALUES (5, 7, 0, '运维部', 4, b'1', NULL, 'admin', 'admin', '2019-03-25 09:20
 INSERT INTO `sys_dept`
 VALUES (6, 8, 0, '测试部', 6, b'1', NULL, 'admin', 'admin', '2019-03-25 09:52:18', '2020-06-08 11:59:21');
 INSERT INTO `sys_dept`
-VALUES (7, NULL, 2, '华南分部', 0, b'1', NULL, 'admin', 'admin', '2019-03-25 11:04:50', '2020-06-08 12:08:56');
+VALUES (7, 0, 2, '华南分部', 0, b'1', NULL, 'admin', 'admin', '2019-03-25 11:04:50', '2020-06-08 12:08:56');
 INSERT INTO `sys_dept`
-VALUES (8, NULL, 2, '华北分部', 1, b'1', NULL, 'admin', 'admin', '2019-03-25 11:04:53', '2020-05-14 12:54:00');
+VALUES (8, 0, 2, '华北分部', 1, b'1', NULL, 'admin', 'admin', '2019-03-25 11:04:53', '2020-05-14 12:54:00');
 INSERT INTO `sys_dept`
 VALUES (15, 8, 0, 'UI部门', 7, b'1', NULL, 'admin', 'admin', '2020-05-13 22:56:53', '2020-05-14 12:54:13');
 INSERT INTO `sys_dept`

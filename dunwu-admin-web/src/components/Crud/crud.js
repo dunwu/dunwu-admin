@@ -17,6 +17,8 @@ function CRUD(options) {
     idField: 'id',
     // 标题
     title: '',
+    // 表类型
+    tableType: 'page',
     // 请求数据的url
     url: '',
     // 表格数据
@@ -134,29 +136,54 @@ function CRUD(options) {
       }
       return new Promise((resolve, reject) => {
         crud.loading = true
+        console.log('tableType', this.tableType)
         // 请求数据
-        initData(crud.url + '/page', crud.getQueryParams())
-          .then(data => {
-            const table = crud.getTable()
-            if (table && table.lazy) {
-              // 懒加载子节点数据，清掉已加载的数据
-              table.store.states.treeData = {}
-              table.store.states.lazyTreeNodeMap = {}
-            }
-            crud.page.total = data.totalElements
-            crud.data = data.content
-            crud.resetDataStatus()
-            // time 毫秒后显示表格
-            setTimeout(() => {
+        if (this.tableType === 'tree') {
+          initData(crud.url + '/treeList', crud.getQueryParams())
+            .then(data => {
+              const table = crud.getTable()
+              if (table && table.lazy) {
+                // 懒加载子节点数据，清掉已加载的数据
+                table.store.states.treeData = {}
+                table.store.states.lazyTreeNodeMap = {}
+              }
+              crud.data = data
+              crud.resetDataStatus()
+              // time 毫秒后显示表格
+              setTimeout(() => {
+                crud.loading = false
+                callVmHook(crud, CRUD.HOOK.afterRefresh)
+              }, crud.time)
+              resolve(data)
+            })
+            .catch(err => {
               crud.loading = false
-              callVmHook(crud, CRUD.HOOK.afterRefresh)
-            }, crud.time)
-            resolve(data)
-          })
-          .catch(err => {
-            crud.loading = false
-            reject(err)
-          })
+              reject(err)
+            })
+        } else {
+          initData(crud.url + '/page', crud.getQueryParams())
+            .then(data => {
+              const table = crud.getTable()
+              if (table && table.lazy) {
+                // 懒加载子节点数据，清掉已加载的数据
+                table.store.states.treeData = {}
+                table.store.states.lazyTreeNodeMap = {}
+              }
+              crud.page.total = data.totalElements
+              crud.data = data.content
+              crud.resetDataStatus()
+              // time 毫秒后显示表格
+              setTimeout(() => {
+                crud.loading = false
+                callVmHook(crud, CRUD.HOOK.afterRefresh)
+              }, crud.time)
+              resolve(data)
+            })
+            .catch(err => {
+              crud.loading = false
+              reject(err)
+            })
+        }
       })
     },
     /**
@@ -367,12 +394,20 @@ function CRUD(options) {
         Object.keys(crud.params).forEach(item => {
           if (crud.params[item] === null || crud.params[item] === '') crud.params[item] = undefined
         })
-      return {
-        page: crud.page.page - 1,
-        size: crud.page.size,
-        sort: crud.sort,
-        ...crud.query,
-        ...crud.params
+
+      if (this.tableType === 'tree') {
+        return {
+          ...crud.query,
+          ...crud.params
+        }
+      } else {
+        return {
+          page: crud.page.page - 1,
+          size: crud.page.size,
+          sort: crud.sort,
+          ...crud.query,
+          ...crud.params
+        }
       }
     },
     // 当前页改变
