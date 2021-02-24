@@ -182,7 +182,7 @@ import crudUser from '@/api/system/user'
 import { isvalidPhone } from '@/utils/validate'
 import { getDepts, getDeptSuperior } from '@/api/system/dept'
 import { getAll, getLevel } from '@/api/system/role'
-import { getAllJob } from '@/api/system/job'
+import { list as getJobList } from '@/api/system/job'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
 import rrOperation from '@crud/Query.operation'
 import crudOperation from '@crud/CRUD.operation'
@@ -243,7 +243,10 @@ export default {
         edit: ['admin', 'user:edit'],
         del: ['admin', 'user:del']
       },
-      enabledTypeOptions: [{ code: 'true', name: '激活' }, { code: 'false', name: '锁定' }],
+      enabledTypeOptions: [
+        { code: 'true', name: '激活' },
+        { code: 'false', name: '锁定' }
+      ],
       rules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -297,7 +300,7 @@ export default {
         this.getSupDepts(form.dept.id)
       }
       this.getRoleLevel()
-      this.getJobs()
+      this.getJobs({ enabled: true })
       form.enabled = form.enabled.toString()
     },
     // 新增前将多选的值设置为空
@@ -306,7 +309,7 @@ export default {
     },
     // 初始化编辑时候的角色与岗位
     [CRUD.HOOK.beforeToEdit](crud, form) {
-      this.getJobs(this.form.dept.id)
+      this.getJobs({ deptId: this.form.dept.id })
       this.roleDatas = []
       userRoles = []
       const _this = this
@@ -443,10 +446,10 @@ export default {
         .catch(() => {})
     },
     // 获取弹窗内岗位数据
-    getJobs() {
-      getAllJob()
+    getJobs(params) {
+      getJobList(params)
         .then(res => {
-          this.jobs = res.content
+          this.jobs = res
         })
         .catch(() => {})
     },

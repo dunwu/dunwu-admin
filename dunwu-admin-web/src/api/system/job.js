@@ -39,17 +39,12 @@ export function edit(data) {
   })
 }
 
-export function getAllJob() {
-  const params = {
-    page: 0,
-    size: 9999,
-    enabled: true
-  }
+export function list(params) {
   return request({
-    url: 'api/sys/job',
+    url: 'api/sys/job/list',
     method: 'get',
     params
   })
 }
 
-export default { add, edit, del }
+export default { add, edit, del, list }

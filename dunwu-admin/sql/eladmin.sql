@@ -333,13 +333,13 @@ CREATE TABLE `sys_job` (
 -- ----------------------------
 BEGIN;
 INSERT INTO `sys_job`
-VALUES (8, '人事专员', 3, NULL, b'1', NULL, 'admin', 'admin', '2019-03-29 14:52:28', NULL);
+VALUES (1, '人事专员', 3, NULL, b'1', NULL, 'admin', 'admin', '2019-03-29 14:52:28', NULL);
 INSERT INTO `sys_job`
-VALUES (10, '产品经理', 4, NULL, b'1', NULL, 'admin', 'admin', '2019-03-29 14:55:51', NULL);
+VALUES (2, '产品经理', 4, NULL, b'1', NULL, 'admin', 'admin', '2019-03-29 14:55:51', NULL);
 INSERT INTO `sys_job`
-VALUES (11, '全栈开发', 2, NULL, b'1', NULL, 'admin', 'admin', '2019-03-31 13:39:30', '2020-05-05 11:33:43');
+VALUES (3, '全栈开发', 2, NULL, b'1', NULL, 'admin', 'admin', '2019-03-31 13:39:30', '2020-05-05 11:33:43');
 INSERT INTO `sys_job`
-VALUES (12, '软件测试', 5, NULL, b'1', NULL, 'admin', 'admin', '2019-03-31 13:39:43', '2020-05-10 19:56:26');
+VALUES (4, '软件测试', 5, NULL, b'1', NULL, 'admin', 'admin', '2019-03-31 13:39:43', '2020-05-10 19:56:26');
 COMMIT;
 
 -- ----------------------------
@@ -811,12 +811,12 @@ CREATE TABLE `sys_user` (
 -- ----------------------------
 BEGIN;
 INSERT INTO `sys_user`
-VALUES (1, 2, NULL, 'admin', '管理员', '男', '18888888888', '201507802@qq.com',
+VALUES (1, 2, 1, 'admin', '管理员', '男', '18888888888', '201507802@qq.com',
         'http://dunwu.test.upcdn.net/common/logo/dunwu-logo.png',
         '$2a$10$Egp1/gvFlt7zhlXVfEFw4OfWQCGPw0ClmMcc6FjTnvXNRVf9zdMRa', b'1', 1, NULL, 'admin', '2020-05-03 16:38:31',
         '2018-08-23 09:11:56', '2020-09-05 10:43:31');
 INSERT INTO `sys_user`
-VALUES (2, 2, NULL, 'test', '测试', '男', '19999999999', '231@qq.com',
+VALUES (2, 2, 2, 'test', '测试', '男', '19999999999', '231@qq.com',
         'http://dunwu.test.upcdn.net/common/logo/dunwu-logo.png',
         '$2a$10$4XcyudOYTSz6fue6KFNMHeUQnCX5jbBQypLEnGk1PmekXt5c95JcK', b'0', 1, 'admin', 'admin', NULL,
         '2020-05-05 11:15:49', '2020-09-05 10:43:38');
