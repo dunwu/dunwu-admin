@@ -48,7 +48,7 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 @Api(tags = "运维：部署管理")
 @RequiredArgsConstructor
-@RequestMapping("/api/deploy")
+@RequestMapping("deploy")
 public class DeployController {
 
 	private final String fileSavePath = FileUtil.getTmpDirPath()+"/";

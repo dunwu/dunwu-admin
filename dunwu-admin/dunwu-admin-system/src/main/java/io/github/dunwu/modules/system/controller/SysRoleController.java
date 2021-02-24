@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
  * @since 2020-05-24
  */
 @RestController
-@RequestMapping("/api/sys/role")
+@RequestMapping("sys/role")
 @Api(tags = "系统：角色管理")
 @RequiredArgsConstructor
 public class SysRoleController {

@@ -40,7 +40,7 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 @Api(tags = "运维：服务器管理")
 @RequiredArgsConstructor
-@RequestMapping("/api/serverDeploy")
+@RequestMapping("serverDeploy")
 public class ServerDeployController {
 
     private final ServerDeployService serverDeployService;

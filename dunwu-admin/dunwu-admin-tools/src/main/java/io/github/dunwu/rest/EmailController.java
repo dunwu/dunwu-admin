@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/email")
+@RequestMapping("email")
 @Api(tags = "工具：邮件管理")
 public class EmailController {
 

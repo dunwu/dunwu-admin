@@ -42,7 +42,7 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 @RequiredArgsConstructor
 @Api(tags = "工具：本地存储管理")
-@RequestMapping("/api/localStorage")
+@RequestMapping("localStorage")
 public class LocalStorageController {
 
     private final LocalStorageService localStorageService;

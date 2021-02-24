@@ -37,7 +37,7 @@ import javax.servlet.http.HttpServletResponse;
  * @since 2020-05-25
  */
 @RestController
-@RequestMapping("/api/sys/user")
+@RequestMapping("sys/user")
 @Api(tags = "系统：用户管理")
 @RequiredArgsConstructor
 public class SysUserController {

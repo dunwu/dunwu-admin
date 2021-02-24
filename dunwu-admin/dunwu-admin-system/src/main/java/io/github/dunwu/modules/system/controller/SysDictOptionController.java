@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
  * @since 2020-05-24
  */
 @RestController
-@RequestMapping("api/sys/dict/option")
+@RequestMapping("sys/dict/option")
 @Api(tags = "系统：字典选项管理")
 @RequiredArgsConstructor
 public class SysDictOptionController {

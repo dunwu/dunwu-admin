@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
  * @since 2020-05-24
  */
 @RestController
-@RequestMapping("/api/sys/dict")
+@RequestMapping("sys/dict")
 @Api(tags = "系统：字典管理")
 @RequiredArgsConstructor
 public class SysDictController {

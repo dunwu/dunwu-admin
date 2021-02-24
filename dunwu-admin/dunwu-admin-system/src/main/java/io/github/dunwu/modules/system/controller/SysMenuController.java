@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
  * @since 2020-05-24
  */
 @RestController
-@RequestMapping("api/sys/menu")
+@RequestMapping("sys/menu")
 @Api(tags = "系统：菜单管理")
 @RequiredArgsConstructor
 public class SysMenuController {

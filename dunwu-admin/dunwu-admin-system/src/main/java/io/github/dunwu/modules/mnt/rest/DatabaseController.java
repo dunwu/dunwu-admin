@@ -47,7 +47,7 @@ import javax.servlet.http.HttpServletResponse;
 @Api(tags = "运维：数据库管理")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/database")
+@RequestMapping("database")
 public class DatabaseController {
 
 	private final String fileSavePath = FileUtil.getTmpDirPath()+"/";

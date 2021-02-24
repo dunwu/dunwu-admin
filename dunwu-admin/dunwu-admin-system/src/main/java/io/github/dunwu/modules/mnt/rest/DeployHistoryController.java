@@ -38,7 +38,7 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 @RequiredArgsConstructor
 @Api(tags = "运维：部署历史管理")
-@RequestMapping("/api/deployHistory")
+@RequestMapping("deployHistory")
 public class DeployHistoryController {
 
     private final DeployHistoryService deployhistoryService;

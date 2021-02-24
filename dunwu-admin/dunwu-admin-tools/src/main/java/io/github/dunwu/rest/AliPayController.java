@@ -45,7 +45,7 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/aliPay")
+@RequestMapping("aliPay")
 @Api(tags = "工具：支付宝管理")
 public class AliPayController {
 

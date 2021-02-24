@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
  * @since 2020-05-24
  */
 @RestController
-@RequestMapping("/api/sys/dept")
+@RequestMapping("sys/dept")
 @Api(tags = "系统：部门管理")
 @RequiredArgsConstructor
 public class SysDeptController {

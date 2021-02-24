@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
  * @since 2020-05-24
  */
 @RestController
-@RequestMapping("/api/sys/job")
+@RequestMapping("sys/job")
 @Api(tags = "系统：岗位管理")
 @RequiredArgsConstructor
 public class SysJobController {

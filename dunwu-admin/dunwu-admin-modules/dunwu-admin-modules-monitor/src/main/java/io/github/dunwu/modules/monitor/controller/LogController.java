@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
  * @since 2020-04-09
  */
 @RestController
-@RequestMapping("/api/monitor/log")
+@RequestMapping("monitor/log")
 @Api(tags = "系统：日志管理")
 @RequiredArgsConstructor
 public class LogController {
