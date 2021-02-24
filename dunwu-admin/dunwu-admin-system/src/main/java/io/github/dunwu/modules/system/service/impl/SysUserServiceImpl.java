@@ -225,9 +225,7 @@ public class SysUserServiceImpl extends ServiceImpl implements SysUserService {
     }
 
     public SysUser dtoToDo(SysUserDto dto) {
-        SysUser entity = BeanUtil.toBean(dto, SysUser.class);
-        entity.setDeptId(dto.getDept().getId());
-        return entity;
+        return BeanUtil.toBean(dto, SysUser.class);
     }
 
     @Override
