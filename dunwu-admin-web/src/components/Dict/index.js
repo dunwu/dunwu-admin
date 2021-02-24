@@ -16,6 +16,7 @@ const install = function(Vue) {
     },
     created() {
       if (this.$options.dicts instanceof Array) {
+        console.log('this.$options.dicts', this.$options.dicts)
         new Dict(this.dict).init(this.$options.dicts, () => {
           this.$nextTick(() => {
             this.$emit('dictReady')

@@ -37,87 +37,79 @@ public class SysJobController {
     private final SysJobService jobService;
     private final SysRoleService roleService;
 
-    @PostMapping
-    @Log("创建一条 SysJob 记录")
+    @Log("添加一条 SysJob 记录")
     @PreAuthorize("@exp.check('job:add')")
-    @ApiOperation("创建一条 SysJob 记录")
+    @ApiOperation("添加一条 SysJob 记录")
+    @PostMapping("add")
     public ResponseEntity<Object> add(@Validated(AddCheck.class) @RequestBody SysJob entity) {
         return new ResponseEntity<>(jobService.save(entity), HttpStatus.CREATED);
     }
 
-    @PutMapping
     @Log("更新一条 SysJob 记录")
     @PreAuthorize("@exp.check('job:edit')")
     @ApiOperation("更新一条 SysJob 记录")
+    @PostMapping("edit")
     public ResponseEntity<Object> edit(@Validated(EditCheck.class) @RequestBody SysJob entity) {
         return new ResponseEntity<>(jobService.updateById(entity), HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping("{id}")
     @Log("删除一条 SysJob 记录")
     @PreAuthorize("@exp.check('job:del')")
     @ApiOperation("删除一条 SysJob 记录")
+    @PostMapping("del/{id}")
     public ResponseEntity<Object> deleteById(@PathVariable Serializable id) {
         return new ResponseEntity<>(jobService.removeById(id), HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping
     @Log("根据 ID 集合批量删除 SysJob 记录")
     @PreAuthorize("@exp.check('job:del')")
     @ApiOperation("根据 ID 集合批量删除 SysJob 记录")
+    @PostMapping("del")
     public ResponseEntity<Object> deleteByIds(@RequestBody Collection<Serializable> ids) {
         return new ResponseEntity<>(jobService.removeByIds(ids), HttpStatus.ACCEPTED);
     }
 
-    @GetMapping
-    @PreAuthorize("@exp.check('job:view')")
-    @ApiOperation("查询 SysJobDto 记录")
-    public ResponseEntity<Object> view(SysJobQuery query, Pageable pageable) {
-        return page(query, pageable);
-    }
-
-    @GetMapping("page")
-    @PreAuthorize("@exp.check('job:view')")
-    @ApiOperation("根据 query 和 pageable 条件，分页查询 SysJobDto 记录")
-    public ResponseEntity<Object> page(SysJobQuery query, Pageable pageable) {
-        return new ResponseEntity<>(jobService.pojoPageByQuery(query, pageable), HttpStatus.OK);
-    }
-
-    @GetMapping("{id}")
-    @PreAuthorize("@exp.check('job:view')")
-    @ApiOperation("根据 ID 查询 SysJob 记录")
-    public ResponseEntity<Object> getById(@PathVariable Serializable id) {
-        return new ResponseEntity<>(jobService.pojoById(id), HttpStatus.OK);
-    }
-
-    @GetMapping("count")
-    @PreAuthorize("@exp.check('job:view')")
-    @ApiOperation("根据 query 条件，查询匹配条件的总记录数")
-    public ResponseEntity<Object> count(SysJobQuery query) {
-        return new ResponseEntity<>(jobService.countByQuery(query), HttpStatus.OK);
-    }
-
-    @GetMapping("list")
     @PreAuthorize("@exp.check('job:view')")
     @ApiOperation("根据 query 条件，查询匹配条件的 SysJobDto 列表")
+    @GetMapping("list")
     public ResponseEntity<Object> list(SysJobQuery query) {
         return new ResponseEntity<>(jobService.pojoListByQuery(query), HttpStatus.OK);
     }
 
-    // @GetMapping("export")
-    // @PreAuthorize("@exp.check('job:view')")
-    // @ApiOperation("根据 ID 集合批量导出 SysJobDto 列表数据")
-    // public void exportByIds(@RequestBody Collection<Serializable> ids, HttpServletResponse response)
-    //     throws IOException {
-    //     jobService.exportByIds(ids, response);
-    // }
+    @PreAuthorize("@exp.check('job:view')")
+    @ApiOperation("根据 query 和 pageable 条件，分页查询 SysJobDto 记录")
+    @GetMapping("page")
+    public ResponseEntity<Object> page(SysJobQuery query, Pageable pageable) {
+        return new ResponseEntity<>(jobService.pojoPageByQuery(query, pageable), HttpStatus.OK);
+    }
 
-    // @GetMapping("export/page")
-    @GetMapping("export")
+    @PreAuthorize("@exp.check('job:view')")
+    @ApiOperation("根据 query 条件，查询匹配条件的总记录数")
+    @GetMapping("count")
+    public ResponseEntity<Object> count(SysJobQuery query) {
+        return new ResponseEntity<>(jobService.countByQuery(query), HttpStatus.OK);
+    }
+
+    @PreAuthorize("@exp.check('job:view')")
+    @ApiOperation("根据 ID 查询 SysJob 记录")
+    @GetMapping("{id}")
+    public ResponseEntity<Object> getById(@PathVariable Serializable id) {
+        return new ResponseEntity<>(jobService.pojoById(id), HttpStatus.OK);
+    }
+
     @PreAuthorize("@exp.check('job:view')")
     @ApiOperation("根据 query 和 pageable 条件批量导出 SysJobDto 列表数据")
+    @GetMapping("export/page")
     public void exportPageData(SysJobQuery query, Pageable pageable, HttpServletResponse response) throws IOException {
         jobService.exportPageData(query, pageable, response);
+    }
+
+    @PreAuthorize("@exp.check('job:view')")
+    @ApiOperation("根据 ID 集合批量导出 SysJobDto 列表数据")
+    @GetMapping("export/list")
+    public void exportByIds(@RequestBody Collection<Serializable> ids, HttpServletResponse response)
+        throws IOException {
+        jobService.exportByIds(ids, response);
     }
 
     @GetMapping("roles/{jobId}")

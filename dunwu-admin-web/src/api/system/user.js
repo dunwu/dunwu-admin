@@ -2,7 +2,7 @@ import request from '@/utils/request'
 import { encrypt } from '@/utils/rsaEncrypt'
 
 /**
- * 添加一条用户记录
+ * 添加一条记录
  * @param data
  * @returns {*}
  */
@@ -15,7 +15,7 @@ export function add(data) {
 }
 
 /**
- * 根据 ID 集合批量删除用户
+ * 根据 ID 集合批量删除
  * @param ids
  * @returns {*}
  */
@@ -28,7 +28,7 @@ export function del(ids) {
 }
 
 /**
- * 修改一条用户记录
+ * 修改一条记录
  * @param data
  * @returns {*}
  */

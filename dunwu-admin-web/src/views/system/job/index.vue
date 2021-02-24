@@ -47,7 +47,7 @@
     <!--分页组件-->
     <pagination />
     <!--表单渲染-->
-    <eForm :job-status="dict.job_status" />
+    <eForm :job-status="dict.job_status.options" />
   </div>
 </template>
 

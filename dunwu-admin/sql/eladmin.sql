@@ -823,28 +823,6 @@ VALUES (2, 2, NULL, 'test', '测试', '男', '19999999999', '231@qq.com',
 COMMIT;
 
 -- ----------------------------
--- Table structure for sys_users_jobs
--- ----------------------------
-DROP TABLE IF EXISTS `sys_users_jobs`;
-CREATE TABLE `sys_users_jobs` (
-    `user_id` BIGINT(20) NOT NULL COMMENT '用户ID',
-    `job_id`  BIGINT(20) NOT NULL COMMENT '岗位ID',
-    PRIMARY KEY (`user_id`, `job_id`)
-)
-    ENGINE = InnoDB
-    DEFAULT CHARSET = `utf8`;
-
--- ----------------------------
--- Records of sys_users_jobs
--- ----------------------------
-BEGIN;
-INSERT INTO `sys_users_jobs`
-VALUES (1, 11);
-INSERT INTO `sys_users_jobs`
-VALUES (2, 12);
-COMMIT;
-
--- ----------------------------
 -- Table structure for sys_users_roles
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_users_roles`;
