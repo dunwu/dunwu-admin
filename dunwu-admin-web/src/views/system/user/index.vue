@@ -98,7 +98,7 @@
             </el-form-item>
             <el-form-item label="状态">
               <el-radio-group v-model="form.enabled" :disabled="form.id === user.id">
-                <el-radio v-for="item in dict.dict.user_status" :key="item.id" :label="item.code">
+                <el-radio v-for="item in dict['user_status'].options" :key="item.id" :label="item.code">
                   {{ item.name }}
                 </el-radio>
               </el-radio-group>

@@ -19,7 +19,7 @@
       style="width: 90px"
       @change="crud.toQuery"
     >
-      <el-option v-for="item in dict.dict.job_status" :key="item.value" :label="item.label" :value="item.value" />
+      <el-option v-for="item in dict.job_status.options" :key="item.value" :label="item.label" :value="item.value" />
     </el-select>
     <rrOperation />
   </div>

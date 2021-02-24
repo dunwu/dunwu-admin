@@ -21,8 +21,13 @@
         />
       </el-form-item>
       <el-form-item v-if="form.pid !== 0" label="状态" prop="enabled">
-        <el-radio v-for="item in jobStatus" :key="item.id" v-model="form.enabled" :label="item.value === 'true'">
-          {{ item.label }}
+        <el-radio
+          v-for="item in dict['job_status'].options"
+          :key="item.id"
+          v-model="form.enabled"
+          :label="item.code === 'true'"
+        >
+          {{ item.name }}
         </el-radio>
       </el-form-item>
     </el-form>
@@ -49,10 +54,7 @@ const defaultForm = {
 export default {
   mixins: [form(defaultForm)],
   props: {
-    jobStatus: {
-      type: Array,
-      required: true
-    }
+    dict: { type: Object, required: true }
   },
   data() {
     return {

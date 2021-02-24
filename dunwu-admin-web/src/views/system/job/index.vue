@@ -47,7 +47,7 @@
     <!--分页组件-->
     <pagination />
     <!--表单渲染-->
-    <eForm :job-status="dict.job_status.options" />
+    <eForm :dict="dict" />
   </div>
 </template>
 
@@ -96,7 +96,7 @@ export default {
             .edit(data)
             .then(() => {
               // eslint-disable-next-line no-undef
-              this.crud.notify(this.dict.label.job_status[val] + '成功', 'success')
+              this.crud.notify(this.dict.job_status[val] + '成功', 'success')
             })
             .catch(err => {
               data.enabled = !data.enabled
