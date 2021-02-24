@@ -48,12 +48,7 @@
               style="width: 90px"
               @change="crud.toQuery"
             >
-              <el-option
-                v-for="item in enabledTypeOptions"
-                :key="item.code"
-                :label="item.name"
-                :value="item.code"
-              />
+              <el-option v-for="item in enabledTypeOptions" :key="item.code" :label="item.name" :value="item.code" />
             </el-select>
             <rrOperation />
           </div>
@@ -81,25 +76,18 @@
             <el-form-item label="邮箱" prop="email">
               <el-input v-model="form.email" />
             </el-form-item>
-            <el-form-item label="部门" prop="dept.id">
+            <el-form-item label="部门" prop="deptId">
               <treeselect
-                v-model="form.dept.id"
+                v-model="form.deptId"
                 :options="depts"
                 :load-options="loadDepts"
                 style="width: 178px"
-                placeholder="选择部门"
+                placeholder="请选择"
               />
             </el-form-item>
-            <el-form-item label="岗位" prop="jobs">
-              <el-select
-                v-model="jobDatas"
-                style="width: 178px"
-                multiple
-                placeholder="请选择"
-                @remove-tag="deleteTag"
-                @change="changeJob"
-              >
-                <el-option v-for="item in jobs" :key="item.name" :label="item.name" :value="item.id" />
+            <el-form-item label="岗位" prop="jobId">
+              <el-select v-model="form.jobId" style="width: 178px" placeholder="请选择">
+                <el-option v-for="item in jobs" :key="item.id" :label="item.name" :value="item.id" />
               </el-select>
             </el-form-item>
             <el-form-item label="性别">
@@ -110,8 +98,8 @@
             </el-form-item>
             <el-form-item label="状态">
               <el-radio-group v-model="form.enabled" :disabled="form.id === user.id">
-                <el-radio v-for="item in dict.user_status" :key="item.id" :label="item.value">
-                  {{ item.label }}
+                <el-radio v-for="item in dict.dict.user_status" :key="item.id" :label="item.code">
+                  {{ item.name }}
                 </el-radio>
               </el-radio-group>
             </el-form-item>
@@ -206,7 +194,6 @@ import { mapGetters } from 'vuex'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import { LOAD_CHILDREN_OPTIONS } from '@riophae/vue-treeselect'
 let userRoles = []
-let userJobs = []
 const defaultForm = {
   id: null,
   username: null,
@@ -215,8 +202,10 @@ const defaultForm = {
   email: null,
   enabled: 'false',
   roles: [],
-  jobs: [],
+  jobId: null,
+  deptId: null,
   dept: { id: null },
+  job: { id: null },
   phone: null
 }
 export default {
@@ -247,7 +236,6 @@ export default {
       jobs: [],
       level: 3,
       roles: [],
-      jobDatas: [],
       roleDatas: [], // 多选时使用
       defaultProps: { children: 'children', label: 'name', isLeaf: 'leaf' },
       permission: {
@@ -293,13 +281,6 @@ export default {
         userRoles.push(role)
       })
     },
-    changeJob(value) {
-      userJobs = []
-      value.forEach(function(data, index) {
-        const job = { id: data }
-        userJobs.push(job)
-      })
-    },
     deleteTag(value) {
       userRoles.forEach(function(data, index) {
         if (data.id === value) {
@@ -321,26 +302,18 @@ export default {
     },
     // 新增前将多选的值设置为空
     [CRUD.HOOK.beforeToAdd]() {
-      this.jobDatas = []
       this.roleDatas = []
     },
     // 初始化编辑时候的角色与岗位
     [CRUD.HOOK.beforeToEdit](crud, form) {
       this.getJobs(this.form.dept.id)
-      this.jobDatas = []
       this.roleDatas = []
       userRoles = []
-      userJobs = []
       const _this = this
       form.roles.forEach(function(role, index) {
         _this.roleDatas.push(role.id)
         const rol = { id: role.id }
         userRoles.push(rol)
-      })
-      form.jobs.forEach(function(job, index) {
-        _this.jobDatas.push(job.id)
-        const data = { id: job.id }
-        userJobs.push(data)
       })
     },
     // 提交前做的操作
@@ -351,7 +324,7 @@ export default {
           type: 'warning'
         })
         return false
-      } else if (this.jobDatas.length === 0) {
+      } else if (!crud.form.jobId) {
         this.$message({
           message: '岗位不能为空',
           type: 'warning'
@@ -365,7 +338,6 @@ export default {
         return false
       }
       crud.form.roles = userRoles
-      crud.form.jobs = userJobs
       return true
     },
     // 获取左侧部门数据

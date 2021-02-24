@@ -30,7 +30,7 @@ public class SysMenu implements Serializable {
 
     @ApiModelProperty(value = "ID")
     @NotNull(groups = EditCheck.class)
-    @TableId(value = "menu_id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     @ApiModelProperty(value = "上级菜单ID")

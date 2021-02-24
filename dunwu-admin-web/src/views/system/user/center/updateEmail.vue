@@ -34,7 +34,7 @@
 <script>
 import store from '@/store'
 import { validEmail } from '@/utils/validate'
-import { updateEmail } from '@/api/system/user'
+import { editEmail } from '@/api/system/user'
 import { resetEmail } from '@/api/system/code'
 export default {
   props: {
@@ -113,7 +113,7 @@ export default {
       this.$refs['form'].validate(valid => {
         if (valid) {
           this.loading = true
-          updateEmail(this.form)
+          editEmail(this.form)
             .then(res => {
               this.loading = false
               this.resetForm()

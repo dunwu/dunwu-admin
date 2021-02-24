@@ -32,7 +32,7 @@ public class SysDept implements Serializable {
 
     @ApiModelProperty(value = "ID")
     @NotNull(groups = EditCheck.class)
-    @TableId(value = "dept_id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     @ApiModelProperty(value = "上级部门ID")

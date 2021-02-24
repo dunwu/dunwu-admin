@@ -62,11 +62,11 @@ public class SysUserDto implements Serializable {
     @ApiModelProperty(value = "用户所属角色集合", hidden = true)
     private List<SysRoleDto> roles;
 
-    @ApiModelProperty(value = "用户所属岗位信息", hidden = true)
-    private SysJobDto job;
-
     @ApiModelProperty(value = "用户所属部门信息", hidden = true)
     private SysDeptDto dept;
+
+    @ApiModelProperty(value = "用户所属岗位信息", hidden = true)
+    private SysJobDto job;
 
     @ApiModelProperty(value = "状态")
     private Boolean enabled;

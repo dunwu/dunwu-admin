@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function getDicts() {
+export function getDicts(code) {
   return request({
-    url: 'api/sys/dict',
+    url: 'api/sys/dict' + '?code=' + code,
     method: 'get'
   })
 }

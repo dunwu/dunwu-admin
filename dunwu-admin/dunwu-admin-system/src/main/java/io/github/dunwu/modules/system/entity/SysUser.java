@@ -31,7 +31,7 @@ public class SysUser implements Serializable {
 
     @ApiModelProperty(value = "用户ID")
     @NotNull(groups = EditCheck.class)
-    @TableId(value = "user_id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     @ApiModelProperty(value = "昵称")

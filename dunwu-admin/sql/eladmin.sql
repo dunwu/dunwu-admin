@@ -83,7 +83,7 @@ CREATE TABLE `mnt_app` (
     `create_by`     VARCHAR(255)  DEFAULT NULL COMMENT '创建者',
     `update_by`     VARCHAR(255)  DEFAULT NULL COMMENT '更新者',
     `create_time`   DATETIME      DEFAULT NULL COMMENT '创建时间',
-    `update_time`   DATETIME      DEFAULT NULL COMMENT '更新时间',
+    `update_time`   DATETIME      DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`app_id`) USING BTREE
 )
     ENGINE = InnoDB
@@ -103,8 +103,8 @@ CREATE TABLE `mnt_database` (
     `pwd`         VARCHAR(255) NOT NULL COMMENT '密码',
     `create_by`   VARCHAR(255) DEFAULT NULL COMMENT '创建者',
     `update_by`   VARCHAR(255) DEFAULT NULL COMMENT '更新者',
-    `create_time` DATETIME     DEFAULT NULL COMMENT '创建时间',
-    `update_time` DATETIME     DEFAULT NULL COMMENT '更新时间',
+    `create_time` DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`db_id`) USING BTREE
 )
     ENGINE = InnoDB
@@ -122,7 +122,7 @@ CREATE TABLE `mnt_deploy` (
     `create_by`   VARCHAR(255) DEFAULT NULL COMMENT '创建者',
     `update_by`   VARCHAR(255) DEFAULT NULL COMMENT '更新者',
     `create_time` DATETIME     DEFAULT NULL,
-    `update_time` DATETIME     DEFAULT NULL COMMENT '更新时间',
+    `update_time` DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`deploy_id`) USING BTREE,
     KEY `FK6sy157pseoxx4fmcqr1vnvvhy`(`app_id`) USING BTREE
 )
@@ -177,8 +177,8 @@ CREATE TABLE `mnt_server` (
     `port`        INT(11)      DEFAULT NULL COMMENT '端口',
     `create_by`   VARCHAR(255) DEFAULT NULL COMMENT '创建者',
     `update_by`   VARCHAR(255) DEFAULT NULL COMMENT '更新者',
-    `create_time` DATETIME     DEFAULT NULL COMMENT '创建时间',
-    `update_time` DATETIME     DEFAULT NULL COMMENT '更新时间',
+    `create_time` DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`server_id`) USING BTREE,
     KEY `idx_ip`(`ip`)
 )
@@ -193,7 +193,7 @@ CREATE TABLE `mnt_server` (
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_dept`;
 CREATE TABLE `sys_dept` (
-    `dept_id`     BIGINT(20)   NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `id`          BIGINT(20)   NOT NULL AUTO_INCREMENT COMMENT 'ID',
     `pid`         BIGINT(20)   DEFAULT NULL COMMENT '上级部门',
     `sub_count`   INT(5)       DEFAULT 0 COMMENT '子部门数目',
     `name`        VARCHAR(255) NOT NULL COMMENT '名称',
@@ -202,11 +202,11 @@ CREATE TABLE `sys_dept` (
     `note`        VARCHAR(255) DEFAULT NULL COMMENT '备注',
     `create_by`   VARCHAR(255) DEFAULT NULL COMMENT '创建者',
     `update_by`   VARCHAR(255) DEFAULT NULL COMMENT '更新者',
-    `create_time` DATETIME     DEFAULT NULL COMMENT '创建时间',
-    `update_time` DATETIME     DEFAULT NULL COMMENT '更新时间',
-    PRIMARY KEY (`dept_id`) USING BTREE,
-    KEY `inx_pid`(`pid`),
-    KEY `inx_enabled`(`enabled`)
+    `create_time` DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`) USING BTREE,
+    KEY `key_pid`(`pid`),
+    KEY `key_enabled`(`enabled`)
 )
     ENGINE = InnoDB
     AUTO_INCREMENT = 18
@@ -237,15 +237,15 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_dict`;
 CREATE TABLE `sys_dict` (
-    `id`     BIGINT(20)   NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `id`          BIGINT(20)   NOT NULL AUTO_INCREMENT COMMENT 'ID',
     `code`        VARCHAR(255) NOT NULL COMMENT '字典编码',
     `name`        VARCHAR(255) NOT NULL COMMENT '字典名称',
     `enabled`     BIT(1)       NOT NULL COMMENT '状态',
     `note`        VARCHAR(255) DEFAULT NULL COMMENT '备注',
     `create_by`   VARCHAR(255) DEFAULT NULL COMMENT '创建者',
     `update_by`   VARCHAR(255) DEFAULT NULL COMMENT '更新者',
-    `create_time` DATETIME     DEFAULT NULL COMMENT '创建时间',
-    `update_time` DATETIME     DEFAULT NULL COMMENT '更新时间',
+    `create_time` DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`) USING BTREE
 )
     ENGINE = InnoDB
@@ -272,12 +272,12 @@ DROP TABLE IF EXISTS `sys_dict_option`;
 CREATE TABLE `sys_dict_option` (
     `id`          BIGINT(20)   NOT NULL AUTO_INCREMENT COMMENT 'ID',
     `dict_id`     BIGINT(11)   DEFAULT NULL COMMENT '字典id',
-    `code`       VARCHAR(255) NOT NULL COMMENT '字典选项编码',
-    `name`       VARCHAR(255) NOT NULL COMMENT '字典选项名称',
+    `code`        VARCHAR(255) NOT NULL COMMENT '字典选项编码',
+    `name`        VARCHAR(255) NOT NULL COMMENT '字典选项名称',
     `create_by`   VARCHAR(255) DEFAULT NULL COMMENT '创建者',
     `update_by`   VARCHAR(255) DEFAULT NULL COMMENT '更新者',
-    `create_time` DATETIME     DEFAULT NULL COMMENT '创建时间',
-    `update_time` DATETIME     DEFAULT NULL COMMENT '更新时间',
+    `create_time` DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`) USING BTREE,
     KEY `key_dict_id`(`dict_id`) USING BTREE
 )
@@ -309,7 +309,7 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_job`;
 CREATE TABLE `sys_job` (
-    `job_id`      BIGINT(20)   NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `id`          BIGINT(20)   NOT NULL AUTO_INCREMENT COMMENT 'ID',
     `name`        VARCHAR(255) NOT NULL COMMENT '岗位名称',
     `weight`      INT(5)       DEFAULT NULL COMMENT '排序',
     `dept_id`     BIGINT(20)   DEFAULT NULL COMMENT '部门ID',
@@ -317,11 +317,11 @@ CREATE TABLE `sys_job` (
     `note`        VARCHAR(255) DEFAULT NULL COMMENT '备注',
     `create_by`   VARCHAR(255) DEFAULT NULL COMMENT '创建者',
     `update_by`   VARCHAR(255) DEFAULT NULL COMMENT '更新者',
-    `create_time` DATETIME     DEFAULT NULL COMMENT '创建时间',
-    `update_time` DATETIME     DEFAULT NULL COMMENT '更新时间',
-    PRIMARY KEY (`job_id`) USING BTREE,
+    `create_time` DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`) USING BTREE,
     UNIQUE KEY `uniq_name`(`name`),
-    KEY `inx_enabled`(`enabled`)
+    KEY `key_enabled`(`enabled`)
 )
     ENGINE = InnoDB
     DEFAULT CHARSET = `utf8`
@@ -347,7 +347,7 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_log`;
 CREATE TABLE `sys_log` (
-    `log_id`           BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `id`               BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
     `description`      VARCHAR(255) DEFAULT NULL,
     `log_type`         VARCHAR(255) DEFAULT NULL,
     `method`           VARCHAR(255) DEFAULT NULL,
@@ -359,9 +359,9 @@ CREATE TABLE `sys_log` (
     `browser`          VARCHAR(255) DEFAULT NULL,
     `exception_detail` TEXT         DEFAULT NULL,
     `create_time`      DATETIME     DEFAULT NULL,
-    PRIMARY KEY (`log_id`) USING BTREE,
+    PRIMARY KEY (`id`) USING BTREE,
     KEY `log_create_time_index`(`create_time`),
-    KEY `inx_log_type`(`log_type`)
+    KEY `key_log_type`(`log_type`)
 )
     ENGINE = InnoDB
     AUTO_INCREMENT = 3537
@@ -374,7 +374,7 @@ CREATE TABLE `sys_log` (
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_menu`;
 CREATE TABLE `sys_menu` (
-    `menu_id`     BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `id`          BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
     `pid`         BIGINT(20)   DEFAULT NULL COMMENT '上级菜单ID',
     `sub_count`   INT(5)       DEFAULT 0 COMMENT '子菜单数目',
     `type`        INT(11)      DEFAULT NULL COMMENT '菜单类型',
@@ -390,12 +390,12 @@ CREATE TABLE `sys_menu` (
     `permission`  VARCHAR(255) DEFAULT NULL COMMENT '权限',
     `create_by`   VARCHAR(255) DEFAULT NULL COMMENT '创建者',
     `update_by`   VARCHAR(255) DEFAULT NULL COMMENT '更新者',
-    `create_time` DATETIME     DEFAULT NULL COMMENT '创建时间',
-    `update_time` DATETIME     DEFAULT NULL COMMENT '更新时间',
-    PRIMARY KEY (`menu_id`) USING BTREE,
+    `create_time` DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`) USING BTREE,
     UNIQUE KEY `uniq_title`(`title`),
     UNIQUE KEY `uniq_name`(`name`),
-    KEY `inx_pid`(`pid`)
+    KEY `key_pid`(`pid`)
 )
     ENGINE = InnoDB
     AUTO_INCREMENT = 118
@@ -487,74 +487,11 @@ COMMIT;
 -- @formatter:on
 
 -- ----------------------------
--- Table structure for sys_quartz_job
--- ----------------------------
-DROP TABLE IF EXISTS `sys_quartz_job`;
-CREATE TABLE `sys_quartz_job` (
-    `job_id`              BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-    `bean_name`           VARCHAR(255) DEFAULT NULL COMMENT 'Spring Bean名称',
-    `cron_expression`     VARCHAR(255) DEFAULT NULL COMMENT 'cron 表达式',
-    `is_pause`            BIT(1)       DEFAULT NULL COMMENT '状态：1暂停、0启用',
-    `job_name`            VARCHAR(255) DEFAULT NULL COMMENT '任务名称',
-    `method_name`         VARCHAR(255) DEFAULT NULL COMMENT '方法名称',
-    `params`              VARCHAR(255) DEFAULT NULL COMMENT '参数',
-    `description`         VARCHAR(255) DEFAULT NULL COMMENT '备注',
-    `person_in_charge`    VARCHAR(100) DEFAULT NULL COMMENT '负责人',
-    `email`               VARCHAR(100) DEFAULT NULL COMMENT '报警邮箱',
-    `sub_task`            VARCHAR(100) DEFAULT NULL COMMENT '子任务ID',
-    `pause_after_failure` BIT(1)       DEFAULT NULL COMMENT '任务失败后是否暂停',
-    `create_by`           VARCHAR(255) DEFAULT NULL COMMENT '创建者',
-    `update_by`           VARCHAR(255) DEFAULT NULL COMMENT '更新者',
-    `create_time`         DATETIME     DEFAULT NULL COMMENT '创建时间',
-    `update_time`         DATETIME     DEFAULT NULL COMMENT '更新时间',
-    PRIMARY KEY (`job_id`) USING BTREE,
-    KEY `inx_is_pause`(`is_pause`)
-)
-    ENGINE = InnoDB
-    AUTO_INCREMENT = 7
-    DEFAULT CHARSET = `utf8`
-    ROW_FORMAT = COMPACT COMMENT ='定时任务';
-
--- ----------------------------
--- Records of sys_quartz_job
--- ----------------------------
--- @formatter:off
-BEGIN;
-INSERT INTO `sys_quartz_job` VALUES (2, 'testTask', '0/5 * * * * ?', b'1', '测试1', 'run1', 'test', '带参测试，多参使用json', '测试', NULL, NULL, NULL, NULL, 'admin', '2019-08-22 14:08:29', '2020-05-24 13:58:33');
-INSERT INTO `sys_quartz_job` VALUES (3, 'testTask', '0/5 * * * * ?', b'1', '测试', 'run', '', '不带参测试', 'Zheng Jie', '', '5,6', b'1', NULL, 'admin', '2019-09-26 16:44:39', '2020-05-24 14:48:12');
-INSERT INTO `sys_quartz_job` VALUES (5, 'Test', '0/5 * * * * ?', b'1', '任务告警测试', 'run', NULL, '测试', 'test', '', NULL, b'1', 'admin', 'admin', '2020-05-05 20:32:41', '2020-05-05 20:36:13');
-INSERT INTO `sys_quartz_job` VALUES (6, 'testTask', '0/5 * * * * ?', b'1', '测试3', 'run2', NULL, '测试3', 'Zheng Jie', '', NULL, b'1', 'admin', 'admin', '2020-05-05 20:35:41', '2020-05-05 20:36:07');
-COMMIT;
--- @formatter:on
-
--- ----------------------------
--- Table structure for sys_quartz_log
--- ----------------------------
-DROP TABLE IF EXISTS `sys_quartz_log`;
-CREATE TABLE `sys_quartz_log` (
-    `log_id`           BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-    `bean_name`        VARCHAR(255) DEFAULT NULL,
-    `create_time`      DATETIME     DEFAULT NULL,
-    `cron_expression`  VARCHAR(255) DEFAULT NULL,
-    `exception_detail` TEXT         DEFAULT NULL,
-    `is_success`       BIT(1)       DEFAULT NULL,
-    `job_name`         VARCHAR(255) DEFAULT NULL,
-    `method_name`      VARCHAR(255) DEFAULT NULL,
-    `params`           VARCHAR(255) DEFAULT NULL,
-    `time`             BIGINT(20)   DEFAULT NULL,
-    PRIMARY KEY (`log_id`) USING BTREE
-)
-    ENGINE = InnoDB
-    AUTO_INCREMENT = 151
-    DEFAULT CHARSET = `utf8`
-    ROW_FORMAT = COMPACT COMMENT ='定时任务日志';
-
--- ----------------------------
 -- Table structure for sys_role
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_role`;
 CREATE TABLE `sys_role` (
-    `role_id`     BIGINT(20)   NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `id`          BIGINT(20)   NOT NULL AUTO_INCREMENT COMMENT 'ID',
     `name`        VARCHAR(255) NOT NULL COMMENT '名称',
     `level`       INT(255)     DEFAULT NULL COMMENT '角色级别',
     `data_scope`  VARCHAR(255) DEFAULT NULL COMMENT '数据权限',
@@ -562,9 +499,9 @@ CREATE TABLE `sys_role` (
     `note`        VARCHAR(255) DEFAULT NULL COMMENT '备注',
     `create_by`   VARCHAR(255) DEFAULT NULL COMMENT '创建者',
     `update_by`   VARCHAR(255) DEFAULT NULL COMMENT '更新者',
-    `create_time` DATETIME     DEFAULT NULL COMMENT '创建时间',
-    `update_time` DATETIME     DEFAULT NULL COMMENT '更新时间',
-    PRIMARY KEY (`role_id`) USING BTREE,
+    `create_time` DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`) USING BTREE,
     UNIQUE KEY `uniq_name`(`name`),
     KEY `role_name_index`(`name`)
 )
@@ -839,7 +776,7 @@ CREATE TABLE `sys_job_role` (
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_user`;
 CREATE TABLE `sys_user` (
-    `user_id`        BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `id`             BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
     `dept_id`        BIGINT(20)   DEFAULT NULL COMMENT '部门ID',
     `job_id`         BIGINT(20)   DEFAULT NULL COMMENT '岗位ID',
     `username`       VARCHAR(255) DEFAULT NULL COMMENT '用户名',
@@ -854,16 +791,14 @@ CREATE TABLE `sys_user` (
     `create_by`      VARCHAR(255) DEFAULT NULL COMMENT '创建者',
     `update_by`      VARCHAR(255) DEFAULT NULL COMMENT '更新着',
     `pwd_reset_time` DATETIME     DEFAULT NULL COMMENT '修改密码的时间',
-    `create_time`    DATETIME     DEFAULT NULL COMMENT '创建时间',
-    `update_time`    DATETIME     DEFAULT NULL COMMENT '更新时间',
-    PRIMARY KEY (`user_id`) USING BTREE,
-    UNIQUE KEY `UK_kpubos9gc2cvtkb0thktkbkes`(`email`) USING BTREE,
-    UNIQUE KEY `username`(`username`) USING BTREE,
-    UNIQUE KEY `uniq_username`(`username`),
-    UNIQUE KEY `uniq_email`(`email`),
-    KEY `FK5rwmryny6jthaaxkogownknqp`(`dept_id`) USING BTREE,
-    KEY `FKpq2dhypk2qgt68nauh2by22jb`(`avatar`) USING BTREE,
-    KEY `inx_enabled`(`enabled`)
+    `create_time`    DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time`    DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`) USING BTREE,
+    UNIQUE KEY `uniq_email`(`email`) USING BTREE,
+    UNIQUE KEY `uniq_username`(`username`) USING BTREE,
+    KEY `key_dept_id`(`dept_id`) USING BTREE,
+    KEY `key_avatar`(`avatar`) USING BTREE,
+    KEY `key_enabled`(`enabled`)
 )
     ENGINE = InnoDB
     AUTO_INCREMENT = 3
@@ -936,6 +871,71 @@ VALUES (2, 2);
 COMMIT;
 
 -- ----------------------------
+-- Table structure for sys_quartz_job
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_quartz_job`;
+CREATE TABLE `sys_quartz_job` (
+    `job_id`              BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `bean_name`           VARCHAR(255) DEFAULT NULL COMMENT 'Spring Bean名称',
+    `cron_expression`     VARCHAR(255) DEFAULT NULL COMMENT 'cron 表达式',
+    `is_pause`            BIT(1)       DEFAULT NULL COMMENT '状态：1暂停、0启用',
+    `job_name`            VARCHAR(255) DEFAULT NULL COMMENT '任务名称',
+    `method_name`         VARCHAR(255) DEFAULT NULL COMMENT '方法名称',
+    `params`              VARCHAR(255) DEFAULT NULL COMMENT '参数',
+    `description`         VARCHAR(255) DEFAULT NULL COMMENT '备注',
+    `person_in_charge`    VARCHAR(100) DEFAULT NULL COMMENT '负责人',
+    `email`               VARCHAR(100) DEFAULT NULL COMMENT '报警邮箱',
+    `sub_task`            VARCHAR(100) DEFAULT NULL COMMENT '子任务ID',
+    `pause_after_failure` BIT(1)       DEFAULT NULL COMMENT '任务失败后是否暂停',
+    `create_by`           VARCHAR(255) DEFAULT NULL COMMENT '创建者',
+    `update_by`           VARCHAR(255) DEFAULT NULL COMMENT '更新者',
+    `create_time`         DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time`         DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`job_id`) USING BTREE,
+    KEY `key_is_pause`(`is_pause`)
+)
+    ENGINE = InnoDB
+    AUTO_INCREMENT = 7
+    DEFAULT CHARSET = `utf8`
+    ROW_FORMAT = COMPACT COMMENT ='定时任务';
+
+-- ----------------------------
+-- Records of sys_quartz_job
+-- ----------------------------
+-- @formatter:off
+BEGIN;
+INSERT INTO `sys_quartz_job` VALUES (2, 'testTask', '0/5 * * * * ?', b'1', '测试1', 'run1', 'test', '带参测试，多参使用json', '测试', NULL, NULL, NULL, NULL, 'admin', '2019-08-22 14:08:29', '2020-05-24 13:58:33');
+INSERT INTO `sys_quartz_job` VALUES (3, 'testTask', '0/5 * * * * ?', b'1', '测试', 'run', '', '不带参测试', 'Zheng Jie', '', '5,6', b'1', NULL, 'admin', '2019-09-26 16:44:39', '2020-05-24 14:48:12');
+INSERT INTO `sys_quartz_job` VALUES (5, 'Test', '0/5 * * * * ?', b'1', '任务告警测试', 'run', NULL, '测试', 'test', '', NULL, b'1', 'admin', 'admin', '2020-05-05 20:32:41', '2020-05-05 20:36:13');
+INSERT INTO `sys_quartz_job` VALUES (6, 'testTask', '0/5 * * * * ?', b'1', '测试3', 'run2', NULL, '测试3', 'Zheng Jie', '', NULL, b'1', 'admin', 'admin', '2020-05-05 20:35:41', '2020-05-05 20:36:07');
+COMMIT;
+-- @formatter:on
+
+-- ----------------------------
+-- Table structure for sys_quartz_log
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_quartz_log`;
+CREATE TABLE `sys_quartz_log` (
+    `log_id`           BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `bean_name`        VARCHAR(255) DEFAULT NULL,
+    `create_time`      DATETIME     DEFAULT NULL,
+    `cron_expression`  VARCHAR(255) DEFAULT NULL,
+    `exception_detail` TEXT         DEFAULT NULL,
+    `is_success`       BIT(1)       DEFAULT NULL,
+    `job_name`         VARCHAR(255) DEFAULT NULL,
+    `method_name`      VARCHAR(255) DEFAULT NULL,
+    `params`           VARCHAR(255) DEFAULT NULL,
+    `time`             BIGINT(20)   DEFAULT NULL,
+    PRIMARY KEY (`log_id`) USING BTREE
+)
+    ENGINE = InnoDB
+    AUTO_INCREMENT = 151
+    DEFAULT CHARSET = `utf8`
+    ROW_FORMAT = COMPACT
+    COMMENT ='定时任务日志';
+
+
+-- ----------------------------
 -- Table structure for tool_alipay_config
 -- ----------------------------
 DROP TABLE IF EXISTS `tool_alipay_config`;
@@ -1002,8 +1002,8 @@ CREATE TABLE `tool_local_storage` (
     `size`        VARCHAR(100) DEFAULT NULL COMMENT '大小',
     `create_by`   VARCHAR(255) DEFAULT NULL COMMENT '创建者',
     `update_by`   VARCHAR(255) DEFAULT NULL COMMENT '更新者',
-    `create_time` DATETIME     DEFAULT NULL COMMENT '创建时间',
-    `update_time` DATETIME     DEFAULT NULL COMMENT '更新时间',
+    `create_time` DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`storage_id`) USING BTREE
 )
     ENGINE = InnoDB

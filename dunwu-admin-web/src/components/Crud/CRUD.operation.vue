@@ -27,7 +27,7 @@
         编辑
       </el-button>
       <el-button
-        v-if="crud.optShow.exportList"
+        v-if="crud.optShow.exportPage"
         :loading="crud.downloadLoading"
         :disabled="!crud.data.length"
         class="filter-item"

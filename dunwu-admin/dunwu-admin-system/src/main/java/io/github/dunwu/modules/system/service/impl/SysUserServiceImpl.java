@@ -24,7 +24,6 @@ import io.github.dunwu.util.RedisUtils;
 import io.github.dunwu.util.RsaUtils;
 import io.github.dunwu.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
-import org.apache.ibatis.annotations.Select;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -105,22 +104,22 @@ public class SysUserServiceImpl extends ServiceImpl implements SysUserService {
 
     @Override
     public Page<SysUserDto> pojoPageByQuery(Object query, Pageable pageable) {
-        return userDao.pojoPageByQuery(query, pageable, this::toDto);
+        return userDao.pojoPageByQuery(query, pageable, this::doToDto);
     }
 
     @Override
     public List<SysUserDto> pojoListByQuery(Object query) {
-        return userDao.pojoListByQuery(query, this::toDto);
+        return userDao.pojoListByQuery(query, this::doToDto);
     }
 
     @Override
     public SysUserDto pojoById(Serializable id) {
-        return userDao.pojoById(id, this::toDto);
+        return userDao.pojoById(id, this::doToDto);
     }
 
     @Override
     public SysUserDto pojoByQuery(Object query) {
-        return userDao.pojoByQuery(query, this::toDto);
+        return userDao.pojoByQuery(query, this::doToDto);
     }
 
     @Override
@@ -130,20 +129,20 @@ public class SysUserServiceImpl extends ServiceImpl implements SysUserService {
 
     @Override
     public void exportList(Collection<Serializable> ids, HttpServletResponse response) throws IOException {
-        List<SysUserDto> list = userDao.pojoListByIds(ids, this::toDto);
+        List<SysUserDto> list = userDao.pojoListByIds(ids, this::doToDto);
         userDao.exportDtoList(list, response);
     }
 
     @Override
     public void exportPage(Object query, Pageable pageable, HttpServletResponse response) throws IOException {
-        Page<SysUserDto> page = userDao.pojoPageByQuery(query, pageable, this::toDto);
+        Page<SysUserDto> page = userDao.pojoPageByQuery(query, pageable, this::doToDto);
         userDao.exportDtoList(page.getContent(), response);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long saveUserRelatedRecords(SysUserDto dto) {
-        SysUser user = BeanUtil.toBean(dto, SysUser.class);
+        SysUser user = dtoToDo(dto);
         user.setPassword(passwordEncoder.encode(INIT_PASSWORD));
         if (userDao.save(user)) {
             List<SysUserRole> newRecords = new ArrayList<>();
@@ -159,7 +158,7 @@ public class SysUserServiceImpl extends ServiceImpl implements SysUserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean updateUserRelatedRecords(SysUserDto dto) {
-        SysUser entity = BeanUtil.toBean(dto, SysUser.class);
+        SysUser entity = dtoToDo(dto);
         if (userDao.updateById(entity)) {
             SysUserRole sysUserRole = new SysUserRole();
             sysUserRole.setUserId(entity.getId());
@@ -180,14 +179,14 @@ public class SysUserServiceImpl extends ServiceImpl implements SysUserService {
     public SysUserDto pojoByUsername(String username) {
         SysUser userQuery = new SysUser().setUsername(username);
         SysUser user = userDao.getOne(userQuery);
-        return toDto(user);
+        return doToDto(user);
     }
 
-    public SysUserDto toDto(SysUser user) {
-        SysUserDto dto = BeanUtil.toBean(user, SysUserDto.class);
-        dto.setName(user.getUsername());
+    public SysUserDto doToDto(SysUser entity) {
+        SysUserDto dto = BeanUtil.toBean(entity, SysUserDto.class);
+        dto.setName(entity.getUsername());
 
-        SysJobDto job = jobDao.pojoById(user.getJobId(), SysJobDto.class);
+        SysJobDto job = jobDao.pojoById(entity.getJobId(), SysJobDto.class);
         if (job != null) {
             dto.setJob(job);
         } else {
@@ -196,7 +195,7 @@ public class SysUserServiceImpl extends ServiceImpl implements SysUserService {
             }
         }
 
-        SysDeptDto dept = deptDao.pojoById(user.getDeptId(), SysDeptDto.class);
+        SysDeptDto dept = deptDao.pojoById(entity.getDeptId(), SysDeptDto.class);
         if (dept != null) {
             dto.setDept(dept);
         } else {
@@ -206,7 +205,7 @@ public class SysUserServiceImpl extends ServiceImpl implements SysUserService {
         }
 
         SysUserRole sysUserRole = new SysUserRole();
-        sysUserRole.setUserId(user.getId());
+        sysUserRole.setUserId(entity.getId());
         List<SysUserRole> sysUserRoles = userRoleDao.list(Wrappers.query(sysUserRole));
         if (CollectionUtil.isNotEmpty(sysUserRoles)) {
             Set<Long> roleIds = sysUserRoles.stream().map(SysUserRole::getRoleId).collect(Collectors.toSet());
@@ -223,6 +222,12 @@ public class SysUserServiceImpl extends ServiceImpl implements SysUserService {
         }
 
         return dto;
+    }
+
+    public SysUser dtoToDo(SysUserDto dto) {
+        SysUser entity = BeanUtil.toBean(dto, SysUser.class);
+        entity.setDeptId(dto.getDept().getId());
+        return entity;
     }
 
     @Override

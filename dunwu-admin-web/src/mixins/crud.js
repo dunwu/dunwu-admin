@@ -1,4 +1,4 @@
-import { initData, exportList } from '@/api/data'
+import { initData, exportPage } from '@/api/data'
 import { parseTime, downloadFile } from '@/utils/index'
 
 export default {
@@ -332,7 +332,7 @@ export default {
     downloadMethod() {
       this.beforeInit()
       this.downloadLoading = true
-      exportList(this.url + '/export', this.params)
+      exportPage(this.url + '/export', this.params)
         .then(result => {
           this.downloadFile(result, this.title + '数据', 'xlsx')
           this.downloadLoading = false

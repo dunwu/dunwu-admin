@@ -68,7 +68,7 @@ export default {
       add: false,
       edit: false,
       del: true,
-      exportList: true
+      exportPage: true
     }
   },
   methods: {

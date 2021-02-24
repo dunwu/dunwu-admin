@@ -72,7 +72,7 @@ export default {
     }
   },
   created() {
-    this.crud.optShow = { add: false, edit: false, del: false, exportList: false }
+    this.crud.optShow = { add: false, edit: false, del: false, exportPage: false }
   },
   methods: {
     toGen(tableName) {

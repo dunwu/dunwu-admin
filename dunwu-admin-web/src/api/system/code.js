@@ -6,10 +6,3 @@ export function resetEmail(data) {
     method: 'post'
   })
 }
-
-export function updatePass(pass) {
-  return request({
-    url: 'api/users/updatePass/' + pass,
-    method: 'get'
-  })
-}

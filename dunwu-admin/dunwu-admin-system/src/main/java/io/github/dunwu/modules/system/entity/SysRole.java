@@ -30,7 +30,7 @@ public class SysRole implements Serializable {
 
     @ApiModelProperty(value = "角色ID")
     @NotNull(groups = EditCheck.class)
-    @TableId(value = "role_id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     @ApiModelProperty(value = "角色名称")

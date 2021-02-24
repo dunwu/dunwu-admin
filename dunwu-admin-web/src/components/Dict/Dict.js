@@ -6,25 +6,33 @@ export default class Dict {
     this.dict = dict
   }
 
-  async init(names, completeCallback) {
-    if (names === undefined || name === null) {
+  async init(codes, completeCallback) {
+    if (codes === undefined || name === null) {
       throw new Error('need Dict names')
     }
     const ps = []
-    names.forEach(n => {
-      Vue.set(this.dict.dict, n, {})
-      Vue.set(this.dict.label, n, {})
-      Vue.set(this.dict, n, [])
+    codes.forEach(code => {
+      Vue.set(this.dict.dict, code, {})
+      Vue.set(this.dict.label, code, {})
+      Vue.set(this.dict, code, [])
       ps.push(
-        getDicts(n).then(data => {
-          this.dict[n].splice(0, 0, ...data.content)
-          data.content.forEach(d => {
-            Vue.set(this.dict.dict[n], d.value, d)
-            Vue.set(this.dict.label[n], d.value, d.label)
+        getDicts(code).then(data => {
+          const dicts = data.content
+          console.log('code', code)
+          console.log('dicts', dicts)
+
+          this.dict[code].splice(0, 0, ...dicts)
+          dicts.forEach(d => {
+            d.options.forEach(o => {
+              Vue.set(this.dict.dict[code], o.code, o)
+              Vue.set(this.dict.label[code], o.code, o.name)
+            })
           })
+          console.log('this.dict', this.dict)
         })
       )
     })
+    console.log('字典', this.dict)
     await Promise.all(ps)
     completeCallback()
   }

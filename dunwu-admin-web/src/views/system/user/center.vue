@@ -150,7 +150,7 @@ import { getToken } from '@/utils/auth'
 import store from '@/store'
 import { isvalidPhone } from '@/utils/validate'
 import crud from '@/mixins/crud'
-import { editUser } from '@/api/system/user'
+import { editCenter } from '@/api/system/user'
 import Avatar from '@/assets/images/avatar.png'
 export default {
   name: 'Center',
@@ -213,7 +213,7 @@ export default {
         this.$refs['form'].validate(valid => {
           if (valid) {
             this.saveLoading = true
-            editUser(this.form)
+            editCenter(this.form)
               .then(() => {
                 this.editSuccessNotify()
                 store.dispatch('GetInfo').then(() => {})
