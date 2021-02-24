@@ -39,6 +39,10 @@ export function edit(data) {
   })
 }
 
+/**
+ * 根据 params 条件，查询匹配条件的列表
+ * @param params
+ */
 export function list(params) {
   return request({
     url: 'api/sys/job/list',

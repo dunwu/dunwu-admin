@@ -36,13 +36,13 @@ public class SysJobServiceImpl extends ServiceImpl implements SysJobService {
     private final SysRoleService roleService;
 
     @Override
-    public boolean save(SysJob entity) {
-        return jobDao.save(entity);
+    public boolean save(SysJobDto entity) {
+        return jobDao.save(dtoToDo(entity));
     }
 
     @Override
-    public boolean updateById(SysJob entity) {
-        return jobDao.updateById(entity);
+    public boolean updateById(SysJobDto entity) {
+        return jobDao.updateById(dtoToDo(entity));
     }
 
     @Override
@@ -57,22 +57,22 @@ public class SysJobServiceImpl extends ServiceImpl implements SysJobService {
 
     @Override
     public Page<SysJobDto> pojoPageByQuery(Object query, Pageable pageable) {
-        return jobDao.pojoPageByQuery(query, pageable, this::toDto);
+        return jobDao.pojoPageByQuery(query, pageable, this::doToDto);
     }
 
     @Override
     public List<SysJobDto> pojoListByQuery(Object query) {
-        return jobDao.pojoListByQuery(query, this::toDto);
+        return jobDao.pojoListByQuery(query, this::doToDto);
     }
 
     @Override
     public SysJobDto pojoById(Serializable id) {
-        return jobDao.pojoById(id, this::toDto);
+        return jobDao.pojoById(id, this::doToDto);
     }
 
     @Override
     public SysJobDto pojoByQuery(Object query) {
-        return jobDao.pojoByQuery(query, this::toDto);
+        return jobDao.pojoByQuery(query, this::doToDto);
     }
 
     @Override
@@ -82,24 +82,27 @@ public class SysJobServiceImpl extends ServiceImpl implements SysJobService {
 
     @Override
     public void exportByIds(Collection<Serializable> ids, HttpServletResponse response) throws IOException {
-        List<SysJobDto> list = jobDao.pojoListByIds(ids, this::toDto);
+        List<SysJobDto> list = jobDao.pojoListByIds(ids, this::doToDto);
         jobDao.exportDtoList(list, response);
     }
 
     @Override
     public void exportPageData(Object query, Pageable pageable, HttpServletResponse response) throws IOException {
-        Page<SysJobDto> page = jobDao.pojoPageByQuery(query, pageable, this::toDto);
+        Page<SysJobDto> page = jobDao.pojoPageByQuery(query, pageable, this::doToDto);
         jobDao.exportDtoList(page.getContent(), response);
     }
 
-    @Override
-    public SysJobDto toDto(SysJob job) {
+    private SysJobDto doToDto(SysJob job) {
         SysDeptDto sysDeptDto = deptDao.pojoById(job.getDeptId(), SysDeptDto.class);
         List<SysRoleDto> roles = roleService.pojoListByJobId(job.getId());
         SysJobDto sysJobDto = BeanUtil.toBean(job, SysJobDto.class);
         sysJobDto.setDept(sysDeptDto);
         sysJobDto.setRoles(roles);
         return sysJobDto;
+    }
+
+    private SysJob dtoToDo(SysJobDto dto) {
+        return BeanUtil.toBean(dto, SysJob.class);
     }
 
 }

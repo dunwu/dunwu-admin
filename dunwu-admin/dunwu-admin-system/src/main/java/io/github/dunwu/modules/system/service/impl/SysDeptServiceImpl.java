@@ -45,16 +45,16 @@ public class SysDeptServiceImpl extends ServiceImpl implements SysDeptService {
     private final SysRoleDeptDao roleDeptDao;
 
     @Override
-    public boolean save(SysDept entity) {
-        return deptDao.save(entity);
+    public boolean save(SysDeptDto entity) {
+        return deptDao.save(dtoToDo(entity));
     }
 
     @Override
-    public boolean updateById(SysDept entity) {
+    public boolean updateById(SysDeptDto entity) {
         if (entity.getPid() != null && entity.getId().equals(entity.getPid())) {
             throw new IllegalArgumentException("上级部门不能设为自身");
         }
-        return deptDao.updateById(entity);
+        return deptDao.updateById(dtoToDo(entity));
     }
 
     @Override
@@ -86,17 +86,17 @@ public class SysDeptServiceImpl extends ServiceImpl implements SysDeptService {
 
     @Override
     public Page<SysDeptDto> pojoPageByQuery(Object query, Pageable pageable) {
-        return deptDao.pojoPageByQuery(query, pageable, this::doToVo);
+        return deptDao.pojoPageByQuery(query, pageable, this::doToDto);
     }
 
     @Override
     public List<SysDeptDto> pojoListByQuery(Object query) {
-        return deptDao.pojoListByQuery(query, this::doToVo);
+        return deptDao.pojoListByQuery(query, this::doToDto);
     }
 
     @Override
     public SysDeptDto pojoById(Serializable id) {
-        SysDeptDto sysDeptDto = deptDao.pojoById(id, this::doToVo);
+        SysDeptDto sysDeptDto = deptDao.pojoById(id, this::doToDto);
         if (sysDeptDto != null) {
             sysDeptDto.setLabel(sysDeptDto.getName());
         }
@@ -105,7 +105,7 @@ public class SysDeptServiceImpl extends ServiceImpl implements SysDeptService {
 
     @Override
     public SysDeptDto pojoByQuery(Object query) {
-        return deptDao.pojoByQuery(query, this::doToVo);
+        return deptDao.pojoByQuery(query, this::doToDto);
     }
 
     @Override
@@ -115,13 +115,13 @@ public class SysDeptServiceImpl extends ServiceImpl implements SysDeptService {
 
     @Override
     public void exportByIds(Collection<Serializable> ids, HttpServletResponse response) throws IOException {
-        List<SysDeptDto> list = deptDao.pojoListByIds(ids, this::doToVo);
+        List<SysDeptDto> list = deptDao.pojoListByIds(ids, this::doToDto);
         deptDao.exportDtoList(list, response);
     }
 
     @Override
     public void exportPageData(Object query, Pageable pageable, HttpServletResponse response) throws IOException {
-        Page<SysDeptDto> page = deptDao.pojoPageByQuery(query, pageable, this::doToVo);
+        Page<SysDeptDto> page = deptDao.pojoPageByQuery(query, pageable, this::doToDto);
         deptDao.exportDtoList(page.getContent(), response);
     }
 
@@ -142,7 +142,7 @@ public class SysDeptServiceImpl extends ServiceImpl implements SysDeptService {
         if (CollUtil.isEmpty(ids)) {
             return deptList;
         }
-        return deptDao.pojoListByIds(ids, this::doToVo);
+        return deptDao.pojoListByIds(ids, this::doToDto);
     }
 
     @Override
@@ -209,7 +209,7 @@ public class SysDeptServiceImpl extends ServiceImpl implements SysDeptService {
                        .collect(Collectors.toSet());
     }
 
-    public SysDeptDto doToVo(SysDept model) {
+    private SysDeptDto doToDto(SysDept model) {
         if (model == null) {
             return null;
         }
@@ -217,6 +217,14 @@ public class SysDeptServiceImpl extends ServiceImpl implements SysDeptService {
         SysDeptDto dto = BeanUtil.toBean(model, SysDeptDto.class);
         dto.setLabel(dto.getName());
         return dto;
+    }
+
+    private SysDept dtoToDo(SysDeptDto dto) {
+        if (dto == null) {
+            return null;
+        }
+
+        return BeanUtil.toBean(dto, SysDept.class);
     }
 
 }

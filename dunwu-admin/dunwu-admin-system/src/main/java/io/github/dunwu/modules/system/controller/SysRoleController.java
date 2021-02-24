@@ -37,18 +37,18 @@ public class SysRoleController {
 
     private final SysRoleService service;
 
-    @PostMapping
-    @Log("创建一条 SysRole 记录")
+    @Log("添加一条 SysRole 记录")
     @PreAuthorize("@exp.check('role:add')")
-    @ApiOperation("创建一条 SysRole 记录")
+    @ApiOperation("添加一条 SysRole 记录")
+    @PostMapping("add")
     public ResponseEntity<Object> add(@Validated(AddCheck.class) @RequestBody SysRole entity) {
         return new ResponseEntity<>(service.save(entity), HttpStatus.CREATED);
     }
 
-    @PutMapping
     @Log("更新一条 SysRole 记录")
     @PreAuthorize("@exp.check('role:edit')")
     @ApiOperation("更新一条 SysRole 记录")
+    @PostMapping("edit")
     public ResponseEntity<Object> edit(@Validated(EditCheck.class) @RequestBody SysRole entity) {
         return new ResponseEntity<>(service.updateById(entity), HttpStatus.ACCEPTED);
     }

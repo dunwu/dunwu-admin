@@ -3,7 +3,6 @@ package io.github.dunwu.modules.system.controller;
 import io.github.dunwu.data.validator.annotation.AddCheck;
 import io.github.dunwu.data.validator.annotation.EditCheck;
 import io.github.dunwu.modules.monitor.annotation.Log;
-import io.github.dunwu.modules.system.entity.SysDept;
 import io.github.dunwu.modules.system.entity.dto.SysDeptDto;
 import io.github.dunwu.modules.system.entity.dto.SysDeptRelationDto;
 import io.github.dunwu.modules.system.entity.query.SysDeptQuery;
@@ -20,7 +19,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -37,104 +39,100 @@ public class SysDeptController {
 
     private final SysDeptService service;
 
-    @PostMapping
-    @Log("创建一条 SysDept 记录")
+    @Log("添加一条 SysDept 记录")
     @PreAuthorize("@exp.check('dept:add')")
-    @ApiOperation("创建一条 SysDept 记录")
-    public ResponseEntity<Object> add(@Validated(AddCheck.class) @RequestBody SysDept entity) {
+    @ApiOperation("添加一条 SysDept 记录")
+    @PostMapping("add")
+    public ResponseEntity<Object> add(@Validated(AddCheck.class) @RequestBody SysDeptDto entity) {
         return new ResponseEntity<>(service.save(entity), HttpStatus.CREATED);
     }
 
-    @PutMapping
     @Log("更新一条 SysDept 记录")
     @PreAuthorize("@exp.check('dept:edit')")
     @ApiOperation("更新一条 SysDept 记录")
-    public ResponseEntity<Object> edit(@Validated(EditCheck.class) @RequestBody SysDept entity) {
+    @PostMapping("edit")
+    public ResponseEntity<Object> edit(@Validated(EditCheck.class) @RequestBody SysDeptDto entity) {
         return new ResponseEntity<>(service.updateById(entity), HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping("{id}")
     @Log("删除一条 SysDept 记录")
     @PreAuthorize("@exp.check('dept:del')")
     @ApiOperation("删除一条 SysDept 记录")
+    @PostMapping("del/{id}")
     public ResponseEntity<Object> deleteById(@PathVariable Serializable id) {
         return new ResponseEntity<>(service.removeById(id), HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping
     @Log("根据 ID 集合批量删除 SysDept 记录")
     @PreAuthorize("@exp.check('dept:del')")
     @ApiOperation("根据 ID 集合批量删除 SysDept 记录")
+    @PostMapping("del")
     public ResponseEntity<Object> deleteByIds(@RequestBody Collection<Serializable> ids) {
         return new ResponseEntity<>(service.removeByIds(ids), HttpStatus.ACCEPTED);
     }
 
-    @GetMapping
-    @PreAuthorize("@exp.check('dept:view')")
-    @ApiOperation("根据 query 条件，返回 SysDeptDto 树形列表")
-    public ResponseEntity<Object> view(SysDeptQuery query, Pageable pageable) {
-        return new ResponseEntity<>(service.treeListMap(query), HttpStatus.OK);
-    }
-
-    @GetMapping("page")
-    @PreAuthorize("@exp.check('dept:view')")
-    @ApiOperation("根据 query 和 pageable 条件，分页查询 SysDeptDto 记录")
-    public ResponseEntity<Object> page(SysDeptQuery query, Pageable pageable) {
-        return new ResponseEntity<>(service.pojoPageByQuery(query, pageable), HttpStatus.OK);
-    }
-
-    @GetMapping("{id}")
-    @PreAuthorize("@exp.check('dept:view')")
-    @ApiOperation("根据 ID 查询 SysDept 记录")
-    public ResponseEntity<Object> getById(@PathVariable Serializable id) {
-        return new ResponseEntity<>(service.pojoById(id), HttpStatus.OK);
-    }
-
-    @GetMapping("count")
-    @PreAuthorize("@exp.check('dept:view')")
-    @ApiOperation("根据 query 条件，查询匹配条件的总记录数")
-    public ResponseEntity<Object> count(SysDeptQuery query) {
-        return new ResponseEntity<>(service.countByQuery(query), HttpStatus.OK);
-    }
-
-    @GetMapping("list")
     @PreAuthorize("@exp.check('dept:view')")
     @ApiOperation("根据 query 条件，查询匹配条件的 SysDeptDto 列表")
+    @GetMapping("list")
     public ResponseEntity<Object> list(SysDeptQuery query) {
         return new ResponseEntity<>(service.pojoListByQuery(query), HttpStatus.OK);
     }
 
-    @GetMapping("export")
+    @PreAuthorize("@exp.check('dept:view')")
+    @ApiOperation("根据 query 和 pageable 条件，分页查询 SysDeptDto 记录")
+    @GetMapping("page")
+    public ResponseEntity<Object> page(SysDeptQuery query, Pageable pageable) {
+        return new ResponseEntity<>(service.pojoPageByQuery(query, pageable), HttpStatus.OK);
+    }
+
+    @PreAuthorize("@exp.check('dept:view')")
+    @ApiOperation("根据 query 条件，查询匹配条件的总记录数")
+    @GetMapping("count")
+    public ResponseEntity<Object> count(SysDeptQuery query) {
+        return new ResponseEntity<>(service.countByQuery(query), HttpStatus.OK);
+    }
+
+    @PreAuthorize("@exp.check('dept:view')")
+    @ApiOperation("根据 ID 查询 SysDept 记录")
+    @GetMapping("{id}")
+    public ResponseEntity<Object> getById(@PathVariable Serializable id) {
+        return new ResponseEntity<>(service.pojoById(id), HttpStatus.OK);
+    }
+
+    @PreAuthorize("@exp.check('dept:view')")
+    @ApiOperation("根据 query 和 pageable 条件批量导出 SysDeptDto 列表数据")
+    @GetMapping("export/page")
+    public void exportPage(SysDeptQuery query, Pageable pageable, HttpServletResponse response) throws IOException {
+        service.exportPageData(query, pageable, response);
+    }
+
     @PreAuthorize("@exp.check('dept:view')")
     @ApiOperation("根据 ID 集合批量导出 SysDeptDto 列表数据")
-    public void exportByIds(@RequestBody Collection<Serializable> ids, HttpServletResponse response)
+    @GetMapping("export/list")
+    public void exportList(@RequestBody Collection<Serializable> ids, HttpServletResponse response)
         throws IOException {
         service.exportByIds(ids, response);
     }
 
-    @GetMapping("export/page")
     @PreAuthorize("@exp.check('dept:view')")
-    @ApiOperation("根据 query 和 pageable 条件批量导出 SysDeptDto 列表数据")
-    public void exportPageData(SysDeptQuery query, Pageable pageable, HttpServletResponse response) throws IOException {
-        service.exportPageData(query, pageable, response);
-    }
-
-    @PutMapping("relation")
-    @Log("更新一条 SysDept 记录的关联关系")
-    @PreAuthorize("@exp.check('dept:edit')")
-    @ApiOperation("更新一条 SysDept 记录的关联关系")
-    public ResponseEntity<Object> updateRelations(@Validated @RequestBody SysDeptRelationDto dto) {
-        return new ResponseEntity<>(service.updateRelations(dto), HttpStatus.ACCEPTED);
+    @ApiOperation("根据 query 条件，返回 SysDeptDto 树形列表")
+    @GetMapping("treeList")
+    public ResponseEntity<Object> treeList(SysDeptQuery query) {
+        return new ResponseEntity<>(service.treeListMap(query), HttpStatus.OK);
     }
 
     @ApiOperation("查询部门:根据ID获取同级与上级数据")
-    @PostMapping("superior")
     @PreAuthorize("@exp.check('dept:view')")
-    public ResponseEntity<Object> getSuperior(@RequestBody List<Long> ids) {
+    @GetMapping("superior")
+    public ResponseEntity<Object> superiorList(Collection<Long> ids) {
         Collection<SysDeptDto> depts = new ArrayList<>();
         for (Long id : ids) {
             SysDeptDto sysDeptDto = service.pojoById(id);
-            if (sysDeptDto != null && sysDeptDto.getPid() != null) {
+            if (sysDeptDto == null) {
+                continue;
+            }
+
+            if (sysDeptDto.getPid() != null) {
                 // 获取上级部门
                 SysDeptDto parentDept = service.pojoById(sysDeptDto.getPid());
                 depts.add(parentDept);
@@ -148,6 +146,14 @@ public class SysDeptController {
         }
         Map<String, Object> stringObjectMap = new HashMap<>(service.buildTreeList(depts));
         return new ResponseEntity<>(stringObjectMap, HttpStatus.OK);
+    }
+
+    @PutMapping("relation")
+    @Log("更新一条 SysDept 记录的关联关系")
+    @PreAuthorize("@exp.check('dept:edit')")
+    @ApiOperation("更新一条 SysDept 记录的关联关系")
+    public ResponseEntity<Object> updateRelations(@Validated @RequestBody SysDeptRelationDto dto) {
+        return new ResponseEntity<>(service.updateRelations(dto), HttpStatus.ACCEPTED);
     }
 
 }

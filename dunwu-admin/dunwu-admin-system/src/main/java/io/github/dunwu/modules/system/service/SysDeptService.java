@@ -30,7 +30,7 @@ public interface SysDeptService extends IService {
      * @param entity {@link SysDept} 数据实体
      * @return true / false
      */
-    boolean save(SysDept entity);
+    boolean save(SysDeptDto entity);
 
     /**
      * 根据 ID 更新一条 {@link SysDept} 记录
@@ -38,7 +38,7 @@ public interface SysDeptService extends IService {
      * @param entity {@link SysDept} 数据实体
      * @return true / false
      */
-    boolean updateById(SysDept entity);
+    boolean updateById(SysDeptDto entity);
 
     /**
      * 根据 ID 删除一条 {@link SysDept} 记录

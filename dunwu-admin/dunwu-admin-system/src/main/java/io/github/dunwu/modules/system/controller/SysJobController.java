@@ -3,7 +3,7 @@ package io.github.dunwu.modules.system.controller;
 import io.github.dunwu.data.validator.annotation.AddCheck;
 import io.github.dunwu.data.validator.annotation.EditCheck;
 import io.github.dunwu.modules.monitor.annotation.Log;
-import io.github.dunwu.modules.system.entity.SysJob;
+import io.github.dunwu.modules.system.entity.dto.SysJobDto;
 import io.github.dunwu.modules.system.entity.query.SysJobQuery;
 import io.github.dunwu.modules.system.service.SysJobService;
 import io.github.dunwu.modules.system.service.SysRoleService;
@@ -41,7 +41,7 @@ public class SysJobController {
     @PreAuthorize("@exp.check('job:add')")
     @ApiOperation("添加一条 SysJob 记录")
     @PostMapping("add")
-    public ResponseEntity<Object> add(@Validated(AddCheck.class) @RequestBody SysJob entity) {
+    public ResponseEntity<Object> add(@Validated(AddCheck.class) @RequestBody SysJobDto entity) {
         return new ResponseEntity<>(jobService.save(entity), HttpStatus.CREATED);
     }
 
@@ -49,11 +49,11 @@ public class SysJobController {
     @PreAuthorize("@exp.check('job:edit')")
     @ApiOperation("更新一条 SysJob 记录")
     @PostMapping("edit")
-    public ResponseEntity<Object> edit(@Validated(EditCheck.class) @RequestBody SysJob entity) {
+    public ResponseEntity<Object> edit(@Validated(EditCheck.class) @RequestBody SysJobDto entity) {
         return new ResponseEntity<>(jobService.updateById(entity), HttpStatus.ACCEPTED);
     }
 
-    @Log("删除一条 SysJob 记录")
+    @Log("根据 ID 删除一条 SysJob 记录")
     @PreAuthorize("@exp.check('job:del')")
     @ApiOperation("删除一条 SysJob 记录")
     @PostMapping("del/{id}")
@@ -100,14 +100,14 @@ public class SysJobController {
     @PreAuthorize("@exp.check('job:view')")
     @ApiOperation("根据 query 和 pageable 条件批量导出 SysJobDto 列表数据")
     @GetMapping("export/page")
-    public void exportPageData(SysJobQuery query, Pageable pageable, HttpServletResponse response) throws IOException {
+    public void exportPage(SysJobQuery query, Pageable pageable, HttpServletResponse response) throws IOException {
         jobService.exportPageData(query, pageable, response);
     }
 
     @PreAuthorize("@exp.check('job:view')")
     @ApiOperation("根据 ID 集合批量导出 SysJobDto 列表数据")
     @GetMapping("export/list")
-    public void exportByIds(@RequestBody Collection<Serializable> ids, HttpServletResponse response)
+    public void exportList(@RequestBody Collection<Serializable> ids, HttpServletResponse response)
         throws IOException {
         jobService.exportByIds(ids, response);
     }

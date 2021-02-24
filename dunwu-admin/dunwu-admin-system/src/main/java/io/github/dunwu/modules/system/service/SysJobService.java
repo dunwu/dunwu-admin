@@ -27,7 +27,7 @@ public interface SysJobService extends IService {
      * @param entity {@link SysJob} 数据实体
      * @return true / false
      */
-    boolean save(SysJob entity);
+    boolean save(SysJobDto entity);
 
     /**
      * 根据 ID 更新一条 {@link SysJob} 记录
@@ -35,7 +35,7 @@ public interface SysJobService extends IService {
      * @param entity {@link SysJob} 数据实体
      * @return true / false
      */
-    boolean updateById(SysJob entity);
+    boolean updateById(SysJobDto entity);
 
     /**
      * 根据 ID 删除一条 {@link SysJob} 记录
@@ -110,7 +110,5 @@ public interface SysJobService extends IService {
      * @param response {@link HttpServletResponse} 实体
      */
     void exportPageData(Object query, Pageable pageable, HttpServletResponse response) throws IOException;
-
-    SysJobDto toDto(SysJob job);
 
 }

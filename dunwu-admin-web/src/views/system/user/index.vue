@@ -180,9 +180,9 @@
 <script>
 import crudUser from '@/api/system/user'
 import { isvalidPhone } from '@/utils/validate'
-import { getDepts, getDeptSuperior } from '@/api/system/dept'
+import crudDept from '@/api/system/dept'
+import crudJob from '@/api/system/job'
 import { getAll, getLevel } from '@/api/system/role'
-import { list as getJobList } from '@/api/system/job'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
 import rrOperation from '@crud/Query.operation'
 import crudOperation from '@crud/CRUD.operation'
@@ -355,7 +355,7 @@ export default {
         params['pid'] = node.data.id
       }
       setTimeout(() => {
-        getDepts(params).then(res => {
+        crudDept.treeList(params).then(res => {
           if (resolve) {
             resolve(res.content)
           } else {
@@ -365,7 +365,7 @@ export default {
       }, 100)
     },
     getDepts() {
-      getDepts({ enabled: true }).then(res => {
+      crudDept.treeList({ enabled: true }).then(res => {
         this.depts = res.content.map(function(obj) {
           if (obj.hasChildren) {
             obj.children = null
@@ -375,7 +375,7 @@ export default {
       })
     },
     getSupDepts(deptId) {
-      getDeptSuperior(deptId).then(res => {
+      crudDept.getDeptSuperior(deptId).then(res => {
         const date = res.content
         this.buildDepts(date)
         this.depts = date
@@ -394,7 +394,7 @@ export default {
     // 获取弹窗内部门数据
     loadDepts({ action, parentNode, callback }) {
       if (action === LOAD_CHILDREN_OPTIONS) {
-        getDepts({ enabled: true, pid: parentNode.id }).then(res => {
+        crudDept.treeList({ enabled: true, pid: parentNode.id }).then(res => {
           parentNode.children = res.content.map(function(obj) {
             if (obj.hasChildren) {
               obj.children = null
@@ -447,7 +447,8 @@ export default {
     },
     // 获取弹窗内岗位数据
     getJobs(params) {
-      getJobList(params)
+      crudJob
+        .list(params)
         .then(res => {
           this.jobs = res
         })

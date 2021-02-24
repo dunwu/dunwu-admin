@@ -137,7 +137,7 @@
 
 <script>
 import crudRoles from '@/api/system/role'
-import { getDepts, getDeptSuperior } from '@/api/system/dept'
+import { treeList, getDeptSuperior } from '@/api/system/dept'
 import { getMenusTree, getChild } from '@/api/system/menu'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
 import rrOperation from '@crud/Query.operation'
@@ -304,7 +304,7 @@ export default {
     },
     // 获取部门数据
     getDepts() {
-      getDepts({ enabled: true }).then(res => {
+      treeList({ enabled: true }).then(res => {
         this.depts = res.content.map(function(obj) {
           if (obj.hasChildren) {
             obj.children = null
@@ -337,7 +337,7 @@ export default {
     // 获取弹窗内部门数据
     loadDepts({ action, parentNode, callback }) {
       if (action === LOAD_CHILDREN_OPTIONS) {
-        getDepts({ enabled: true, pid: parentNode.id }).then(res => {
+        treeList({ enabled: true, pid: parentNode.id }).then(res => {
           parentNode.children = res.content.map(function(obj) {
             if (obj.hasChildren) {
               obj.children = null
