@@ -1,65 +1,81 @@
 import request from '@/utils/request'
 
-export function getMenusTree(pid) {
+/**
+ * 添加一条记录
+ * @param data
+ * @returns {*}
+ */
+export function add(data) {
   return request({
-    url: 'api/sys/menu/list?pid=' + pid,
-    method: 'get'
-  })
-}
-
-export function getMenus(params) {
-  return request({
-    url: 'api/sys/menu/list',
-    method: 'get',
-    params
-  })
-}
-
-export function getMenuSuperior(ids) {
-  const data = ids.length || ids.length === 0 ? ids : Array.of(ids)
-  return request({
-    url: 'api/sys/menu/superior',
+    url: 'api/sys/menu/add',
     method: 'post',
     data
   })
 }
 
-export function getChild(id) {
+/**
+ * 根据 ID 集合批量删除
+ * @param ids
+ * @returns {*}
+ */
+export function del(ids) {
   return request({
-    url: 'api/sys/menu/child?id=' + id,
+    url: 'api/sys/menu/del',
+    method: 'post',
+    data: ids
+  })
+}
+
+/**
+ * 修改一条记录
+ * @param data
+ * @returns {*}
+ */
+export function edit(data) {
+  return request({
+    url: 'api/sys/menu/edit',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 根据 params 条件，返回树形列表
+ * @param params
+ */
+export function treeList(params) {
+  return request({
+    url: 'api/sys/menu/treeList',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 根据 params 条件，返回同级和上级的树形列表
+ * @param idList
+ */
+export function superiorTreeList(idList) {
+  const ids = idList.length || idList.length === 0 ? idList : Array.of(idList)
+  return request({
+    url: 'api/sys/menu/superiorTreeList',
+    method: 'post',
+    data: ids
+  })
+}
+
+export function childrenIds(id) {
+  return request({
+    url: 'api/sys/menu/childrenIds?id=' + id,
     method: 'get'
   })
 }
 
 export function buildMenus() {
   return request({
-    url: 'api/sys/menu/build',
+    url: 'api/sys/menu/mine',
     method: 'get'
   })
 }
 
-export function add(data) {
-  return request({
-    url: 'api/sys/menu',
-    method: 'post',
-    data
-  })
-}
-
-export function del(ids) {
-  return request({
-    url: 'api/sys/menu',
-    method: 'delete',
-    data: ids
-  })
-}
-
-export function edit(data) {
-  return request({
-    url: 'api/sys/menu',
-    method: 'put',
-    data
-  })
-}
-
-export default { add, edit, del, getMenusTree, getMenuSuperior, getMenus, getChild }
+export default { add, edit, del, treeList, superiorTreeList, childrenIds }

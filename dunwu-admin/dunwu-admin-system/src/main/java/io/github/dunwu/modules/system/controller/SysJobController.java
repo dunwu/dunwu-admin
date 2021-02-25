@@ -107,8 +107,7 @@ public class SysJobController {
     @PreAuthorize("@exp.check('job:view')")
     @ApiOperation("根据 ID 集合批量导出 SysJobDto 列表数据")
     @GetMapping("export/list")
-    public void exportList(@RequestBody Collection<Serializable> ids, HttpServletResponse response)
-        throws IOException {
+    public void exportList(@RequestBody Collection<Serializable> ids, HttpServletResponse response) throws IOException {
         jobService.exportByIds(ids, response);
     }
 

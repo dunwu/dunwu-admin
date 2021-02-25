@@ -42,6 +42,7 @@ export function edit(data) {
 /**
  * 根据 params 条件，返回树形列表
  * @param params
+ * @returns {*}
  */
 export function treeList(params) {
   return request({
@@ -54,6 +55,7 @@ export function treeList(params) {
 /**
  * 根据 params 条件，返回同级和上级的树形列表
  * @param idList
+ * @returns {*}
  */
 export function superiorTreeList(idList) {
   const ids = idList.length || idList.length === 0 ? idList : Array.of(idList)

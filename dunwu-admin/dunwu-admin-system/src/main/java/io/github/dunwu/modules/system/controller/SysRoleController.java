@@ -53,70 +53,62 @@ public class SysRoleController {
         return new ResponseEntity<>(service.updateById(entity), HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping("{id}")
     @Log("删除一条 SysRole 记录")
     @PreAuthorize("@exp.check('role:del')")
     @ApiOperation("删除一条 SysRole 记录")
+    @PostMapping("del/{id}")
     public ResponseEntity<Object> deleteById(@PathVariable Serializable id) {
         return new ResponseEntity<>(service.removeById(id), HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping
     @Log("根据 ID 集合批量删除 SysRole 记录")
     @PreAuthorize("@exp.check('role:del')")
     @ApiOperation("根据 ID 集合批量删除 SysRole 记录")
+    @PostMapping("del")
     public ResponseEntity<Object> deleteByIds(@RequestBody Collection<Serializable> ids) {
         return new ResponseEntity<>(service.removeByIds(ids), HttpStatus.ACCEPTED);
     }
 
-    @GetMapping
-    @PreAuthorize("@exp.check('role:view')")
-    @ApiOperation("查询 SysRoleDto 记录")
-    public ResponseEntity<Object> view(SysRoleQuery query, Pageable pageable) {
-        return page(query, pageable);
-    }
-
-    @GetMapping("page")
-    @PreAuthorize("@exp.check('role:view')")
-    @ApiOperation("根据 query 和 pageable 条件，分页查询 SysRoleDto 记录")
-    public ResponseEntity<Object> page(SysRoleQuery query, Pageable pageable) {
-        return new ResponseEntity<>(service.pojoPageByQuery(query, pageable), HttpStatus.OK);
-    }
-
-    @GetMapping("{id}")
-    @PreAuthorize("@exp.check('role:view')")
-    @ApiOperation("根据 ID 查询 SysRole 记录")
-    public ResponseEntity<Object> getById(@PathVariable Serializable id) {
-        return new ResponseEntity<>(service.pojoById(id), HttpStatus.OK);
-    }
-
-    @GetMapping("count")
-    @PreAuthorize("@exp.check('role:view')")
-    @ApiOperation("根据 query 条件，查询匹配条件的总记录数")
-    public ResponseEntity<Object> count(SysRoleQuery query) {
-        return new ResponseEntity<>(service.countByQuery(query), HttpStatus.OK);
-    }
-
-    @GetMapping("list")
     @PreAuthorize("@exp.check('role:view')")
     @ApiOperation("根据 query 条件，查询匹配条件的 SysRoleDto 列表")
+    @GetMapping("list")
     public ResponseEntity<Object> list(SysRoleQuery query) {
         return new ResponseEntity<>(service.pojoListByQuery(query), HttpStatus.OK);
     }
 
-    @GetMapping("export/list")
     @PreAuthorize("@exp.check('role:view')")
-    @ApiOperation("根据 ID 集合批量导出 SysRoleDto 列表数据")
-    public void exportByIds(@RequestBody Collection<Serializable> ids, HttpServletResponse response)
-        throws IOException {
-        service.exportByIds(ids, response);
+    @ApiOperation("根据 query 和 pageable 条件，分页查询 SysRoleDto 记录")
+    @GetMapping("page")
+    public ResponseEntity<Object> page(SysRoleQuery query, Pageable pageable) {
+        return new ResponseEntity<>(service.pojoPageByQuery(query, pageable), HttpStatus.OK);
     }
 
-    @GetMapping("export")
+    @PreAuthorize("@exp.check('role:view')")
+    @ApiOperation("根据 query 条件，查询匹配条件的总记录数")
+    @GetMapping("count")
+    public ResponseEntity<Object> count(SysRoleQuery query) {
+        return new ResponseEntity<>(service.countByQuery(query), HttpStatus.OK);
+    }
+
+    @PreAuthorize("@exp.check('role:view')")
+    @ApiOperation("根据 ID 查询 SysRole 记录")
+    @GetMapping("{id}")
+    public ResponseEntity<Object> getById(@PathVariable Serializable id) {
+        return new ResponseEntity<>(service.pojoById(id), HttpStatus.OK);
+    }
+
     @PreAuthorize("@exp.check('role:view')")
     @ApiOperation("根据 query 和 pageable 条件批量导出 SysRoleDto 列表数据")
+    @GetMapping("export/page")
     public void exportPageData(SysRoleQuery query, Pageable pageable, HttpServletResponse response) throws IOException {
         service.exportPageData(query, pageable, response);
+    }
+
+    @PreAuthorize("@exp.check('role:view')")
+    @ApiOperation("根据 ID 集合批量导出 SysRoleDto 列表数据")
+    @GetMapping("export/list")
+    public void exportByIds(@RequestBody Collection<Serializable> ids, HttpServletResponse response) throws IOException {
+        service.exportByIds(ids, response);
     }
 
     @PutMapping(value = "menu")

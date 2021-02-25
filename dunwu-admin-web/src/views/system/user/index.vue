@@ -437,7 +437,7 @@ export default {
     // 获取弹窗内角色数据
     getRoles() {
       roleApi
-        .getAll()
+        .list()
         .then(res => {
           this.roles = res
         })

@@ -136,9 +136,9 @@
 </template>
 
 <script>
-import crudRole from '@/api/system/role'
-import crudDept from '@/api/system/dept'
-import { getMenusTree, getChild } from '@/api/system/menu'
+import roleApi from '@/api/system/role'
+import deptApi from '@/api/system/dept'
+import menuApi from '@/api/system/menu'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
 import rrOperation from '@crud/Query.operation'
 import crudOperation from '@crud/CRUD.operation'
@@ -154,7 +154,12 @@ export default {
   name: 'Role',
   components: { Treeselect, pagination, crudOperation, rrOperation, udOperation, DateRangePicker },
   cruds() {
-    return CRUD({ title: '角色', url: 'api/sys/role', sort: 'level,asc', crudMethod: { ...crudRole }})
+    return CRUD({
+      title: '角色',
+      url: 'api/sys/role',
+      sort: 'level,asc',
+      crudMethod: { ...roleApi }
+    })
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   data() {
@@ -181,16 +186,20 @@ export default {
     }
   },
   created() {
-    crudRole.getLevel().then(data => {
+    roleApi.getLevel().then(data => {
       this.level = data.level
     })
   },
   methods: {
     getMenuDatas(node, resolve) {
       setTimeout(() => {
-        getMenusTree(node.data.id ? node.data.id : 0).then(res => {
-          resolve(res)
-        })
+        menuApi
+          .treeList({
+            pid: node.data.id ? node.data.id : 0
+          })
+          .then(res => {
+            resolve(res)
+          })
       }, 100)
     },
     [CRUD.HOOK.afterRefresh]() {
@@ -233,6 +242,7 @@ export default {
     },
     // 触发单选
     handleCurrentChange(val) {
+      console.log('handleCurrentChange before', val)
       if (val) {
         const _this = this
         // 清空菜单的选中
@@ -246,23 +256,25 @@ export default {
         })
         this.showButton = true
       }
+      console.log('handleCurrentChange after', this.menuIds)
     },
     menuChange(menu) {
       // 获取该节点的所有子节点，id 包含自身
-      getChild(menu.id).then(childIds => {
+      console.log('menuChange', menu)
+      menuApi.childrenIds(menu.id).then(ids => {
         // 判断是否在 menuIds 中，如果存在则删除，否则添加
         if (this.menuIds.indexOf(menu.id) !== -1) {
-          for (let i = 0; i < childIds.length; i++) {
-            const index = this.menuIds.indexOf(childIds[i])
+          for (let i = 0; i < ids.length; i++) {
+            const index = this.menuIds.indexOf(ids[i])
             if (index !== -1) {
               this.menuIds.splice(index, 1)
             }
           }
         } else {
-          for (let i = 0; i < childIds.length; i++) {
-            const index = this.menuIds.indexOf(childIds[i])
+          for (let i = 0; i < ids.length; i++) {
+            const index = this.menuIds.indexOf(ids[i])
             if (index === -1) {
-              this.menuIds.push(childIds[i])
+              this.menuIds.push(ids[i])
             }
           }
         }
@@ -278,7 +290,7 @@ export default {
         const menu = { id: id }
         role.menus.push(menu)
       })
-      crudRole
+      roleApi
         .editMenu(role)
         .then(() => {
           this.crud.notify('保存成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
@@ -293,7 +305,7 @@ export default {
     // 改变数据
     update() {
       // 无刷新更新 表格数据
-      crudRole.get(this.currentId).then(res => {
+      roleApi.getById(this.currentId).then(res => {
         for (let i = 0; i < this.crud.data.length; i++) {
           if (res.id === this.crud.data[i].id) {
             this.crud.data[i] = res
@@ -304,7 +316,7 @@ export default {
     },
     // 获取部门数据
     getDepts() {
-      crudDept.treeList({ enabled: true }).then(res => {
+      deptApi.treeList({ enabled: true }).then(res => {
         this.depts = res.content.map(function(obj) {
           if (obj.hasChildren) {
             obj.children = null
@@ -318,7 +330,7 @@ export default {
       depts.forEach(dept => {
         ids.push(dept.id)
       })
-      crudDept.superiorTreeList(ids).then(res => {
+      deptApi.superiorTreeList(ids).then(res => {
         const date = res.content
         this.buildDepts(date)
         this.depts = date
@@ -337,7 +349,7 @@ export default {
     // 获取弹窗内部门数据
     loadDepts({ action, parentNode, callback }) {
       if (action === LOAD_CHILDREN_OPTIONS) {
-        crudDept.treeList({ enabled: true, pid: parentNode.id }).then(res => {
+        deptApi.treeList({ enabled: true, pid: parentNode.id }).then(res => {
           parentNode.children = res.content.map(function(obj) {
             if (obj.hasChildren) {
               obj.children = null
