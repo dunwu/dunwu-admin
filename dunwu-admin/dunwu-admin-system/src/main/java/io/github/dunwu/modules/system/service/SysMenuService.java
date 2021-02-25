@@ -1,5 +1,6 @@
 package io.github.dunwu.modules.system.service;
 
+import io.github.dunwu.data.core.annotation.QueryField;
 import io.github.dunwu.data.mybatis.IService;
 import io.github.dunwu.modules.system.entity.SysMenu;
 import io.github.dunwu.modules.system.entity.dto.SysMenuDto;
@@ -100,8 +101,9 @@ public interface SysMenuService extends IService {
      *
      * @param ids      id 列表
      * @param response {@link HttpServletResponse} 实体
+     * @throws IOException /
      */
-    void exportByIds(Collection<Serializable> ids, HttpServletResponse response) throws IOException;
+    void exportList(Collection<Serializable> ids, HttpServletResponse response) throws IOException;
 
     /**
      * 根据 query 和 pageable 查询 {@link SysMenuDto} 列表，并导出 excel 表单
@@ -109,17 +111,22 @@ public interface SysMenuService extends IService {
      * @param query    查询条件，根据 query 中的 {@link io.github.dunwu.data.core.annotation.QueryField} 注解自动组装查询条件
      * @param pageable 分页查询条件
      * @param response {@link HttpServletResponse} 实体
+     * @throws IOException /
      */
-    void exportPageData(Object query, Pageable pageable, HttpServletResponse response) throws IOException;
+    void exportPage(Object query, Pageable pageable, HttpServletResponse response) throws IOException;
 
-    Object treeObject();
-
-    Map<String, Object> treeListMap(Object query);
+    /**
+     * 根据 query 和 pageable 查询 {@link SysMenuDto} 树形列表
+     *
+     * @param query 查询条件，根据 query 中的 {@link QueryField} 注解自动组装查询条件
+     * @return /
+     */
+    Collection<SysMenuDto> treeList(Object query);
 
     Map<String, Object> buildTreeList(Collection<SysMenuDto> list);
 
-    List<SysMenuDto> pojoListByRoleIds(Collection<Long> roleIds);
-
     List<MenuVo> buildMenuListForCurrentUser();
+
+    List<Long> childrenIds(Long id);
 
 }

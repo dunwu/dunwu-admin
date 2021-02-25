@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import crudJob from '@/api/system/job'
+import jobApi from '@/api/system/job'
 import eHeader from './module/header'
 import eForm from './module/form'
 import CRUD, { presenter } from '@crud/crud'
@@ -67,7 +67,7 @@ export default {
       title: '岗位',
       url: 'api/sys/job',
       sort: ['weight,asc', 'id,desc'],
-      crudMethod: { ...crudJob }
+      crudMethod: { ...jobApi }
     })
   },
   mixins: [presenter()],
@@ -92,7 +92,7 @@ export default {
       })
         .then(() => {
           // eslint-disable-next-line no-undef
-          crudJob
+          jobApi
             .edit(data)
             .then(() => {
               // eslint-disable-next-line no-undef

@@ -11,6 +11,7 @@ import io.github.dunwu.modules.system.entity.SysMenu;
 import io.github.dunwu.modules.system.entity.SysRoleMenu;
 import io.github.dunwu.modules.system.entity.dto.SysMenuDto;
 import io.github.dunwu.modules.system.entity.dto.SysRoleDto;
+import io.github.dunwu.modules.system.entity.query.SysMenuQuery;
 import io.github.dunwu.modules.system.entity.vo.MenuVo;
 import io.github.dunwu.modules.system.service.SysMenuService;
 import io.github.dunwu.modules.system.service.SysRoleService;
@@ -62,22 +63,22 @@ public class SysMenuServiceImpl extends ServiceImpl implements SysMenuService {
 
     @Override
     public Page<SysMenuDto> pojoPageByQuery(Object query, Pageable pageable) {
-        return menuDao.pojoPageByQuery(query, pageable, this::doToVo);
+        return menuDao.pojoPageByQuery(query, pageable, this::doToDto);
     }
 
     @Override
     public List<SysMenuDto> pojoListByQuery(Object query) {
-        return menuDao.pojoListByQuery(query, this::doToVo);
+        return menuDao.pojoListByQuery(query, this::doToDto);
     }
 
     @Override
     public SysMenuDto pojoById(Serializable id) {
-        return menuDao.pojoById(id, this::doToVo);
+        return menuDao.pojoById(id, this::doToDto);
     }
 
     @Override
     public SysMenuDto pojoByQuery(Object query) {
-        return menuDao.pojoByQuery(query, this::doToVo);
+        return menuDao.pojoByQuery(query, this::doToDto);
     }
 
     @Override
@@ -86,26 +87,21 @@ public class SysMenuServiceImpl extends ServiceImpl implements SysMenuService {
     }
 
     @Override
-    public void exportByIds(Collection<Serializable> ids, HttpServletResponse response) throws IOException {
-        List<SysMenuDto> list = menuDao.pojoListByIds(ids, this::doToVo);
+    public void exportList(Collection<Serializable> ids, HttpServletResponse response) throws IOException {
+        List<SysMenuDto> list = menuDao.pojoListByIds(ids, this::doToDto);
         menuDao.exportDtoList(list, response);
     }
 
     @Override
-    public void exportPageData(Object query, Pageable pageable, HttpServletResponse response) throws IOException {
-        Page<SysMenuDto> page = menuDao.pojoPageByQuery(query, pageable, this::doToVo);
+    public void exportPage(Object query, Pageable pageable, HttpServletResponse response) throws IOException {
+        Page<SysMenuDto> page = menuDao.pojoPageByQuery(query, pageable, this::doToDto);
         menuDao.exportDtoList(page.getContent(), response);
     }
 
     @Override
-    public Object treeObject() {
-        return menuDao.treeObject(menuDao.listByPid(0L));
-    }
-
-    @Override
-    public Map<String, Object> treeListMap(Object query) {
+    public Collection<SysMenuDto> treeList(Object query) {
         Collection<SysMenuDto> list = pojoListByQuery(query);
-        return buildTreeList(list);
+        return menuDao.buildTreeList(list);
     }
 
     @Override
@@ -115,23 +111,6 @@ public class SysMenuServiceImpl extends ServiceImpl implements SysMenuService {
         map.put("content", trees);
         map.put("totalElements", trees.size());
         return map;
-    }
-
-    @Override
-    public List<SysMenuDto> pojoListByRoleIds(Collection<Long> roleIds) {
-        Set<Long> menuIds = new HashSet<>();
-        for (Long roleId : roleIds) {
-            SysRoleMenu roleMenu = new SysRoleMenu();
-            roleMenu.setRoleId(roleId);
-            List<SysRoleMenu> rolesMenus = roleMenuDao.list(Wrappers.query(roleMenu));
-            menuIds.addAll(rolesMenus.stream().map(SysRoleMenu::getMenuId).collect(Collectors.toSet()));
-        }
-
-        List<SysMenu> list = menuDao.listByIds(menuIds);
-        return list.stream()
-                   .filter(i -> StrUtil.isNotBlank(i.getPath()))
-                   .map(this::doToVo)
-                   .collect(Collectors.toList());
     }
 
     @Override
@@ -159,14 +138,58 @@ public class SysMenuServiceImpl extends ServiceImpl implements SysMenuService {
         return menuDao.buildFrontMenus(menuDtos);
     }
 
-    public SysMenuDto doToVo(SysMenu model) {
+    @Override
+    public List<Long> childrenIds(Long id) {
+        SysMenuQuery query = new SysMenuQuery();
+        query.setPid(id);
+        List<SysMenu> menus = menuDao.listByQuery(query);
+        if (CollectionUtil.isEmpty(menus)) {
+            return Collections.emptyList();
+        }
+
+        List<Long> ids = new ArrayList<>();
+        for (SysMenu i : menus) {
+            if (i == null) {
+                continue;
+            }
+
+            ids.add(i.getId());
+            // 递归获取子节点 ID
+            List<Long> childrenIds = childrenIds(i.getId());
+            ids.addAll(childrenIds);
+        }
+
+        return ids;
+    }
+
+    private SysMenuDto doToDto(SysMenu model) {
         if (model == null) {
             return null;
         }
 
         SysMenuDto dto = BeanUtil.toBean(model, SysMenuDto.class);
-        dto.setLabel(dto.getName());
+        dto.setLabel(dto.getTitle());
         return dto;
+    }
+
+    private SysMenu dtoToDo(SysMenuDto entity) {
+        return BeanUtil.toBean(entity, SysMenu.class);
+    }
+
+    private List<SysMenuDto> pojoListByRoleIds(Collection<Long> roleIds) {
+        Set<Long> menuIds = new HashSet<>();
+        for (Long roleId : roleIds) {
+            SysRoleMenu roleMenu = new SysRoleMenu();
+            roleMenu.setRoleId(roleId);
+            List<SysRoleMenu> rolesMenus = roleMenuDao.list(Wrappers.query(roleMenu));
+            menuIds.addAll(rolesMenus.stream().map(SysRoleMenu::getMenuId).collect(Collectors.toSet()));
+        }
+
+        List<SysMenu> list = menuDao.listByIds(menuIds);
+        return list.stream()
+                   .filter(i -> StrUtil.isNotBlank(i.getPath()))
+                   .map(this::doToDto)
+                   .collect(Collectors.toList());
     }
 
 }

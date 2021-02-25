@@ -4,7 +4,6 @@ import io.github.dunwu.data.validator.annotation.AddCheck;
 import io.github.dunwu.data.validator.annotation.EditCheck;
 import io.github.dunwu.modules.monitor.annotation.Log;
 import io.github.dunwu.modules.system.entity.dto.SysDeptDto;
-import io.github.dunwu.modules.system.entity.dto.SysDeptRelationDto;
 import io.github.dunwu.modules.system.entity.query.SysDeptQuery;
 import io.github.dunwu.modules.system.service.SysDeptService;
 import io.swagger.annotations.Api;
@@ -103,7 +102,7 @@ public class SysDeptController {
     @ApiOperation("根据 query 和 pageable 条件批量导出 SysDeptDto 列表数据")
     @GetMapping("export/page")
     public void exportPage(SysDeptQuery query, Pageable pageable, HttpServletResponse response) throws IOException {
-        service.exportPageData(query, pageable, response);
+        service.exportPage(query, pageable, response);
     }
 
     @PreAuthorize("@exp.check('dept:view')")
@@ -111,7 +110,7 @@ public class SysDeptController {
     @GetMapping("export/list")
     public void exportList(@RequestBody Collection<Serializable> ids, HttpServletResponse response)
         throws IOException {
-        service.exportByIds(ids, response);
+        service.exportList(ids, response);
     }
 
     @PreAuthorize("@exp.check('dept:view')")
@@ -121,39 +120,38 @@ public class SysDeptController {
         return new ResponseEntity<>(service.treeList(query), HttpStatus.OK);
     }
 
-    @ApiOperation("查询部门:根据ID获取同级与上级数据")
     @PreAuthorize("@exp.check('dept:view')")
-    @PostMapping("superior")
+    @ApiOperation("根据ID获取同级与上级数据")
+    @PostMapping("superiorTreeList")
     public ResponseEntity<Object> superiorTreeList(@RequestBody Collection<Serializable> ids) {
-        Collection<SysDeptDto> depts = new ArrayList<>();
+        Collection<SysDeptDto> treeList = new ArrayList<>();
         for (Serializable id : ids) {
-            SysDeptDto sysDeptDto = service.pojoById(id);
-            if (sysDeptDto == null) {
+            SysDeptDto entity = service.pojoById(id);
+            if (entity == null) {
                 continue;
             }
 
-            if (sysDeptDto.getPid() != null) {
+            if (entity.getPid() != null) {
                 // 获取上级部门
-                SysDeptDto parentDept = service.pojoById(sysDeptDto.getPid());
-                depts.add(parentDept);
+                SysDeptDto parent = service.pojoById(entity.getPid());
+                treeList.add(parent);
 
                 // 获取所有同级部门
                 SysDeptQuery query = new SysDeptQuery();
-                query.setPid(sysDeptDto.getPid());
+                query.setPid(entity.getPid());
                 Collection<SysDeptDto> list = service.pojoListByQuery(query);
-                depts.addAll(list);
+                treeList.addAll(list);
             }
         }
-        Map<String, Object> stringObjectMap = new HashMap<>(service.buildTreeList(depts));
+        Map<String, Object> stringObjectMap = new HashMap<>(service.buildTreeList(treeList));
         return new ResponseEntity<>(stringObjectMap, HttpStatus.OK);
     }
 
-    @PutMapping("relation")
-    @Log("更新一条 SysDept 记录的关联关系")
-    @PreAuthorize("@exp.check('dept:edit')")
-    @ApiOperation("更新一条 SysDept 记录的关联关系")
-    public ResponseEntity<Object> updateRelations(@Validated @RequestBody SysDeptRelationDto dto) {
-        return new ResponseEntity<>(service.updateRelations(dto), HttpStatus.ACCEPTED);
-    }
-
+    // @Log("更新一条 SysDept 记录的关联关系")
+    // @PreAuthorize("@exp.check('dept:edit')")
+    // @ApiOperation("更新一条 SysDept 记录的关联关系")
+    // @PutMapping("relation")
+    // public ResponseEntity<Object> updateRelations(@Validated @RequestBody SysDeptRelationDto dto) {
+    //     return new ResponseEntity<>(service.updateRelations(dto), HttpStatus.ACCEPTED);
+    // }
 }

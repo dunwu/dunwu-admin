@@ -80,11 +80,8 @@ function CRUD(options) {
       },
       // 标题
       get title() {
-        return this.add > CRUD.STATUS.NORMAL
-          ? `新增${crud.title}`
-          : this.edit > CRUD.STATUS.NORMAL
-            ? `编辑${crud.title}`
-            : crud.title
+        const editTitle = this.edit > CRUD.STATUS.NORMAL ? `编辑${crud.title}` : crud.title
+        return this.add > CRUD.STATUS.NORMAL ? `新增${crud.title}` : editTitle
       }
     },
     msg: {
@@ -136,7 +133,6 @@ function CRUD(options) {
       }
       return new Promise((resolve, reject) => {
         crud.loading = true
-        console.log('tableType', this.tableType)
         // 请求数据
         if (this.tableType === 'tree') {
           initData(crud.url + '/treeList', crud.getQueryParams())

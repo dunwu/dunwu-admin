@@ -51,10 +51,14 @@ export function treeList(params) {
   })
 }
 
+/**
+ * 根据 params 条件，返回同级和上级的树形列表
+ * @param idList
+ */
 export function superiorTreeList(idList) {
   const ids = idList.length || idList.length === 0 ? idList : Array.of(idList)
   return request({
-    url: 'api/sys/dept/superior',
+    url: 'api/sys/dept/superiorTreeList',
     method: 'post',
     data: ids
   })

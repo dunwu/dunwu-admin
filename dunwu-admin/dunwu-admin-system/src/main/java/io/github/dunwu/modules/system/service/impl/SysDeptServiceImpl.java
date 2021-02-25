@@ -114,13 +114,13 @@ public class SysDeptServiceImpl extends ServiceImpl implements SysDeptService {
     }
 
     @Override
-    public void exportByIds(Collection<Serializable> ids, HttpServletResponse response) throws IOException {
+    public void exportList(Collection<Serializable> ids, HttpServletResponse response) throws IOException {
         List<SysDeptDto> list = deptDao.pojoListByIds(ids, this::doToDto);
         deptDao.exportDtoList(list, response);
     }
 
     @Override
-    public void exportPageData(Object query, Pageable pageable, HttpServletResponse response) throws IOException {
+    public void exportPage(Object query, Pageable pageable, HttpServletResponse response) throws IOException {
         Page<SysDeptDto> page = deptDao.pojoPageByQuery(query, pageable, this::doToDto);
         deptDao.exportDtoList(page.getContent(), response);
     }

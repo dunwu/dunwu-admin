@@ -119,8 +119,8 @@
       ref="table"
       v-loading="crud.loading"
       lazy
-      :load="getMenus"
       :data="crud.data"
+      :load="getMenus"
       :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
       row-key="id"
       @select="crud.selectChange"
@@ -180,7 +180,7 @@
 </template>
 
 <script>
-import crudMenu from '@/api/system/menu'
+import menuApi from '@/api/system/menu'
 import IconSelect from '@/components/IconSelect'
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
@@ -212,17 +212,28 @@ export default {
   name: 'Menu',
   components: { Treeselect, IconSelect, crudOperation, rrOperation, udOperation, DateRangePicker },
   cruds() {
-    return CRUD({ title: '菜单', url: 'api/sys/menu', crudMethod: { ...crudMenu }})
+    return CRUD({
+      title: '菜单',
+      url: 'api/sys/menu',
+      tableType: 'tree',
+      crudMethod: { ...menuApi }
+    })
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   data() {
     return {
       menus: [],
+      /**
+       * 权限表达式
+       */
       permission: {
         add: ['admin', 'menu:add'],
         edit: ['admin', 'menu:edit'],
         del: ['admin', 'menu:del']
       },
+      /**
+       * 表单校验规则
+       */
       rules: {
         title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
         path: [{ required: true, message: '请输入地址', trigger: 'blur' }]
@@ -237,7 +248,7 @@ export default {
         if (form.pid === null) {
           form.pid = 0
         }
-        this.getSupDepts(form.id)
+        this.getSuperiorTreeList(form.id)
       } else {
         this.menus.push({ id: 0, label: '顶级类目', children: null })
       }
@@ -245,32 +256,24 @@ export default {
     getMenus(tree, treeNode, resolve) {
       const params = { pid: tree.id }
       setTimeout(() => {
-        crudMenu.getMenus(params).then(res => {
-          console.log('getMenus', params, res)
-          resolve(res.content)
+        menuApi.treeList(params).then(res => {
+          resolve(res)
         })
       }, 100)
     },
-    getSupDepts(id) {
-      console.log('getSupDepts id', id)
-      crudMenu.getMenuSuperior(id).then(res => {
+    getSuperiorTreeList(id) {
+      console.log('getSuperiorTreeList id', id)
+      menuApi.superiorTreeList(id).then(res => {
         const children = res.content.map(function(obj) {
-          // if (obj.hasChildren && !obj.children) {
-          //   obj.children = null
-          // }
           return obj
         })
         this.menus = [{ id: 0, label: '顶级类目', children: children }]
       })
     },
     loadMenus({ action, parentNode, callback }) {
-      console.log('loadMenus action', action)
       if (action === LOAD_CHILDREN_OPTIONS) {
-        crudMenu.getMenusTree(parentNode.id).then(res => {
+        menuApi.treeList({ pid: parentNode.id !== 0 ? parentNode.id : null }).then(res => {
           parentNode.children = res.map(function(obj) {
-            // if (obj.hasChildren) {
-            //   obj.children = null
-            // }
             return obj
           })
           setTimeout(() => {

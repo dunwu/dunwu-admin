@@ -178,11 +178,11 @@
 </template>
 
 <script>
-import crudUser from '@/api/system/user'
+import userApi from '@/api/system/user'
+import deptApi from '@/api/system/dept'
+import jobApi from '@/api/system/job'
+import roleApi from '@/api/system/role'
 import { isvalidPhone } from '@/utils/validate'
-import crudDept from '@/api/system/dept'
-import crudJob from '@/api/system/job'
-import { getAll, getLevel } from '@/api/system/role'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
 import rrOperation from '@crud/Query.operation'
 import crudOperation from '@crud/CRUD.operation'
@@ -212,7 +212,7 @@ export default {
   name: 'User',
   components: { Treeselect, crudOperation, rrOperation, udOperation, pagination, DateRangePicker },
   cruds() {
-    return CRUD({ title: '用户', url: 'api/sys/user', crudMethod: { ...crudUser }})
+    return CRUD({ title: '用户', url: 'api/sys/user', crudMethod: { ...userApi }})
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   // 数据字典
@@ -243,10 +243,7 @@ export default {
         edit: ['admin', 'user:edit'],
         del: ['admin', 'user:del']
       },
-      enabledTypeOptions: [
-        { code: 'true', name: '激活' },
-        { code: 'false', name: '锁定' }
-      ],
+      enabledTypeOptions: [{ code: 'true', name: '激活' }, { code: 'false', name: '锁定' }],
       rules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -355,7 +352,7 @@ export default {
         params['pid'] = node.data.id
       }
       setTimeout(() => {
-        crudDept.treeList(params).then(res => {
+        deptApi.treeList(params).then(res => {
           if (resolve) {
             resolve(res)
           } else {
@@ -365,7 +362,7 @@ export default {
       }, 100)
     },
     getDepts() {
-      crudDept.treeList({ enabled: true }).then(res => {
+      deptApi.treeList({ enabled: true }).then(res => {
         this.depts = res.map(function(obj) {
           if (obj.hasChildren) {
             obj.children = null
@@ -375,7 +372,7 @@ export default {
       })
     },
     getSupDepts(deptId) {
-      crudDept.superiorTreeList(deptId).then(res => {
+      deptApi.superiorTreeList(deptId).then(res => {
         const date = res.content
         this.buildDepts(date)
         this.depts = date
@@ -394,7 +391,7 @@ export default {
     // 获取弹窗内部门数据
     loadDepts({ action, parentNode, callback }) {
       if (action === LOAD_CHILDREN_OPTIONS) {
-        crudDept.treeList({ enabled: true, pid: parentNode.id }).then(res => {
+        deptApi.treeList({ enabled: true, pid: parentNode.id }).then(res => {
           parentNode.children = res.map(function(obj) {
             if (obj.hasChildren) {
               obj.children = null
@@ -424,7 +421,7 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          crudUser
+          userApi
             .edit(data)
             .then(res => {
               this.crud.notify(this.dict.label.user_status[val] + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
@@ -439,7 +436,8 @@ export default {
     },
     // 获取弹窗内角色数据
     getRoles() {
-      getAll()
+      roleApi
+        .getAll()
         .then(res => {
           this.roles = res
         })
@@ -447,7 +445,7 @@ export default {
     },
     // 获取弹窗内岗位数据
     getJobs(params) {
-      crudJob
+      jobApi
         .list(params)
         .then(res => {
           this.jobs = res
@@ -456,7 +454,8 @@ export default {
     },
     // 获取权限级别
     getRoleLevel() {
-      getLevel()
+      roleApi
+        .getLevel()
         .then(res => {
           this.level = res.level
         })

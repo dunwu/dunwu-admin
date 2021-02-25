@@ -102,8 +102,9 @@ public interface SysDeptService extends IService {
      *
      * @param ids      id 列表
      * @param response {@link HttpServletResponse} 实体
+     * @throws IOException /
      */
-    void exportByIds(Collection<Serializable> ids, HttpServletResponse response) throws IOException;
+    void exportList(Collection<Serializable> ids, HttpServletResponse response) throws IOException;
 
     /**
      * 根据 query 和 pageable 查询 {@link SysDeptDto} 列表，并导出 excel 表单
@@ -111,14 +112,21 @@ public interface SysDeptService extends IService {
      * @param query    查询条件，根据 query 中的 {@link QueryField} 注解自动组装查询条件
      * @param pageable 分页查询条件
      * @param response {@link HttpServletResponse} 实体
+     * @throws IOException /
      */
-    void exportPageData(Object query, Pageable pageable, HttpServletResponse response) throws IOException;
+    void exportPage(Object query, Pageable pageable, HttpServletResponse response) throws IOException;
+
+    /**
+     * 根据 query 和 pageable 查询 {@link SysDeptDto} 树形列表
+     *
+     * @param query 查询条件，根据 query 中的 {@link QueryField} 注解自动组装查询条件
+     * @return /
+     */
+    Collection<SysDeptDto> treeList(Object query);
 
     List<SysDeptDto> pojoListByPid(Serializable pid);
 
     List<SysDeptDto> pojoListByRoleId(Long roleId);
-
-    Collection<SysDeptDto> treeList(Object query);
 
     Map<String, Object> buildTreeList(Collection<SysDeptDto> list);
 

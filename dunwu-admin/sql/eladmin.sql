@@ -398,7 +398,6 @@ CREATE TABLE `sys_menu` (
     KEY `key_pid`(`pid`)
 )
     ENGINE = InnoDB
-    AUTO_INCREMENT = 118
     DEFAULT CHARSET = `utf8`
     ROW_FORMAT = COMPACT
     COMMENT ='系统菜单';

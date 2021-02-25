@@ -86,7 +86,11 @@
             :show-count="true"
             :default-expand-level="1"
           >
-            <label slot="option-label" slot-scope="{ node, shouldShowCount, count, labelClassName, countClassName }" :class="labelClassName">
+            <label
+              slot="option-label"
+              slot-scope="{ node, shouldShowCount, count, labelClassName, countClassName }"
+              :class="labelClassName"
+            >
               {{ node.label }}
               <span v-if="shouldShowCount" :class="countClassName">({{ count }})</span>
             </label>
@@ -103,9 +107,9 @@
       ref="table"
       v-loading="crud.loading"
       lazy
-      :load="getDeptDatas"
-      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
       :data="crud.data"
+      :load="getDepts"
+      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
       row-key="id"
       @select="crud.selectChange"
       @select-all="crud.selectAllChange"
@@ -147,7 +151,7 @@
 </template>
 
 <script>
-import crudDept from '@/api/system/dept'
+import deptApi from '@/api/system/dept'
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import { LOAD_CHILDREN_OPTIONS } from '@riophae/vue-treeselect'
@@ -166,41 +170,39 @@ export default {
       title: '部门',
       url: 'api/sys/dept',
       tableType: 'tree',
-      crudMethod: { ...crudDept }
+      crudMethod: { ...deptApi }
     })
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
-  // 设置数据字典
+  /**
+   * 设置数据字典
+   */
   dicts: ['dept_status'],
   data() {
     return {
       depts: [],
-      rules: {
-        name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
-        weight: [{ required: true, message: '请输入序号', trigger: 'blur', type: 'number' }]
-      },
+      /**
+       * 权限表达式
+       */
       permission: {
         add: ['admin', 'dept:add'],
         edit: ['admin', 'dept:edit'],
         del: ['admin', 'dept:del']
       },
-      enabledTypeOptions: [
-        { key: 'true', display_name: '正常' },
-        { key: 'false', display_name: '禁用' }
-      ]
+      /**
+       * 表单校验规则
+       */
+      rules: {
+        name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
+        weight: [{ required: true, message: '请输入序号', trigger: 'blur', type: 'number' }]
+      },
+      enabledTypeOptions: [{ key: 'true', display_name: '正常' }, { key: 'false', display_name: '禁用' }]
     }
   },
   methods: {
-    getDeptDatas(tree, treeNode, resolve) {
-      const params = { pid: tree.id }
-      setTimeout(() => {
-        crudDept.treeList(params).then(res => {
-          resolve(res)
-        })
-      }, 100)
-    },
     // 新增与编辑前做的操作
     [CRUD.HOOK.afterToCU](crud, form) {
+      this.depts = []
       if (form.pid !== 0) {
         form.isTop = '0'
       } else if (form.id !== null) {
@@ -208,14 +210,26 @@ export default {
       }
       form.enabled = `${form.enabled}`
       if (form.id != null) {
-        this.getSupDepts(form.id)
+        this.getSuperiorTreeList(form.id)
       } else {
-        this.getDepts()
+        this.depts.push({ id: 0, label: '顶级类目', children: null })
       }
     },
-    getSupDepts(id) {
-      crudDept.superiorTreeList(id).then(res => {
-        const depts = res.content
+    getDepts(tree, treeNode, resolve) {
+      const params = { pid: tree.id }
+      setTimeout(() => {
+        deptApi.treeList(params).then(res => {
+          resolve(res)
+        })
+      }, 100)
+    },
+    getSuperiorTreeList(id) {
+      console.log('getSuperiorTreeList id', id)
+      deptApi.superiorTreeList(id).then(res => {
+        const children = res.content.map(function(obj) {
+          return obj
+        })
+        const depts = [{ id: 0, label: '顶级类目', children: children }]
         this.buildDepts(depts)
         this.depts = depts
       })
@@ -230,8 +244,8 @@ export default {
         // }
       })
     },
-    getDepts() {
-      crudDept.treeList({ enabled: true }).then(res => {
+    getAllEnableDepts() {
+      deptApi.treeList({ enabled: true }).then(res => {
         this.depts = res.map(function(obj) {
           return obj
         })
@@ -240,7 +254,7 @@ export default {
     // 获取弹窗内部门数据
     loadDepts({ action, parentNode, callback }) {
       if (action === LOAD_CHILDREN_OPTIONS) {
-        crudDept.treeList({ enabled: true, pid: parentNode.id }).then(res => {
+        deptApi.treeList({ enabled: true, pid: parentNode.id !== 0 ? parentNode.id : null }).then(res => {
           parentNode.children = res.map(function(obj) {
             return obj
           })
@@ -272,7 +286,7 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          crudDept
+          deptApi
             .edit(data)
             .then(res => {
               this.crud.notify(this.dict.label.dept_status[val] + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
