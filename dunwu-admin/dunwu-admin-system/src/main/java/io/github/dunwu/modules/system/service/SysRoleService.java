@@ -121,8 +121,6 @@ public interface SysRoleService extends IService {
 
     List<SysRoleDto> pojoListByMenuIds(Collection<Long> menuIds);
 
-    SysRoleDto toDto(SysRole obj);
-
     boolean updateMenusByRoleId(Long roleId, List<SysMenuDto> menus);
 
     boolean updateRolesByJobId(Long jobId, Collection<Long> roleIds);

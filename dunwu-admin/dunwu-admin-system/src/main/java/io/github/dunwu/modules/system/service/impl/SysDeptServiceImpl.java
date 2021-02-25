@@ -152,12 +152,34 @@ public class SysDeptServiceImpl extends ServiceImpl implements SysDeptService {
     }
 
     @Override
-    public Map<String, Object> buildTreeList(Collection<SysDeptDto> list) {
-        Collection<SysDeptDto> trees = deptDao.buildTreeList(list);
-        Map<String, Object> map = new HashMap<>(2);
-        map.put("content", trees);
-        map.put("totalElements", trees.size());
-        return map;
+    public List<SysDeptDto> treeListByIds(Collection<Serializable> ids) {
+        if (CollectionUtil.isEmpty(ids)) {
+            return Collections.emptyList();
+        }
+
+        List<SysDeptDto> list = new ArrayList<>();
+        for (Serializable id : ids) {
+            SysDeptDto entity = pojoById(id);
+            if (entity == null) {
+                continue;
+            }
+
+            if (entity.getPid() != null) {
+                // 获取上级部门
+                SysDeptDto parent = pojoById(entity.getPid());
+                list.add(parent);
+
+                // 获取所有同级部门
+                SysDeptQuery query = new SysDeptQuery();
+                query.setPid(entity.getPid());
+                list.addAll(pojoListByQuery(query));
+            }
+        }
+
+        if (CollectionUtil.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        return deptDao.buildTreeList(list);
     }
 
     @Override

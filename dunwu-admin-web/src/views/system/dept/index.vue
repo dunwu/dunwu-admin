@@ -226,7 +226,7 @@ export default {
     getSuperiorTreeList(id) {
       console.log('getSuperiorTreeList id', id)
       deptApi.superiorTreeList(id).then(res => {
-        const children = res.content.map(function(obj) {
+        const children = res.map(function(obj) {
           return obj
         })
         const depts = [{ id: 0, label: '顶级类目', children: children }]

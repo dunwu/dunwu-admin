@@ -50,7 +50,7 @@ public class SysDeptDaoImpl extends BaseExtDaoImpl<SysDeptMapper, SysDept> imple
     }
 
     @Override
-    public Collection<SysDeptDto> buildTreeList(Collection<SysDeptDto> list) {
+    public List<SysDeptDto> buildTreeList(Collection<SysDeptDto> list) {
         if (CollectionUtil.isEmpty(list)) {
             return Collections.emptyList();
         }

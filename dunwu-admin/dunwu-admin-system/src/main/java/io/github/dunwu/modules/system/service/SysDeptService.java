@@ -128,7 +128,7 @@ public interface SysDeptService extends IService {
 
     List<SysDeptDto> pojoListByRoleId(Long roleId);
 
-    Map<String, Object> buildTreeList(Collection<SysDeptDto> list);
+    List<SysDeptDto> treeListByIds(Collection<Serializable> ids);
 
     boolean updateRelations(SysDeptRelationDto dto);
 

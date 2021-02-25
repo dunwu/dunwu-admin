@@ -125,9 +125,10 @@ public class TreeUtil {
             }
 
             if (CollUtil.isNotEmpty(parentNode.getChildren())) {
-                List<T> children;
-
-                children = parentNode.getChildren().stream().sorted(comparator).collect(Collectors.toList());
+                List<T> children = parentNode.getChildren().stream()
+                                             .filter(Objects::nonNull)
+                                             .sorted(comparator)
+                                             .collect(Collectors.toList());
                 parentNode.setHasChildren(true);
                 parentNode.setChildren(children);
             }
@@ -185,7 +186,6 @@ public class TreeUtil {
 
     /**
      * 获取所有父节点名称列表
-     *
      * <p>
      * 比如有个人在研发1部，他上面有研发部，接着上面有技术中心<br> 返回结果就是：[研发一部, 研发中心, 技术中心]
      *

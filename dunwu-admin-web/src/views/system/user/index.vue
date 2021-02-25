@@ -373,9 +373,9 @@ export default {
     },
     getSupDepts(deptId) {
       deptApi.superiorTreeList(deptId).then(res => {
-        const date = res.content
-        this.buildDepts(date)
-        this.depts = date
+        const data = res
+        this.buildDepts(data)
+        this.depts = data
       })
     },
     buildDepts(depts) {

@@ -331,9 +331,9 @@ export default {
         ids.push(dept.id)
       })
       deptApi.superiorTreeList(ids).then(res => {
-        const date = res.content
-        this.buildDepts(date)
-        this.depts = date
+        const data = res
+        this.buildDepts(data)
+        this.depts = data
       })
     },
     buildDepts(depts) {

@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -121,9 +120,11 @@ public interface SysMenuService extends IService {
      * @param query 查询条件，根据 query 中的 {@link QueryField} 注解自动组装查询条件
      * @return /
      */
-    Collection<SysMenuDto> treeList(Object query);
+    List<SysMenuDto> treeList(Object query);
 
-    Map<String, Object> buildTreeList(Collection<SysMenuDto> list);
+    List<SysMenuDto> treeListByIds(Collection<Serializable> list);
+
+    List<SysMenuDto> pojoTreeListByRoleIds(Collection<Long> roleIds);
 
     List<MenuVo> buildMenuListForCurrentUser();
 

@@ -10,7 +10,6 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * 系统菜单信息 Dto 类
@@ -92,6 +91,9 @@ public class SysMenuDto implements Serializable, Comparable<SysMenuDto> {
 
     @ApiModelProperty(value = "是否有子菜单")
     private boolean hasChildren;
+
+    @ApiModelProperty(value = "是否为叶子节点")
+    private boolean isLeaf;
 
     @ApiModelProperty(value = "子菜单")
     @JsonInclude(JsonInclude.Include.NON_EMPTY)

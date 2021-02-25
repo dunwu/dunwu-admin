@@ -99,18 +99,70 @@ public class SysMenuServiceImpl extends ServiceImpl implements SysMenuService {
     }
 
     @Override
-    public Collection<SysMenuDto> treeList(Object query) {
-        Collection<SysMenuDto> list = pojoListByQuery(query);
+    public List<SysMenuDto> treeList(Object query) {
+        List<SysMenuDto> list = pojoListByQuery(query);
         return menuDao.buildTreeList(list);
     }
 
     @Override
-    public Map<String, Object> buildTreeList(Collection<SysMenuDto> list) {
-        Collection<SysMenuDto> trees = menuDao.buildTreeList(list);
-        Map<String, Object> map = new HashMap<>(2);
-        map.put("content", trees);
-        map.put("totalElements", trees.size());
-        return map;
+    public List<SysMenuDto> treeListByIds(Collection<Serializable> ids) {
+        if (CollectionUtil.isEmpty(ids)) {
+            return Collections.emptyList();
+        }
+
+        List<SysMenuDto> list = new ArrayList<>();
+        for (Serializable id : ids) {
+            SysMenuDto entity = pojoById(id);
+            if (entity == null) {
+                continue;
+            }
+
+            if (entity.getPid() != null) {
+                // 获取上级菜单
+                SysMenuDto parent = pojoById(entity.getPid());
+                list.add(parent);
+
+                // 获取所有同级菜单
+                SysMenuQuery query = new SysMenuQuery();
+                query.setPid(entity.getPid());
+                list.addAll(pojoListByQuery(query));
+            }
+        }
+
+        if (CollectionUtil.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        return menuDao.buildTreeList(list);
+    }
+
+    @Override
+    public List<SysMenuDto> pojoTreeListByRoleIds(Collection<Long> roleIds) {
+        if (CollectionUtil.isEmpty(roleIds)) {
+            return Collections.emptyList();
+        }
+
+        // 查找所有角色绑定的菜单
+        Set<Long> menuIds = new HashSet<>();
+        for (Long roleId : roleIds) {
+            SysRoleMenu roleMenu = new SysRoleMenu();
+            roleMenu.setRoleId(roleId);
+            List<SysRoleMenu> rolesMenus = roleMenuDao.list(Wrappers.query(roleMenu));
+            menuIds.addAll(rolesMenus.stream().map(SysRoleMenu::getMenuId).collect(Collectors.toSet()));
+        }
+
+        if (CollectionUtil.isEmpty(menuIds)) {
+            return Collections.emptyList();
+        }
+
+        // 根据菜单 ID 查询菜单详细信息
+        List<SysMenu> list = menuDao.listByIds(menuIds);
+
+        // 过滤菜单项
+        Set<SysMenuDto> set = list.stream()
+                                  .filter(i -> StrUtil.isNotBlank(i.getPath()))
+                                  .map(this::doToDto)
+                                  .collect(Collectors.toSet());
+        return menuDao.buildTreeList(set);
     }
 
     @Override
@@ -129,13 +181,8 @@ public class SysMenuServiceImpl extends ServiceImpl implements SysMenuService {
             return new ArrayList<>();
         }
 
-        List<SysMenuDto> menuList = pojoListByRoleIds(roleIds);
-        if (CollectionUtil.isEmpty(menuList)) {
-            return new ArrayList<>();
-        }
-
-        Collection<SysMenuDto> menuDtos = menuDao.buildTreeList(menuList);
-        return menuDao.buildFrontMenus(menuDtos);
+        List<SysMenuDto> treeList = pojoTreeListByRoleIds(roleIds);
+        return menuDao.buildFrontMenus(treeList);
     }
 
     @Override
@@ -174,22 +221,6 @@ public class SysMenuServiceImpl extends ServiceImpl implements SysMenuService {
 
     private SysMenu dtoToDo(SysMenuDto entity) {
         return BeanUtil.toBean(entity, SysMenu.class);
-    }
-
-    private List<SysMenuDto> pojoListByRoleIds(Collection<Long> roleIds) {
-        Set<Long> menuIds = new HashSet<>();
-        for (Long roleId : roleIds) {
-            SysRoleMenu roleMenu = new SysRoleMenu();
-            roleMenu.setRoleId(roleId);
-            List<SysRoleMenu> rolesMenus = roleMenuDao.list(Wrappers.query(roleMenu));
-            menuIds.addAll(rolesMenus.stream().map(SysRoleMenu::getMenuId).collect(Collectors.toSet()));
-        }
-
-        List<SysMenu> list = menuDao.listByIds(menuIds);
-        return list.stream()
-                   .filter(i -> StrUtil.isNotBlank(i.getPath()))
-                   .map(this::doToDto)
-                   .collect(Collectors.toList());
     }
 
 }

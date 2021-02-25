@@ -18,10 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -124,27 +121,7 @@ public class SysDeptController {
     @ApiOperation("根据ID获取同级与上级数据")
     @PostMapping("superiorTreeList")
     public ResponseEntity<Object> superiorTreeList(@RequestBody Collection<Serializable> ids) {
-        Collection<SysDeptDto> treeList = new ArrayList<>();
-        for (Serializable id : ids) {
-            SysDeptDto entity = service.pojoById(id);
-            if (entity == null) {
-                continue;
-            }
-
-            if (entity.getPid() != null) {
-                // 获取上级部门
-                SysDeptDto parent = service.pojoById(entity.getPid());
-                treeList.add(parent);
-
-                // 获取所有同级部门
-                SysDeptQuery query = new SysDeptQuery();
-                query.setPid(entity.getPid());
-                Collection<SysDeptDto> list = service.pojoListByQuery(query);
-                treeList.addAll(list);
-            }
-        }
-        Map<String, Object> stringObjectMap = new HashMap<>(service.buildTreeList(treeList));
-        return new ResponseEntity<>(stringObjectMap, HttpStatus.OK);
+        return new ResponseEntity<>(service.treeListByIds(ids), HttpStatus.OK);
     }
 
     // @Log("更新一条 SysDept 记录的关联关系")

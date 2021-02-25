@@ -95,23 +95,23 @@ public class SysRoleServiceImpl extends ServiceImpl implements SysRoleService {
 
     @Override
     public Page<SysRoleDto> pojoPageByQuery(Object query, Pageable pageable) {
-        return roleDao.pojoPageByQuery(query, pageable, this::toDto);
+        return roleDao.pojoPageByQuery(query, pageable, this::doToDto);
     }
 
     @Override
     public List<SysRoleDto> pojoListByQuery(Object query) {
-        return roleDao.pojoListByQuery(query, this::toDto);
+        return roleDao.pojoListByQuery(query, this::doToDto);
     }
 
     @Override
     @Cacheable(key = "'id:' + #p0")
     public SysRoleDto pojoById(Serializable id) {
-        return roleDao.pojoById(id, this::toDto);
+        return roleDao.pojoById(id, this::doToDto);
     }
 
     @Override
     public SysRoleDto pojoByQuery(Object query) {
-        return roleDao.pojoByQuery(query, this::toDto);
+        return roleDao.pojoByQuery(query, this::doToDto);
     }
 
     @Override
@@ -147,7 +147,7 @@ public class SysRoleServiceImpl extends ServiceImpl implements SysRoleService {
             return sysRoleVos;
         }
 
-        return roleDao.pojoListByIds(roleIds, this::toDto);
+        return roleDao.pojoListByIds(roleIds, this::doToDto);
     }
 
     @Override
@@ -217,9 +217,7 @@ public class SysRoleServiceImpl extends ServiceImpl implements SysRoleService {
         return jobRoleDao.saveBatch(jobRoleSet);
     }
 
-    @Override
-    @Cacheable(value = "dunwu:sys:role:", key = "#obj.id")
-    public SysRoleDto toDto(SysRole obj) {
+    private SysRoleDto doToDto(SysRole obj) {
         SysRoleDto role = BeanUtil.toBean(obj, SysRoleDto.class);
         fillDeptInfo(role);
         fillMenuInfo(role);

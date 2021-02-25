@@ -31,6 +31,6 @@ public interface SysDeptDao extends IExtDao<SysDept> {
 
     Set<SysDeptDto> getDeleteDepts(List<SysDept> deptList, Set<SysDeptDto> deptDtos);
 
-    Collection<SysDeptDto> buildTreeList(Collection<SysDeptDto> list);
+    List<SysDeptDto> buildTreeList(Collection<SysDeptDto> list);
 
 }

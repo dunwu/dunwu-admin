@@ -4,7 +4,6 @@ import io.github.dunwu.data.validator.annotation.AddCheck;
 import io.github.dunwu.data.validator.annotation.EditCheck;
 import io.github.dunwu.modules.monitor.annotation.Log;
 import io.github.dunwu.modules.system.entity.SysMenu;
-import io.github.dunwu.modules.system.entity.dto.SysMenuDto;
 import io.github.dunwu.modules.system.entity.query.SysMenuQuery;
 import io.github.dunwu.modules.system.service.SysMenuService;
 import io.swagger.annotations.Api;
@@ -19,7 +18,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -122,37 +123,17 @@ public class SysMenuController {
     @ApiOperation("根据ID获取同级与上级数据")
     @PostMapping("superiorTreeList")
     public ResponseEntity<Object> superiorTreeList(@RequestBody Collection<Serializable> ids) {
-        Collection<SysMenuDto> treeList = new ArrayList<>();
-        for (Serializable id : ids) {
-            SysMenuDto entity = service.pojoById(id);
-            if (entity == null) {
-                continue;
-            }
-
-            if (entity.getPid() != null) {
-                // 获取上级菜单
-                SysMenuDto parent = service.pojoById(entity.getPid());
-                treeList.add(parent);
-
-                // 获取所有同级菜单
-                SysMenuQuery query = new SysMenuQuery();
-                query.setPid(entity.getPid());
-                Collection<SysMenuDto> list = service.pojoListByQuery(query);
-                treeList.addAll(list);
-            }
-        }
-
-        Map<String, Object> stringObjectMap = new HashMap<>(service.buildTreeList(treeList));
-        return new ResponseEntity<>(stringObjectMap, HttpStatus.OK);
+        return new ResponseEntity<>(service.treeListByIds(ids), HttpStatus.OK);
     }
 
     @PreAuthorize("@exp.check('menu:view')")
     @ApiOperation("根据ID获取所有孩子节点ID")
     @PostMapping("childrenIds")
     public ResponseEntity<Object> childrenIds(@RequestBody Long id) {
-        List<Long> ids = service.childrenIds(id);
+        List<Long> ids = new ArrayList<>();
         ids.add(id);
-        return new ResponseEntity<>(service.childrenIds(id), HttpStatus.OK);
+        ids.addAll(service.childrenIds(id));
+        return new ResponseEntity<>(ids, HttpStatus.OK);
     }
 
     @ApiOperation("获取当前用户展示于前端的菜单列表")

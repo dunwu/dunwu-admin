@@ -262,9 +262,8 @@ export default {
       }, 100)
     },
     getSuperiorTreeList(id) {
-      console.log('getSuperiorTreeList id', id)
       menuApi.superiorTreeList(id).then(res => {
-        const children = res.content.map(function(obj) {
+        const children = res.map(function(obj) {
           return obj
         })
         this.menus = [{ id: 0, label: '顶级类目', children: children }]
