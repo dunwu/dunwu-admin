@@ -42,7 +42,6 @@ public class LogRecordDaoImpl extends BaseExtDaoImpl<LogRecordMapper, LogRecord>
             map.put("IP来源", item.getRequestLocation());
             map.put("浏览器", item.getRequestBrowser());
             map.put("请求耗时/毫秒", item.getRequestTime());
-            map.put("创建日期", item.getCreateTime().toString());
             mapList.add(map);
         }
         ServletUtil.downloadExcel(mapList, response);
