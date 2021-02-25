@@ -98,6 +98,8 @@ function CRUD(options) {
       // 总数据条数
       total: 0
     },
+    // 是否展示扩展搜索栏
+    showExtendSearch: false,
     // 整体loading
     loading: false,
     // 导出的 Loading
@@ -120,6 +122,12 @@ function CRUD(options) {
     },
     delSuccessNotify() {
       crud.notify(crud.msg.del, CRUD.NOTIFICATION_TYPE.SUCCESS)
+    },
+    /**
+     * 展开/折叠 扩展搜索栏
+     */
+    toggleExtendSearch() {
+      crud.showExtendSearch = !crud.showExtendSearch
     },
     // 搜索
     toQuery() {

@@ -24,6 +24,8 @@ export default {
       time: 50,
       // 是否为新增类型的表单
       isAdd: false,
+      // 是否展示扩展搜索栏
+      showExtendSearch: false,
       // 导出的 Loading
       downloadLoading: false,
       // 表格 Loading 属性

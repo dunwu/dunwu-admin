@@ -4,16 +4,16 @@
 
 <!--搜索与重置-->
 <template>
-  <span>
-    <el-button class="filter-item" size="mini" type="primary" icon="el-icon-search" @click="crud.toQuery">
+  <span style="width: 90%">
+    <el-button size="mini" type="primary" icon="el-icon-search" class="filter-item" @click="crud.toQuery">
       搜索
     </el-button>
     <el-button
       v-if="crud.optShow.reset"
-      class="filter-item"
       size="mini"
       type="primary"
       icon="el-icon-refresh-left"
+      class="filter-item"
       @click="crud.resetQuery()"
     >
       重置

@@ -1,27 +1,49 @@
 <template>
   <div v-if="crud.props.searchToggle">
-    <el-input
-      v-model="query.name"
-      clearable
-      size="small"
-      placeholder="输入岗位名称搜索"
-      style="width: 200px;"
-      class="filter-item"
-      @keyup.enter.native="crud.toQuery"
-    />
-    <date-range-picker v-model="query.createTime" class="date-item" />
-    <el-select
-      v-model="query.enabled"
-      clearable
-      size="small"
-      placeholder="状态"
-      class="filter-item"
-      style="width: 90px"
-      @change="crud.toQuery"
-    >
-      <el-option v-for="item in dict.job_status.options" :key="item.value" :label="item.label" :value="item.value" />
-    </el-select>
-    <queryOperation />
+    <el-row>
+      <el-col :span="6">
+        <el-input
+          v-model="query.name"
+          clearable
+          size="small"
+          placeholder="输入岗位名称搜索"
+          class="filter-item"
+          style="width: 90%"
+          @keyup.enter.native="crud.toQuery"
+        />
+      </el-col>
+      <el-col :span="6">
+        <el-select
+          v-model="query.enabled"
+          clearable
+          size="small"
+          placeholder="状态"
+          class="filter-item"
+          style="width: 90%"
+          @keyup.enter.native="crud.toQuery"
+        >
+          <el-option v-for="item in dict.job_status.options" :key="item.code" :label="item.name" :value="item.code" />
+        </el-select>
+      </el-col>
+
+      <template v-if="crud.showExtendSearch">
+        <el-col :span="6">
+          <date-range-picker v-model="query.createTime" class="date-item" style="width: 90%" />
+        </el-col>
+      </template>
+
+      <el-col :span="6">
+        <queryOperation />
+        <el-button v-if="crud.showExtendSearch" type="text" @click="crud.toggleExtendSearch">
+          折叠
+          <i class="el-icon-arrow-up el-icon--right" />
+        </el-button>
+        <el-button v-else type="text" @click="crud.toggleExtendSearch">
+          展开
+          <i class="el-icon-arrow-down el-icon--right" />
+        </el-button>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -44,3 +66,13 @@ export default {
   }
 }
 </script>
+
+<style>
+.el-dropdown-link {
+  cursor: pointer;
+  color: #409eff;
+}
+.el-icon-arrow-down {
+  font-size: 12px;
+}
+</style>
