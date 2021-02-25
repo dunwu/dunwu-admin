@@ -122,7 +122,7 @@ public interface SysDeptService extends IService {
      * @param query 查询条件，根据 query 中的 {@link QueryField} 注解自动组装查询条件
      * @return /
      */
-    Collection<SysDeptDto> treeList(Object query);
+    List<SysDeptDto> treeList(Object query);
 
     List<SysDeptDto> pojoListByPid(Serializable pid);
 

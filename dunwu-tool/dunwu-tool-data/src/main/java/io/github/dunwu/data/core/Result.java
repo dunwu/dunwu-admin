@@ -3,6 +3,8 @@ package io.github.dunwu.data.core;
 import cn.hutool.core.collection.CollectionUtil;
 import io.github.dunwu.data.core.constant.ResultStatus;
 import io.github.dunwu.data.core.constant.Status;
+import lombok.Data;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.List;
@@ -13,6 +15,8 @@ import java.util.List;
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
  * @since 2019-04-21
  */
+@Data
+@ToString
 public class Result implements Status, Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -20,12 +24,12 @@ public class Result implements Status, Serializable {
     /**
      * 状态码
      */
-    protected int code;
+    private int code;
 
     /**
      * 响应信息
      */
-    protected String message;
+    private String message;
 
     /**
      * 数据
@@ -160,49 +164,6 @@ public class Result implements Status, Serializable {
      */
     public static Result getInstance(final int code, final String message, final Object data) {
         return new Result(code, message, data);
-    }
-
-    @Override
-    public String toString() {
-        return "Result{" +
-            "code=" + code +
-            ", message='" + message + '\'' +
-            ", data=" + data +
-            '}';
-    }
-
-    @Override
-    public int getCode() {
-        return code;
-    }
-
-    public Result setCode(int code) {
-        this.code = code;
-        return this;
-    }
-
-    @Override
-    public String getMessage() {
-        return message;
-    }
-
-    public Result setMessage(String message) {
-        this.message = message;
-        return this;
-    }
-
-    public Object getData() {
-        return data;
-    }
-
-    @SuppressWarnings("all")
-    public <T> T getData(Class<T> clazz) {
-        return (T) data;
-    }
-
-    public Result setData(Object data) {
-        this.data = data;
-        return this;
     }
 
 }

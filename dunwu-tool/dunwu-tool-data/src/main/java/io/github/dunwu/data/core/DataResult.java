@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -83,66 +84,8 @@ public class DataResult<T> extends BaseResult {
      * @param code     响应状态错误码
      * @param messages 响应状态消息列表
      */
-    public DataResult(final int code, final List<String> messages) {
+    public DataResult(final int code, final Collection<String> messages) {
         super(code, messages);
-    }
-
-    /**
-     * 返回失败的 {@link DataResult} （默认应答）
-     *
-     * @param <T> 数据类型
-     * @return {@link DataResult}
-     */
-    public static <T> DataResult<T> failData() {
-        return failData(ResultStatus.FAIL);
-    }
-
-    /**
-     * 根据 {@link Status} 返回失败的 {@link DataResult}
-     *
-     * @param status {@link Status} 响应状态
-     * @param <T>    数据类型
-     * @return {@link DataResult}
-     */
-    public static <T> DataResult<T> failData(final Status status) {
-        return new DataResult<>(status);
-    }
-
-    /**
-     * 返回失败的 {@link DataResult}
-     *
-     * @param code    响应状态错误码
-     * @param message 响应状态消息
-     * @param <T>     数据类型
-     * @return {@link DataResult}
-     */
-    public static <T> DataResult<T> failData(final int code, final String message) {
-        return new DataResult<>(code, message);
-    }
-
-    /**
-     * 返回失败的 {@link DataResult}
-     *
-     * @param code     响应状态错误码
-     * @param messages 响应状态消息列表
-     * @param <T>      数据类型
-     * @return {@link DataResult}
-     */
-    public static <T> DataResult<T> failData(final int code, final List<String> messages) {
-        return new DataResult<>(code, messages);
-    }
-
-    /**
-     * 根据模板字符串以及参数，组装响应消息，返回失败的 {@link DataResult}
-     *
-     * @param code     响应状态错误码
-     * @param template 响应状态消息模板
-     * @param params   响应状态消息参数
-     * @param <T>      数据类型
-     * @return {@link DataResult}
-     */
-    public static <T> DataResult<T> failData(final int code, final String template, final Object... params) {
-        return new DataResult<>(code, template, params);
     }
 
     /**
@@ -152,7 +95,7 @@ public class DataResult<T> extends BaseResult {
      * @param <T>  数据类型
      * @return {@link DataResult}
      */
-    public static <T> DataResult<T> success(final T data) {
+    public static <T> DataResult<T> ok(final T data) {
         return new DataResult<>(data);
     }
 

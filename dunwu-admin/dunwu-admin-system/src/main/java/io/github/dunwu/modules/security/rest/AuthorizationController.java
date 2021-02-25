@@ -1,18 +1,3 @@
-/*
- *  Copyright 2019-2020 Zheng Jie
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
 package io.github.dunwu.modules.security.rest;
 
 import cn.hutool.core.util.IdUtil;
@@ -21,6 +6,9 @@ import io.github.dunwu.annotation.rest.AnonymousDeleteMapping;
 import io.github.dunwu.annotation.rest.AnonymousGetMapping;
 import io.github.dunwu.annotation.rest.AnonymousPostMapping;
 import io.github.dunwu.config.RsaProperties;
+import io.github.dunwu.data.core.BaseResult;
+import io.github.dunwu.data.core.DataResult;
+import io.github.dunwu.data.core.MapResult;
 import io.github.dunwu.exception.BadRequestException;
 import io.github.dunwu.modules.security.config.bean.LoginCodeEnum;
 import io.github.dunwu.modules.security.config.bean.LoginProperties;
@@ -37,12 +25,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -57,8 +44,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Zheng Jie
- * @date 2018-11-23
- * 授权、根据token获取用户详细信息
+ * @date 2018-11-23 授权、根据token获取用户详细信息
  */
 @Slf4j
 @RestController
@@ -66,6 +52,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 @Api(tags = "系统：系统授权接口")
 public class AuthorizationController {
+
     private final SecurityProperties properties;
     private final RedisUtils redisUtils;
     private final OnlineUserService onlineUserService;
@@ -76,7 +63,8 @@ public class AuthorizationController {
 
     @ApiOperation("登录授权")
     @AnonymousPostMapping(value = "/login")
-    public ResponseEntity<Object> login(@Validated @RequestBody AuthUserDto authUser, HttpServletRequest request) throws Exception {
+    public MapResult<String, Object> login(@Validated @RequestBody AuthUserDto authUser, HttpServletRequest request)
+        throws Exception {
         // 密码解密
         String password = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, authUser.getPassword());
         // 查询验证码
@@ -90,7 +78,7 @@ public class AuthorizationController {
             throw new BadRequestException("验证码错误");
         }
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(authUser.getUsername(), password);
+            new UsernamePasswordAuthenticationToken(authUser.getUsername(), password);
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         // 生成令牌
@@ -107,18 +95,18 @@ public class AuthorizationController {
             //踢掉之前已经登录的token
             onlineUserService.checkLoginOnUser(authUser.getUsername(), token);
         }
-        return ResponseEntity.ok(authInfo);
+        return MapResult.ok(authInfo);
     }
 
     @ApiOperation("获取用户信息")
     @GetMapping(value = "/info")
-    public ResponseEntity<Object> getUserInfo() {
-        return ResponseEntity.ok(SecurityUtils.getCurrentUser());
+    public DataResult<UserDetails> getUserInfo() {
+        return DataResult.ok(SecurityUtils.getCurrentUser());
     }
 
     @ApiOperation("获取验证码")
     @AnonymousGetMapping(value = "/code")
-    public ResponseEntity<Object> getCode() {
+    public MapResult<String, Object> getCode() {
         // 获取运算的结果
         Captcha captcha = loginProperties.getCaptcha();
         String uuid = properties.getCodeKey() + IdUtil.simpleUUID();
@@ -134,13 +122,14 @@ public class AuthorizationController {
             put("img", captcha.toBase64());
             put("uuid", uuid);
         }};
-        return ResponseEntity.ok(imgResult);
+        return MapResult.ok(imgResult);
     }
 
     @ApiOperation("退出登录")
     @AnonymousDeleteMapping(value = "/logout")
-    public ResponseEntity<Object> logout(HttpServletRequest request) {
+    public BaseResult logout(HttpServletRequest request) {
         onlineUserService.logout(tokenProvider.getToken(request));
-        return new ResponseEntity<>(HttpStatus.OK);
+        return BaseResult.ok();
     }
+
 }

@@ -13,6 +13,13 @@ export function login(username, password, code, uuid) {
   })
 }
 
+export function logout() {
+  return request({
+    url: 'auth/logout',
+    method: 'delete'
+  })
+}
+
 export function getInfo() {
   return request({
     url: 'auth/info',
@@ -27,9 +34,4 @@ export function getCodeImg() {
   })
 }
 
-export function logout() {
-  return request({
-    url: 'auth/logout',
-    method: 'delete'
-  })
-}
+export default { login, logout, getInfo, getCodeImg }

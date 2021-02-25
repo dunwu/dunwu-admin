@@ -132,6 +132,7 @@ public class TreeUtil {
                 parentNode.setHasChildren(true);
                 parentNode.setChildren(children);
             }
+            parentNode.setLeaf(!parentNode.isHasChildren());
         }
 
         // 如果没有成功组织为树结构，直接将剩余节点加入列表

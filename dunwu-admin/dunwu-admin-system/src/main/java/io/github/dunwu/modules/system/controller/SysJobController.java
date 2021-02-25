@@ -1,9 +1,14 @@
 package io.github.dunwu.modules.system.controller;
 
+import io.github.dunwu.data.core.BaseResult;
+import io.github.dunwu.data.core.DataListResult;
+import io.github.dunwu.data.core.DataResult;
+import io.github.dunwu.data.core.PageResult;
 import io.github.dunwu.data.validator.annotation.AddCheck;
 import io.github.dunwu.data.validator.annotation.EditCheck;
 import io.github.dunwu.modules.monitor.annotation.Log;
 import io.github.dunwu.modules.system.entity.dto.SysJobDto;
+import io.github.dunwu.modules.system.entity.dto.SysRoleDto;
 import io.github.dunwu.modules.system.entity.query.SysJobQuery;
 import io.github.dunwu.modules.system.service.SysJobService;
 import io.github.dunwu.modules.system.service.SysRoleService;
@@ -34,96 +39,101 @@ import javax.servlet.http.HttpServletResponse;
 @RequiredArgsConstructor
 public class SysJobController {
 
-    private final SysJobService jobService;
+    private final SysJobService service;
     private final SysRoleService roleService;
 
-    @Log("添加一条 SysJob 记录")
+    @Log("添加一条 SysJobDto 记录")
     @PreAuthorize("@exp.check('job:add')")
-    @ApiOperation("添加一条 SysJob 记录")
+    @ApiOperation("添加一条 SysJobDto 记录")
     @PostMapping("add")
-    public ResponseEntity<Object> add(@Validated(AddCheck.class) @RequestBody SysJobDto entity) {
-        return new ResponseEntity<>(jobService.save(entity), HttpStatus.CREATED);
+    public BaseResult add(@Validated(AddCheck.class) @RequestBody SysJobDto entity) {
+        service.save(entity);
+        return BaseResult.ok();
     }
 
-    @Log("更新一条 SysJob 记录")
+    @Log("更新一条 SysJobDto 记录")
     @PreAuthorize("@exp.check('job:edit')")
-    @ApiOperation("更新一条 SysJob 记录")
+    @ApiOperation("更新一条 SysJobDto 记录")
     @PostMapping("edit")
-    public ResponseEntity<Object> edit(@Validated(EditCheck.class) @RequestBody SysJobDto entity) {
-        return new ResponseEntity<>(jobService.updateById(entity), HttpStatus.ACCEPTED);
+    public BaseResult edit(@Validated(EditCheck.class) @RequestBody SysJobDto entity) {
+        service.updateById(entity);
+        return BaseResult.ok();
     }
 
-    @Log("根据 ID 删除一条 SysJob 记录")
+    @Log("根据 ID 删除一条 SysJobDto 记录")
     @PreAuthorize("@exp.check('job:del')")
-    @ApiOperation("删除一条 SysJob 记录")
+    @ApiOperation("根据 ID 删除一条 SysJobDto 记录")
     @PostMapping("del/{id}")
-    public ResponseEntity<Object> deleteById(@PathVariable Serializable id) {
-        return new ResponseEntity<>(jobService.removeById(id), HttpStatus.ACCEPTED);
+    public BaseResult deleteById(@PathVariable Serializable id) {
+        service.removeById(id);
+        return BaseResult.ok();
     }
 
-    @Log("根据 ID 集合批量删除 SysJob 记录")
+    @Log("根据 ID 集合批量删除 SysJobDto 记录")
     @PreAuthorize("@exp.check('job:del')")
-    @ApiOperation("根据 ID 集合批量删除 SysJob 记录")
+    @ApiOperation("根据 ID 集合批量删除 SysJobDto 记录")
     @PostMapping("del")
-    public ResponseEntity<Object> deleteByIds(@RequestBody Collection<Serializable> ids) {
-        return new ResponseEntity<>(jobService.removeByIds(ids), HttpStatus.ACCEPTED);
+    public BaseResult deleteByIds(@RequestBody Collection<Serializable> ids) {
+        service.removeByIds(ids);
+        return BaseResult.ok();
     }
 
     @PreAuthorize("@exp.check('job:view')")
     @ApiOperation("根据 query 条件，查询匹配条件的 SysJobDto 列表")
     @GetMapping("list")
-    public ResponseEntity<Object> list(SysJobQuery query) {
-        return new ResponseEntity<>(jobService.pojoListByQuery(query), HttpStatus.OK);
+    public DataListResult<SysJobDto> list(SysJobQuery query) {
+        return DataListResult.ok(service.pojoListByQuery(query));
     }
 
     @PreAuthorize("@exp.check('job:view')")
     @ApiOperation("根据 query 和 pageable 条件，分页查询 SysJobDto 记录")
     @GetMapping("page")
-    public ResponseEntity<Object> page(SysJobQuery query, Pageable pageable) {
-        return new ResponseEntity<>(jobService.pojoPageByQuery(query, pageable), HttpStatus.OK);
+    public PageResult<SysJobDto> page(SysJobQuery query, Pageable pageable) {
+        return PageResult.ok(service.pojoPageByQuery(query, pageable));
     }
 
     @PreAuthorize("@exp.check('job:view')")
     @ApiOperation("根据 query 条件，查询匹配条件的总记录数")
     @GetMapping("count")
-    public ResponseEntity<Object> count(SysJobQuery query) {
-        return new ResponseEntity<>(jobService.countByQuery(query), HttpStatus.OK);
+    public DataResult<Integer> count(SysJobQuery query) {
+        return DataResult.ok(service.countByQuery(query));
     }
 
     @PreAuthorize("@exp.check('job:view')")
-    @ApiOperation("根据 ID 查询 SysJob 记录")
+    @ApiOperation("根据 ID 查询 SysJobDto 记录")
     @GetMapping("{id}")
-    public ResponseEntity<Object> getById(@PathVariable Serializable id) {
-        return new ResponseEntity<>(jobService.pojoById(id), HttpStatus.OK);
+    public DataResult<SysJobDto> getById(@PathVariable Serializable id) {
+        return DataResult.ok(service.pojoById(id));
     }
 
     @PreAuthorize("@exp.check('job:view')")
     @ApiOperation("根据 query 和 pageable 条件批量导出 SysJobDto 列表数据")
     @GetMapping("export/page")
     public void exportPage(SysJobQuery query, Pageable pageable, HttpServletResponse response) throws IOException {
-        jobService.exportPageData(query, pageable, response);
+        service.exportPage(query, pageable, response);
     }
 
     @PreAuthorize("@exp.check('job:view')")
     @ApiOperation("根据 ID 集合批量导出 SysJobDto 列表数据")
     @GetMapping("export/list")
     public void exportList(@RequestBody Collection<Serializable> ids, HttpServletResponse response) throws IOException {
-        jobService.exportByIds(ids, response);
+        service.exportList(ids, response);
     }
 
     @GetMapping("roles/{jobId}")
     @PreAuthorize("@exp.check('job:view')")
     @ApiOperation("根据 Job ID 查询角色列表")
-    public ResponseEntity<Object> rolesByJobId(@PathVariable Long jobId) {
-        return new ResponseEntity<>(roleService.pojoListByJobId(jobId), HttpStatus.OK);
+    public DataListResult<SysRoleDto> rolesByJobId(@PathVariable Long jobId) {
+        return DataListResult.ok(roleService.pojoListByJobId(jobId));
     }
 
     @PutMapping("roles/{jobId}")
     @Log("更新岗位/角色记录")
     @PreAuthorize("@exp.check('job:edit')")
-    @ApiOperation("更新一条 SysJob 记录")
-    public ResponseEntity<Object> updateRolesByJobId(@PathVariable Long jobId, @RequestBody Collection<Long> roleIds) {
-        return new ResponseEntity<>(roleService.updateRolesByJobId(jobId, roleIds), HttpStatus.OK);
+    @ApiOperation("更新一条 SysJobDto 记录")
+    public BaseResult updateRolesByJobId(@PathVariable Long jobId, @RequestBody Collection<Long> roleIds) {
+        roleService.updateRolesByJobId(jobId, roleIds);
+        return BaseResult.ok();
     }
 
 }

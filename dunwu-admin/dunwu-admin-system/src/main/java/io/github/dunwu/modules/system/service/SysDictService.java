@@ -27,7 +27,7 @@ public interface SysDictService extends IService {
      * @param entity {@link SysDict} 数据实体
      * @return true / false
      */
-    boolean save(SysDict entity);
+    boolean save(SysDictDto entity);
 
     /**
      * 根据 ID 更新一条 {@link SysDict} 记录
@@ -35,7 +35,7 @@ public interface SysDictService extends IService {
      * @param entity {@link SysDict} 数据实体
      * @return true / false
      */
-    boolean updateById(SysDict entity);
+    boolean updateById(SysDictDto entity);
 
     /**
      * 根据 ID 删除一条 {@link SysDict} 记录
@@ -109,14 +109,6 @@ public interface SysDictService extends IService {
      * @param pageable 分页查询条件
      * @param response {@link HttpServletResponse} 实体
      */
-    void exportPageData(Object query, Pageable pageable, HttpServletResponse response) throws IOException;
-
-    /**
-     * 将数据实体转为 Dto
-     *
-     * @param sysDict {@link  SysDict} 数据实体
-     * @return {@link SysDictDto}
-     */
-    SysDictDto toDto(SysDict sysDict);
+    void exportPage(Object query, Pageable pageable, HttpServletResponse response) throws IOException;
 
 }

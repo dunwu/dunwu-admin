@@ -24,18 +24,18 @@ public interface SysDictOptionService extends IService {
     /**
      * 添加一条 {@link SysDictOption} 记录
      *
-     * @param entity {@link SysDictOption} 数据实体
+     * @param entity {@link SysDictOptionDto} 数据实体
      * @return true / false
      */
-    boolean save(SysDictOption entity);
+    boolean save(SysDictOptionDto entity);
 
     /**
      * 根据 ID 更新一条 {@link SysDictOption} 记录
      *
-     * @param entity {@link SysDictOption} 数据实体
+     * @param entity {@link SysDictOptionDto} 数据实体
      * @return true / false
      */
-    boolean updateById(SysDictOption entity);
+    boolean updateById(SysDictOptionDto entity);
 
     /**
      * 根据 ID 删除一条 {@link SysDictOption} 记录
@@ -100,7 +100,7 @@ public interface SysDictOptionService extends IService {
      * @param ids      id 列表
      * @param response {@link HttpServletResponse} 实体
      */
-    void exportByIds(Collection<Serializable> ids, HttpServletResponse response) throws IOException;
+    void exportList(Collection<Serializable> ids, HttpServletResponse response) throws IOException;
 
     /**
      * 根据 query 和 pageable 查询 {@link SysDictOptionDto} 列表，并导出 excel 表单
@@ -109,6 +109,6 @@ public interface SysDictOptionService extends IService {
      * @param pageable 分页查询条件
      * @param response {@link HttpServletResponse} 实体
      */
-    void exportPageData(Object query, Pageable pageable, HttpServletResponse response) throws IOException;
+    void exportPage(Object query, Pageable pageable, HttpServletResponse response) throws IOException;
 
 }

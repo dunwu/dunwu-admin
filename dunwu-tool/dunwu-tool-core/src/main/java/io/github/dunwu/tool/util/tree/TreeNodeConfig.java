@@ -20,6 +20,7 @@ public class TreeNodeConfig {
     private String weightKey = "weight";
     private String sortKey = "sort";
     private String hasChildrenKey = "hasChildren";
+    private String leafKey = "leaf";
     private String childrenKey = "children";
     // 可以配置递归深度 从0开始计算 默认此配置为空,即不限制
     private Integer deep;
@@ -115,13 +116,33 @@ public class TreeNodeConfig {
     }
 
     /**
-     * 设置是否有子点对应的名称
+     * 设置是否有子节点对应的名称
      *
      * @param hasChildrenKey 是否有子点对应的名称
      * @return this
      */
     public TreeNodeConfig setHasChildrenKey(String hasChildrenKey) {
         this.hasChildrenKey = hasChildrenKey;
+        return this;
+    }
+
+    /**
+     * 获取是否为叶子节点对应的名称
+     *
+     * @return 是否为叶子节点
+     */
+    public String getLeafKey() {
+        return leafKey;
+    }
+
+    /**
+     * 设置是否为叶子节点对应的名称
+     *
+     * @param leafKey 是否为叶子节点对应的名称
+     * @return this
+     */
+    public TreeNodeConfig setLeafKey(String leafKey) {
+        this.leafKey = leafKey;
         return this;
     }
 

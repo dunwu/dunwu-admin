@@ -89,71 +89,13 @@ public class PageResult<T> extends BaseResult {
     }
 
     /**
-     * 返回失败的 {@link PageResult} （默认应答）
-     *
-     * @param <T> 数据类型
-     * @return {@link PageResult}
-     */
-    public static <T> PageResult<T> failPageResult() {
-        return failPageResult(ResultStatus.FAIL);
-    }
-
-    /**
-     * 根据 {@link Status} 返回失败的 {@link PageResult}
-     *
-     * @param status {@link Status} 响应状态
-     * @param <T>    数据类型
-     * @return {@link PageResult}
-     */
-    public static <T> PageResult<T> failPageResult(final Status status) {
-        return new PageResult<>(status);
-    }
-
-    /**
-     * 返回失败的 {@link PageResult}
-     *
-     * @param code    响应状态错误码
-     * @param message 响应状态消息
-     * @param <T>     数据类型
-     * @return {@link PageResult}
-     */
-    public static <T> PageResult<T> failPageResult(final int code, final String message) {
-        return new PageResult<>(code, message);
-    }
-
-    /**
-     * 返回失败的 {@link PageResult}
-     *
-     * @param code     响应状态错误码
-     * @param messages 响应状态消息列表
-     * @param <T>      数据类型
-     * @return {@link PageResult}
-     */
-    public static <T> PageResult<T> failPageResult(final int code, final List<String> messages) {
-        return new PageResult<>(code, messages);
-    }
-
-    /**
-     * 根据模板字符串以及参数，组装响应消息，返回失败的 {@link PageResult}
-     *
-     * @param code     响应状态错误码
-     * @param template 响应状态消息模板
-     * @param params   响应状态消息参数
-     * @param <T>      数据类型
-     * @return {@link PageResult}
-     */
-    public static <T> PageResult<T> failPageResult(final int code, final String template, final Object... params) {
-        return new PageResult<>(code, template, params);
-    }
-
-    /**
      * 根据模板字符串以及参数，组装响应消息，返回成功的 {@link PageResult}
      *
      * @param data 被分页实体 {@link Page} 包装的应答数据对象
      * @param <T>  数据类型
      * @return {@link PageResult}
      */
-    public static <T> PageResult<T> success(Page<T> data) {
+    public static <T> PageResult<T> ok(Page<T> data) {
         return new PageResult<>(data);
     }
 

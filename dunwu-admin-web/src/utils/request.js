@@ -1,6 +1,6 @@
 import axios from 'axios'
 import router from '@/router/routers'
-import { Notification } from 'element-ui'
+import { Notification, MessageBox } from 'element-ui'
 import store from '../store'
 import { getToken } from '@/utils/auth'
 import Config from '@/settings'
@@ -15,6 +15,8 @@ const service = axios.create({
 // request拦截器
 service.interceptors.request.use(
   config => {
+    // console.group('%c%s', 'color:blue', '[Http Request]')
+    // console.info('[request info]', config)
     if (getToken()) {
       config.headers['Authorization'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
     }
@@ -22,6 +24,8 @@ service.interceptors.request.use(
     return config
   },
   error => {
+    // Do something with request error
+    // console.log(error) // for debug
     Promise.reject(error)
   }
 )
@@ -29,7 +33,23 @@ service.interceptors.request.use(
 // response 拦截器
 service.interceptors.response.use(
   response => {
-    return response.data
+    // console.info('[response info]', response)
+    // console.groupEnd()
+    if (response.status < 200 || response.status > 300) {
+      Notification.error({ title: response.message, duration: 5000 })
+      return Promise.reject('error')
+    } else {
+      if (!response.data) {
+        Notification.error({ title: '应答消息数据部分为空', duration: 5000 })
+        return Promise.reject('error')
+      }
+
+      if (response.data.code !== 0) {
+        Notification.error({ title: response.data.message, duration: 5000 })
+        return Promise.reject('error')
+      }
+      return response.data.data
+    }
   },
   error => {
     // 兼容blob下载出错json提示

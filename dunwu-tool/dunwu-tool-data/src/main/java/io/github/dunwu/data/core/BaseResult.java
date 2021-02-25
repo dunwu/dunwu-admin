@@ -1,13 +1,13 @@
 package io.github.dunwu.data.core;
 
+import cn.hutool.core.util.StrUtil;
 import io.github.dunwu.data.core.constant.ResultStatus;
 import io.github.dunwu.data.core.constant.Status;
-import cn.hutool.core.util.StrUtil;
 import lombok.Data;
 import lombok.ToString;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * 应答消息实体
@@ -24,12 +24,16 @@ public class BaseResult implements Status, Serializable {
     /**
      * 状态码
      */
-    protected int code;
+    private int code;
 
     /**
      * 响应信息
      */
-    protected String message;
+    private String message;
+
+    public BaseResult() {
+        this(ResultStatus.OK);
+    }
 
     /**
      * 根据 {@link Status} 构造 {@link BaseResult}
@@ -80,7 +84,7 @@ public class BaseResult implements Status, Serializable {
      * @param code     响应状态错误码
      * @param messages 响应状态消息列表
      */
-    public BaseResult(final int code, final List<String> messages) {
+    public BaseResult(final int code, final Collection<String> messages) {
         this.code = code;
         this.message = StrUtil.join("\n", messages.toArray());
     }
@@ -131,7 +135,7 @@ public class BaseResult implements Status, Serializable {
      * @param messages 响应状态消息列表
      * @return {@link BaseResult}
      */
-    public static BaseResult fail(final int code, final List<String> messages) {
+    public static BaseResult fail(final int code, final Collection<String> messages) {
         return new BaseResult(code, messages);
     }
 
@@ -152,7 +156,7 @@ public class BaseResult implements Status, Serializable {
      *
      * @return {@link BaseResult}
      */
-    public static BaseResult success() {
+    public static BaseResult ok() {
         return new BaseResult(ResultStatus.OK);
     }
 

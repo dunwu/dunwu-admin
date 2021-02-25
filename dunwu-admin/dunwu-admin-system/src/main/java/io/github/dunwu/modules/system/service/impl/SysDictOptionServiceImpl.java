@@ -5,6 +5,7 @@ import io.github.dunwu.modules.system.dao.SysDictOptionDao;
 import io.github.dunwu.modules.system.entity.SysDictOption;
 import io.github.dunwu.modules.system.entity.dto.SysDictOptionDto;
 import io.github.dunwu.modules.system.service.SysDictOptionService;
+import io.github.dunwu.tool.bean.BeanUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,13 +30,13 @@ public class SysDictOptionServiceImpl extends ServiceImpl implements SysDictOpti
     private final SysDictOptionDao dao;
 
     @Override
-    public boolean save(SysDictOption entity) {
-        return dao.save(entity);
+    public boolean save(SysDictOptionDto entity) {
+        return dao.save(dtoToDo(entity));
     }
 
     @Override
-    public boolean updateById(SysDictOption entity) {
-        return dao.updateById(entity);
+    public boolean updateById(SysDictOptionDto entity) {
+        return dao.updateById(dtoToDo(entity));
     }
 
     @Override
@@ -74,15 +75,35 @@ public class SysDictOptionServiceImpl extends ServiceImpl implements SysDictOpti
     }
 
     @Override
-    public void exportByIds(Collection<Serializable> ids, HttpServletResponse response) throws IOException {
+    public void exportList(Collection<Serializable> ids, HttpServletResponse response) throws IOException {
         List<SysDictOptionDto> list = dao.pojoListByIds(ids, SysDictOptionDto.class);
         dao.exportDtoList(list, response);
     }
 
     @Override
-    public void exportPageData(Object query, Pageable pageable, HttpServletResponse response) throws IOException {
+    public void exportPage(Object query, Pageable pageable, HttpServletResponse response) throws IOException {
         Page<SysDictOptionDto> page = dao.pojoPageByQuery(query, pageable, SysDictOptionDto.class);
         dao.exportDtoList(page.getContent(), response);
+    }
+
+    /**
+     * 将数据实体转为 Dto
+     *
+     * @param entity {@link  SysDictOption} 数据实体
+     * @return {@link SysDictOptionDto}
+     */
+    private SysDictOptionDto doToDto(SysDictOption entity) {
+        return BeanUtil.toBean(entity, SysDictOptionDto.class);
+    }
+
+    /**
+     * 将 Dto 转为数据实体
+     *
+     * @param dto Dto
+     * @return {@link SysDictOption}
+     */
+    private SysDictOption dtoToDo(SysDictOptionDto dto) {
+        return BeanUtil.toBean(dto, SysDictOption.class);
     }
 
 }

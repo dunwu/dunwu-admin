@@ -84,69 +84,6 @@ public class MapResult<K, V> extends BaseResult {
     }
 
     /**
-     * 返回失败的 {@link MapResult} （默认应答）
-     *
-     * @param <K> key 数据类型
-     * @param <V> value 数据类型
-     * @return {@link MapResult}
-     */
-    public static <K, V> MapResult<K, V> failDataMap() {
-        return failDataMap(ResultStatus.FAIL);
-    }
-
-    /**
-     * 根据 {@link Status} 返回失败的 {@link MapResult}
-     *
-     * @param status {@link Status} 响应状态
-     * @param <K>    key 数据类型
-     * @param <V>    value 数据类型
-     * @return {@link MapResult}
-     */
-    public static <K, V> MapResult<K, V> failDataMap(final Status status) {
-        return new MapResult<>(status);
-    }
-
-    /**
-     * 返回失败的 {@link MapResult}
-     *
-     * @param code    响应状态错误码
-     * @param message 响应状态消息
-     * @param <K>     key 数据类型
-     * @param <V>     value 数据类型
-     * @return {@link MapResult}
-     */
-    public static <K, V> MapResult<K, V> failDataMap(final int code, final String message) {
-        return new MapResult<>(code, message);
-    }
-
-    /**
-     * 返回失败的 {@link MapResult}
-     *
-     * @param code     响应状态错误码
-     * @param messages 响应状态消息列表
-     * @param <K>      key 数据类型
-     * @param <V>      value 数据类型
-     * @return {@link MapResult}
-     */
-    public static <K, V> MapResult<K, V> failDataMap(final int code, final List<String> messages) {
-        return new MapResult<>(code, messages);
-    }
-
-    /**
-     * 根据模板字符串以及参数，组装响应消息，返回失败的 {@link MapResult}
-     *
-     * @param code     响应状态错误码
-     * @param template 响应状态消息模板
-     * @param params   响应状态消息参数
-     * @param <K>      key 数据类型
-     * @param <V>      value 数据类型
-     * @return {@link MapResult}
-     */
-    public static <K, V> MapResult<K, V> failDataMap(final int code, final String template, final Object... params) {
-        return new MapResult<>(code, template, params);
-    }
-
-    /**
      * 根据模板字符串以及参数，组装响应消息，返回成功的 {@link MapResult}
      *
      * @param data 数据对象
@@ -154,7 +91,7 @@ public class MapResult<K, V> extends BaseResult {
      * @param <V>  value 数据类型
      * @return {@link MapResult}
      */
-    public static <K, V> MapResult<K, V> success(final Map<K, V> data) {
+    public static <K, V> MapResult<K, V> ok(final Map<K, V> data) {
         return new MapResult<>(data);
     }
 

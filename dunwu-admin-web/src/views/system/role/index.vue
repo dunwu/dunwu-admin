@@ -49,8 +49,8 @@
             placeholder="请选择"
           />
         </el-form-item>
-        <el-form-item label="描述信息" prop="description">
-          <el-input v-model="form.description" style="width: 380px;" rows="5" type="textarea" />
+        <el-form-item label="描述信息" prop="note">
+          <el-input v-model="form.note" style="width: 380px;" rows="5" type="textarea" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -78,7 +78,7 @@
             <el-table-column prop="name" label="名称" />
             <el-table-column prop="dataScope" label="数据权限" />
             <el-table-column prop="level" label="角色级别" />
-            <el-table-column :show-overflow-tooltip="true" prop="description" label="描述" />
+            <el-table-column :show-overflow-tooltip="true" prop="note" label="描述" />
             <el-table-column :show-overflow-tooltip="true" width="135px" prop="createTime" label="创建日期" />
             <el-table-column
               v-if="checkPer(['admin', 'roles:edit', 'roles:del'])"
@@ -149,7 +149,7 @@ import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import { LOAD_CHILDREN_OPTIONS } from '@riophae/vue-treeselect'
 import DateRangePicker from '@/components/DateRangePicker'
 
-const defaultForm = { id: null, name: null, depts: [], description: null, dataScope: '全部', level: 3 }
+const defaultForm = { id: null, name: null, depts: [], note: null, dataScope: '全部', level: 3 }
 export default {
   name: 'Role',
   components: { Treeselect, pagination, crudOperation, queryOperation, udOperation, DateRangePicker },
@@ -193,13 +193,9 @@ export default {
   methods: {
     getMenuDatas(node, resolve) {
       setTimeout(() => {
-        menuApi
-          .treeList({
-            pid: node.data.id ? node.data.id : 0
-          })
-          .then(res => {
-            resolve(res)
-          })
+        menuApi.treeList({ pid: node.data.id }).then(res => {
+          resolve(res)
+        })
       }, 100)
     },
     [CRUD.HOOK.afterRefresh]() {
@@ -256,7 +252,6 @@ export default {
         })
         this.showButton = true
       }
-      console.log('handleCurrentChange after', this.menuIds)
     },
     menuChange(menu) {
       // 获取该节点的所有子节点，id 包含自身

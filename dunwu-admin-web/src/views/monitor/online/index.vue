@@ -7,7 +7,7 @@
       </div>
       <crudOperation>
         <el-button
-          slot="left"
+          slot="right"
           class="filter-item"
           type="danger"
           icon="el-icon-delete"

@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { getDicts } from '@/api/system/dict'
+import dictApi from '@/api/system/dict'
 
 export default class Dict {
   constructor(dict) {
@@ -15,11 +15,10 @@ export default class Dict {
       Vue.set(this.dict.label, code, {})
       Vue.set(this.dict, code, [])
       ps.push(
-        getDicts(code).then(data => {
-          const expectDict = data.content[0]
+        dictApi.list({ code }).then(data => {
+          const expectDict = data[0]
           this.dict[code] = expectDict
           expectDict.options.forEach(o => {
-            // Vue.set(this.dict.dict[code], o.code, o)
             Vue.set(this.dict.label[code], o.code, o.name)
           })
         })

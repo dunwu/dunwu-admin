@@ -43,6 +43,11 @@ public class TreeNode implements Node<TreeNode> {
     private boolean hasChildren = false;
 
     /**
+     * 是否为叶子节点
+     */
+    private boolean leaf = true;
+
+    /**
      * 孩子节点
      */
     private Collection<TreeNode> children;
@@ -143,6 +148,17 @@ public class TreeNode implements Node<TreeNode> {
     @Override
     public TreeNode setHasChildren(boolean hasChildren) {
         this.hasChildren = hasChildren;
+        return this;
+    }
+
+    @Override
+    public boolean isLeaf() {
+        return leaf;
+    }
+
+    @Override
+    public TreeNode setLeaf(boolean leaf) {
+        this.leaf = leaf;
         return this;
     }
 

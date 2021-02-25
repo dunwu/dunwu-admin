@@ -86,6 +86,9 @@ public class SysMenuDto implements Serializable, Comparable<SysMenuDto> {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime updateTime;
 
+    // ========================================================================
+    // 以下字段在构建树形列表时会自动填充
+
     @ApiModelProperty(value = "标签")
     private String label;
 
@@ -93,11 +96,13 @@ public class SysMenuDto implements Serializable, Comparable<SysMenuDto> {
     private boolean hasChildren;
 
     @ApiModelProperty(value = "是否为叶子节点")
-    private boolean isLeaf;
+    private boolean leaf;
 
     @ApiModelProperty(value = "子菜单")
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Collection<SysMenuDto> children;
+
+    // ========================================================================
 
     @Override
     public int compareTo(SysMenuDto o) {

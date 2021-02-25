@@ -39,13 +39,13 @@ public class SysDictServiceImpl extends ServiceImpl implements SysDictService {
     private final SysDictOptionDao sysDictOptionDao;
 
     @Override
-    public boolean save(SysDict entity) {
-        return sysDictDao.save(entity);
+    public boolean save(SysDictDto entity) {
+        return sysDictDao.save(dtoToDo(entity));
     }
 
     @Override
-    public boolean updateById(SysDict entity) {
-        return sysDictDao.updateById(entity);
+    public boolean updateById(SysDictDto entity) {
+        return sysDictDao.updateById(dtoToDo(entity));
     }
 
     @Override
@@ -75,22 +75,22 @@ public class SysDictServiceImpl extends ServiceImpl implements SysDictService {
 
     @Override
     public Page<SysDictDto> pojoPageByQuery(Object query, Pageable pageable) {
-        return sysDictDao.pojoPageByQuery(query, pageable, this::toDto);
+        return sysDictDao.pojoPageByQuery(query, pageable, this::doToDto);
     }
 
     @Override
     public List<SysDictDto> pojoListByQuery(Object query) {
-        return sysDictDao.pojoListByQuery(query, this::toDto);
+        return sysDictDao.pojoListByQuery(query, this::doToDto);
     }
 
     @Override
     public SysDictDto pojoById(Serializable id) {
-        return sysDictDao.pojoById(id, this::toDto);
+        return sysDictDao.pojoById(id, this::doToDto);
     }
 
     @Override
     public SysDictDto pojoByQuery(Object query) {
-        return sysDictDao.pojoByQuery(query, this::toDto);
+        return sysDictDao.pojoByQuery(query, this::doToDto);
     }
 
     @Override
@@ -105,14 +105,19 @@ public class SysDictServiceImpl extends ServiceImpl implements SysDictService {
     }
 
     @Override
-    public void exportPageData(Object query, Pageable pageable, HttpServletResponse response) throws IOException {
+    public void exportPage(Object query, Pageable pageable, HttpServletResponse response) throws IOException {
         Page<SysDictDto> page = sysDictDao.pojoPageByQuery(query, pageable, SysDictDto.class);
         sysDictDao.exportDtoList(page.getContent(), response);
     }
 
-    @Override
-    public SysDictDto toDto(SysDict sysDict) {
-        SysDictDto sysDictDto = BeanUtil.toBean(sysDict, SysDictDto.class);
+    /**
+     * 将数据实体转为 Dto
+     *
+     * @param entity {@link  SysDict} 数据实体
+     * @return {@link SysDictDto}
+     */
+    private SysDictDto doToDto(SysDict entity) {
+        SysDictDto sysDictDto = BeanUtil.toBean(entity, SysDictDto.class);
         List<SysDictOptionDto> options = sysDictOptionDao.pojoDictOptionsByDictId(sysDictDto.getId());
         if (CollectionUtil.isEmpty(options)) {
             sysDictDto.setOptions(new ArrayList<>());
@@ -120,6 +125,16 @@ public class SysDictServiceImpl extends ServiceImpl implements SysDictService {
             sysDictDto.setOptions(options);
         }
         return sysDictDto;
+    }
+
+    /**
+     * 将 Dto 转为数据实体
+     *
+     * @param dto Dto
+     * @return {@link SysDict}
+     */
+    private SysDict dtoToDo(SysDictDto dto) {
+        return BeanUtil.toBean(dto, SysDict.class);
     }
 
 }

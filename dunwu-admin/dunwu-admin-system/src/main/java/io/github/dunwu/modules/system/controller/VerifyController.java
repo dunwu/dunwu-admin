@@ -1,20 +1,6 @@
-/*
- *  Copyright 2019-2020 Zheng Jie
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
 package io.github.dunwu.modules.system.controller;
 
+import io.github.dunwu.data.core.BaseResult;
 import io.github.dunwu.domain.vo.EmailVo;
 import io.github.dunwu.modules.system.service.VerifyService;
 import io.github.dunwu.service.EmailService;
@@ -23,8 +9,6 @@ import io.github.dunwu.util.enums.CodeEnum;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
@@ -44,34 +28,36 @@ public class VerifyController {
 
     @PostMapping(value = "/resetEmail")
     @ApiOperation("重置邮箱，发送验证码")
-    public ResponseEntity<Object> resetEmail(@RequestParam String email){
+    public BaseResult resetEmail(@RequestParam String email) {
         EmailVo emailVo = verificationCodeService.sendEmail(email, CodeEnum.EMAIL_RESET_EMAIL_CODE.getKey());
-        emailService.send(emailVo,emailService.find());
-        return new ResponseEntity<>(HttpStatus.OK);
+        emailService.send(emailVo, emailService.find());
+        return BaseResult.ok();
     }
 
     @PostMapping(value = "/email/resetPass")
     @ApiOperation("重置密码，发送验证码")
-    public ResponseEntity<Object> resetPass(@RequestParam String email){
+    public BaseResult resetPass(@RequestParam String email) {
         EmailVo emailVo = verificationCodeService.sendEmail(email, CodeEnum.EMAIL_RESET_PWD_CODE.getKey());
-        emailService.send(emailVo,emailService.find());
-        return new ResponseEntity<>(HttpStatus.OK);
+        emailService.send(emailVo, emailService.find());
+        return BaseResult.ok();
     }
 
     @GetMapping(value = "/validated")
     @ApiOperation("验证码验证")
-    public ResponseEntity<Object> validated(@RequestParam String email, @RequestParam String code, @RequestParam Integer codeBi){
+    public BaseResult validated(@RequestParam String email, @RequestParam String code,
+        @RequestParam Integer codeBi) {
         CodeBiEnum biEnum = CodeBiEnum.find(codeBi);
-        switch (Objects.requireNonNull(biEnum)){
+        switch (Objects.requireNonNull(biEnum)) {
             case ONE:
-                verificationCodeService.validated(CodeEnum.EMAIL_RESET_EMAIL_CODE.getKey() + email ,code);
+                verificationCodeService.validated(CodeEnum.EMAIL_RESET_EMAIL_CODE.getKey() + email, code);
                 break;
             case TWO:
-                verificationCodeService.validated(CodeEnum.EMAIL_RESET_PWD_CODE.getKey() + email ,code);
+                verificationCodeService.validated(CodeEnum.EMAIL_RESET_PWD_CODE.getKey() + email, code);
                 break;
             default:
                 break;
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return BaseResult.ok();
     }
+
 }

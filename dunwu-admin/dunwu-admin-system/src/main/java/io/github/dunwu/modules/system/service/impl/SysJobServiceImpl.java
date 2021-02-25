@@ -81,13 +81,13 @@ public class SysJobServiceImpl extends ServiceImpl implements SysJobService {
     }
 
     @Override
-    public void exportByIds(Collection<Serializable> ids, HttpServletResponse response) throws IOException {
+    public void exportList(Collection<Serializable> ids, HttpServletResponse response) throws IOException {
         List<SysJobDto> list = jobDao.pojoListByIds(ids, this::doToDto);
         jobDao.exportDtoList(list, response);
     }
 
     @Override
-    public void exportPageData(Object query, Pageable pageable, HttpServletResponse response) throws IOException {
+    public void exportPage(Object query, Pageable pageable, HttpServletResponse response) throws IOException {
         Page<SysJobDto> page = jobDao.pojoPageByQuery(query, pageable, this::doToDto);
         jobDao.exportDtoList(page.getContent(), response);
     }

@@ -1,6 +1,10 @@
 package io.github.dunwu.modules.system.controller;
 
 import io.github.dunwu.config.RsaProperties;
+import io.github.dunwu.data.core.BaseResult;
+import io.github.dunwu.data.core.DataListResult;
+import io.github.dunwu.data.core.DataResult;
+import io.github.dunwu.data.core.PageResult;
 import io.github.dunwu.data.validator.annotation.AddCheck;
 import io.github.dunwu.data.validator.annotation.EditCheck;
 import io.github.dunwu.exception.BadRequestException;
@@ -18,8 +22,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
@@ -50,60 +52,64 @@ public class SysUserController {
     @PreAuthorize("@exp.check('user:add')")
     @ApiOperation("添加一条 SysUser 记录")
     @PostMapping("add")
-    public ResponseEntity<Object> add(@Validated(AddCheck.class) @RequestBody SysUserDto entity) {
-        return new ResponseEntity<>(service.saveUserRelatedRecords(entity), HttpStatus.CREATED);
+    public BaseResult add(@Validated(AddCheck.class) @RequestBody SysUserDto entity) {
+        service.saveUserRelatedRecords(entity);
+        return BaseResult.ok();
     }
 
     @Log("更新一条 SysUser 记录")
     @PreAuthorize("@exp.check('user:edit')")
     @ApiOperation("更新一条 SysUser 记录")
     @PostMapping("edit")
-    public ResponseEntity<Object> edit(@Validated(EditCheck.class) @RequestBody SysUserDto entity) {
-        return new ResponseEntity<>(service.updateUserRelatedRecords(entity), HttpStatus.ACCEPTED);
+    public BaseResult edit(@Validated(EditCheck.class) @RequestBody SysUserDto entity) {
+        service.updateUserRelatedRecords(entity);
+        return BaseResult.ok();
     }
 
     @Log("根据 ID 删除一条 SysUser 记录")
     @PreAuthorize("@exp.check('user:del')")
     @ApiOperation("删除一条 SysUser 记录")
     @PostMapping("del/{id}")
-    public ResponseEntity<Object> deleteById(@PathVariable Serializable id) {
-        return new ResponseEntity<>(service.removeById(id), HttpStatus.ACCEPTED);
+    public BaseResult deleteById(@PathVariable Serializable id) {
+        service.removeById(id);
+        return BaseResult.ok();
     }
 
     @Log("根据 ID 集合批量删除 SysUser 记录")
     @PreAuthorize("@exp.check('user:del')")
     @ApiOperation("根据 ID 集合批量删除 SysUser 记录")
     @PostMapping("del")
-    public ResponseEntity<Object> deleteByIds(@RequestBody Collection<Serializable> ids) {
-        return new ResponseEntity<>(service.removeByIds(ids), HttpStatus.ACCEPTED);
+    public BaseResult deleteByIds(@RequestBody Collection<Serializable> ids) {
+        service.removeByIds(ids);
+        return BaseResult.ok();
     }
 
     @PreAuthorize("@exp.check('user:view')")
     @ApiOperation("根据 query 条件，查询匹配条件的 SysUserDto 列表")
     @GetMapping("list")
-    public ResponseEntity<Object> list(SysUserQuery query) {
-        return new ResponseEntity<>(service.pojoListByQuery(query), HttpStatus.OK);
+    public DataListResult<SysUserDto> list(SysUserQuery query) {
+        return DataListResult.ok(service.pojoListByQuery(query));
     }
 
     @PreAuthorize("@exp.check('user:view')")
     @ApiOperation("根据 query 和 pageable 条件，分页查询 SysUserDto 记录")
     @GetMapping("page")
-    public ResponseEntity<Object> page(SysUserQuery query, Pageable pageable) {
-        return new ResponseEntity<>(service.pojoPageByQuery(query, pageable), HttpStatus.OK);
+    public PageResult<SysUserDto> page(SysUserQuery query, Pageable pageable) {
+        return PageResult.ok(service.pojoPageByQuery(query, pageable));
     }
 
     @PreAuthorize("@exp.check('user:view')")
     @ApiOperation("根据 query 条件，查询匹配条件的总记录数")
     @GetMapping("count")
-    public ResponseEntity<Object> count(SysUserQuery query) {
-        return new ResponseEntity<>(service.countByQuery(query), HttpStatus.OK);
+    public DataResult<Integer> count(SysUserQuery query) {
+        return DataResult.ok(service.countByQuery(query));
     }
 
     @PreAuthorize("@exp.check('user:view')")
-    @ApiOperation("根据 ID 查询 SysUser 记录")
+    @ApiOperation("根据 ID 查询 SysUserDto 记录")
     @GetMapping("{id}")
-    public ResponseEntity<Object> getById(@PathVariable Serializable id) {
-        return new ResponseEntity<>(service.pojoById(id), HttpStatus.OK);
+    public DataResult<SysUserDto> getById(@PathVariable Serializable id) {
+        return DataResult.ok(service.pojoById(id));
     }
 
     @PreAuthorize("@exp.check('user:view')")
@@ -124,19 +130,19 @@ public class SysUserController {
     @Log("修改用户：个人中心")
     @ApiOperation("修改用户：个人中心")
     @PostMapping("edit/center")
-    public ResponseEntity<Object> center(@Validated(EditCheck.class) @RequestBody SysUserDto entity) {
+    public BaseResult center(@Validated(EditCheck.class) @RequestBody SysUserDto entity) {
         if (!entity.getId().equals(SecurityUtils.getCurrentUserId())) {
             throw new BadRequestException("不能修改他人资料");
         }
         service.updateCenter(entity);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return BaseResult.ok();
     }
 
     @ApiOperation("修改用户密码")
     @PostMapping("edit/password")
-    public ResponseEntity<Object> updatePass(@RequestBody UserPassVo entity) throws Exception {
+    public BaseResult updatePass(@RequestBody UserPassVo entity) throws Exception {
         service.updatePass(entity);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return BaseResult.ok();
     }
 
     // @ApiOperation("修改头像")
@@ -148,7 +154,7 @@ public class SysUserController {
     @Log("修改用户邮箱")
     @ApiOperation("修改用户邮箱")
     @PostMapping(value = "edit/email/{code}")
-    public ResponseEntity<Object> updateEmail(@PathVariable String code,
+    public BaseResult updateEmail(@PathVariable String code,
         @Validated(EditCheck.class) @RequestBody SysUserDto entity) throws Exception {
         String password = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, entity.getPassword());
         SysUserDto userDto = service.pojoByUsername(SecurityUtils.getCurrentUsername());
@@ -160,7 +166,7 @@ public class SysUserController {
         user.setId(entity.getId());
         user.setPassword(passwordEncoder.encode(entity.getPassword()));
         service.updateById(user);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return BaseResult.ok();
     }
 
 }

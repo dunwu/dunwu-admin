@@ -146,7 +146,7 @@ public class SysDeptServiceImpl extends ServiceImpl implements SysDeptService {
     }
 
     @Override
-    public Collection<SysDeptDto> treeList(Object query) {
+    public List<SysDeptDto> treeList(Object query) {
         Collection<SysDeptDto> list = pojoListByQuery(query);
         return deptDao.buildTreeList(list);
     }

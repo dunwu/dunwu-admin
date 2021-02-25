@@ -7,6 +7,8 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -26,20 +28,16 @@ public class DataListResult<T> extends BaseResult {
     /**
      * 应答数据实体
      */
-    protected ListContent<T> data;
+    private Collection<T> data;
 
     /**
      * 构造成功的 {@link DataListResult}
      *
      * @param data 应答数据实体
      */
-    public DataListResult(ListContent<T> data) {
+    public DataListResult(final Collection<T> data) {
         super(ResultStatus.OK);
-        this.data = data;
-    }
-
-    public DataListResult(List<T> content) {
-        this(new ListContent<>(content));
+        this.data = new ArrayList<>(data);
     }
 
     /**
@@ -92,81 +90,13 @@ public class DataListResult<T> extends BaseResult {
     }
 
     /**
-     * 返回失败的 {@link DataListResult} （默认应答）
-     *
-     * @param <T> 数据类型
-     * @return {@link DataListResult}
-     */
-    public static <T> DataListResult<T> failDataList() {
-        return failDataList(ResultStatus.FAIL);
-    }
-
-    /**
-     * 根据 {@link Status} 返回失败的 {@link DataListResult}
-     *
-     * @param status {@link Status} 响应状态
-     * @param <T>    数据类型
-     * @return {@link DataListResult}
-     */
-    public static <T> DataListResult<T> failDataList(final Status status) {
-        return new DataListResult<>(status);
-    }
-
-    /**
-     * 返回失败的 {@link DataListResult}
-     *
-     * @param code    响应状态错误码
-     * @param message 响应状态消息
-     * @param <T>     数据类型
-     * @return {@link DataListResult}
-     */
-    public static <T> DataListResult<T> failDataList(final int code, final String message) {
-        return new DataListResult<>(code, message);
-    }
-
-    /**
-     * 返回失败的 {@link DataListResult}
-     *
-     * @param code     响应状态错误码
-     * @param messages 响应状态消息列表
-     * @param <T>      数据类型
-     * @return {@link DataListResult}
-     */
-    public static <T> DataListResult<T> failDataList(final int code, final List<String> messages) {
-        return new DataListResult<>(code, messages);
-    }
-
-    /**
-     * 根据模板字符串以及参数，组装响应消息，返回失败的 {@link DataListResult}
-     *
-     * @param code     响应状态错误码
-     * @param template 响应状态消息模板
-     * @param params   响应状态消息参数
-     * @param <T>      数据类型
-     * @return {@link DataListResult}
-     */
-    public static <T> DataListResult<T> failDataList(final int code, final String template, final Object... params) {
-        return new DataListResult<>(code, template, params);
-    }
-    /**
      * 根据模板字符串以及参数，组装响应消息，返回成功的 {@link DataListResult}
      *
      * @param data 数据对象列表
      * @param <T>  数据类型
      * @return {@link DataListResult}
      */
-    public static <T> DataListResult<T> success(final List<T> data) {
-        return new DataListResult<>(data);
-    }
-
-    /**
-     * 根据模板字符串以及参数，组装响应消息，返回成功的 {@link DataListResult}
-     *
-     * @param data 数据对象列表
-     * @param <T>  数据类型
-     * @return {@link DataListResult}
-     */
-    public static <T> DataListResult<T> success(final ListContent<T> data) {
+    public static <T> DataListResult<T> ok(final List<T> data) {
         return new DataListResult<>(data);
     }
 
