@@ -21,16 +21,16 @@
     >
       <el-option v-for="item in dict.job_status.options" :key="item.value" :label="item.label" :value="item.value" />
     </el-select>
-    <rrOperation />
+    <queryOperation />
   </div>
 </template>
 
 <script>
 import { header } from '@crud/crud'
-import rrOperation from '@crud/Query.operation'
+import queryOperation from '@crud/Query.operation'
 import DateRangePicker from '@/components/DateRangePicker'
 export default {
-  components: { rrOperation, DateRangePicker },
+  components: { queryOperation, DateRangePicker },
   mixins: [header()],
   props: {
     dict: {

@@ -6,7 +6,7 @@
         <!-- 搜索 -->
         <el-input v-model="query.name" clearable placeholder="输入名称搜索" style="width: 200px" class="filter-item" @keyup.enter.native="crud.toQuery" />
         <date-range-picker v-model="query.createTime" class="date-item" />
-        <rrOperation />
+        <queryOperation />
       </div>
       <crudOperation :permission="permission">
         <el-button
@@ -77,7 +77,7 @@
 <script>
 import crudApp from '@/api/mnt/app'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
-import rrOperation from '@crud/Query.operation'
+import queryOperation from '@crud/Query.operation'
 import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
@@ -86,7 +86,7 @@ import DateRangePicker from '@/components/DateRangePicker'
 const defaultForm = { id: null, name: null, port: 8080, uploadPath: '/opt/upload', deployPath: '/opt/app', backupPath: '/opt/backup', startScript: null, deployScript: null }
 export default {
   name: 'App',
-  components: { pagination, crudOperation, rrOperation, udOperation, DateRangePicker },
+  components: { pagination, crudOperation, queryOperation, udOperation, DateRangePicker },
   cruds() {
     return CRUD({ title: '应用', url: 'api/app', crudMethod: { ...crudApp }})
   },

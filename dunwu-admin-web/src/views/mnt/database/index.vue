@@ -6,7 +6,7 @@
         <!-- 搜索 -->
         <el-input v-model="query.blurry" clearable placeholder="模糊搜索" style="width: 200px" class="filter-item" @keyup.enter.native="crud.toQuery" />
         <date-range-picker v-model="query.createTime" class="date-item" />
-        <rrOperation />
+        <queryOperation />
       </div>
       <crudOperation :permission="permission">
         <el-button
@@ -71,7 +71,7 @@ import crudDatabase from '@/api/mnt/database'
 import { testDbConnect } from '@/api/mnt/connect'
 import eForm from './execute'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
-import rrOperation from '@crud/Query.operation'
+import queryOperation from '@crud/Query.operation'
 import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
@@ -80,7 +80,7 @@ import DateRangePicker from '@/components/DateRangePicker'
 const defaultForm = { id: null, name: null, jdbcUrl: 'jdbc:mysql://', userName: null, pwd: null }
 export default {
   name: 'DataBase',
-  components: { eForm, pagination, crudOperation, rrOperation, udOperation, DateRangePicker },
+  components: { eForm, pagination, crudOperation, queryOperation, udOperation, DateRangePicker },
   cruds() {
     return CRUD({ title: '数据库', url: 'api/database', crudMethod: { ...crudDatabase }})
   },

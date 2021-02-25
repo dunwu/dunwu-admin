@@ -6,7 +6,7 @@
         <!-- 搜索 -->
         <el-input v-model="query.id" clearable placeholder="输入名称或IP搜索" style="width: 200px" class="filter-item" @keyup.enter.native="crud.toQuery" />
         <date-range-picker v-model="query.createTime" class="date-item" />
-        <rrOperation />
+        <queryOperation />
       </div>
       <crudOperation :permission="permission" />
     </div>
@@ -63,7 +63,7 @@ import crudServer from '@/api/mnt/serverDeploy'
 import { testServerConnect } from '@/api/mnt/connect'
 import { validateIP } from '@/utils/validate'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
-import rrOperation from '@crud/Query.operation'
+import queryOperation from '@crud/Query.operation'
 import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
@@ -72,7 +72,7 @@ import DateRangePicker from '@/components/DateRangePicker'
 const defaultForm = { id: null, name: null, ip: null, port: 22, account: 'root', password: null }
 export default {
   name: 'Server',
-  components: { pagination, crudOperation, rrOperation, udOperation, DateRangePicker },
+  components: { pagination, crudOperation, queryOperation, udOperation, DateRangePicker },
   cruds() {
     return CRUD({ title: '服务器', url: 'api/serverDeploy', crudMethod: { ...crudServer }})
   },

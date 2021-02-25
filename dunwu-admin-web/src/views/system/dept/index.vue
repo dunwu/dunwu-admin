@@ -25,7 +25,7 @@
         >
           <el-option v-for="item in enabledTypeOptions" :key="item.key" :label="item.display_name" :value="item.key" />
         </el-select>
-        <rrOperation />
+        <queryOperation />
       </div>
       <crudOperation :permission="permission" />
     </div>
@@ -156,7 +156,7 @@ import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import { LOAD_CHILDREN_OPTIONS } from '@riophae/vue-treeselect'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
-import rrOperation from '@crud/Query.operation'
+import queryOperation from '@crud/Query.operation'
 import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
 import DateRangePicker from '@/components/DateRangePicker'
@@ -164,7 +164,7 @@ import DateRangePicker from '@/components/DateRangePicker'
 const defaultForm = { id: null, name: null, isTop: '1', subCount: 0, pid: 0, weight: 999, enabled: 'true' }
 export default {
   name: 'Dept',
-  components: { Treeselect, crudOperation, rrOperation, udOperation, DateRangePicker },
+  components: { Treeselect, crudOperation, queryOperation, udOperation, DateRangePicker },
   cruds() {
     return CRUD({
       title: '部门',

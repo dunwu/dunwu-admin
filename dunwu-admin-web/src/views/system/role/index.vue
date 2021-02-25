@@ -14,7 +14,7 @@
           @keyup.enter.native="crud.toQuery"
         />
         <date-range-picker v-model="query.createTime" class="date-item" />
-        <rrOperation />
+        <queryOperation />
       </div>
       <crudOperation :permission="permission" />
     </div>
@@ -140,7 +140,7 @@ import roleApi from '@/api/system/role'
 import deptApi from '@/api/system/dept'
 import menuApi from '@/api/system/menu'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
-import rrOperation from '@crud/Query.operation'
+import queryOperation from '@crud/Query.operation'
 import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
@@ -152,7 +152,7 @@ import DateRangePicker from '@/components/DateRangePicker'
 const defaultForm = { id: null, name: null, depts: [], description: null, dataScope: '全部', level: 3 }
 export default {
   name: 'Role',
-  components: { Treeselect, pagination, crudOperation, rrOperation, udOperation, DateRangePicker },
+  components: { Treeselect, pagination, crudOperation, queryOperation, udOperation, DateRangePicker },
   cruds() {
     return CRUD({
       title: '角色',

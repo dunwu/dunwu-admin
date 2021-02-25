@@ -3,7 +3,7 @@
     <div class="head-container">
       <div v-if="crud.props.searchToggle">
         <el-input v-model="query.filter" clearable size="small" placeholder="全表模糊搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
-        <rrOperation />
+        <queryOperation />
       </div>
       <crudOperation>
         <el-button
@@ -56,13 +56,13 @@
 <script>
 import { del } from '@/api/monitor/online'
 import CRUD, { presenter, header, crud } from '@crud/crud'
-import rrOperation from '@crud/Query.operation'
+import queryOperation from '@crud/Query.operation'
 import crudOperation from '@crud/CRUD.operation'
 import pagination from '@crud/Pagination'
 
 export default {
   name: 'OnlineUser',
-  components: { pagination, crudOperation, rrOperation },
+  components: { pagination, crudOperation, queryOperation },
   cruds() {
     return CRUD({ url: 'auth/online', title: '在线用户' })
   },

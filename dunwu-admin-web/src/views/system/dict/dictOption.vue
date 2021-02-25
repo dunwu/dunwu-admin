@@ -17,7 +17,7 @@
             class="filter-item"
             @keyup.enter.native="toQuery"
           />
-          <rrOperation />
+          <queryOperation />
         </div>
       </div>
       <!--表单组件-->
@@ -75,13 +75,13 @@
 import crudDictOption from '@/api/system/dictOption'
 import CRUD, { presenter, header, form } from '@crud/crud'
 import pagination from '@crud/Pagination'
-import rrOperation from '@crud/Query.operation'
+import queryOperation from '@crud/Query.operation'
 import udOperation from '@crud/UD.operation'
 
 const defaultForm = { id: null, code: null, name: null }
 
 export default {
-  components: { pagination, rrOperation, udOperation },
+  components: { pagination, queryOperation, udOperation },
   cruds() {
     return [
       CRUD({

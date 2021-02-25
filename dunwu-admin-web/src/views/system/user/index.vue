@@ -50,7 +50,7 @@
             >
               <el-option v-for="item in enabledTypeOptions" :key="item.code" :label="item.name" :value="item.code" />
             </el-select>
-            <rrOperation />
+            <queryOperation />
           </div>
           <crudOperation show="" :permission="permission" />
         </div>
@@ -184,7 +184,7 @@ import jobApi from '@/api/system/job'
 import roleApi from '@/api/system/role'
 import { isvalidPhone } from '@/utils/validate'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
-import rrOperation from '@crud/Query.operation'
+import queryOperation from '@crud/Query.operation'
 import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
@@ -210,7 +210,7 @@ const defaultForm = {
 }
 export default {
   name: 'User',
-  components: { Treeselect, crudOperation, rrOperation, udOperation, pagination, DateRangePicker },
+  components: { Treeselect, crudOperation, queryOperation, udOperation, pagination, DateRangePicker },
   cruds() {
     return CRUD({ title: '用户', url: 'api/sys/user', crudMethod: { ...userApi }})
   },

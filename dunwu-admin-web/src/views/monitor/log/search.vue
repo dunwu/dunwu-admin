@@ -9,16 +9,16 @@
       class="filter-item"
     />
     <date-range-picker v-model="query.createTime" class="date-item" />
-    <rrOperation />
+    <queryOperation />
   </div>
 </template>
 
 <script>
 import { header } from '@crud/crud'
-import rrOperation from '@crud/Query.operation'
+import queryOperation from '@crud/Query.operation'
 import DateRangePicker from '@/components/DateRangePicker'
 export default {
-  components: { rrOperation, DateRangePicker },
+  components: { queryOperation, DateRangePicker },
   mixins: [header()]
 }
 </script>

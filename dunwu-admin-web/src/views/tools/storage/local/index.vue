@@ -6,7 +6,7 @@
         <!-- 搜索 -->
         <el-input v-model="query.blurry" clearable size="small" placeholder="输入内容模糊搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
         <date-range-picker v-model="query.createTime" class="date-item" />
-        <rrOperation />
+        <queryOperation />
       </div>
       <crudOperation :permission="permission">
         <!-- 新增 -->
@@ -106,14 +106,14 @@ import { mapGetters } from 'vuex'
 import { getToken } from '@/utils/auth'
 import crudFile from '@/api/tools/localStorage'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
-import rrOperation from '@crud/Query.operation'
+import queryOperation from '@crud/Query.operation'
 import crudOperation from '@crud/CRUD.operation'
 import pagination from '@crud/Pagination'
 import DateRangePicker from '@/components/DateRangePicker'
 
 const defaultForm = { id: null, name: '' }
 export default {
-  components: { pagination, crudOperation, rrOperation, DateRangePicker },
+  components: { pagination, crudOperation, queryOperation, DateRangePicker },
   cruds() {
     return CRUD({ title: '文件', url: 'api/localStorage', crudMethod: { ...crudFile }})
   },

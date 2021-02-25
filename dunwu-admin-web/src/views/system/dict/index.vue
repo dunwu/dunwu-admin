@@ -42,7 +42,7 @@
                 class="filter-item"
                 @keyup.enter.native="crud.toQuery"
               />
-              <rrOperation />
+              <queryOperation />
             </div>
             <crudOperation :permission="permission" />
           </div>
@@ -106,14 +106,14 @@ import crudDict from '@/api/system/dict'
 import CRUD, { presenter, header, form } from '@crud/crud'
 import crudOperation from '@crud/CRUD.operation'
 import pagination from '@crud/Pagination'
-import rrOperation from '@crud/Query.operation'
+import queryOperation from '@crud/Query.operation'
 import udOperation from '@crud/UD.operation'
 
 const defaultForm = { id: null, name: null, note: null, enabled: true, dictOptions: [] }
 
 export default {
   name: 'Dict',
-  components: { crudOperation, pagination, rrOperation, udOperation, dictOption },
+  components: { crudOperation, pagination, queryOperation, udOperation, dictOption },
   cruds() {
     return [CRUD({ title: '字典', url: 'api/sys/dict', crudMethod: { ...crudDict }})]
   },

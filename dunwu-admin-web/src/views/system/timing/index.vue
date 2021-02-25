@@ -6,7 +6,7 @@
         <!-- 搜索 -->
         <el-input v-model="query.jobName" clearable size="small" placeholder="输入任务名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery" />
         <date-range-picker v-model="query.createTime" class="date-item" />
-        <rrOperation />
+        <queryOperation />
       </div>
       <crudOperation :permission="permission">
         <!-- 任务日志 -->
@@ -117,7 +117,7 @@
 import crudJob from '@/api/system/timing'
 import Log from './log'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
-import rrOperation from '@crud/Query.operation'
+import queryOperation from '@crud/Query.operation'
 import crudOperation from '@crud/CRUD.operation'
 import pagination from '@crud/Pagination'
 import DateRangePicker from '@/components/DateRangePicker'
@@ -125,7 +125,7 @@ import DateRangePicker from '@/components/DateRangePicker'
 const defaultForm = { id: null, jobName: null, subTask: null, beanName: null, methodName: null, params: null, cronExpression: null, pauseAfterFailure: true, isPause: false, personInCharge: null, email: null, description: null }
 export default {
   name: 'Timing',
-  components: { Log, pagination, crudOperation, rrOperation, DateRangePicker },
+  components: { Log, pagination, crudOperation, queryOperation, DateRangePicker },
   cruds() {
     return CRUD({ title: '定时任务', url: 'api/jobs', crudMethod: { ...crudJob }})
   },

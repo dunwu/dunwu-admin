@@ -4,7 +4,7 @@
     <div class="head-container">
       <div v-if="crud.props.searchToggle">
         <el-input v-model="query.name" clearable size="small" placeholder="请输入表名" style="width: 200px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
-        <rrOperation />
+        <queryOperation />
       </div>
       <crudOperation>
         <el-tooltip slot="right" class="item" effect="dark" content="数据库中表字段变动时使用该功能" placement="top-start">
@@ -55,13 +55,13 @@
 import { generator, sync } from '@/api/generator/generator'
 import { downloadFile } from '@/utils/index'
 import CRUD, { presenter, header } from '@crud/crud'
-import rrOperation from '@crud/Query.operation'
+import queryOperation from '@crud/Query.operation'
 import crudOperation from '@crud/CRUD.operation'
 import pagination from '@crud/Pagination'
 
 export default {
   name: 'GeneratorIndex',
-  components: { pagination, crudOperation, rrOperation },
+  components: { pagination, crudOperation, queryOperation },
   cruds() {
     return CRUD({ url: 'api/generator/tables' })
   },

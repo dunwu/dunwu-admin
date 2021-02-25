@@ -6,7 +6,7 @@
         <!-- 搜索 -->
         <el-input v-model="query.appName" clearable placeholder="输入应用名称查询" style="width: 200px" class="filter-item" @keyup.enter.native="crud.toQuery" />
         <date-range-picker v-model="query.createTime" class="date-item" />
-        <rrOperation />
+        <queryOperation />
       </div>
       <crudOperation :permission="permission">
         <template slot="right">
@@ -110,7 +110,7 @@ import crudDeploy from '@/api/mnt/deploy'
 import dForm from './deploy'
 import fForm from './sysRestore'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
-import rrOperation from '@crud/Query.operation'
+import queryOperation from '@crud/Query.operation'
 import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
@@ -119,7 +119,7 @@ import DateRangePicker from '@/components/DateRangePicker'
 const defaultForm = { id: null, app: { id: null }, deploys: [] }
 export default {
   name: 'Deploy',
-  components: { dForm, fForm, pagination, crudOperation, rrOperation, udOperation, DateRangePicker },
+  components: { dForm, fForm, pagination, crudOperation, queryOperation, udOperation, DateRangePicker },
   cruds() {
     return CRUD({ title: '部署', url: 'api/deploy', crudMethod: { ...crudDeploy }})
   },
