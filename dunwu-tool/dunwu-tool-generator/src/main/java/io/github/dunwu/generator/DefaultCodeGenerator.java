@@ -39,18 +39,31 @@ public class DefaultCodeGenerator implements ICodeGenerator {
     private final Logger log = LoggerFactory.getLogger(DefaultCodeGenerator.class);
     private Properties properties;
 
+    /**
+     * 加载默认加载配置文件，尝试读取其中的属性
+     */
     public DefaultCodeGenerator() {
+        // 默认加载配置文件
         this("classpath://conf/mybatis.properties", "classpath://application.properties");
     }
 
+    /**
+     * 加载指定路径的配置文件，尝试读取其中的属性
+     */
     public DefaultCodeGenerator(String... configFiles) {
         loadProperties(configFiles);
     }
 
+    /**
+     * 直接读取传入的属性，尝试读取其中的属性
+     */
     public DefaultCodeGenerator(Properties properties) {
         this.properties = properties;
     }
 
+    /**
+     * 生成代码到本地
+     */
     @Override
     public void generate() {
         AutoGenerator generator = newAutoGenerator();
@@ -59,6 +72,9 @@ public class DefaultCodeGenerator implements ICodeGenerator {
         }
     }
 
+    /**
+     * 获取生成代码的预览内容
+     */
     @Override
     public List<TemplateContent> getPreviewList() {
         AutoGenerator generator = newAutoGenerator();
@@ -68,6 +84,9 @@ public class DefaultCodeGenerator implements ICodeGenerator {
         return new ArrayList<>();
     }
 
+    /**
+     * 加载指定路径的配置文件，尝试读取其中的属性
+     */
     @Override
     public void loadProperties(String... files) {
         this.properties = new Properties();
@@ -84,6 +103,12 @@ public class DefaultCodeGenerator implements ICodeGenerator {
         }
     }
 
+    /**
+     * 从 {@link Properties} 中尝试读取代码生成器的全局配置 {@link GlobalConfig}
+     *
+     * @param properties Properties
+     * @return /
+     */
     @Override
     public GlobalConfig getGlobalConfig(Properties properties) {
         // 全局配置
@@ -101,17 +126,17 @@ public class DefaultCodeGenerator implements ICodeGenerator {
 
         GlobalConfig gc = new GlobalConfig();
         gc.setOpen(false)
-            .setFileOverride(true)
-            .setActiveRecord(false)
-            .setOutputDir(javaDir)
-            .setXmlName(xmlName)
-            .setMapperName(mapperName)
-            .setDaoName(daoName)
-            .setDaoImplName(daoImplName)
-            .setServiceName(serviceName)
-            .setServiceImplName(serviceImplName)
-            .setControllerName(controllerName)
-            .setSwagger2(enableSwagger);
+          .setFileOverride(true)
+          .setActiveRecord(false)
+          .setOutputDir(javaDir)
+          .setXmlName(xmlName)
+          .setMapperName(mapperName)
+          .setDaoName(daoName)
+          .setDaoImplName(daoImplName)
+          .setServiceName(serviceName)
+          .setServiceImplName(serviceImplName)
+          .setControllerName(controllerName)
+          .setSwagger2(enableSwagger);
 
         if (StrUtil.isNotBlank(authorName)) {
             gc.setAuthor(authorName);
@@ -119,6 +144,12 @@ public class DefaultCodeGenerator implements ICodeGenerator {
         return gc;
     }
 
+    /**
+     * 从 {@link Properties} 中尝试读取代码生成器的数据源配置 {@link DataSourceConfig}
+     *
+     * @param properties Properties
+     * @return /
+     */
     @Override
     public DataSourceConfig getDataSourceConfig(Properties properties) {
         String url = getPropertie(properties, MybatisPlusGeneratorProps.SPRING_DATASOURCE_URL);
@@ -127,10 +158,16 @@ public class DefaultCodeGenerator implements ICodeGenerator {
         String password = getPropertie(properties, MybatisPlusGeneratorProps.SPRING_DATASOURCE_PASSWORD);
         DataSourceConfig dsc = new DataSourceConfig();
         dsc.setUrl(url).setDriverName(driverName)
-            .setUsername(username).setPassword(password);
+           .setUsername(username).setPassword(password);
         return dsc;
     }
 
+    /**
+     * 从 {@link Properties} 中尝试读取代码生成器的 package 配置 {@link PackageConfig}
+     *
+     * @param properties Properties
+     * @return /
+     */
     @Override
     public PackageConfig getPackageConfig(Properties properties) {
         String moduleName = getPropertie(properties, MybatisPlusGeneratorProps.PC_MODULE_NAME);
@@ -149,14 +186,20 @@ public class DefaultCodeGenerator implements ICodeGenerator {
             pc.setParent(packageName);
         }
         pc.setMapper(mapperPackageName)
-            .setDao(daoPackageName)
-            .setDaoImpl(daoImplPackageName)
-            .setService(servicePackageName)
-            .setServiceImpl(serviceImplPackageName)
-            .setXml(xmlPackageName);
+          .setDao(daoPackageName)
+          .setDaoImpl(daoImplPackageName)
+          .setService(servicePackageName)
+          .setServiceImpl(serviceImplPackageName)
+          .setXml(xmlPackageName);
         return pc;
     }
 
+    /**
+     * 从 {@link Properties} 中尝试读取代码生成器的策略配置 {@link StrategyConfig}
+     *
+     * @param properties Properties
+     * @return /
+     */
     @Override
     public StrategyConfig getStrategyConfig(Properties properties, PackageConfig pc) {
         String tableName = getPropertie(properties, MybatisPlusGeneratorProps.SC_TABLE_NAME);
@@ -166,12 +209,12 @@ public class DefaultCodeGenerator implements ICodeGenerator {
 
         StrategyConfig sc = new StrategyConfig();
         sc.setEntityLombokModel(true)
-            .setRestControllerStyle(true)
-            .setControllerMappingHyphenStyle(true)
-            .setNaming(NamingStrategy.underline_to_camel)
-            .setColumnNaming(NamingStrategy.underline_to_camel)
-            .setSuperDaoClass(superDao)
-            .setSuperDaoImplClass(superDaoImpl);
+          .setRestControllerStyle(true)
+          .setControllerMappingHyphenStyle(true)
+          .setNaming(NamingStrategy.underline_to_camel)
+          .setColumnNaming(NamingStrategy.underline_to_camel)
+          .setSuperDaoClass(superDao)
+          .setSuperDaoImplClass(superDaoImpl);
         if (StrUtil.isNotBlank(tableName)) {
             tableName = tableName.trim();
             sc.setInclude(tableName.split(","));
@@ -185,6 +228,12 @@ public class DefaultCodeGenerator implements ICodeGenerator {
         return sc;
     }
 
+    /**
+     * 从 {@link Properties} 中尝试读取代码生成器的注入配置 {@link InjectionConfig}
+     *
+     * @param properties Properties
+     * @return /
+     */
     @Override
     public InjectionConfig getInjectionConfig(Properties properties, PackageConfig pc) {
         String resourcesDir = getPropertie(properties, MybatisPlusGeneratorProps.GC_RESOURCE_DIR);
@@ -215,6 +264,11 @@ public class DefaultCodeGenerator implements ICodeGenerator {
         return cfg;
     }
 
+    /**
+     * 获取代码生成器的策略配置 {@link TemplateConfig}
+     *
+     * @return /
+     */
     @Override
     public TemplateConfig getTemplateConfig() {
         return new TemplateConfig().setXml(null);
@@ -246,12 +300,12 @@ public class DefaultCodeGenerator implements ICodeGenerator {
         // 将配置项注入 AutoGenerator
         AutoGenerator generator = new AutoGenerator();
         generator.setTemplateEngine(new FreemarkerTemplateEngine())
-            .setGlobalConfig(gc)
-            .setDataSource(dsc)
-            .setPackageInfo(pc)
-            .setStrategy(sc)
-            .setCfg(cfg)
-            .setTemplate(tc);
+                 .setGlobalConfig(gc)
+                 .setDataSource(dsc)
+                 .setPackageInfo(pc)
+                 .setStrategy(sc)
+                 .setCfg(cfg)
+                 .setTemplate(tc);
         return generator;
     }
 

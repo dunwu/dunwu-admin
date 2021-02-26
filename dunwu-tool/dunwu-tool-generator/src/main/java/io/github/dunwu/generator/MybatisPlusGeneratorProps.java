@@ -130,12 +130,12 @@ public enum MybatisPlusGeneratorProps {
     /**
      * 配置参数 key
      */
-    private String key;
+    private final String key;
 
     /**
      * 配置参数默认值
      */
-    private String value;
+    private final String value;
 
     MybatisPlusGeneratorProps(String key, String value) {
         this.key = key;
