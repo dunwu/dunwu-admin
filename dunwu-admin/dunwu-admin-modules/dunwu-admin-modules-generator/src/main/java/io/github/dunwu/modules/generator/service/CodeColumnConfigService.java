@@ -1,9 +1,9 @@
 package io.github.dunwu.modules.generator.service;
 
 import io.github.dunwu.data.core.annotation.QueryField;
+import io.github.dunwu.data.mybatis.IService;
 import io.github.dunwu.modules.generator.entity.CodeColumnConfig;
 import io.github.dunwu.modules.generator.entity.dto.CodeColumnConfigDto;
-import io.github.dunwu.data.mybatis.IService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -29,6 +29,12 @@ public interface CodeColumnConfigService extends IService {
      */
     boolean save(CodeColumnConfig entity);
 
+    /**
+     * 批量添加 {@link CodeColumnConfig} 记录
+     *
+     * @param list {@link CodeColumnConfig} 数据实体列表
+     * @return true / false
+     */
     boolean saveBatch(Collection<CodeColumnConfig> list);
 
     /**
@@ -39,6 +45,12 @@ public interface CodeColumnConfigService extends IService {
      */
     boolean updateById(CodeColumnConfig entity);
 
+    /**
+     * 根据 ID 批量更新 {@link CodeColumnConfig} 记录
+     *
+     * @param list {@link CodeColumnConfig} 数据实体列表
+     * @return true / false
+     */
     boolean updateBatchById(Collection<CodeColumnConfig> list);
 
     /**

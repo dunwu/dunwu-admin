@@ -43,8 +43,18 @@ public class ${table.serviceImplName} extends ${superServiceImplClass} implement
     }
 
     @Override
+    public boolean saveBatch(Collection<${entity}> list) {
+        return dao.saveBatch(list);
+    }
+
+    @Override
     public boolean updateById(${entity} entity) {
         return dao.updateById(entity);
+    }
+
+    @Override
+    public boolean updateBatchById(Collection<${entity}> list) {
+        return dao.updateBatchById(list);
     }
 
     @Override

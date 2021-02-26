@@ -33,12 +33,28 @@ public interface ${table.serviceName} extends ${superServiceClass} {
     boolean save(${entity} entity);
 
     /**
+     * 批量添加 {@link ${entity}} 记录
+     *
+     * @param list {@link ${entity}} 数据实体列表
+     * @return true / false
+     */
+    boolean saveBatch(Collection<${entity}> list);
+
+    /**
      * 根据 ID 更新一条 {@link ${entity}} 记录
      *
      * @param entity {@link ${entity}} 数据实体
      * @return true / false
      */
     boolean updateById(${entity} entity);
+
+    /**
+     * 根据 ID 批量更新 {@link ${entity}} 记录
+     *
+     * @param list {@link ${entity}} 数据实体列表
+     * @return true / false
+     */
+    boolean updateBatchById(Collection<${entity}> list);
 
     /**
      * 根据 ID 删除一条 {@link ${entity}} 记录
