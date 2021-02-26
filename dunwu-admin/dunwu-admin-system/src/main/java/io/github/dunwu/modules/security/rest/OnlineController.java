@@ -42,7 +42,7 @@ public class OnlineController {
 
     @ApiOperation("踢出用户")
     @PreAuthorize("@exp.check()")
-    @PostMapping("del")
+    @PostMapping("del/batch")
     public BaseResult delete(@RequestBody Set<String> keys) throws Exception {
         for (String key : keys) {
             // 解密Key

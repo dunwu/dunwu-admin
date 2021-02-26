@@ -1,5 +1,7 @@
 package ${package.ServiceImpl};
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import ${package.Entity}.${entity};
 import ${package.Dto}.${table.dtoName};
 import ${package.Dao}.${table.daoName};
@@ -81,15 +83,33 @@ public class ${table.serviceImplName} extends ${superServiceImplClass} implement
     }
 
     @Override
-    public void exportByIds(Collection<Serializable> ids, HttpServletResponse response) throws IOException {
+    public void exportList(Collection<Serializable> ids, HttpServletResponse response) throws IOException {
         List<${table.dtoName}> list = dao.pojoListByIds(ids, ${table.dtoName}.class);
         dao.exportDtoList(list, response);
     }
 
     @Override
-    public void exportPageData(Object query, Pageable pageable, HttpServletResponse response) throws IOException {
+    public void exportPage(Object query, Pageable pageable, HttpServletResponse response) throws IOException {
         Page<${table.dtoName}> page = dao.pojoPageByQuery(query, pageable, ${table.dtoName}.class);
         dao.exportDtoList(page.getContent(), response);
+    }
+
+    @Override
+    public ${table.dtoName} doToDto(${entity} model) {
+        if (model == null) {
+            return null;
+        }
+
+        return BeanUtil.toBean(model, ${table.dtoName}.class);
+    }
+
+    @Override
+    public ${entity} dtoToDo(${table.dtoName} dto) {
+        if (dto == null) {
+            return null;
+        }
+
+        return BeanUtil.toBean(dto, ${entity}.class);
     }
 
 }

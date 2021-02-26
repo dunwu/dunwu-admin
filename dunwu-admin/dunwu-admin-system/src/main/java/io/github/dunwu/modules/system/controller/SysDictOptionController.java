@@ -67,7 +67,7 @@ public class SysDictOptionController {
     @Log("根据 ID 集合批量删除 SysDictOption 记录")
     @PreAuthorize("@exp.check('dict:del')")
     @ApiOperation("根据 ID 集合批量删除 SysDictOption 记录")
-    @PostMapping("del")
+    @PostMapping("del/batch")
     public BaseResult deleteByIds(@RequestBody Collection<Serializable> ids) {
         service.removeByIds(ids);
         return BaseResult.ok();

@@ -78,7 +78,7 @@ public class SysUserController {
     @Log("根据 ID 集合批量删除 SysUser 记录")
     @PreAuthorize("@exp.check('user:del')")
     @ApiOperation("根据 ID 集合批量删除 SysUser 记录")
-    @PostMapping("del")
+    @PostMapping("del/batch")
     public BaseResult deleteByIds(@RequestBody Collection<Serializable> ids) {
         service.removeByIds(ids);
         return BaseResult.ok();

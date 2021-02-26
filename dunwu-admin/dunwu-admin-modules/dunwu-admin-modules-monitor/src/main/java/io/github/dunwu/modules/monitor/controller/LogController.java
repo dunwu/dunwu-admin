@@ -51,7 +51,7 @@ public class LogController {
     @Log("批量删除数据")
     @ApiOperation("根据 ID 批量删除 SysLog 记录")
     @PreAuthorize("@exp.check()")
-    @PostMapping("del")
+    @PostMapping("del/batch")
     public BaseResult deleteByIds(@RequestBody Set<String> ids) {
         dao.removeByIds(ids);
         return BaseResult.ok();

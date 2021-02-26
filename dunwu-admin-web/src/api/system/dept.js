@@ -20,7 +20,7 @@ export function add(data) {
  */
 export function del(ids) {
   return request({
-    url: 'api/sys/dept/del',
+    url: 'api/sys/dept/del/batch',
     method: 'post',
     data: ids
   })

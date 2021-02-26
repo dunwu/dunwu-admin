@@ -17,9 +17,9 @@ export function generator(tableName, type) {
 
 export function save(data) {
   return request({
-    url: 'api/generator',
-    data,
-    method: 'put'
+    url: 'api/generator/column/add/batch',
+    method: 'post',
+    data
   })
 }
 
@@ -30,4 +30,3 @@ export function sync(tables) {
     data: tables
   })
 }
-

@@ -22,50 +22,57 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 DROP TABLE IF EXISTS `code_column_config`;
 CREATE TABLE `code_column_config` (
-    `column_id`       BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-    `table_name`      VARCHAR(255) DEFAULT NULL,
-    `column_name`     VARCHAR(255) DEFAULT NULL,
-    `column_type`     VARCHAR(255) DEFAULT NULL,
-    `dict_name`       VARCHAR(255) DEFAULT NULL,
-    `extra`           VARCHAR(255) DEFAULT NULL,
-    `form_show`       BIT(1)       DEFAULT NULL,
-    `form_type`       VARCHAR(255) DEFAULT NULL,
-    `key_type`        VARCHAR(255) DEFAULT NULL,
-    `list_show`       BIT(1)       DEFAULT NULL,
-    `not_null`        BIT(1)       DEFAULT NULL,
-    `query_type`      VARCHAR(255) DEFAULT NULL,
-    `remark`          VARCHAR(255) DEFAULT NULL,
-    `date_annotation` VARCHAR(255) DEFAULT NULL,
-    PRIMARY KEY (`column_id`) USING BTREE,
-    KEY `idx_table_name`(`table_name`)
+    `id`              BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `table_schema`    VARCHAR(255) DEFAULT NULL COMMENT '数据库Schema',
+    `table_name`      VARCHAR(255) DEFAULT NULL COMMENT '数据库Table',
+    `column_name`     VARCHAR(255) DEFAULT NULL COMMENT '字段名称',
+    `column_type`     VARCHAR(255) DEFAULT NULL COMMENT '字段类型',
+    `column_key`      VARCHAR(255) DEFAULT NULL COMMENT '字段KEY类型',
+    `column_comment`  VARCHAR(255) DEFAULT NULL COMMENT '字段备注',
+    `dict_name`       VARCHAR(255) DEFAULT NULL COMMENT '字典名称',
+    `extra`           VARCHAR(255) DEFAULT NULL COMMENT '扩展属性',
+    `form_show`       BIT(1)       DEFAULT NULL COMMENT '是否出现在表单',
+    `form_type`       VARCHAR(255) DEFAULT NULL COMMENT '表单类型',
+    `list_show`       BIT(1)       DEFAULT NULL COMMENT '是否出现在列表',
+    `not_null`        BIT(1)       DEFAULT NULL COMMENT '不允许为空',
+    `query_type`      VARCHAR(255) DEFAULT NULL COMMENT '查询类型',
+    `date_expression` VARCHAR(255) DEFAULT NULL COMMENT '日期表达式',
+    `note`            VARCHAR(255) DEFAULT NULL COMMENT '备注',
+    `create_by`       VARCHAR(255) DEFAULT NULL COMMENT '创建者',
+    `update_by`       VARCHAR(255) DEFAULT NULL COMMENT '更新者',
+    `create_time`     DATETIME     DEFAULT NULL COMMENT '创建时间',
+    `update_time`     DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`) USING BTREE,
+    KEY `key_table_name`(`table_name`)
 )
     ENGINE = InnoDB
     DEFAULT CHARSET = `utf8`
     ROW_FORMAT = COMPACT
-    COMMENT ='代码生成字段信息存储';
+    COMMENT ='代码生成-字段配置';
 
 -- ----------------------------
--- Table structure for code_gen_config
+-- Table structure for code_global_config
 -- ----------------------------
-DROP TABLE IF EXISTS `code_gen_config`;
-CREATE TABLE `code_gen_config` (
-    `config_id`   BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-    `table_name`  VARCHAR(255) DEFAULT NULL COMMENT '表名',
-    `author`      VARCHAR(255) DEFAULT NULL COMMENT '作者',
-    `cover`       BIT(1)       DEFAULT NULL COMMENT '是否覆盖',
-    `module_name` VARCHAR(255) DEFAULT NULL COMMENT '模块名称',
-    `pack`        VARCHAR(255) DEFAULT NULL COMMENT '至于哪个包下',
-    `path`        VARCHAR(255) DEFAULT NULL COMMENT '前端代码生成的路径',
-    `api_path`    VARCHAR(255) DEFAULT NULL COMMENT '前端Api文件路径',
-    `prefix`      VARCHAR(255) DEFAULT NULL COMMENT '表前缀',
-    `api_alias`   VARCHAR(255) DEFAULT NULL COMMENT '接口名称',
-    PRIMARY KEY (`config_id`) USING BTREE,
-    KEY `idx_table_name`(`table_name`(100))
+DROP TABLE IF EXISTS `code_global_config`;
+CREATE TABLE `code_global_config` (
+    `id`           BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `table_schema` VARCHAR(255) DEFAULT NULL COMMENT '数据库Schema',
+    `table_name`   VARCHAR(255) DEFAULT NULL COMMENT '数据库Table',
+    `author`       VARCHAR(255) DEFAULT NULL COMMENT '作者',
+    `cover`        BIT(1)       DEFAULT NULL COMMENT '是否覆盖',
+    `module_name`  VARCHAR(255) DEFAULT NULL COMMENT '模块名称',
+    `pack`         VARCHAR(255) DEFAULT NULL COMMENT '至于哪个包下',
+    `path`         VARCHAR(255) DEFAULT NULL COMMENT '前端代码生成的路径',
+    `api_path`     VARCHAR(255) DEFAULT NULL COMMENT '前端Api文件路径',
+    `prefix`       VARCHAR(255) DEFAULT NULL COMMENT '表前缀',
+    `api_alias`    VARCHAR(255) DEFAULT NULL COMMENT '接口名称',
+    PRIMARY KEY (`id`) USING BTREE,
+    KEY `key_table_name`(`table_name`(100))
 )
     ENGINE = InnoDB
     DEFAULT CHARSET = `utf8`
     ROW_FORMAT = COMPACT
-    COMMENT ='代码生成器配置';
+    COMMENT ='代码生成-全局配置';
 
 -- ----------------------------
 -- Table structure for mnt_app

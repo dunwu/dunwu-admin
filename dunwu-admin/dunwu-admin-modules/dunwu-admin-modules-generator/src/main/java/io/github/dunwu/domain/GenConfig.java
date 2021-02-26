@@ -33,7 +33,7 @@ import javax.validation.constraints.NotBlank;
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "code_gen_config")
+@Table(name = "code_global_config")
 public class GenConfig implements Serializable {
 
     public GenConfig(String tableName) {

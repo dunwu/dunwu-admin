@@ -1,24 +1,9 @@
-/*
- *  Copyright 2019-2020 Zheng Jie
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
 package io.github.dunwu.util;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.template.*;
-import io.github.dunwu.domain.ColumnInfo;
 import io.github.dunwu.domain.GenConfig;
+import io.github.dunwu.modules.generator.entity.dto.CodeColumnConfigDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.ObjectUtils;
 
@@ -84,7 +69,7 @@ public class GenUtil {
         return templateNames;
     }
 
-    public static List<Map<String, Object>> preview(List<ColumnInfo> columns, GenConfig genConfig) {
+    public static List<Map<String, Object>> preview(List<CodeColumnConfigDto> columns, GenConfig genConfig) {
         Map<String, Object> genMap = getGenMap(columns, genConfig);
         List<Map<String, Object>> genList = new ArrayList<>();
         // 获取后端模版
@@ -111,7 +96,7 @@ public class GenUtil {
         return genList;
     }
 
-    public static String download(List<ColumnInfo> columns, GenConfig genConfig) throws IOException {
+    public static String download(List<CodeColumnConfigDto> columns, GenConfig genConfig) throws IOException {
         String tempPath = new StringBuilder()
             .append(SYS_TEM_DIR)
             .append(TEMP_DIR)
@@ -165,7 +150,7 @@ public class GenUtil {
         return tempPath;
     }
 
-    public static void generatorCode(List<ColumnInfo> columnInfos, GenConfig genConfig) throws IOException {
+    public static void generatorCode(List<CodeColumnConfigDto> columnInfos, GenConfig genConfig) throws IOException {
         Map<String, Object> genMap = getGenMap(columnInfos, genConfig);
 
         TemplateEngine engine = TemplateUtil.createEngine(
@@ -219,7 +204,7 @@ public class GenUtil {
     }
 
     // 获取模版数据
-    private static Map<String, Object> getGenMap(List<ColumnInfo> columnInfos, GenConfig genConfig) {
+    private static Map<String, Object> getGenMap(List<CodeColumnConfigDto> columnInfos, GenConfig genConfig) {
         // 存储模版字段数据
         Map<String, Object> genMap = new HashMap<>(16);
         // 接口别名
@@ -276,19 +261,19 @@ public class GenUtil {
         // 存储不为空的字段信息
         List<Map<String, Object>> isNotNullColumns = new ArrayList<>();
 
-        for (ColumnInfo column : columnInfos) {
+        for (CodeColumnConfigDto column : columnInfos) {
             Map<String, Object> listMap = new HashMap<>(16);
             // 字段描述
-            listMap.put("remark", column.getRemark());
+            listMap.put("remark", column.getNote());
             // 字段类型
-            listMap.put("columnKey", column.getKeyType());
+            listMap.put("columnKey", column.getColumnKey());
             // 主键类型
             String colType = ColUtil.cloToJava(column.getColumnType());
             // 小写开头的字段名
             String changeColumnName = StringUtils.toCamelCase(column.getColumnName());
             // 大写开头的字段名
             String capitalColumnName = StringUtils.toCapitalizeCamelCase(column.getColumnName());
-            if (PK.equals(column.getKeyType())) {
+            if (PK.equals(column.getColumnKey())) {
                 // 存储主键类型
                 genMap.put("pkColumnType", colType);
                 // 存储小写开头的字段名
@@ -333,8 +318,8 @@ public class GenUtil {
             // 字典名称
             listMap.put("dictName", column.getDictName());
             // 日期注解
-            listMap.put("dateAnnotation", column.getDateAnnotation());
-            if (StringUtils.isNotBlank(column.getDateAnnotation())) {
+            listMap.put("dateAnnotation", column.getDateExpression());
+            if (StringUtils.isNotBlank(column.getDateExpression())) {
                 genMap.put("hasDateAnnotation", true);
             }
             // 添加非空字段信息

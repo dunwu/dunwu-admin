@@ -48,9 +48,9 @@
             >
               <el-table-column prop="columnName" label="字段名称" />
               <el-table-column prop="columnType" label="字段类型" />
-              <el-table-column prop="remark" label="字段描述">
+              <el-table-column prop="note" label="字段描述">
                 <template slot-scope="scope">
-                  <el-input v-model="data[scope.$index].remark" size="mini" class="edit-input" />
+                  <el-input v-model="data[scope.$index].note" size="mini" class="edit-input" />
                 </template>
               </el-table-column>
               <el-table-column align="center" label="必填" width="70px">
@@ -134,7 +134,7 @@
                     <el-option
                       v-for="item in dicts"
                       :key="item.id"
-                      :label="item.remark === '' ? item.name : item.remark"
+                      :label="item.note === '' ? item.name : item.note"
                       :value="item.name"
                     />
                   </el-select>
