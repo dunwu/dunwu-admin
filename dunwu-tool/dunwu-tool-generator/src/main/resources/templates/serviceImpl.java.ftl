@@ -69,22 +69,22 @@ public class ${table.serviceImplName} extends ${superServiceImplClass} implement
 
     @Override
     public Page<${table.dtoName}> pojoPageByQuery(Object query, Pageable pageable) {
-        return dao.pojoPageByQuery(query, pageable, ${table.dtoName}.class);
+        return dao.pojoPageByQuery(query, pageable, this::doToDto);
     }
 
     @Override
     public List<${table.dtoName}> pojoListByQuery(Object query) {
-        return dao.pojoListByQuery(query, ${table.dtoName}.class);
+        return dao.pojoListByQuery(query, this::doToDto);
     }
 
     @Override
     public ${table.dtoName} pojoById(Serializable id) {
-        return dao.pojoById(id, ${table.dtoName}.class);
+        return dao.pojoById(id, this::doToDto);
     }
 
     @Override
     public ${table.dtoName} pojoByQuery(Object query) {
-        return dao.pojoByQuery(query, ${table.dtoName}.class);
+        return dao.pojoByQuery(query, this::doToDto);
     }
 
     @Override
@@ -94,13 +94,13 @@ public class ${table.serviceImplName} extends ${superServiceImplClass} implement
 
     @Override
     public void exportList(Collection<Serializable> ids, HttpServletResponse response) throws IOException {
-        List<${table.dtoName}> list = dao.pojoListByIds(ids, ${table.dtoName}.class);
+        List<${table.dtoName}> list = dao.pojoListByIds(ids, this::doToDto);
         dao.exportDtoList(list, response);
     }
 
     @Override
     public void exportPage(Object query, Pageable pageable, HttpServletResponse response) throws IOException {
-        Page<${table.dtoName}> page = dao.pojoPageByQuery(query, pageable, ${table.dtoName}.class);
+        Page<${table.dtoName}> page = dao.pojoPageByQuery(query, pageable, this::doToDto);
         dao.exportDtoList(page.getContent(), response);
     }
 

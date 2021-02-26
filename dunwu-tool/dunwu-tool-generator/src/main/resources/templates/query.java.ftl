@@ -36,14 +36,14 @@ import java.util.List;
 @TableName("${table.name}")
 </#if>
 <#if swagger2>
-@ApiModel(value = "${entity}Query", description = "${table.comment!}")
+@ApiModel(value = "${table.queryName}", description = "${table.comment!}")
 </#if>
 <#if superEntityClass??>
 public class ${entity} extends ${superEntityClass}<#if activeRecord><${entity}></#if> {
 <#elseif activeRecord>
 public class ${entity} extends Model<${entity}> {
 <#else>
-public class ${entity}Query implements Serializable {
+public class ${table.queryName} implements Serializable {
 </#if>
 
 <#if entitySerialVersionUID>

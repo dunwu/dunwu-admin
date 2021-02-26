@@ -72,7 +72,7 @@ public class ${table.controllerName} {
     @ApiOperation("批量添加 ${entity} 记录")
     </#if>
     @PostMapping("add/batch")
-    public BaseResult addBatch(@Validated(AddCheck.class) @RequestBody Collection<entity> list) {
+    public BaseResult addBatch(@Validated(AddCheck.class) @RequestBody Collection<${entity}> list) {
         service.saveBatch(list);
         return BaseResult.ok();
     }
@@ -82,7 +82,7 @@ public class ${table.controllerName} {
     @ApiOperation("更新一条 ${entity} 记录")
     </#if>
     @PostMapping("edit")
-    public BaseResult update(@Validated(EditCheck.class) @RequestBody ${entity} entity) {
+    public BaseResult edit(@Validated(EditCheck.class) @RequestBody ${entity} entity) {
         service.updateById(entity);
         return BaseResult.ok();
     }

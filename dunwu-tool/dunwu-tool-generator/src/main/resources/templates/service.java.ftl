@@ -132,5 +132,21 @@ public interface ${table.serviceName} extends ${superServiceClass} {
      */
     void exportPage(Object query, Pageable pageable, HttpServletResponse response) throws IOException;
 
+    /**
+     * {@link ${entity}} 转为 {@link ${table.dtoName}}
+     *
+     * @param model 数据实体
+     * @return /
+     */
+    ${table.dtoName} doToDto(${entity} model);
+
+    /**
+     * {@link ${table.dtoName}} 转为 {@link ${entity}}
+     *
+     * @param dto Dto 实体
+     * @return /
+     */
+    ${entity} dtoToDo(${table.dtoName} dto);
+
 }
 </#if>

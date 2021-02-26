@@ -10,7 +10,6 @@ import io.github.dunwu.modules.generator.entity.query.CodeColumnConfigQuery;
 import io.github.dunwu.modules.generator.service.CodeColumnConfigService;
 import io.github.dunwu.modules.generator.service.TableService;
 import io.github.dunwu.util.StringUtils;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -30,11 +29,16 @@ import javax.servlet.http.HttpServletResponse;
  * @since 2021-02-26
  */
 @Service
-@RequiredArgsConstructor
 public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColumnConfigService {
 
     private final CodeColumnConfigDao dao;
     private final TableService tableService;
+
+    public CodeColumnConfigServiceImpl(CodeColumnConfigDao dao,
+        TableService tableService) {
+        this.dao = dao;
+        this.tableService = tableService;
+    }
 
     @Override
     public boolean save(CodeColumnConfig entity) {

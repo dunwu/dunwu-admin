@@ -129,10 +129,22 @@ public interface CodeColumnConfigService extends IService {
      */
     void exportPage(Object query, Pageable pageable, HttpServletResponse response) throws IOException;
 
-    void sync(Collection<String> tables);
-
+    /**
+     * {@link CodeColumnConfig} 转为 {@link CodeColumnConfigDto}
+     *
+     * @param model 数据实体
+     * @return /
+     */
     CodeColumnConfigDto doToDto(CodeColumnConfig model);
 
+    /**
+     * {@link CodeColumnConfigDto} 转为 {@link CodeColumnConfig}
+     *
+     * @param dto Dto 实体
+     * @return /
+     */
     CodeColumnConfig dtoToDo(CodeColumnConfigDto dto);
+
+    void sync(Collection<String> tables);
 
 }
