@@ -245,7 +245,7 @@ public class DefaultCodeGenerator implements ICodeGenerator {
             }
         };
         List<FileOutConfig> focList = new ArrayList<>();
-        focList.add(new FileOutConfig("/templates/mapper.xml.ftl") {
+        focList.add(new FileOutConfig("/templates/backend/mapper.xml.ftl") {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 StringBuilder sb = new StringBuilder(resourcesDir);

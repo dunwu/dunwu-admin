@@ -59,17 +59,17 @@ public interface ConstVal {
     String KT_SUFFIX = ".kt";
     String XML_SUFFIX = ".xml";
 
-    String TEMPLATE_XML = "/templates/mapper.xml";
-    String TEMPLATE_ENTITY_JAVA = "/templates/entity.java";
-    String TEMPLATE_DTO_JAVA = "/templates/dto.java";
-    String TEMPLATE_QUERY_JAVA = "/templates/query.java";
-    String TEMPLATE_ENTITY_KT = "/templates/entity.kt";
-    String TEMPLATE_MAPPER = "/templates/mapper.java";
-    String TEMPLATE_DAO = "/templates/dao.java";
-    String TEMPLATE_DAO_IMPL = "/templates/daoImpl.java";
-    String TEMPLATE_SERVICE = "/templates/service.java";
-    String TEMPLATE_SERVICE_IMPL = "/templates/serviceImpl.java";
-    String TEMPLATE_CONTROLLER = "/templates/controller.java";
+    String TEMPLATE_XML = "/templates/backend/mapper.xml";
+    String TEMPLATE_ENTITY_JAVA = "/templates/backend/entity.java";
+    String TEMPLATE_DTO_JAVA = "/templates/backend/dto.java";
+    String TEMPLATE_QUERY_JAVA = "/templates/backend/query.java";
+    String TEMPLATE_ENTITY_KT = "/templates/backend/entity.kt";
+    String TEMPLATE_MAPPER = "/templates/backend/mapper.java";
+    String TEMPLATE_DAO = "/templates/backend/dao.java";
+    String TEMPLATE_DAO_IMPL = "/templates/backend/daoImpl.java";
+    String TEMPLATE_SERVICE = "/templates/backend/service.java";
+    String TEMPLATE_SERVICE_IMPL = "/templates/backend/serviceImpl.java";
+    String TEMPLATE_CONTROLLER = "/templates/backend/controller.java";
 
     String VM_LOAD_PATH_KEY = "file.resource.loader.class";
     String VM_LOAD_PATH_VALUE = "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader";
