@@ -20,7 +20,6 @@
     <module>dunwu-admin-modules</module>
     <module>dunwu-admin-system</module>
     <module>dunwu-admin-tools</module>
-    <module>dunwu-admin-generator</module>
   </modules>
 
   <properties>

@@ -32,4 +32,17 @@
 `-- vue.config.js				# vue 项目顶级配置
 ```
 
+## 快速入门
+
+### 环境要求
+
+Nodejs 11.0+
+
+### 启动/构建
+
+安装项目的依赖：`npm install`
+
+开发环境启动：`npm run dev`
+
+生产环境构建：`npm run build`
 

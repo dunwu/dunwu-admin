@@ -15,5 +15,6 @@
 
   <modules>
     <module>dunwu-admin-modules-monitor</module>
+    <module>dunwu-admin-modules-generator</module>
   </modules>
 </project>

@@ -9,14 +9,11 @@ import io.github.dunwu.modules.monitor.dao.LogRecordDao;
 import io.github.dunwu.modules.monitor.entity.LogRecord;
 import io.github.dunwu.modules.monitor.entity.dto.LogDto;
 import io.github.dunwu.modules.monitor.entity.query.LogQuery;
-import io.github.dunwu.util.PageUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 

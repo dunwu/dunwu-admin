@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>dunwu-admin-generator</artifactId>
+    <artifactId>dunwu-admin-modules-generator</artifactId>
 
     <properties>
         <configuration.version>1.9</configuration.version>

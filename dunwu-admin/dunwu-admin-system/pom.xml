@@ -21,7 +21,7 @@
     <!-- 代码生成模块 -->
     <dependency>
       <groupId>io.github.dunwu</groupId>
-      <artifactId>dunwu-admin-generator</artifactId>
+      <artifactId>dunwu-admin-modules-generator</artifactId>
       <version>2.6</version>
       <exclusions>
         <exclusion>
