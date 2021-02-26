@@ -160,11 +160,11 @@ public class ConfigBuilder {
         // 包信息
         packageInfo = new HashMap<>(8);
         packageInfo.put(ConstVal.MODULE_NAME, config.getModuleName());
+        packageInfo.put(ConstVal.XML, config.getXml() + StringPool.SLASH + config.getModuleName());
         packageInfo.put(ConstVal.ENTITY, joinPackage(config.getParent(), config.getEntity()));
         packageInfo.put(ConstVal.DTO, joinPackage(config.getParent(), config.getDto()));
         packageInfo.put(ConstVal.QUERY, joinPackage(config.getParent(), config.getQuery()));
         packageInfo.put(ConstVal.MAPPER, joinPackage(config.getParent(), config.getMapper()));
-        packageInfo.put(ConstVal.XML, joinPackage(config.getParent(), config.getXml()));
         packageInfo.put(ConstVal.DAO, joinPackage(config.getParent(), config.getDao()));
         packageInfo.put(ConstVal.DAO_IMPL, joinPackage(config.getParent(), config.getDaoImpl()));
         packageInfo.put(ConstVal.SERVICE, joinPackage(config.getParent(), config.getService()));
@@ -178,18 +178,18 @@ public class ConfigBuilder {
         } else {
             // 生成路径信息
             pathInfo = new HashMap<>(6);
-            setPathInfo(pathInfo, template.getEntity(getGlobalConfig().isKotlin()), outputDir, ConstVal.ENTITY_PATH,
-                ConstVal.ENTITY);
-            setPathInfo(pathInfo, template.getDto(), outputDir, ConstVal.DTO_PATH, ConstVal.DTO);
-            setPathInfo(pathInfo, template.getQuery(), outputDir, ConstVal.QUERY_PATH, ConstVal.QUERY);
-            setPathInfo(pathInfo, template.getMapper(), outputDir, ConstVal.MAPPER_PATH, ConstVal.MAPPER);
-            setPathInfo(pathInfo, template.getXml(), outputDir, ConstVal.XML_PATH, ConstVal.XML);
-            setPathInfo(pathInfo, template.getDao(), outputDir, ConstVal.DAO_PATH, ConstVal.DAO);
-            setPathInfo(pathInfo, template.getDaoImpl(), outputDir, ConstVal.DAO_IMPL_PATH, ConstVal.DAO_IMPL);
-            setPathInfo(pathInfo, template.getService(), outputDir, ConstVal.SERVICE_PATH, ConstVal.SERVICE);
-            setPathInfo(pathInfo, template.getServiceImpl(), outputDir, ConstVal.SERVICE_IMPL_PATH,
-                ConstVal.SERVICE_IMPL);
-            setPathInfo(pathInfo, template.getController(), outputDir, ConstVal.CONTROLLER_PATH, ConstVal.CONTROLLER);
+            String javaDir = outputDir + "/src/main/java";
+            String resourcesDir = outputDir + "/src/main/resources";
+            setPathInfo(pathInfo, template.getEntity(getGlobalConfig().isKotlin()), javaDir, ConstVal.ENTITY_PATH, ConstVal.ENTITY);
+            setPathInfo(pathInfo, template.getDto(), javaDir, ConstVal.DTO_PATH, ConstVal.DTO);
+            setPathInfo(pathInfo, template.getQuery(), javaDir, ConstVal.QUERY_PATH, ConstVal.QUERY);
+            setPathInfo(pathInfo, template.getMapper(), javaDir, ConstVal.MAPPER_PATH, ConstVal.MAPPER);
+            setPathInfo(pathInfo, template.getDao(), javaDir, ConstVal.DAO_PATH, ConstVal.DAO);
+            setPathInfo(pathInfo, template.getDaoImpl(), javaDir, ConstVal.DAO_IMPL_PATH, ConstVal.DAO_IMPL);
+            setPathInfo(pathInfo, template.getService(), javaDir, ConstVal.SERVICE_PATH, ConstVal.SERVICE);
+            setPathInfo(pathInfo, template.getServiceImpl(), javaDir, ConstVal.SERVICE_IMPL_PATH, ConstVal.SERVICE_IMPL);
+            setPathInfo(pathInfo, template.getController(), javaDir, ConstVal.CONTROLLER_PATH, ConstVal.CONTROLLER);
+            setPathInfo(pathInfo, template.getXml(), resourcesDir, ConstVal.XML_PATH, ConstVal.XML);
         }
     }
 

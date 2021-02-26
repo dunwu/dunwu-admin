@@ -112,10 +112,9 @@ public class DefaultCodeGenerator implements ICodeGenerator {
     @Override
     public GlobalConfig getGlobalConfig(Properties properties) {
         // 全局配置
-        String javaDir = getPropertie(properties, MybatisPlusGeneratorProps.GC_JAVA_DIR);
+        String outputDir = getPropertie(properties, MybatisPlusGeneratorProps.OUTPUT_DIR);
         String authorName = getPropertie(properties, MybatisPlusGeneratorProps.GC_AUTHOR_NAME);
-        boolean enableSwagger =
-            Boolean.parseBoolean(getPropertie(properties, MybatisPlusGeneratorProps.GC_ENABLE_SWAGGER));
+        boolean enableSwagger = Boolean.parseBoolean(getPropertie(properties, MybatisPlusGeneratorProps.GC_ENABLE_SWAGGER));
         String xmlName = getPropertie(properties, MybatisPlusGeneratorProps.GC_XML_NAME);
         String mapperName = getPropertie(properties, MybatisPlusGeneratorProps.GC_MAPPER_NAME);
         String daoName = getPropertie(properties, MybatisPlusGeneratorProps.GC_DAO_NAME);
@@ -128,7 +127,7 @@ public class DefaultCodeGenerator implements ICodeGenerator {
         gc.setOpen(false)
           .setFileOverride(true)
           .setActiveRecord(false)
-          .setOutputDir(javaDir)
+          .setOutputDir(outputDir)
           .setXmlName(xmlName)
           .setMapperName(mapperName)
           .setDaoName(daoName)
@@ -236,7 +235,7 @@ public class DefaultCodeGenerator implements ICodeGenerator {
      */
     @Override
     public InjectionConfig getInjectionConfig(Properties properties, PackageConfig pc) {
-        String resourcesDir = getPropertie(properties, MybatisPlusGeneratorProps.GC_RESOURCE_DIR);
+        String resourcesDir = getPropertie(properties, MybatisPlusGeneratorProps.OUTPUT_DIR) + "/src/main/resources";
 
         InjectionConfig cfg = new InjectionConfig() {
             @Override
@@ -271,7 +270,7 @@ public class DefaultCodeGenerator implements ICodeGenerator {
      */
     @Override
     public TemplateConfig getTemplateConfig() {
-        return new TemplateConfig().setXml(null);
+        return new TemplateConfig();
     }
 
     private AutoGenerator newAutoGenerator() {
@@ -292,7 +291,7 @@ public class DefaultCodeGenerator implements ICodeGenerator {
         StrategyConfig sc = getStrategyConfig(properties, pc);
 
         // 自定义配置
-        InjectionConfig cfg = getInjectionConfig(properties, pc);
+        // InjectionConfig cfg = getInjectionConfig(properties, pc);
 
         // 自定义 controller 模板
         TemplateConfig tc = getTemplateConfig();
@@ -304,7 +303,7 @@ public class DefaultCodeGenerator implements ICodeGenerator {
                  .setDataSource(dsc)
                  .setPackageInfo(pc)
                  .setStrategy(sc)
-                 .setCfg(cfg)
+                 // .setCfg(cfg)
                  .setTemplate(tc);
         return generator;
     }

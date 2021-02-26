@@ -28,16 +28,9 @@ public enum MybatisPlusGeneratorProps {
 
     // ------------------------------------- 全局配置 -------------------------------------
     /**
-     * java 根路径
+     * 输出根路径
      */
-    GC_JAVA_DIR("mybatis.generator.gc.java.dir",
-        System.getProperty("user.dir") + "/src/main/java"),
-
-    /**
-     * resources 根路径
-     */
-    GC_RESOURCE_DIR("mybatis.generator.gc.resources.dir",
-        System.getProperty("user.dir") + "/src/main/resources"),
+    OUTPUT_DIR("mybatis.generator.gc.output.dir", System.getProperty("user.dir")),
     /**
      * 是否自动生成 Swagger 注解
      */
