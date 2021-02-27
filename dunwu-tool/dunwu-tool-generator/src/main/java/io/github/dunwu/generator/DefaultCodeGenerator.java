@@ -209,7 +209,7 @@ public class DefaultCodeGenerator implements ICodeGenerator {
         StrategyConfig config = new StrategyConfig();
         config.setEntityLombokModel(true)
           .setRestControllerStyle(true)
-          .setControllerMappingHyphenStyle(true)
+          .setControllerMappingHyphenStyle(false)
           .setNaming(NamingStrategy.underline_to_camel)
           .setColumnNaming(NamingStrategy.underline_to_camel)
           .setSuperDaoClass(superDao)

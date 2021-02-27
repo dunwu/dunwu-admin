@@ -39,6 +39,8 @@ public interface ConstVal {
     String SERVICE_IMPL = "ServiceImpl";
     String MAPPER = "Mapper";
     String CONTROLLER = "Controller";
+    String API = "Api";
+    String LIST = "List";
 
     String XML_PATH = "xml_path";
     String ENTITY_PATH = "entity_path";
@@ -51,7 +53,7 @@ public interface ConstVal {
     String MAPPER_PATH = "mapper_path";
     String CONTROLLER_PATH = "controller_path";
     String API_PATH = "api_path";
-    String INDEX_PATH = "index_path";
+    String LIST_PATH = "list_path";
 
     String JAVA_TMPDIR = "java.io.tmpdir";
     String UTF8 = StandardCharsets.UTF_8.name();
@@ -60,7 +62,8 @@ public interface ConstVal {
     String JAVA_SUFFIX = StringPool.DOT_JAVA;
     String KT_SUFFIX = ".kt";
     String XML_SUFFIX = ".xml";
-    String API_FILE_NAME = "api.js";
+    String JS_SUFFIX = ".js";
+    String VUE_SUFFIX = ".vue";
 
     String TEMPLATE_XML = "/templates/backend/mapper.xml";
     String TEMPLATE_ENTITY_JAVA = "/templates/backend/entity.java";
@@ -74,7 +77,7 @@ public interface ConstVal {
     String TEMPLATE_SERVICE_IMPL = "/templates/backend/serviceImpl.java";
     String TEMPLATE_CONTROLLER = "/templates/backend/controller.java";
     String TEMPLATE_API = "/templates/frontend/api.js";
-    String TEMPLATE_INDEX = "/templates/frontend/index.vue";
+    String TEMPLATE_LIST = "/templates/frontend/list.vue";
 
     String VM_LOAD_PATH_KEY = "file.resource.loader.class";
     String VM_LOAD_PATH_VALUE = "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader";

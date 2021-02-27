@@ -43,7 +43,7 @@ public class TemplateConfig {
     private String controller = ConstVal.TEMPLATE_CONTROLLER;
     private String xml = ConstVal.TEMPLATE_XML;
     private String api = ConstVal.TEMPLATE_API;
-    private String index = ConstVal.TEMPLATE_INDEX;
+    private String list = ConstVal.TEMPLATE_LIST;
 
     public String getEntity(boolean kotlin) {
         return kotlin ? entityKt : entity;

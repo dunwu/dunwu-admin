@@ -86,7 +86,7 @@ public class ConfigBuilder {
     /**
      * 路径配置信息
      */
-    private Map<String, String> pathInfo;
+    private Map<String, String> pathInfoMap;
     /**
      * 策略配置
      */
@@ -121,26 +121,31 @@ public class ConfigBuilder {
         } else {
             this.globalConfig = globalConfig;
         }
-        // 模板配置
-        if (null == template) {
-            this.template = new TemplateConfig();
-        } else {
-            this.template = template;
-        }
-        // 包配置
-        if (null == packageConfig) {
-            handlerPackage(this.template, this.globalConfig.getOutputDir(), new PackageConfig());
-        } else {
-            handlerPackage(this.template, this.globalConfig.getOutputDir(), packageConfig);
-        }
-        this.dataSourceConfig = dataSourceConfig;
-        handlerDataSource(dataSourceConfig);
+
         // 策略配置
         if (null == strategyConfig) {
             this.strategyConfig = new StrategyConfig();
         } else {
             this.strategyConfig = strategyConfig;
         }
+
+        // 模板配置
+        if (null == template) {
+            this.template = new TemplateConfig();
+        } else {
+            this.template = template;
+        }
+
+        // 包配置
+        if (null == packageConfig) {
+            handlerPackage(this.template, this.globalConfig.getOutputDir(), new PackageConfig());
+        } else {
+            handlerPackage(this.template, this.globalConfig.getOutputDir(), packageConfig);
+        }
+
+        this.dataSourceConfig = dataSourceConfig;
+        handlerDataSource(dataSourceConfig);
+
         //SQLITE 数据库不支持注释获取
         commentSupported = !dataSourceConfig.getDbType().equals(DbType.SQLITE);
 
@@ -174,28 +179,37 @@ public class ConfigBuilder {
         // 自定义路径
         Map<String, String> configPathInfo = config.getPathInfo();
         if (null != configPathInfo) {
-            pathInfo = configPathInfo;
+            pathInfoMap = configPathInfo;
         } else {
             // 生成路径信息
-            pathInfo = new HashMap<>(6);
+            pathInfoMap = new HashMap<>(11);
+
+            // 设置 MyBatis Plus 各个 java 文件的包路径
             String javaDir = outputDir + "/backend/src/main/java";
+            addPathInfo(pathInfoMap, template.getEntity(getGlobalConfig().isKotlin()), javaDir, ConstVal.ENTITY_PATH,
+                ConstVal.ENTITY);
+            addPathInfo(pathInfoMap, template.getDto(), javaDir, ConstVal.DTO_PATH, ConstVal.DTO);
+            addPathInfo(pathInfoMap, template.getQuery(), javaDir, ConstVal.QUERY_PATH, ConstVal.QUERY);
+            addPathInfo(pathInfoMap, template.getMapper(), javaDir, ConstVal.MAPPER_PATH, ConstVal.MAPPER);
+            addPathInfo(pathInfoMap, template.getDao(), javaDir, ConstVal.DAO_PATH, ConstVal.DAO);
+            addPathInfo(pathInfoMap, template.getDaoImpl(), javaDir, ConstVal.DAO_IMPL_PATH, ConstVal.DAO_IMPL);
+            addPathInfo(pathInfoMap, template.getService(), javaDir, ConstVal.SERVICE_PATH, ConstVal.SERVICE);
+            addPathInfo(pathInfoMap, template.getServiceImpl(), javaDir, ConstVal.SERVICE_IMPL_PATH,
+                ConstVal.SERVICE_IMPL);
+            addPathInfo(pathInfoMap, template.getController(), javaDir, ConstVal.CONTROLLER_PATH, ConstVal.CONTROLLER);
+
+            // 设置 MyBatis Plus 的 Mapper.xml 文件的包路径
             String resourcesDir = outputDir + "/backend/src/main/resources";
+            addPathInfo(pathInfoMap, template.getXml(), resourcesDir, ConstVal.XML_PATH, ConstVal.XML);
+
+            // 设置前端文件的包路径
             String viewsDir = outputDir + "/frontend/src/views";
-            setPathInfo(pathInfo, template.getEntity(getGlobalConfig().isKotlin()), javaDir, ConstVal.ENTITY_PATH, ConstVal.ENTITY);
-            setPathInfo(pathInfo, template.getDto(), javaDir, ConstVal.DTO_PATH, ConstVal.DTO);
-            setPathInfo(pathInfo, template.getQuery(), javaDir, ConstVal.QUERY_PATH, ConstVal.QUERY);
-            setPathInfo(pathInfo, template.getMapper(), javaDir, ConstVal.MAPPER_PATH, ConstVal.MAPPER);
-            setPathInfo(pathInfo, template.getDao(), javaDir, ConstVal.DAO_PATH, ConstVal.DAO);
-            setPathInfo(pathInfo, template.getDaoImpl(), javaDir, ConstVal.DAO_IMPL_PATH, ConstVal.DAO_IMPL);
-            setPathInfo(pathInfo, template.getService(), javaDir, ConstVal.SERVICE_PATH, ConstVal.SERVICE);
-            setPathInfo(pathInfo, template.getServiceImpl(), javaDir, ConstVal.SERVICE_IMPL_PATH, ConstVal.SERVICE_IMPL);
-            setPathInfo(pathInfo, template.getController(), javaDir, ConstVal.CONTROLLER_PATH, ConstVal.CONTROLLER);
-            setPathInfo(pathInfo, template.getXml(), resourcesDir, ConstVal.XML_PATH, ConstVal.XML);
-            setPathInfo(pathInfo, template.getApi(), viewsDir, ConstVal.API_PATH, ConstVal.MODULE_NAME);
+            addPathInfo(pathInfoMap, template.getApi(), viewsDir, ConstVal.API_PATH, ConstVal.MODULE_NAME);
+            addPathInfo(pathInfoMap, template.getList(), viewsDir, ConstVal.LIST_PATH, ConstVal.MODULE_NAME);
         }
     }
 
-    private void setPathInfo(Map<String, String> pathInfo, String template, String outputDir, String path,
+    private void addPathInfo(Map<String, String> pathInfo, String template, String outputDir, String path,
         String module) {
         if (StringUtils.isNotBlank(template)) {
             pathInfo.put(path, joinPath(outputDir, packageInfo.get(module)));
@@ -361,27 +375,27 @@ public class ConfigBuilder {
             if (config.isEnableSqlFilter()) {
                 if (config.getLikeTable() != null) {
                     sql.append(" AND ")
-                        .append(dbQuery.tableName())
-                        .append(" LIKE '")
-                        .append(config.getLikeTable().getValue())
-                        .append("'");
+                       .append(dbQuery.tableName())
+                       .append(" LIKE '")
+                       .append(config.getLikeTable().getValue())
+                       .append("'");
                 } else if (config.getNotLikeTable() != null) {
                     sql.append(" AND ")
-                        .append(dbQuery.tableName())
-                        .append(" NOT LIKE '")
-                        .append(config.getNotLikeTable().getValue())
-                        .append("'");
+                       .append(dbQuery.tableName())
+                       .append(" NOT LIKE '")
+                       .append(config.getNotLikeTable().getValue())
+                       .append("'");
                 }
                 if (isInclude) {
                     sql.append(" AND ").append(dbQuery.tableName()).append(" IN (")
-                        .append(Arrays.stream(config.getInclude())
-                            .map(tb -> "'" + tb + "'")
-                            .collect(Collectors.joining(","))).append(")");
+                       .append(Arrays.stream(config.getInclude())
+                                     .map(tb -> "'" + tb + "'")
+                                     .collect(Collectors.joining(","))).append(")");
                 } else if (isExclude) {
                     sql.append(" AND ").append(dbQuery.tableName()).append(" NOT IN (")
-                        .append(Arrays.stream(config.getExclude())
-                            .map(tb -> "'" + tb + "'")
-                            .collect(Collectors.joining(","))).append(")");
+                       .append(Arrays.stream(config.getExclude())
+                                     .map(tb -> "'" + tb + "'")
+                                     .collect(Collectors.joining(","))).append(")");
                 }
             }
             TableInfo tableInfo;
@@ -519,6 +533,16 @@ public class ConfigBuilder {
             } else {
                 tableInfo.setXmlName(entityName + ConstVal.MAPPER);
             }
+            if (StringUtils.isNotBlank(globalConfig.getApiName())) {
+                tableInfo.setApiName(String.format(globalConfig.getApiName(), entityName));
+            } else {
+                tableInfo.setApiName(entityName + ConstVal.API);
+            }
+            if (StringUtils.isNotBlank(globalConfig.getListName())) {
+                tableInfo.setListName(String.format(globalConfig.getListName(), entityName));
+            } else {
+                tableInfo.setListName(entityName + ConstVal.LIST);
+            }
             // 检测导入包
             checkImportPackages(tableInfo);
         }
@@ -537,7 +561,7 @@ public class ConfigBuilder {
         } else if (globalConfig.isActiveRecord()) {
             // 无父类开启 AR 模式
             tableInfo.getImportPackages()
-                .add(com.baomidou.mybatisplus.extension.activerecord.Model.class.getCanonicalName());
+                     .add(com.baomidou.mybatisplus.extension.activerecord.Model.class.getCanonicalName());
         }
         if (null != globalConfig.getIdType()) {
             // 指定需要 IdType 场景
@@ -549,7 +573,7 @@ public class ConfigBuilder {
             tableInfo.getFields().forEach(f -> {
                 if (strategyConfig.getVersionFieldName().equals(f.getName())) {
                     tableInfo.getImportPackages()
-                        .add(com.baomidou.mybatisplus.annotation.Version.class.getCanonicalName());
+                             .add(com.baomidou.mybatisplus.annotation.Version.class.getCanonicalName());
                 }
             });
         }
@@ -673,7 +697,7 @@ public class ConfigBuilder {
                     if (null != tableFillList) {
                         // 忽略大写字段问题
                         tableFillList.stream().filter(tf -> tf.getFieldName().equalsIgnoreCase(field.getName()))
-                            .findFirst().ifPresent(tf -> field.setFill(tf.getFieldFill().name()));
+                                     .findFirst().ifPresent(tf -> field.setFill(tf.getFieldFill().name()));
                     }
                     fieldList.add(field);
                 }
@@ -750,8 +774,8 @@ public class ConfigBuilder {
      *
      * @return 路径配置
      */
-    public Map<String, String> getPathInfo() {
-        return pathInfo;
+    public Map<String, String> getPathInfoMap() {
+        return pathInfoMap;
     }
 
     public String getSuperEntityClass() {

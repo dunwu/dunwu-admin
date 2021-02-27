@@ -33,5 +33,6 @@ public enum FileType {
     SERVICE_IMPL,
     CONTROLLER,
     API,
+    LIST,
     OTHER
 }
