@@ -114,7 +114,8 @@ public class DefaultCodeGenerator implements ICodeGenerator {
         // 全局配置
         String outputDir = getPropertie(properties, MybatisPlusGeneratorProps.OUTPUT_DIR);
         String authorName = getPropertie(properties, MybatisPlusGeneratorProps.GC_AUTHOR_NAME);
-        boolean enableSwagger = Boolean.parseBoolean(getPropertie(properties, MybatisPlusGeneratorProps.GC_ENABLE_SWAGGER));
+        boolean enableSwagger = Boolean.parseBoolean(
+            getPropertie(properties, MybatisPlusGeneratorProps.GC_ENABLE_SWAGGER));
         String xmlName = getPropertie(properties, MybatisPlusGeneratorProps.GC_XML_NAME);
         String mapperName = getPropertie(properties, MybatisPlusGeneratorProps.GC_MAPPER_NAME);
         String daoName = getPropertie(properties, MybatisPlusGeneratorProps.GC_DAO_NAME);
@@ -155,14 +156,13 @@ public class DefaultCodeGenerator implements ICodeGenerator {
         String driverName = getPropertie(properties, MybatisPlusGeneratorProps.SPRING_DATASOURCE_DRIVER);
         String username = getPropertie(properties, MybatisPlusGeneratorProps.SPRING_DATASOURCE_USERNAME);
         String password = getPropertie(properties, MybatisPlusGeneratorProps.SPRING_DATASOURCE_PASSWORD);
-        DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl(url).setDriverName(driverName)
-           .setUsername(username).setPassword(password);
-        return dsc;
+        DataSourceConfig config = new DataSourceConfig();
+        config.setUrl(url).setDriverName(driverName).setUsername(username).setPassword(password);
+        return config;
     }
 
     /**
-     * 从 {@link Properties} 中尝试读取代码生成器的 package 配置 {@link PackageConfig}
+     * 从 {@link Properties} 中读取代码生成器的 package 配置 {@link PackageConfig}
      *
      * @param properties Properties
      * @return /
@@ -177,24 +177,24 @@ public class DefaultCodeGenerator implements ICodeGenerator {
         String servicePackageName = getPropertie(properties, MybatisPlusGeneratorProps.PC_SERVICE_NAME);
         String serviceImplPackageName = getPropertie(properties, MybatisPlusGeneratorProps.PC_SERVICE_IMPL_NAME);
         String xmlPackageName = getPropertie(properties, MybatisPlusGeneratorProps.PC_XML_NAME);
-        PackageConfig pc = new PackageConfig();
+        PackageConfig config = new PackageConfig();
         if (StrUtil.isNotBlank(moduleName)) {
-            pc.setModuleName(moduleName);
+            config.setModuleName(moduleName);
         }
         if (StrUtil.isNotBlank(packageName)) {
-            pc.setParent(packageName);
+            config.setParent(packageName);
         }
-        pc.setMapper(mapperPackageName)
+        config.setMapper(mapperPackageName)
           .setDao(daoPackageName)
           .setDaoImpl(daoImplPackageName)
           .setService(servicePackageName)
           .setServiceImpl(serviceImplPackageName)
           .setXml(xmlPackageName);
-        return pc;
+        return config;
     }
 
     /**
-     * 从 {@link Properties} 中尝试读取代码生成器的策略配置 {@link StrategyConfig}
+     * 从 {@link Properties} 中读取代码生成器的策略配置 {@link StrategyConfig}
      *
      * @param properties Properties
      * @return /
@@ -206,8 +206,8 @@ public class DefaultCodeGenerator implements ICodeGenerator {
         String superDao = getPropertie(properties, MybatisPlusGeneratorProps.SC_SUPER_DAO);
         String superDaoImpl = getPropertie(properties, MybatisPlusGeneratorProps.SC_SUPER_DAO_IMPL);
 
-        StrategyConfig sc = new StrategyConfig();
-        sc.setEntityLombokModel(true)
+        StrategyConfig config = new StrategyConfig();
+        config.setEntityLombokModel(true)
           .setRestControllerStyle(true)
           .setControllerMappingHyphenStyle(true)
           .setNaming(NamingStrategy.underline_to_camel)
@@ -216,19 +216,19 @@ public class DefaultCodeGenerator implements ICodeGenerator {
           .setSuperDaoImplClass(superDaoImpl);
         if (StrUtil.isNotBlank(tableName)) {
             tableName = tableName.trim();
-            sc.setInclude(tableName.split(","));
+            config.setInclude(tableName.split(","));
         } else {
-            sc.setInclude(scanner("表名"));
+            config.setInclude(scanner("表名"));
         }
 
         if (StrUtil.isNotBlank(superEntity)) {
-            sc.setSuperEntityClass(superEntity);
+            config.setSuperEntityClass(superEntity);
         }
-        return sc;
+        return config;
     }
 
     /**
-     * 从 {@link Properties} 中尝试读取代码生成器的注入配置 {@link InjectionConfig}
+     * 从 {@link Properties} 中读取代码生成器的注入配置 {@link InjectionConfig}
      *
      * @param properties Properties
      * @return /
@@ -293,7 +293,7 @@ public class DefaultCodeGenerator implements ICodeGenerator {
         // 自定义配置
         // InjectionConfig cfg = getInjectionConfig(properties, pc);
 
-        // 自定义 controller 模板
+        // 模板配置
         TemplateConfig tc = getTemplateConfig();
 
         // 将配置项注入 AutoGenerator

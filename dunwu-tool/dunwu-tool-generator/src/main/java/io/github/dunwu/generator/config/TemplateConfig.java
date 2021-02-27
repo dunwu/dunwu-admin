@@ -42,6 +42,8 @@ public class TemplateConfig {
     private String serviceImpl = ConstVal.TEMPLATE_SERVICE_IMPL;
     private String controller = ConstVal.TEMPLATE_CONTROLLER;
     private String xml = ConstVal.TEMPLATE_XML;
+    private String api = ConstVal.TEMPLATE_API;
+    private String index = ConstVal.TEMPLATE_INDEX;
 
     public String getEntity(boolean kotlin) {
         return kotlin ? entityKt : entity;

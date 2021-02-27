@@ -22,15 +22,16 @@ package io.github.dunwu.generator.config.rules;
  * @since 2018-08-07
  */
 public enum FileType {
+    XML,
     ENTITY,
     DTO,
     QUERY,
     MAPPER,
-    XML,
     DAO,
     DAO_IMPL,
     SERVICE,
     SERVICE_IMPL,
     CONTROLLER,
+    API,
     OTHER
 }

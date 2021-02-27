@@ -178,8 +178,9 @@ public class ConfigBuilder {
         } else {
             // 生成路径信息
             pathInfo = new HashMap<>(6);
-            String javaDir = outputDir + "/src/main/java";
-            String resourcesDir = outputDir + "/src/main/resources";
+            String javaDir = outputDir + "/backend/src/main/java";
+            String resourcesDir = outputDir + "/backend/src/main/resources";
+            String viewsDir = outputDir + "/frontend/src/views";
             setPathInfo(pathInfo, template.getEntity(getGlobalConfig().isKotlin()), javaDir, ConstVal.ENTITY_PATH, ConstVal.ENTITY);
             setPathInfo(pathInfo, template.getDto(), javaDir, ConstVal.DTO_PATH, ConstVal.DTO);
             setPathInfo(pathInfo, template.getQuery(), javaDir, ConstVal.QUERY_PATH, ConstVal.QUERY);
@@ -190,6 +191,7 @@ public class ConfigBuilder {
             setPathInfo(pathInfo, template.getServiceImpl(), javaDir, ConstVal.SERVICE_IMPL_PATH, ConstVal.SERVICE_IMPL);
             setPathInfo(pathInfo, template.getController(), javaDir, ConstVal.CONTROLLER_PATH, ConstVal.CONTROLLER);
             setPathInfo(pathInfo, template.getXml(), resourcesDir, ConstVal.XML_PATH, ConstVal.XML);
+            setPathInfo(pathInfo, template.getApi(), viewsDir, ConstVal.API_PATH, ConstVal.MODULE_NAME);
         }
     }
 

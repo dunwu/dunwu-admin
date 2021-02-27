@@ -144,6 +144,7 @@ public abstract class AbstractTemplateEngine {
                             entityFile);
                     }
                 }
+                // MpDto.java
                 String dtoName = tableInfo.getDtoName();
                 if (null != dtoName && null != pathInfo.get(ConstVal.DTO_PATH)) {
                     String dtoFile =
@@ -153,6 +154,7 @@ public abstract class AbstractTemplateEngine {
                         writer(objectMap, templateFilePath(template.getDto()), dtoFile);
                     }
                 }
+                // MpQuery.java
                 String queryName = tableInfo.getQueryName();
                 if (null != queryName && null != pathInfo.get(ConstVal.QUERY_PATH)) {
                     String queryFile =
@@ -170,16 +172,6 @@ public abstract class AbstractTemplateEngine {
                         + suffixJavaOrKt()), entityName);
                     if (isCreate(FileType.MAPPER, mapperFile)) {
                         writer(objectMap, templateFilePath(template.getMapper()), mapperFile);
-                    }
-                }
-                // MpMapper.xml
-                if (null != tableInfo.getXmlName() && null != pathInfo.get(ConstVal.XML_PATH)) {
-                    String xmlFile = String.format((pathInfo.get(ConstVal.XML_PATH)
-                        + File.separator
-                        + tableInfo.getXmlName()
-                        + ConstVal.XML_SUFFIX), entityName);
-                    if (isCreate(FileType.XML, xmlFile)) {
-                        writer(objectMap, templateFilePath(template.getXml()), xmlFile);
                     }
                 }
                 // IMpDao.java
@@ -230,6 +222,23 @@ public abstract class AbstractTemplateEngine {
                         + suffixJavaOrKt()), entityName);
                     if (isCreate(FileType.CONTROLLER, controllerFile)) {
                         writer(objectMap, templateFilePath(template.getController()), controllerFile);
+                    }
+                }
+                // MpMapper.xml
+                if (null != tableInfo.getXmlName() && null != pathInfo.get(ConstVal.XML_PATH)) {
+                    String xmlFile = String.format((pathInfo.get(ConstVal.XML_PATH)
+                        + File.separator
+                        + tableInfo.getXmlName()
+                        + ConstVal.XML_SUFFIX), entityName);
+                    if (isCreate(FileType.XML, xmlFile)) {
+                        writer(objectMap, templateFilePath(template.getXml()), xmlFile);
+                    }
+                }
+
+                if (null != pathInfo.get(ConstVal.API_PATH)) {
+                    String apiFile = pathInfo.get(ConstVal.API_PATH) + File.separator + ConstVal.API_FILE_NAME;
+                    if (isCreate(FileType.API, apiFile)) {
+                        writer(objectMap, templateFilePath(template.getApi()), apiFile);
                     }
                 }
             }
