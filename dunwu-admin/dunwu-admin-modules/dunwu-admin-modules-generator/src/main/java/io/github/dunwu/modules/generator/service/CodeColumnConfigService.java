@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -158,6 +159,9 @@ public interface CodeColumnConfigService extends IService {
         HttpServletRequest request, HttpServletResponse response);
 
     List<TemplateContent> getPreviewList(CodeTableConfigDto tableConfig,
+        List<CodeColumnConfigDto> columnConfigs);
+
+    Properties getConfigs(String outputDir, CodeTableConfigDto tableConfig,
         List<CodeColumnConfigDto> columnConfigs);
 
     void addOrSaveColumns(TableColumnInfoDto entity);

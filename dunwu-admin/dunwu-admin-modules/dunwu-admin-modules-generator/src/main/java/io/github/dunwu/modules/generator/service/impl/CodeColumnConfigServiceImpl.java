@@ -8,6 +8,7 @@ import cn.hutool.core.util.ZipUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.github.dunwu.data.mybatis.ServiceImpl;
 import io.github.dunwu.generator.DefaultCodeGenerator;
+import io.github.dunwu.generator.MybatisPlusGenProps;
 import io.github.dunwu.generator.engine.TemplateContent;
 import io.github.dunwu.modules.generator.dao.CodeColumnConfigDao;
 import io.github.dunwu.modules.generator.entity.CodeColumnConfig;
@@ -240,31 +241,30 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
         return jdbcTemplate.queryForObject("SELECT database()", String.class);
     }
 
-    private Properties getConfigs(String outputDir, CodeTableConfigDto tableConfig,
+    @Override
+    public Properties getConfigs(String outputDir, CodeTableConfigDto tableConfig,
         List<CodeColumnConfigDto> columnConfigs) {
-
-        // @formatter:off
         Properties properties = new Properties();
-        properties.put("spring.datasource.url", "jdbc:mysql://localhost:3306/dunwu_admin?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8");
-        properties.put("spring.datasource.driver-class-name", "com.mysql.cj.jdbc.Driver");
-        properties.put("spring.datasource.username", "root");
-        properties.put("spring.datasource.password", "root");
-        properties.put("mybatis.generator.gc.enable.swagger", "true");
-        properties.put("mybatis-plus.configuration.default-enum-type-handler", "org.apache.ibatis.type.EnumOrdinalTypeHandler");
-        properties.put("mybatis.generator.gc.output.dir", outputDir );
-        // @formatter:on
 
-        if (tableConfig != null && StrUtil.isNotBlank(tableConfig.getPack())) {
-            properties.put("mybatis.generator.pc.package.name", tableConfig.getPack());
-        } else {
-            properties.put("mybatis.generator.pc.package.name", "io.github.dunwu");
-        }
-        if (tableConfig != null && StrUtil.isNotBlank(tableConfig.getAuthor())) {
-            properties.put("mybatis.generator.gc.author.name", tableConfig.getAuthor());
-        } else {
-            properties.put("mybatis.generator.gc.author.name", "<a href=\"mailto:forbreak@163.com\">Zhang Peng</a>");
-        }
-        properties.put("mybatis.generator.sc.table.name", tableConfig.getTableName());
+        // 全局性配置
+        properties.put(MybatisPlusGenProps.OUTPUT_DIR.getKey(), outputDir);
+        properties.put(MybatisPlusGenProps.GC_AUTHOR_NAME.getKey(), tableConfig.getAuthor());
+        properties.put(MybatisPlusGenProps.GC_ENABLE_SWAGGER.getKey(), "true");
+        properties.put("mybatis-plus.configuration.default-enum-type-handler",
+            "org.apache.ibatis.type.EnumOrdinalTypeHandler");
+
+        // 数据源相关配置
+        properties.put(MybatisPlusGenProps.SPRING_DATASOURCE_URL.getKey(),
+            "jdbc:mysql://localhost:3306/dunwu_admin?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8");
+        properties.put(MybatisPlusGenProps.SPRING_DATASOURCE_DRIVER.getKey(), "com.mysql.cj.jdbc.Driver");
+        properties.put(MybatisPlusGenProps.SPRING_DATASOURCE_USERNAME.getKey(), "root");
+        properties.put(MybatisPlusGenProps.SPRING_DATASOURCE_PASSWORD.getKey(), "root");
+
+        // 包、模块配置
+        properties.put(MybatisPlusGenProps.PC_PACKAGE_NAME.getKey(), tableConfig.getPack());
+        properties.put(MybatisPlusGenProps.PC_MODULE_NAME.getKey(), tableConfig.getModuleName());
+
+        properties.put(MybatisPlusGenProps.SC_TABLE_NAME.getKey(), tableConfig.getTableName());
         return properties;
     }
 

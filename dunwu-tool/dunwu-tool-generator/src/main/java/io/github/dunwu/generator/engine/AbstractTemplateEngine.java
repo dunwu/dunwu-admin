@@ -15,6 +15,7 @@
  */
 package io.github.dunwu.generator.engine;
 
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -27,6 +28,7 @@ import io.github.dunwu.generator.config.TemplateConfig;
 import io.github.dunwu.generator.config.builder.ConfigBuilder;
 import io.github.dunwu.generator.config.po.TableInfo;
 import io.github.dunwu.generator.config.rules.FileType;
+import io.github.dunwu.tool.io.AnsiColorUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,7 +65,7 @@ public abstract class AbstractTemplateEngine {
         List<TableInfo> tableInfoList = getConfigBuilder().getTableInfoList();
         for (TableInfo tableInfo : tableInfoList) {
             Map<String, Object> objectMap = getObjectMap(tableInfo);
-            Map<String, String> pathInfo = getConfigBuilder().getPathInfoMap();
+            // Map<String, String> pathInfo = getConfigBuilder().getPathInfoMap();
             TemplateConfig template = getConfigBuilder().getTemplate();
 
             // 自定义内容
@@ -112,6 +114,7 @@ public abstract class AbstractTemplateEngine {
      * 输出 java xml 文件
      */
     public AbstractTemplateEngine batchOutput() {
+
         try {
             List<TableInfo> tableInfoList = getConfigBuilder().getTableInfoList();
             for (TableInfo tableInfo : tableInfoList) {
@@ -132,6 +135,8 @@ public abstract class AbstractTemplateEngine {
                         }
                     }
                 }
+
+                AnsiColorUtil.BOLD_BLUE.println(JSONUtil.toJsonStr(objectMap));
 
                 // 生成后端源码文件
                 outputBackendFiles(tableInfo, objectMap, pathInfoMap, template);

@@ -47,6 +47,12 @@ public class TableField {
     private IColumnType columnType;
     private String comment;
     private String fill;
+
+    private boolean notNull = true;
+    private boolean formEnabled = false;
+    private boolean listEnabled = false;
+    private String formType;
+
     /**
      * 自定义查询字段列表
      */

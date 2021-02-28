@@ -112,50 +112,51 @@ public class DefaultCodeGenerator implements ICodeGenerator {
     @Override
     public GlobalConfig getGlobalConfig(Properties properties) {
         // 全局配置
-        String outputDir = getPropertie(properties, MybatisPlusGeneratorProps.OUTPUT_DIR);
-        String authorName = getPropertie(properties, MybatisPlusGeneratorProps.GC_AUTHOR_NAME);
-        boolean enableSwagger = Boolean.parseBoolean(
-            getPropertie(properties, MybatisPlusGeneratorProps.GC_ENABLE_SWAGGER));
-        String xmlName = getPropertie(properties, MybatisPlusGeneratorProps.GC_XML_NAME);
-        String mapperName = getPropertie(properties, MybatisPlusGeneratorProps.GC_MAPPER_NAME);
-        String daoName = getPropertie(properties, MybatisPlusGeneratorProps.GC_DAO_NAME);
-        String daoImplName = getPropertie(properties, MybatisPlusGeneratorProps.GC_DAO_IMPL_NAME);
-        String serviceName = getPropertie(properties, MybatisPlusGeneratorProps.GC_SERVICE_NAME);
-        String serviceImplName = getPropertie(properties, MybatisPlusGeneratorProps.GC_SERVICE_IMPL_NAME);
-        String controllerName = getPropertie(properties, MybatisPlusGeneratorProps.GC_CONTROLLER_NAME);
+        boolean enableSwagger = PropertiesUtil.getBoolean(properties,
+            MybatisPlusGenProps.GC_ENABLE_SWAGGER.getKey(), false);
+        String outputDir = getPropertie(properties, MybatisPlusGenProps.OUTPUT_DIR);
+        String authorName = getPropertie(properties, MybatisPlusGenProps.GC_AUTHOR_NAME);
 
-        GlobalConfig gc = new GlobalConfig();
-        gc.setOpen(false)
-          .setFileOverride(true)
-          .setActiveRecord(false)
-          .setOutputDir(outputDir)
-          .setXmlName(xmlName)
-          .setMapperName(mapperName)
-          .setDaoName(daoName)
-          .setDaoImplName(daoImplName)
-          .setServiceName(serviceName)
-          .setServiceImplName(serviceImplName)
-          .setControllerName(controllerName)
-          .setSwagger2(enableSwagger);
+        String xmlName = getPropertie(properties, MybatisPlusGenProps.GC_XML_NAME);
+        String mapperName = getPropertie(properties, MybatisPlusGenProps.GC_MAPPER_NAME);
+        String daoName = getPropertie(properties, MybatisPlusGenProps.GC_DAO_NAME);
+        String daoImplName = getPropertie(properties, MybatisPlusGenProps.GC_DAO_IMPL_NAME);
+        String serviceName = getPropertie(properties, MybatisPlusGenProps.GC_SERVICE_NAME);
+        String serviceImplName = getPropertie(properties, MybatisPlusGenProps.GC_SERVICE_IMPL_NAME);
+        String controllerName = getPropertie(properties, MybatisPlusGenProps.GC_CONTROLLER_NAME);
+
+        GlobalConfig config = new GlobalConfig();
+        config.setOpen(false)
+              .setFileOverride(true)
+              .setActiveRecord(false)
+              .setOutputDir(outputDir)
+              .setXmlName(xmlName)
+              .setMapperName(mapperName)
+              .setDaoName(daoName)
+              .setDaoImplName(daoImplName)
+              .setServiceName(serviceName)
+              .setServiceImplName(serviceImplName)
+              .setControllerName(controllerName)
+              .setSwagger2(enableSwagger);
 
         if (StrUtil.isNotBlank(authorName)) {
-            gc.setAuthor(authorName);
+            config.setAuthor(authorName);
         }
-        return gc;
+        return config;
     }
 
     /**
-     * 从 {@link Properties} 中尝试读取代码生成器的数据源配置 {@link DataSourceConfig}
+     * 从 {@link Properties} 中数据源配置 {@link DataSourceConfig}
      *
      * @param properties Properties
      * @return /
      */
     @Override
     public DataSourceConfig getDataSourceConfig(Properties properties) {
-        String url = getPropertie(properties, MybatisPlusGeneratorProps.SPRING_DATASOURCE_URL);
-        String driverName = getPropertie(properties, MybatisPlusGeneratorProps.SPRING_DATASOURCE_DRIVER);
-        String username = getPropertie(properties, MybatisPlusGeneratorProps.SPRING_DATASOURCE_USERNAME);
-        String password = getPropertie(properties, MybatisPlusGeneratorProps.SPRING_DATASOURCE_PASSWORD);
+        String url = getPropertie(properties, MybatisPlusGenProps.SPRING_DATASOURCE_URL);
+        String driverName = getPropertie(properties, MybatisPlusGenProps.SPRING_DATASOURCE_DRIVER);
+        String username = getPropertie(properties, MybatisPlusGenProps.SPRING_DATASOURCE_USERNAME);
+        String password = getPropertie(properties, MybatisPlusGenProps.SPRING_DATASOURCE_PASSWORD);
         DataSourceConfig config = new DataSourceConfig();
         config.setUrl(url).setDriverName(driverName).setUsername(username).setPassword(password);
         return config;
@@ -169,14 +170,14 @@ public class DefaultCodeGenerator implements ICodeGenerator {
      */
     @Override
     public PackageConfig getPackageConfig(Properties properties) {
-        String moduleName = getPropertie(properties, MybatisPlusGeneratorProps.PC_MODULE_NAME);
-        String packageName = getPropertie(properties, MybatisPlusGeneratorProps.PC_PACKAGE_NAME);
-        String mapperPackageName = getPropertie(properties, MybatisPlusGeneratorProps.PC_MAPPER_NAME);
-        String daoPackageName = getPropertie(properties, MybatisPlusGeneratorProps.PC_DAO_NAME);
-        String daoImplPackageName = getPropertie(properties, MybatisPlusGeneratorProps.PC_DAO_IMPL_NAME);
-        String servicePackageName = getPropertie(properties, MybatisPlusGeneratorProps.PC_SERVICE_NAME);
-        String serviceImplPackageName = getPropertie(properties, MybatisPlusGeneratorProps.PC_SERVICE_IMPL_NAME);
-        String xmlPackageName = getPropertie(properties, MybatisPlusGeneratorProps.PC_XML_NAME);
+        String moduleName = getPropertie(properties, MybatisPlusGenProps.PC_MODULE_NAME);
+        String packageName = getPropertie(properties, MybatisPlusGenProps.PC_PACKAGE_NAME);
+        String mapperPackageName = getPropertie(properties, MybatisPlusGenProps.PC_MAPPER_NAME);
+        String daoPackageName = getPropertie(properties, MybatisPlusGenProps.PC_DAO_NAME);
+        String daoImplPackageName = getPropertie(properties, MybatisPlusGenProps.PC_DAO_IMPL_NAME);
+        String servicePackageName = getPropertie(properties, MybatisPlusGenProps.PC_SERVICE_NAME);
+        String serviceImplPackageName = getPropertie(properties, MybatisPlusGenProps.PC_SERVICE_IMPL_NAME);
+        String xmlPackageName = getPropertie(properties, MybatisPlusGenProps.PC_XML_NAME);
         PackageConfig config = new PackageConfig();
         if (StrUtil.isNotBlank(moduleName)) {
             config.setModuleName(moduleName);
@@ -185,11 +186,11 @@ public class DefaultCodeGenerator implements ICodeGenerator {
             config.setParent(packageName);
         }
         config.setMapper(mapperPackageName)
-          .setDao(daoPackageName)
-          .setDaoImpl(daoImplPackageName)
-          .setService(servicePackageName)
-          .setServiceImpl(serviceImplPackageName)
-          .setXml(xmlPackageName);
+              .setDao(daoPackageName)
+              .setDaoImpl(daoImplPackageName)
+              .setService(servicePackageName)
+              .setServiceImpl(serviceImplPackageName)
+              .setXml(xmlPackageName);
         return config;
     }
 
@@ -201,19 +202,19 @@ public class DefaultCodeGenerator implements ICodeGenerator {
      */
     @Override
     public StrategyConfig getStrategyConfig(Properties properties, PackageConfig pc) {
-        String tableName = getPropertie(properties, MybatisPlusGeneratorProps.SC_TABLE_NAME);
-        String superEntity = getPropertie(properties, MybatisPlusGeneratorProps.SC_SUPER_ENTITY);
-        String superDao = getPropertie(properties, MybatisPlusGeneratorProps.SC_SUPER_DAO);
-        String superDaoImpl = getPropertie(properties, MybatisPlusGeneratorProps.SC_SUPER_DAO_IMPL);
+        String tableName = getPropertie(properties, MybatisPlusGenProps.SC_TABLE_NAME);
+        String superEntity = getPropertie(properties, MybatisPlusGenProps.SC_SUPER_ENTITY);
+        String superDao = getPropertie(properties, MybatisPlusGenProps.SC_SUPER_DAO);
+        String superDaoImpl = getPropertie(properties, MybatisPlusGenProps.SC_SUPER_DAO_IMPL);
 
         StrategyConfig config = new StrategyConfig();
         config.setEntityLombokModel(true)
-          .setRestControllerStyle(true)
-          .setControllerMappingHyphenStyle(false)
-          .setNaming(NamingStrategy.underline_to_camel)
-          .setColumnNaming(NamingStrategy.underline_to_camel)
-          .setSuperDaoClass(superDao)
-          .setSuperDaoImplClass(superDaoImpl);
+              .setRestControllerStyle(true)
+              .setControllerMappingHyphenStyle(false)
+              .setNaming(NamingStrategy.underline_to_camel)
+              .setColumnNaming(NamingStrategy.underline_to_camel)
+              .setSuperDaoClass(superDao)
+              .setSuperDaoImplClass(superDaoImpl);
         if (StrUtil.isNotBlank(tableName)) {
             tableName = tableName.trim();
             config.setInclude(tableName.split(","));
@@ -235,7 +236,7 @@ public class DefaultCodeGenerator implements ICodeGenerator {
      */
     @Override
     public InjectionConfig getInjectionConfig(Properties properties, PackageConfig pc) {
-        String resourcesDir = getPropertie(properties, MybatisPlusGeneratorProps.OUTPUT_DIR) + "/src/main/resources";
+        String resourcesDir = getPropertie(properties, MybatisPlusGenProps.OUTPUT_DIR) + "/src/main/resources";
 
         InjectionConfig cfg = new InjectionConfig() {
             @Override
@@ -278,11 +279,11 @@ public class DefaultCodeGenerator implements ICodeGenerator {
             return null;
         }
 
-        // 全局配置
-        GlobalConfig gc = getGlobalConfig(properties);
-
         // 数据源配置
         DataSourceConfig dsc = getDataSourceConfig(properties);
+
+        // 全局配置
+        GlobalConfig gc = getGlobalConfig(properties);
 
         // 包名配置
         PackageConfig pc = getPackageConfig(properties);
@@ -325,7 +326,7 @@ public class DefaultCodeGenerator implements ICodeGenerator {
         throw new MybatisPlusException("请输入正确的" + tip + "！");
     }
 
-    public String getPropertie(Properties properties, MybatisPlusGeneratorProps key) {
+    public String getPropertie(Properties properties, MybatisPlusGenProps key) {
         return PropertiesUtil.getString(properties, key.getKey(), key.getValue());
     }
 

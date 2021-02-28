@@ -23,7 +23,6 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import freemarker.template.TemplateException;
 import io.github.dunwu.generator.config.*;
-import io.github.dunwu.generator.config.*;
 import io.github.dunwu.generator.config.builder.ConfigBuilder;
 import io.github.dunwu.generator.config.po.TableInfo;
 import io.github.dunwu.generator.engine.AbstractTemplateEngine;
@@ -34,8 +33,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -48,11 +46,10 @@ import java.util.List;
  * @author YangHu, tangguo, hubin
  * @since 2016-08-30
  */
+@Slf4j
 @Data
 @Accessors(chain = true)
 public class AutoGenerator {
-
-    private static final Logger logger = LoggerFactory.getLogger(AutoGenerator.class);
 
     /**
      * 配置信息
@@ -93,21 +90,21 @@ public class AutoGenerator {
      * 生成代码
      */
     public void execute() {
-        logger.debug(">>>>>>>> 准备自动生成源码文件");
+        log.debug(">>>>>>>> 准备自动生成源码文件");
         initEngine();
         // 模板引擎初始化执行文件输出
         templateEngine.mkdirs().batchOutput().open();
-        logger.debug("<<<<<<<< 自动生成源码文件完成");
+        log.debug("<<<<<<<< 自动生成源码文件完成");
     }
 
     public List<TemplateContent> preview() {
-        logger.debug(">>>>>>>> 准备自动生成源码文件预览列表");
+        log.debug(">>>>>>>> 准备自动生成源码文件预览列表");
         initEngine();
 
         List<TemplateContent> list = new ArrayList<>();
         try {
             list.addAll(templateEngine.prepare());
-            logger.debug("<<<<<<<< 自动生成源码文件预览列表完成");
+            log.debug("<<<<<<<< 自动生成源码文件预览列表完成");
         } catch (IOException | TemplateException e) {
             e.printStackTrace();
         }
@@ -184,11 +181,12 @@ public class AutoGenerator {
             if (config.getStrategyConfig().isEntityBooleanColumnRemoveIsPrefix()
                 && CollectionUtils.isNotEmpty(tableInfo.getFields())) {
                 tableInfo.getFields().stream().filter(field -> "boolean".equalsIgnoreCase(field.getPropertyType()))
-                    .filter(field -> field.getPropertyName().startsWith("is"))
-                    .forEach(field -> {
-                        field.setConvert(true);
-                        field.setPropertyName(StringUtils.removePrefixAfterPrefixToLower(field.getPropertyName(), 2));
-                    });
+                         .filter(field -> field.getPropertyName().startsWith("is"))
+                         .forEach(field -> {
+                             field.setConvert(true);
+                             field.setPropertyName(
+                                 StringUtils.removePrefixAfterPrefixToLower(field.getPropertyName(), 2));
+                         });
             }
         }
         return config.setTableInfoList(tableList);

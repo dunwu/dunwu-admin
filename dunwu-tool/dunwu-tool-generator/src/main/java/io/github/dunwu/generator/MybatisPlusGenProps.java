@@ -6,7 +6,7 @@ package io.github.dunwu.generator;
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
  * @since 2019-04-15
  */
-public enum MybatisPlusGeneratorProps {
+public enum MybatisPlusGenProps {
 
     // ------------------------------------- 数据源配置 -------------------------------------
     /**
@@ -130,7 +130,7 @@ public enum MybatisPlusGeneratorProps {
      */
     private final String value;
 
-    MybatisPlusGeneratorProps(String key, String value) {
+    MybatisPlusGenProps(String key, String value) {
         this.key = key;
         this.value = value;
     }

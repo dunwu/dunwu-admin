@@ -1,4 +1,4 @@
-<#--&lt;#&ndash;noinspection ALL&ndash;&gt;-->
+<#--noinspection ALL-->
 <#--<template>-->
 <#--  <div class="app-container">-->
 <#--    <!--工具栏&ndash;&gt;-->
@@ -106,66 +106,65 @@
 <#--  </div>-->
 <#--</template>-->
 
-<#--<script>-->
-<#--  import CRUD, {crud, form, header, presenter} from '@crud/crud'-->
-<#--  import rrOperation from '@crud/RR.operation'-->
-<#--  import crudOperation from '@crud/CRUD.operation'-->
-<#--  import udOperation from '@crud/UD.operation'-->
-<#--  import pagination from '@crud/Pagination'-->
+<script>
+import ${table.entityPath}Api from './${table.entityPath}Api'
+import CRUD, {crud, form, header, presenter} from '@crud/crud'
+import rrOperation from '@crud/RR.operation'
+import crudOperation from '@crud/CRUD.operation'
+import udOperation from '@crud/UD.operation'
+import pagination from '@crud/Pagination'
 
-<#--  const defaultForm = {<#if columns??><#list columns as column>${column.changeColumnName}: null<#if column_has_next>, </#if></#list></#if>}-->
-<#--  export default {-->
-<#--    name: '${className}',-->
-<#--    components: {pagination, crudOperation, rrOperation, udOperation},-->
-<#--    mixins: [presenter(), header(), form(defaultForm), crud()], <#if hasDict>-->
-<#--    dicts: [<#if hasDict??><#list dicts as dict>'${dict}'<#if dict_has_next>, </#if></#list></#if>], </#if>-->
-<#--    cruds() {-->
-<#--      return CRUD({-->
-<#--        title: '${apiAlias}',-->
-<#--        url: 'api/${changeClassName}',-->
-<#--        idField: '${pkChangeColName}',-->
-<#--        sort: '${pkChangeColName},desc',-->
-<#--        crudMethod: {...crud${className}}-->
-<#--      })-->
-<#--    },-->
-<#--    data() {-->
-<#--      return {-->
-<#--        permission: {-->
-<#--          add: ['admin', '${changeClassName}:add'],-->
-<#--          edit: ['admin', '${changeClassName}:edit'],-->
-<#--          del: ['admin', '${changeClassName}:del']-->
-<#--        }, rules: {-->
-<#--          <#if isNotNullColumns??>-->
-<#--          <#list isNotNullColumns as column>-->
-<#--        <#if column.istNotNull>-->
-<#--        ${column.changeColumnName}: [-->
-<#--          { required: true, message: '<#if column.remark != ''>${column.remark}</#if>不能为空', trigger: 'blur' }-->
-<#--        ]<#if column_has_next>,</#if>-->
-<#--        </#if>-->
-<#--        </#list>-->
-<#--        </#if>-->
-<#--      }<#if hasQuery>,-->
-<#--      queryTypeOptions: [-->
-<#--        <#if queryColumns??>-->
-<#--        <#list queryColumns as column>-->
-<#--        <#if column.queryType != 'BetWeen'>-->
-<#--        { key: '${column.changeColumnName}', display_name: '<#if column.remark != ''>${column.remark}<#else>${column.changeColumnName}</#if>' }<#if column_has_next>,</#if>-->
-<#--        </#if>-->
-<#--        </#list>-->
-<#--        </#if>-->
-<#--      ]-->
+const defaultForm = {<#if table.fields??><#list table.fields as field>${field.name}: null, </#list></#if>}
+export default {
+  name: '${table.entityPath}',
+  components: {pagination, crudOperation, rrOperation, udOperation},
+  mixins: [presenter(), header(), form(defaultForm), crud()],
+  cruds() {
+    return CRUD({
+      title: '${table.comment!}',
+      url: 'api/<#if package.ModuleName??>/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen}<#else>${table.entityPath}</#if>',
+      <#--idField: '${pkChangeColName}',-->
+      sort: 'updateTime,desc',
+      crudMethod: { ...${table.entityPath}Api }
+    })
+  },
+<#--  data() {-->
+<#--    return {-->
+<#--      permission: {-->
+<#--        add: ['admin', '${changeClassName}:add'],-->
+<#--        edit: ['admin', '${changeClassName}:edit'],-->
+<#--        del: ['admin', '${changeClassName}:del']-->
+<#--      }, rules: {-->
+<#--        <#if isNotNullColumns??>-->
+<#--        <#list isNotNullColumns as column>-->
+<#--      <#if column.istNotNull>-->
+<#--      ${column.changeColumnName}: [-->
+<#--        { required: true, message: '<#if column.remark != ''>${column.remark}</#if>不能为空', trigger: 'blur' }-->
+<#--      ]<#if column_has_next>,</#if>-->
 <#--      </#if>-->
-<#--    }-->
-<#--  },-->
-<#--  methods: {-->
-<#--    // 钩子：在获取表格数据之前执行，false 则代表不获取数据-->
-<#--    [CRUD.HOOK.beforeRefresh]() {-->
-<#--      return true-->
-<#--    }-->
+<#--      </#list>-->
+<#--      </#if>-->
+<#--    }<#if hasQuery>,-->
+<#--    queryTypeOptions: [-->
+<#--      <#if queryColumns??>-->
+<#--      <#list queryColumns as column>-->
+<#--      <#if column.queryType != 'BetWeen'>-->
+<#--      { key: '${column.changeColumnName}', display_name: '<#if column.remark != ''>${column.remark}<#else>${column.changeColumnName}</#if>' }<#if column_has_next>,</#if>-->
+<#--      </#if>-->
+<#--      </#list>-->
+<#--      </#if>-->
+<#--    ]-->
+<#--    </#if>-->
 <#--  }-->
-<#--}-->
-<#--</script>-->
+<#--},-->
+  methods: {
+    // 钩子：在获取表格数据之前执行，false 则代表不获取数据
+    [CRUD.HOOK.beforeRefresh]() {
+      return true
+    }
+  }
+}
+</script>
 
-<#--<style scoped>-->
-
-<#--</style>-->
+<style scoped>
+</style>

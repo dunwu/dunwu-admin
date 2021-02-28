@@ -39,8 +39,19 @@ public class TableInfo {
 
     private final Set<String> importPackages = new HashSet<>();
     private boolean convert;
+
+    /** 表名 */
     private String name;
+    /** 表备注 */
     private String comment;
+    /** 表字段 */
+    private List<TableField> fields;
+    /** 公共字段 */
+    private List<TableField> commonFields;
+    /** 字段名称，以逗号分隔 */
+    private String fieldNames;
+
+    /******************* 以下为生成的后端文件名（开始） *******************/
     private String xmlName;
     private String entityName;
     private String dtoName;
@@ -51,14 +62,12 @@ public class TableInfo {
     private String serviceName;
     private String serviceImplName;
     private String controllerName;
+    /******************* 以下为生成的后端文件名（结束） *******************/
+
+    /******************* 以下为生成的前端文件名（结束） *******************/
     private String apiName;
     private String listName;
-    private List<TableField> fields;
-    /**
-     * 公共字段
-     */
-    private List<TableField> commonFields;
-    private String fieldNames;
+    /******************* 以下为生成的前端文件名（结束） *******************/
 
     public TableInfo setConvert(boolean convert) {
         this.convert = convert;
