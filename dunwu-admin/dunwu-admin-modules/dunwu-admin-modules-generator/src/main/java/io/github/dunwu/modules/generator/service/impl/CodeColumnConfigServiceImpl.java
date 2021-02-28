@@ -2,6 +2,7 @@ package io.github.dunwu.modules.generator.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.ZipUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -18,6 +19,7 @@ import io.github.dunwu.modules.generator.entity.query.CodeColumnConfigQuery;
 import io.github.dunwu.modules.generator.service.CodeColumnConfigService;
 import io.github.dunwu.modules.generator.service.TableService;
 import io.github.dunwu.web.util.ServletUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -39,6 +41,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
  * @since 2021-02-26
  */
+@Slf4j
 @Service
 public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColumnConfigService {
 
@@ -214,12 +217,15 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
     @Override
     public void generate(CodeTableConfigDto tableConfig, List<CodeColumnConfigDto> columnConfigs,
         HttpServletRequest request, HttpServletResponse response) {
-        String tmpPath = System.getProperty("java.io.tmpdir") + "/dunwu";
+        String tmpPath = System.getProperty("java.io.tmpdir") + File.separator + "dunwu";
         Properties properties = getConfigs(tmpPath, tableConfig, columnConfigs);
         new DefaultCodeGenerator(properties).generate();
-
-        ZipUtil.zip(tmpPath + "/codes", tmpPath + "/codes.zip");
-        ServletUtil.downloadFile(request, response, new File(tmpPath + "/codes.zip"), true);
+        String codePath = tmpPath + File.separator + "codes";
+        String zipFilePath = tmpPath + File.separator + "codes.zip";
+        FileUtil.mkdir(codePath);
+        ZipUtil.zip(codePath, zipFilePath);
+        log.info("代码已生成到：{}", zipFilePath);
+        ServletUtil.downloadFile(request, response, new File(zipFilePath), true);
     }
 
     @Override
@@ -245,8 +251,7 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
         properties.put("spring.datasource.password", "root");
         properties.put("mybatis.generator.gc.enable.swagger", "true");
         properties.put("mybatis-plus.configuration.default-enum-type-handler", "org.apache.ibatis.type.EnumOrdinalTypeHandler");
-        properties.put("mybatis.generator.gc.java.dir", outputDir +  "/codes/src/main/java");
-        properties.put("mybatis.generator.gc.resources.dir", outputDir + "/codes/src/main/resouces");
+        properties.put("mybatis.generator.gc.output.dir", outputDir );
         // @formatter:on
 
         if (tableConfig != null && StrUtil.isNotBlank(tableConfig.getPack())) {

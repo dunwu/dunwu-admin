@@ -10,10 +10,13 @@ import io.github.dunwu.modules.generator.entity.CodeTableConfig;
 import io.github.dunwu.modules.generator.entity.dto.CodeTableConfigDto;
 import io.github.dunwu.modules.generator.entity.query.CodeTableConfigQuery;
 import io.github.dunwu.modules.generator.service.CodeTableConfigService;
+import io.github.dunwu.modules.generator.service.TableService;
+import io.github.dunwu.util.PageUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,10 +34,16 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 @RequestMapping("/generator/table")
 @Api(tags = "代码生成-表级别配置 Controller 类")
-@RequiredArgsConstructor
 public class CodeTableConfigController {
 
     private final CodeTableConfigService service;
+    private final TableService tableService;
+
+    public CodeTableConfigController(CodeTableConfigService service,
+        TableService tableService) {
+        this.service = service;
+        this.tableService = tableService;
+    }
 
     /** 添加一条 {@link CodeTableConfig} 记录 */
     @ApiOperation("添加一条 CodeTableConfig 记录")
@@ -123,6 +132,21 @@ public class CodeTableConfigController {
     @GetMapping("find")
     public DataResult<CodeTableConfigDto> find(CodeTableConfigQuery query) {
         return DataResult.ok(service.find(query));
+    }
+
+    @ApiOperation("查询数据库数据")
+    @GetMapping(value = "all")
+    public DataResult<Object> queryTables() {
+        return DataResult.ok(tableService.getTables());
+    }
+
+    @ApiOperation("查询数据库数据")
+    @GetMapping(value = "all/page")
+    public DataResult<Object> queryTables(@RequestParam(defaultValue = "") String name,
+        @RequestParam(defaultValue = "0") Integer page,
+        @RequestParam(defaultValue = "10") Integer size) {
+        int[] startEnd = PageUtil.transToStartEnd(page, size);
+        return DataResult.ok(tableService.getTables(name, startEnd));
     }
 
 }

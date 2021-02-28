@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getAllTable() {
   return request({
-    url: 'api/generator/tables/all',
+    url: 'api/generator/table/all',
     method: 'get'
   })
 }

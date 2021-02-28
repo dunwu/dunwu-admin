@@ -15,6 +15,7 @@
  */
 package io.github.dunwu.generator.config.builder;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
@@ -165,7 +166,8 @@ public class ConfigBuilder {
         // 包信息
         packageInfo = new HashMap<>(8);
         packageInfo.put(ConstVal.MODULE_NAME, config.getModuleName());
-        packageInfo.put(ConstVal.XML, config.getXml() + StringPool.SLASH + config.getModuleName());
+        packageInfo.put(ConstVal.XML, config.getXml() +
+            (config.getModuleName() == null ? "" : StringPool.SLASH + config.getModuleName()));
         packageInfo.put(ConstVal.ENTITY, joinPackage(config.getParent(), config.getEntity()));
         packageInfo.put(ConstVal.DTO, joinPackage(config.getParent(), config.getDto()));
         packageInfo.put(ConstVal.QUERY, joinPackage(config.getParent(), config.getQuery()));
@@ -230,8 +232,12 @@ public class ConfigBuilder {
         if (!StringUtils.endsWith(parentDir, File.separator)) {
             parentDir += File.separator;
         }
-        packageName = packageName.replaceAll("\\.", StringPool.BACK_SLASH + File.separator);
-        return parentDir + packageName;
+
+        if (StrUtil.isNotBlank(packageName)) {
+            packageName = packageName.replaceAll("\\.", StringPool.BACK_SLASH + File.separator);
+            return parentDir + packageName;
+        }
+        return parentDir;
     }
 
     /**

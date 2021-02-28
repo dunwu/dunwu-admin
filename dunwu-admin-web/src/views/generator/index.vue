@@ -93,7 +93,7 @@ export default {
   name: 'GeneratorIndex',
   components: { pagination, crudOperation, queryOperation },
   cruds() {
-    return CRUD({ url: 'api/generator/tables' })
+    return CRUD({ url: 'api/generator/table/all' })
   },
   mixins: [presenter(), header()],
   data() {
@@ -107,7 +107,7 @@ export default {
   methods: {
     toGen(tableName) {
       // 生成代码
-      generatorApi.generator(tableName, 0).then(data => {
+      generatorApi.generator(tableName, 2).then(data => {
         this.$notify({
           title: '生成成功',
           type: 'success',
@@ -117,7 +117,7 @@ export default {
     },
     toDownload(tableName) {
       // 打包下载
-      generatorApi.generator(tableName, 2).then(data => {
+      generatorApi.generator(tableName, 3).then(data => {
         downloadFile(data, tableName, 'zip')
       })
     },

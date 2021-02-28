@@ -90,6 +90,15 @@ public class DataListResult<T> extends BaseResult {
     }
 
     /**
+     * 返回成功的 {@link BaseResult}
+     *
+     * @return {@link BaseResult}
+     */
+    public static DataListResult<?> ok() {
+        return new DataListResult<>(ResultStatus.OK);
+    }
+
+    /**
      * 根据模板字符串以及参数，组装响应消息，返回成功的 {@link DataListResult}
      *
      * @param data 数据对象列表
