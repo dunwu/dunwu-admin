@@ -1,17 +1,15 @@
 package io.github.dunwu.modules.generator.entity.query;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
-import java.io.Serializable;
-import io.github.dunwu.data.core.annotation.QueryField;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.github.dunwu.data.core.annotation.QueryField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -106,6 +104,8 @@ public class CodeColumnConfigQuery implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.ARRAY, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private List<LocalDateTime> updateTime;
 
-
+    @ApiModelProperty(value = "数据库Table")
+    @QueryField(name = "tableName", type = QueryField.QueryType.IN)
+    private List<String> tables;
 
 }

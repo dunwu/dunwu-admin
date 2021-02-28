@@ -13,20 +13,20 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package io.github.dunwu.service.impl;
+package io.github.dunwu.modules.generator.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ZipUtil;
-import io.github.dunwu.domain.GenConfig;
 import io.github.dunwu.exception.BadRequestException;
 import io.github.dunwu.modules.generator.entity.CodeColumnConfig;
 import io.github.dunwu.modules.generator.entity.dto.CodeColumnConfigDto;
+import io.github.dunwu.modules.generator.entity.dto.CodeTableConfigDto;
 import io.github.dunwu.modules.generator.entity.query.CodeColumnConfigQuery;
 import io.github.dunwu.modules.generator.service.CodeColumnConfigService;
+import io.github.dunwu.modules.generator.service.GeneratorService;
 import io.github.dunwu.modules.generator.service.TableService;
-import io.github.dunwu.service.GeneratorService;
+import io.github.dunwu.modules.generator.util.GenUtil;
 import io.github.dunwu.util.FileUtil;
-import io.github.dunwu.util.GenUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,12 +73,12 @@ public class GeneratorServiceImpl implements GeneratorService {
     }
 
     @Override
-    public void generator(GenConfig genConfig, List<CodeColumnConfigDto> columns) {
-        if (genConfig.getId() == null) {
+    public void generator(CodeTableConfigDto tableConfig, List<CodeColumnConfigDto> columns) {
+        if (tableConfig.getId() == null) {
             throw new BadRequestException("请先配置生成器");
         }
         try {
-            GenUtil.generatorCode(columns, genConfig);
+            GenUtil.generatorCode(columns, tableConfig);
         } catch (IOException e) {
             log.error(e.getMessage(), e);
             throw new BadRequestException("生成失败，请手动处理已生成的文件");
@@ -86,22 +86,22 @@ public class GeneratorServiceImpl implements GeneratorService {
     }
 
     @Override
-    public ResponseEntity<Object> preview(GenConfig genConfig, List<CodeColumnConfigDto> columns) {
-        if (genConfig.getId() == null) {
+    public ResponseEntity<Object> preview(CodeTableConfigDto tableConfig, List<CodeColumnConfigDto> columns) {
+        if (tableConfig.getId() == null) {
             throw new BadRequestException("请先配置生成器");
         }
-        List<Map<String, Object>> genList = GenUtil.preview(columns, genConfig);
+        List<Map<String, Object>> genList = GenUtil.preview(columns, tableConfig);
         return new ResponseEntity<>(genList, HttpStatus.OK);
     }
 
     @Override
-    public void download(GenConfig genConfig, List<CodeColumnConfigDto> columns, HttpServletRequest request,
+    public void download(CodeTableConfigDto tableConfig, List<CodeColumnConfigDto> columns, HttpServletRequest request,
         HttpServletResponse response) {
-        if (genConfig.getId() == null) {
+        if (tableConfig.getId() == null) {
             throw new BadRequestException("请先配置生成器");
         }
         try {
-            File file = new File(GenUtil.download(columns, genConfig));
+            File file = new File(GenUtil.download(columns, tableConfig));
             String zipPath = file.getPath() + ".zip";
             ZipUtil.zip(file.getPath(), zipPath);
             FileUtil.downloadFile(request, response, new File(zipPath), true);

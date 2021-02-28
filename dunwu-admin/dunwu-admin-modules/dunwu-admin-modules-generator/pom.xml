@@ -31,6 +31,10 @@
       <groupId>io.github.dunwu</groupId>
       <artifactId>dunwu-starter-web</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.github.dunwu</groupId>
+      <artifactId>dunwu-tool-generator</artifactId>
+    </dependency>
 
     <!--模板引擎-->
     <dependency>

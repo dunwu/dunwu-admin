@@ -1,9 +1,11 @@
-package io.github.dunwu.util;
+package io.github.dunwu.modules.generator.util;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.template.*;
-import io.github.dunwu.domain.GenConfig;
 import io.github.dunwu.modules.generator.entity.dto.CodeColumnConfigDto;
+import io.github.dunwu.modules.generator.entity.dto.CodeTableConfigDto;
+import io.github.dunwu.util.FileUtil;
+import io.github.dunwu.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.ObjectUtils;
 
@@ -69,7 +71,7 @@ public class GenUtil {
         return templateNames;
     }
 
-    public static List<Map<String, Object>> preview(List<CodeColumnConfigDto> columns, GenConfig genConfig) {
+    public static List<Map<String, Object>> preview(List<CodeColumnConfigDto> columns, CodeTableConfigDto genConfig) {
         Map<String, Object> genMap = getGenMap(columns, genConfig);
         List<Map<String, Object>> genList = new ArrayList<>();
         // 获取后端模版
@@ -96,7 +98,7 @@ public class GenUtil {
         return genList;
     }
 
-    public static String download(List<CodeColumnConfigDto> columns, GenConfig genConfig) throws IOException {
+    public static String download(List<CodeColumnConfigDto> columns, CodeTableConfigDto genConfig) throws IOException {
         String tempPath = new StringBuilder()
             .append(SYS_TEM_DIR)
             .append(TEMP_DIR)
@@ -150,7 +152,8 @@ public class GenUtil {
         return tempPath;
     }
 
-    public static void generatorCode(List<CodeColumnConfigDto> columnInfos, GenConfig genConfig) throws IOException {
+    public static void generatorCode(List<CodeColumnConfigDto> columnInfos, CodeTableConfigDto genConfig)
+        throws IOException {
         Map<String, Object> genMap = getGenMap(columnInfos, genConfig);
 
         TemplateEngine engine = TemplateUtil.createEngine(
@@ -163,7 +166,8 @@ public class GenUtil {
         generatorFrontendCode(genConfig, genMap, engine);
     }
 
-    private static void generatorBackendCode(GenConfig genConfig, Map<String, Object> genMap, TemplateEngine engine)
+    private static void generatorBackendCode(CodeTableConfigDto genConfig, Map<String, Object> genMap,
+        TemplateEngine engine)
         throws IOException {
         List<String> templates = getBackendTemplateNames();
         for (String templateName : templates) {
@@ -183,7 +187,8 @@ public class GenUtil {
         }
     }
 
-    private static void generatorFrontendCode(GenConfig genConfig, Map<String, Object> genMap, TemplateEngine engine)
+    private static void generatorFrontendCode(CodeTableConfigDto genConfig, Map<String, Object> genMap,
+        TemplateEngine engine)
         throws IOException {
         List<String> templates = getFrontendTemplateNames();
         for (String templateName : templates) {
@@ -204,7 +209,7 @@ public class GenUtil {
     }
 
     // 获取模版数据
-    private static Map<String, Object> getGenMap(List<CodeColumnConfigDto> columnInfos, GenConfig genConfig) {
+    private static Map<String, Object> getGenMap(List<CodeColumnConfigDto> columnInfos, CodeTableConfigDto genConfig) {
         // 存储模版字段数据
         Map<String, Object> genMap = new HashMap<>(16);
         // 接口别名
@@ -366,7 +371,7 @@ public class GenUtil {
     /**
      * 定义后端文件路径以及名称
      */
-    private static String getAdminFilePath(String templateName, GenConfig genConfig, String className,
+    private static String getAdminFilePath(String templateName, CodeTableConfigDto genConfig, String className,
         String rootPath) {
         String projectPath = rootPath + File.separator + genConfig.getModuleName();
         String packagePath =

@@ -205,8 +205,8 @@
 <script>
 import crud from '@/mixins/crud'
 import dictApi from '@/api/system/dict'
-import { update, get } from '@/api/generator/genConfig'
-import { save, sync, generator } from '@/api/generator/generator'
+import tableConfigApi from '@/api/generator/tableConfigApi'
+import generatorApi from '@/api/generator/generator'
 export default {
   name: 'GeneratorConfig',
   components: {},
@@ -248,9 +248,10 @@ export default {
     this.tableName = this.$route.params.tableName
     this.$nextTick(() => {
       this.init()
-      get(this.tableName).then(data => {
+      tableConfigApi.find({ tableName: this.tableName }).then(data => {
+        console.log('get', this.tableName, data)
         this.form = data
-        this.form.cover = this.form.cover.toString()
+        // this.form.cover = this.form.cover.toString()
       })
       dictApi.list().then(data => {
         this.dicts = data
@@ -266,7 +267,8 @@ export default {
     },
     saveColumnConfig() {
       this.columnLoading = true
-      save(this.data)
+      generatorApi
+        .save(this.data)
         .then(res => {
           this.notify('保存成功', 'success')
           this.columnLoading = false
@@ -280,23 +282,40 @@ export default {
       this.$refs['form'].validate(valid => {
         if (valid) {
           this.configLoading = true
-          update(this.form)
-            .then(res => {
-              this.notify('保存成功', 'success')
-              this.form = res
-              this.form.cover = this.form.cover.toString()
-              this.configLoading = false
-            })
-            .catch(err => {
-              this.configLoading = false
-              console.log(err.response.data.message)
-            })
+          if (this.form.id) {
+            tableConfigApi
+              .edit(this.form)
+              .then(res => {
+                this.notify('保存成功', 'success')
+                // this.form = res
+                // this.form.cover = this.form.cover.toString()
+                this.configLoading = false
+              })
+              .catch(err => {
+                this.configLoading = false
+                console.log(err.response.data.message)
+              })
+          } else {
+            tableConfigApi
+              .add(this.form)
+              .then(res => {
+                this.notify('保存成功', 'success')
+                // this.form = res
+                // this.form.cover = this.form.cover.toString()
+                this.configLoading = false
+              })
+              .catch(err => {
+                this.configLoading = false
+                console.log(err.response.data.message)
+              })
+          }
         }
       })
     },
     sync() {
       this.syncLoading = true
-      sync([this.tableName])
+      generatorApi
+        .sync([this.tableName])
         .then(() => {
           this.init()
           this.notify('同步成功', 'success')
@@ -308,11 +327,13 @@ export default {
     },
     toGen() {
       this.genLoading = true
-      save(this.data)
+      generatorApi
+        .save(this.data)
         .then(res => {
           this.notify('保存成功', 'success')
           // 生成代码
-          generator(this.tableName, 0)
+          generatorApi
+            .generator(this.tableName, 0)
             .then(data => {
               this.genLoading = false
               this.notify('生成成功', 'success')

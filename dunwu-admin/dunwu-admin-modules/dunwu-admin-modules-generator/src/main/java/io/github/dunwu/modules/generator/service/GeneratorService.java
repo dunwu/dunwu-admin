@@ -13,10 +13,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package io.github.dunwu.service;
+package io.github.dunwu.modules.generator.service;
 
-import io.github.dunwu.domain.GenConfig;
 import io.github.dunwu.modules.generator.entity.dto.CodeColumnConfigDto;
+import io.github.dunwu.modules.generator.entity.dto.CodeTableConfigDto;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -40,29 +40,29 @@ public interface GeneratorService {
     /**
      * 代码生成
      *
-     * @param genConfig 配置信息
-     * @param columns   字段信息
+     * @param tableConfigDto 配置信息
+     * @param columns        字段信息
      */
-    void generator(GenConfig genConfig, List<CodeColumnConfigDto> columns);
+    void generator(CodeTableConfigDto tableConfigDto, List<CodeColumnConfigDto> columns);
 
     /**
      * 预览
      *
-     * @param genConfig 配置信息
-     * @param columns   字段信息
+     * @param tableConfigDto 配置信息
+     * @param columns        字段信息
      * @return /
      */
-    ResponseEntity<Object> preview(GenConfig genConfig, List<CodeColumnConfigDto> columns);
+    ResponseEntity<Object> preview(CodeTableConfigDto tableConfigDto, List<CodeColumnConfigDto> columns);
 
     /**
      * 打包下载
      *
-     * @param genConfig 配置信息
-     * @param columns   字段信息
-     * @param request   /
-     * @param response  /
+     * @param tableConfigDto 配置信息
+     * @param columns        字段信息
+     * @param request        /
+     * @param response       /
      */
-    void download(GenConfig genConfig, List<CodeColumnConfigDto> columns, HttpServletRequest request,
+    void download(CodeTableConfigDto tableConfigDto, List<CodeColumnConfigDto> columns, HttpServletRequest request,
         HttpServletResponse response);
 
 }

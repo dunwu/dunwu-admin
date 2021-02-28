@@ -1,23 +1,23 @@
-package io.github.dunwu.rest;
+package io.github.dunwu.modules.generator.controller;
 
 import io.github.dunwu.exception.BadRequestException;
 import io.github.dunwu.modules.generator.entity.CodeColumnConfig;
 import io.github.dunwu.modules.generator.entity.dto.CodeColumnConfigDto;
+import io.github.dunwu.modules.generator.entity.dto.CodeTableConfigDto;
 import io.github.dunwu.modules.generator.entity.query.CodeColumnConfigQuery;
+import io.github.dunwu.modules.generator.entity.query.CodeTableConfigQuery;
 import io.github.dunwu.modules.generator.service.CodeColumnConfigService;
+import io.github.dunwu.modules.generator.service.CodeTableConfigService;
+import io.github.dunwu.modules.generator.service.GeneratorService;
 import io.github.dunwu.modules.generator.service.TableService;
-import io.github.dunwu.service.GenConfigService;
-import io.github.dunwu.service.GeneratorService;
 import io.github.dunwu.util.PageUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,15 +27,23 @@ import javax.servlet.http.HttpServletResponse;
  * @date 2019-01-02
  */
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("generator")
 @Api(tags = "系统：代码生成管理")
 public class GeneratorController {
 
     private final GeneratorService generatorService;
-    private final GenConfigService genConfigService;
     private final TableService tableService;
-    private final CodeColumnConfigService codeColumnConfigService;
+    private final CodeTableConfigService tableConfigService;
+    private final CodeColumnConfigService columnConfigService;
+
+    public GeneratorController(GeneratorService generatorService,
+        TableService tableService, CodeTableConfigService tableConfigService,
+        CodeColumnConfigService columnConfigService) {
+        this.generatorService = generatorService;
+        this.tableService = tableService;
+        this.tableConfigService = tableConfigService;
+        this.columnConfigService = columnConfigService;
+    }
 
     @Value("${generator.enabled}")
     private Boolean generatorEnabled;
@@ -60,21 +68,14 @@ public class GeneratorController {
     public ResponseEntity<Object> queryColumns(@RequestParam String tableName) {
         CodeColumnConfigQuery query = new CodeColumnConfigQuery();
         query.setTableName(tableName);
-        List<CodeColumnConfigDto> columnInfos = codeColumnConfigService.pojoListByQuery(query);
+        List<CodeColumnConfigDto> columnInfos = columnConfigService.pojoListByQuery(query);
         return new ResponseEntity<>(PageUtil.toPage(columnInfos, columnInfos.size()), HttpStatus.OK);
     }
 
     @ApiOperation("保存字段数据")
     @PutMapping
     public ResponseEntity<HttpStatus> save(@RequestBody List<CodeColumnConfig> columnInfos) {
-        codeColumnConfigService.saveBatch(columnInfos);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @ApiOperation("同步字段数据")
-    @PostMapping(value = "sync")
-    public ResponseEntity<HttpStatus> sync(@RequestBody Collection<String> tables) {
-        codeColumnConfigService.sync(tables);
+        columnConfigService.saveBatch(columnInfos);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -85,19 +86,21 @@ public class GeneratorController {
         if (!generatorEnabled && type == 0) {
             throw new BadRequestException("此环境不允许生成代码，请选择预览或者下载查看！");
         }
+
+        CodeTableConfigQuery query = new CodeTableConfigQuery();
+        query.setTableName(tableName);
+        CodeTableConfigDto entity = tableConfigService.find(query);
         switch (type) {
             // 生成代码
             case 0:
-                generatorService.generator(genConfigService.find(tableName), generatorService.getColumns(tableName));
+                generatorService.generator(entity, generatorService.getColumns(tableName));
                 break;
             // 预览
             case 1:
-                return generatorService.preview(genConfigService.find(tableName),
-                    generatorService.getColumns(tableName));
+                return generatorService.preview(entity, generatorService.getColumns(tableName));
             // 打包
             case 2:
-                generatorService.download(genConfigService.find(tableName), generatorService.getColumns(tableName),
-                    request, response);
+                generatorService.download(entity, generatorService.getColumns(tableName), request, response);
                 break;
             default:
                 throw new BadRequestException("没有这个选项");

@@ -1,7 +1,7 @@
 package io.github.dunwu.modules.generator.entity.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.github.dunwu.util.GenUtil;
+import io.github.dunwu.modules.generator.util.GenUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

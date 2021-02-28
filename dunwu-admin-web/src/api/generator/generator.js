@@ -25,8 +25,10 @@ export function save(data) {
 
 export function sync(tables) {
   return request({
-    url: 'api/generator/sync',
+    url: 'api/generator/column/sync',
     method: 'post',
-    data: tables
+    data: { tables }
   })
 }
+
+export default { generator, save, sync }

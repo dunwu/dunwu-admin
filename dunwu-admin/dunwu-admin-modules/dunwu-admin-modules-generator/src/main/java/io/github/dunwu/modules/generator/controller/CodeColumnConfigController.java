@@ -8,6 +8,7 @@ import io.github.dunwu.data.validator.annotation.AddCheck;
 import io.github.dunwu.data.validator.annotation.EditCheck;
 import io.github.dunwu.modules.generator.entity.CodeColumnConfig;
 import io.github.dunwu.modules.generator.entity.dto.CodeColumnConfigDto;
+import io.github.dunwu.modules.generator.entity.dto.TableColumnInfoDto;
 import io.github.dunwu.modules.generator.entity.query.CodeColumnConfigQuery;
 import io.github.dunwu.modules.generator.service.CodeColumnConfigService;
 import io.swagger.annotations.Api;
@@ -30,7 +31,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @RestController
 @RequestMapping("/generator/column")
-@Api(tags = "代码生成-字段配置 Controller 类")
+@Api(tags = "代码生成-字段界别配置 Controller 类")
 @RequiredArgsConstructor
 public class CodeColumnConfigController {
 
@@ -118,6 +119,19 @@ public class CodeColumnConfigController {
     public void exportPage(CodeColumnConfigQuery query, Pageable pageable, HttpServletResponse response)
         throws IOException {
         service.exportPage(query, pageable, response);
+    }
+
+    @ApiOperation("同步字段数据")
+    @PostMapping(value = "sync")
+    public BaseResult sync(@RequestBody CodeColumnConfigQuery query) {
+        service.syncTables(query);
+        return BaseResult.ok();
+    }
+
+    @PostMapping("saveTableColumns")
+    public BaseResult saveTableColumns(@RequestBody TableColumnInfoDto entity) {
+        service.addOrSaveColumns(entity);
+        return BaseResult.ok();
     }
 
 }
