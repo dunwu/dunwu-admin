@@ -82,7 +82,7 @@
 </template>
 
 <script>
-import generatorApi from '@/api/generator/generator'
+import generatorApi from '@/api/generator/generatorApi'
 import { downloadFile } from '@/utils/index'
 import CRUD, { presenter, header } from '@crud/crud'
 import queryOperation from '@crud/Query.operation'

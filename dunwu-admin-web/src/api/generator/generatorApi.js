@@ -7,7 +7,7 @@ export function getAllTable() {
   })
 }
 
-export function generator(tableName, type) {
+export function generatorApi(tableName, type) {
   return request({
     url: 'api/generator/' + tableName + '/' + type,
     method: 'post',
@@ -15,9 +15,9 @@ export function generator(tableName, type) {
   })
 }
 
-export function save(data) {
+export function saveTableColumns(data) {
   return request({
-    url: 'api/generator/column/add/batch',
+    url: 'api/generator/column/saveTableColumns',
     method: 'post',
     data
   })
@@ -31,4 +31,4 @@ export function sync(tables) {
   })
 }
 
-export default { generator, save, sync }
+export default { generator: generatorApi, saveTableColumns, sync }

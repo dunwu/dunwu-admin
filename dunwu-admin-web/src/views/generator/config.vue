@@ -4,7 +4,7 @@
       <el-col style="margin-bottom: 10px">
         <el-card class="box-card" shadow="never">
           <div slot="header" class="clearfix">
-            <span class="role-span">字段配置：{{ tableName }}</span>
+            <span class="role-span">表字段配置：{{ tableName }}</span>
             <el-button
               :loading="genLoading"
               icon="el-icon-s-promotion"
@@ -206,7 +206,7 @@
 import crud from '@/mixins/crud'
 import dictApi from '@/api/system/dict'
 import tableConfigApi from '@/api/generator/tableConfigApi'
-import generatorApi from '@/api/generator/generator'
+import generatorApi from '@/api/generator/generatorApi'
 export default {
   name: 'GeneratorConfig',
   components: {},
@@ -268,7 +268,7 @@ export default {
     saveColumnConfig() {
       this.columnLoading = true
       generatorApi
-        .save(this.data)
+        .saveTableColumns({ tableName: this.tableName, columns: this.data })
         .then(res => {
           this.notify('保存成功', 'success')
           this.columnLoading = false
