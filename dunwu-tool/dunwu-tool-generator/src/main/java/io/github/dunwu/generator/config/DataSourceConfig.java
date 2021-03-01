@@ -69,6 +69,8 @@ public class DataSourceConfig {
      * 数据库连接密码
      */
     private String password;
+    /** 是否支持注释（部分数据库不支持） */
+    private boolean commentSupported;
 
     public IDbQuery getDbQuery() {
         if (null == dbQuery) {

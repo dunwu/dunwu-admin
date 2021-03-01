@@ -35,23 +35,33 @@ import java.util.Map;
 @Accessors(chain = true)
 public class TableField {
 
-    private boolean convert;
-    private boolean keyFlag;
-    /**
-     * 主键是否为自增类型
-     */
-    private boolean keyIdentityFlag;
+    /** 字段名称 */
     private String name;
+    /** 字段数据类型 */
     private String type;
     private String propertyName;
     private IColumnType columnType;
+    /** 字段备注 */
     private String comment;
     private String fill;
 
+    private boolean convert;
+    private boolean keyFlag = false;
+    /** 主键是否为自增类型 */
+    private boolean keyIdentityFlag = true;
+    /** 是否不允许为空 */
     private boolean notNull = true;
-    private boolean formEnabled = false;
-    private boolean listEnabled = false;
+    /** 是否出现在表单 */
+    private boolean formShow = false;
+    /** 是否出现在列表 */
+    private boolean listShow = false;
+    /** 是否出现在搜索 */
+    private boolean searchShow = false;
+    /** 表单控件类型 */
     private String formType;
+    /** 表单控件类型 */
+    private String searchType;
+    private String keyType;
 
     /**
      * 自定义查询字段列表

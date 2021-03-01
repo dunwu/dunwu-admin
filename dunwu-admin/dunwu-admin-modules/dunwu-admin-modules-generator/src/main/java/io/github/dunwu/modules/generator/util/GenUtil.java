@@ -2,8 +2,8 @@ package io.github.dunwu.modules.generator.util;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.template.*;
-import io.github.dunwu.modules.generator.entity.dto.CodeColumnConfigDto;
-import io.github.dunwu.modules.generator.entity.dto.CodeTableConfigDto;
+import io.github.dunwu.generator.config.po.CodeColumnConfigDto;
+import io.github.dunwu.generator.config.po.CodeTableConfigDto;
 import io.github.dunwu.util.FileUtil;
 import io.github.dunwu.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;

@@ -7,8 +7,9 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.ZipUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.github.dunwu.data.mybatis.ServiceImpl;
-import io.github.dunwu.generator.DefaultCodeGenerator;
+import io.github.dunwu.generator.CodeGeneratorUtil;
 import io.github.dunwu.generator.MybatisPlusGenProps;
+import io.github.dunwu.generator.config.builder.ConfigBuilder;
 import io.github.dunwu.generator.engine.TemplateContent;
 import io.github.dunwu.modules.generator.dao.CodeColumnConfigDao;
 import io.github.dunwu.modules.generator.entity.CodeColumnConfig;
@@ -220,7 +221,7 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
         HttpServletRequest request, HttpServletResponse response) {
         String tmpPath = System.getProperty("java.io.tmpdir") + File.separator + "dunwu";
         Properties properties = getConfigs(tmpPath, tableConfig, columnConfigs);
-        new DefaultCodeGenerator(properties).generate();
+        new CodeGeneratorUtil(properties).generate();
         String codePath = tmpPath + File.separator + "codes";
         String zipFilePath = tmpPath + File.separator + "codes.zip";
         FileUtil.mkdir(codePath);
@@ -234,7 +235,8 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
         List<CodeColumnConfigDto> columnConfigs) {
         String tmpPath = System.getProperty("java.io.tmpdir") + "/dunwu";
         Properties properties = getConfigs(tmpPath, tableConfig, columnConfigs);
-        return new DefaultCodeGenerator(properties).getPreviewList();
+        ConfigBuilder builder = CodeGeneratorUtil.initConfigBuilder(properties);
+        return new CodeGeneratorUtil(properties).getPreviewList();
     }
 
     private String getCurrentSchema() {

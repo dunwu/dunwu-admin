@@ -1,8 +1,10 @@
 package io.github.dunwu.generator;
 
 import io.github.dunwu.generator.config.*;
+import io.github.dunwu.generator.config.po.TableInfo;
 import io.github.dunwu.generator.engine.TemplateContent;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 
@@ -19,15 +21,9 @@ public interface ICodeGenerator {
      */
     void generate();
 
-    List<TemplateContent> getPreviewList();
+    void generate(Collection<TableInfo> tables);
 
-    /**
-     * 从配置文件中加载属性
-     *
-     * @param files 待加载的 properties 文件路径
-     * @return {@link Properties}
-     */
-    void loadProperties(String... files);
+    List<TemplateContent> getPreviewList();
 
     /**
      * 全局配置

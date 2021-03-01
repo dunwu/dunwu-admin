@@ -13,23 +13,29 @@ import lombok.ToString;
 @ToString
 public class ColumnInfoDto {
 
-    /** Schema名称 */
-    private String tableSchema;
-    /** 表名称 */
+    /** Schema的名称 */
+    private String schemaName;
+    /** 表的名称 */
     private String tableName;
-    /** 列名称 */
+    /** 列的名称 */
     private String columnName;
-    /** 是否允许为空 */
-    private String isNullable;
-    /** 数据类型 */
-    private String dataType;
+    /** 列的数据类型 */
+    private String columnType;
     /** 列的Key类型 */
     private String columnKey;
-    /** 列默认值 */
+    /** 列的默认值 */
     private String columnDefault;
-    /** 列备注 */
-    private String columnComment;
+    /** 列的备注 */
+    private String note;
     /** 扩展信息 */
     private String extra;
+    /** 是否不允许为空 */
+    private String notNull;
+    /** 是否出现在表单 */
+    private boolean formEnabled;
+    /** 是否出现在列表 */
+    private boolean listEnabled;
+    /** 是否出现在搜索 */
+    private boolean searchEnabled;
 
 }

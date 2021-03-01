@@ -59,14 +59,21 @@ public abstract class AbstractTemplateEngine {
         return this;
     }
 
-    public List<TemplateContent> prepare() throws IOException, TemplateException {
+    /**
+     * 获取预览模板内容
+     *
+     * @return /
+     * @throws IOException       /
+     * @throws TemplateException /
+     */
+    public List<TemplateContent> preview() throws IOException, TemplateException {
         List<TemplateContent> templateContents = new ArrayList<>();
 
-        List<TableInfo> tableInfoList = getConfigBuilder().getTableInfoList();
+        Collection<TableInfo> tableInfoList = getConfigBuilder().getTableInfoList();
         for (TableInfo tableInfo : tableInfoList) {
             Map<String, Object> objectMap = getObjectMap(tableInfo);
             // Map<String, String> pathInfo = getConfigBuilder().getPathInfoMap();
-            TemplateConfig template = getConfigBuilder().getTemplate();
+            TemplateConfig template = getConfigBuilder().getTemplateConfig();
 
             // 自定义内容
             InjectionConfig injectionConfig = getConfigBuilder().getInjectionConfig();
@@ -116,11 +123,11 @@ public abstract class AbstractTemplateEngine {
     public AbstractTemplateEngine batchOutput() {
 
         try {
-            List<TableInfo> tableInfoList = getConfigBuilder().getTableInfoList();
+            Collection<TableInfo> tableInfoList = getConfigBuilder().getTableInfoList();
             for (TableInfo tableInfo : tableInfoList) {
                 Map<String, Object> objectMap = getObjectMap(tableInfo);
                 Map<String, String> pathInfoMap = getConfigBuilder().getPathInfoMap();
-                TemplateConfig template = getConfigBuilder().getTemplate();
+                TemplateConfig template = getConfigBuilder().getTemplateConfig();
                 // 自定义内容
                 InjectionConfig injectionConfig = getConfigBuilder().getInjectionConfig();
                 if (null != injectionConfig) {
