@@ -52,6 +52,16 @@ public class TableInfo {
     /** 字段名称，以逗号分隔 */
     private String fieldNames;
 
+    /** 开启 权限校验 */
+    private boolean enablePermission = true;
+    /** 开启 搜索栏 */
+    private boolean enableQuery = true;
+    /** 开启 列表 */
+    private boolean enableList = true;
+    /** 开启 表单 */
+    private boolean enableForm = true;
+    private boolean enableValidate = true;
+
     /******************* 以下为生成的后端文件名（开始） *******************/
     private String xmlName;
     private String entityName;

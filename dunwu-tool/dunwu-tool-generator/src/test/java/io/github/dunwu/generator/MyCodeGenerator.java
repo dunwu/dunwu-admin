@@ -2,7 +2,11 @@ package io.github.dunwu.generator;
 
 import cn.hutool.json.JSONUtil;
 import io.github.dunwu.generator.config.builder.ConfigBuilder;
+import io.github.dunwu.generator.config.po.TableField;
+import io.github.dunwu.generator.config.po.TableInfo;
 import io.github.dunwu.tool.io.AnsiColorUtil;
+
+import java.util.Collection;
 
 /**
  * 代码生成器
@@ -20,7 +24,20 @@ public class MyCodeGenerator {
     public static void main(String[] args) {
         ConfigBuilder configBuilder = CodeGeneratorUtil.initConfigBuilder("classpath://conf/mybatis.properties");
         if (configBuilder != null) {
-            configBuilder.initTableInfoList();
+            Collection<TableInfo> tableInfoList = configBuilder.queryTableInfoList();
+            for (TableInfo table : tableInfoList) {
+                for (TableField field : table.getFields()) {
+                    if (field.getName().equals("rating")) {
+                        field.setQueryType("Between");
+                        field.setFormType("Date");
+                    } else {
+                        field.setQueryType("Equals");
+                        field.setFormType("Input");
+                    }
+
+                }
+            }
+            configBuilder.setTableInfoList(tableInfoList);
             CodeGenerator codeGenerator = new CodeGenerator(configBuilder);
             codeGenerator.generate();
             AnsiColorUtil.YELLOW.println(JSONUtil.toJsonStr(configBuilder.getTableInfoList()));

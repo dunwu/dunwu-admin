@@ -47,21 +47,22 @@ public class TableField {
 
     private boolean convert;
     private boolean keyFlag = false;
+    private String keyType;
     /** 主键是否为自增类型 */
     private boolean keyIdentityFlag = true;
     /** 是否不允许为空 */
     private boolean notNull = true;
     /** 是否出现在表单 */
-    private boolean formShow = false;
+    private boolean enableForm = true;
     /** 是否出现在列表 */
-    private boolean listShow = false;
+    private boolean enableList = true;
     /** 是否出现在搜索 */
-    private boolean searchShow = false;
+    private boolean enableQuery = true;
     /** 表单控件类型 */
     private String formType;
     /** 表单控件类型 */
-    private String searchType;
-    private String keyType;
+    private String queryType;
+    private String dictName;
 
     /**
      * 自定义查询字段列表

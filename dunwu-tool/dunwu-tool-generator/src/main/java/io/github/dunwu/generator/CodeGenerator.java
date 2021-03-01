@@ -64,8 +64,6 @@ public class CodeGenerator {
         }
         // 模板引擎初始化执行文件输出
         templateEngine.init(this.pretreatmentConfigBuilder(builder));
-        // 模板引擎初始化执行文件输出
-        templateEngine.mkdirs().batchOutput().open();
         log.debug("<<<<<<<< 自动生成源码文件完成");
     }
 

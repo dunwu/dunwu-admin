@@ -143,7 +143,7 @@ public abstract class AbstractTemplateEngine {
                     }
                 }
 
-                AnsiColorUtil.BOLD_BLUE.println(JSONUtil.toJsonStr(objectMap));
+                // AnsiColorUtil.BOLD_BLUE.println(JSONUtil.toJsonStr(objectMap));
 
                 // 生成后端源码文件
                 outputBackendFiles(tableInfo, objectMap, pathInfoMap, template);

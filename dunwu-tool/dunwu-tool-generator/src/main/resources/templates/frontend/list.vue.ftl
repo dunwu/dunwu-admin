@@ -1,115 +1,115 @@
 <#--noinspection ALL-->
-<#--<template>-->
-<#--  <div class="app-container">-->
-<#--    <!--工具栏&ndash;&gt;-->
-<#--    <div class="head-container">-->
-<#--    <#if hasQuery>-->
-<#--      <div v-if="crud.props.searchToggle">-->
-<#--        <!-- 搜索 &ndash;&gt;-->
-<#--        <#if queryColumns??>-->
-<#--          <#list queryColumns as column>-->
-<#--            <#if column.queryType != 'BetWeen'>-->
-<#--        <label class="el-form-item-label"><#if column.remark != ''>${column.remark}<#else>${column.changeColumnName}</#if></label>-->
-<#--        <el-input v-model="query.${column.changeColumnName}" clearable placeholder="<#if column.remark != ''>${column.remark}<#else>${column.changeColumnName}</#if>" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />-->
-<#--            </#if>-->
-<#--          </#list>-->
-<#--        </#if>-->
-<#--  <#if betweens??>-->
-<#--    <#list betweens as column>-->
-<#--      <#if column.queryType = 'BetWeen'>-->
-<#--        <date-range-picker-->
-<#--          v-model="query.${column.changeColumnName}"-->
-<#--          start-placeholder="${column.changeColumnName}Start"-->
-<#--          end-placeholder="${column.changeColumnName}Start"-->
-<#--          class="date-item"-->
-<#--        />-->
-<#--      </#if>-->
-<#--    </#list>-->
-<#--  </#if>-->
-<#--        <rrOperation :crud="crud" />-->
-<#--      </div>-->
-<#--    </#if>-->
-<#--      <!--如果想在工具栏加入更多按钮，可以使用插槽方式， slot = 'left' or 'right'&ndash;&gt;-->
-<#--      <crudOperation :permission="permission" />-->
-<#--      <!--表单组件&ndash;&gt;-->
-<#--      <el-dialog :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.title" width="500px">-->
-<#--        <el-form ref="form" :model="form" <#if isNotNullColumns??>:rules="rules"</#if> size="small" label-width="80px">-->
-<#--    <#if columns??>-->
-<#--      <#list columns as column>-->
-<#--        <#if column.formShow>-->
-<#--          <el-form-item label="<#if column.remark != ''>${column.remark}<#else>${column.changeColumnName}</#if>"<#if column.istNotNull> prop="${column.changeColumnName}"</#if>>-->
-<#--            <#if column.formType = 'Input'>-->
-<#--            <el-input v-model="form.${column.changeColumnName}" style="width: 370px;" />-->
-<#--            <#elseif column.formType = 'Textarea'>-->
-<#--            <el-input v-model="form.${column.changeColumnName}" :rows="3" type="textarea" style="width: 370px;" />-->
-<#--            <#elseif column.formType = 'Radio'>-->
-<#--              <#if (column.dictName)?? && (column.dictName)!="">-->
-<#--            <el-radio v-model="form.${column.changeColumnName}" v-for="item in dict.${column.dictName}" :key="item.id" :label="item.value">{{ item.label }}</el-radio>-->
-<#--              <#else>-->
-<#--                未设置字典，请手动设置 Radio-->
-<#--              </#if>-->
-<#--            <#elseif column.formType = 'Select'>-->
-<#--              <#if (column.dictName)?? && (column.dictName)!="">-->
-<#--            <el-select v-model="form.${column.changeColumnName}" filterable placeholder="请选择">-->
-<#--              <el-option-->
-<#--                v-for="item in dict.${column.dictName}"-->
-<#--                :key="item.id"-->
-<#--                :label="item.label"-->
-<#--                :value="item.value" />-->
-<#--            </el-select>-->
-<#--              <#else>-->
-<#--            未设置字典，请手动设置 Select-->
-<#--              </#if>-->
-<#--            <#else>-->
-<#--            <el-date-picker v-model="form.${column.changeColumnName}" type="datetime" style="width: 370px;" />-->
-<#--            </#if>-->
-<#--          </el-form-item>-->
-<#--        </#if>-->
-<#--      </#list>-->
-<#--    </#if>-->
-<#--        </el-form>-->
-<#--        <div slot="footer" class="dialog-footer">-->
-<#--          <el-button type="text" @click="crud.cancelCU">取消</el-button>-->
-<#--          <el-button :loading="crud.status.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>-->
-<#--        </div>-->
-<#--      </el-dialog>-->
-<#--      <!--表格渲染&ndash;&gt;-->
-<#--      <el-table ref="table" v-loading="crud.loading" :data="crud.data" size="small" style="width: 100%;" @selection-change="crud.selectionChangeHandler">-->
-<#--        <el-table-column type="selection" width="55" />-->
-<#--        <#if columns??>-->
-<#--            <#list columns as column>-->
-<#--            <#if column.columnShow>-->
-<#--          <#if (column.dictName)?? && (column.dictName)!="">-->
-<#--        <el-table-column prop="${column.changeColumnName}" label="<#if column.remark != ''>${column.remark}<#else>${column.changeColumnName}</#if>">-->
-<#--          <template slot-scope="scope">-->
-<#--            {{ dict.label.${column.dictName}[scope.row.${column.changeColumnName}] }}-->
-<#--          </template>-->
-<#--        </el-table-column>-->
-<#--                <#else>-->
-<#--        <el-table-column prop="${column.changeColumnName}" label="<#if column.remark != ''>${column.remark}<#else>${column.changeColumnName}</#if>" />-->
-<#--                </#if>-->
-<#--            </#if>-->
-<#--            </#list>-->
-<#--        </#if>-->
-<#--        <el-table-column v-if="checkPer(['admin','${changeClassName}:edit','${changeClassName}:del'])" label="操作" width="150px" align="center">-->
-<#--          <template slot-scope="scope">-->
-<#--            <udOperation-->
-<#--              :data="scope.row"-->
-<#--              :permission="permission"-->
-<#--            />-->
-<#--          </template>-->
-<#--        </el-table-column>-->
-<#--      </el-table>-->
-<#--      <!--分页组件&ndash;&gt;-->
-<#--      <pagination />-->
-<#--    </div>-->
-<#--  </div>-->
-<#--</template>-->
+<template>
+  <div class="app-container">
+    <!--工具栏-->
+    <div class="head-container">
+<#if table.enableQuery>
+      <div v-if="crud.props.searchToggle">
+        <!-- 搜索 -->
+  <#list table.fields as field>
+    <#if field.queryType != 'Between'>
+        <label class="el-form-item-label"><#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if></label>
+        <el-input v-model="query.${field.propertyName}" clearable placeholder="<#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if>" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+    </#if>
+    <#if field.queryType = 'Between'>
+        <date-range-picker
+            v-model="query.${field.propertyName}"
+            start-placeholder="${field.propertyName}Start"
+            end-placeholder="${field.propertyName}End"
+            class="date-item"
+        />
+    </#if>
+  </#list>
+        <queryOperation :crud="crud" />
+      </div>
+  <#if table.enablePermission>
+      <crudOperation :permission="permission" />
+  <#else>
+      <crudOperation />
+  </#if>
+</#if>
+    </div>
+
+<#if table.enableForm>
+    <!--表单组件-->
+    <el-dialog :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.title" width="500px">
+      <el-form ref="form" :model="form" size="small" label-width="80px">
+  <#list table.fields as field>
+    <#if field.enableForm>
+        <el-form-item label="<#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if>"<#if field.notNull> prop="${field.propertyName}"</#if>>
+      <#if field.formType = 'Input'>
+          <el-input v-model="form.${field.propertyName}" style="width: 370px;" />
+      <#elseif field.formType = 'Textarea'>
+          <el-input v-model="form.${field.propertyName}" :rows="3" type="textarea" style="width: 370px;" />
+      <#elseif field.formType = 'Radio'>
+        <#if (field.dictName)?? && (field.dictName)!="">
+          <el-radio v-model="form.${field.propertyName}" v-for="item in dict.${field.dictName}" :key="item.id" :label="item.value">{{ item.label }}</el-radio>
+        <#else>
+                未设置字典，请手动设置 Radio
+        </#if>
+      <#elseif field.formType = 'Select'>
+        <#if (field.dictName)?? && (field.dictName)!="">
+          <el-select v-model="form.${field.propertyName}" filterable placeholder="请选择">
+            <el-option
+              v-for="item in dict.${field.dictName}"
+              :key="item.id"
+              :label="item.label"
+              :value="item.value" />
+          </el-select>
+        <#else>
+            未设置字典，请手动设置 Select
+        </#if>
+      <#else>
+          <el-date-picker v-model="form.${field.propertyName}" type="datetime" style="width: 370px;" />
+      </#if>
+        </el-form-item>
+    </#if>
+  </#list>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="text" @click="crud.cancelCU">取消</el-button>
+        <el-button :loading="crud.status.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
+      </div>
+    </el-dialog>
+</#if>
+
+      <!--表格渲染-->
+<#if table.enableList>
+    <el-table ref="table" v-loading="crud.loading" :data="crud.data" size="small" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
+      <el-table-column type="selection" width="55" />
+  <#list table.fields as field>
+    <#if field.enableList>
+      <#if (field.dictName)?? && (field.dictName)!="">
+        <el-table-column prop="${field.propertyName}" label="<#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if>">
+          <template slot-scope="scope">
+            {{ dict.label.${field.dictName}[scope.row.${field.propertyName}] }}
+          </template>
+        </el-table-column>
+      <#else>
+        <el-table-column prop="${field.propertyName}" label="<#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if>" />
+      </#if>
+    </#if>
+  </#list>
+        <el-table-column v-if="checkPer(['admin','<#if package.ModuleName??>${package.ModuleName}</#if>:${table.entityPath}:edit','<#if package.ModuleName??>${package.ModuleName}</#if>:${table.entityPath}:del'])" label="操作" width="150px" align="center">
+          <template slot-scope="scope">
+            <udOperation
+              :data="scope.row"
+              :permission="permission"
+            />
+          </template>
+        </el-table-column>
+    </el-table>
+</#if>
+
+    <!--分页组件-->
+    <pagination />
+  </div>
+</template>
 
 <script>
 import ${table.entityPath}Api from './${table.entityPath}Api'
 import CRUD, {crud, form, header, presenter} from '@crud/crud'
-import rrOperation from '@crud/RR.operation'
+import queryOperation from '@crud/Query.operation'
 import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
@@ -117,7 +117,7 @@ import pagination from '@crud/Pagination'
 const defaultForm = {<#if table.fields??><#list table.fields as field>${field.name}: null, </#list></#if>}
 export default {
   name: '${table.entityPath}',
-  components: {pagination, crudOperation, rrOperation, udOperation},
+  components: {pagination, crudOperation, queryOperation, udOperation},
   mixins: [presenter(), header(), form(defaultForm), crud()],
   cruds() {
     return CRUD({
@@ -128,35 +128,23 @@ export default {
       crudMethod: { ...${table.entityPath}Api }
     })
   },
-<#--  data() {-->
-<#--    return {-->
-<#--      permission: {-->
-<#--        add: ['admin', '${changeClassName}:add'],-->
-<#--        edit: ['admin', '${changeClassName}:edit'],-->
-<#--        del: ['admin', '${changeClassName}:del']-->
-<#--      }, rules: {-->
-<#--        <#if isNotNullColumns??>-->
-<#--        <#list isNotNullColumns as column>-->
-<#--      <#if column.istNotNull>-->
-<#--      ${column.changeColumnName}: [-->
-<#--        { required: true, message: '<#if column.remark != ''>${column.remark}</#if>不能为空', trigger: 'blur' }-->
-<#--      ]<#if column_has_next>,</#if>-->
-<#--      </#if>-->
-<#--      </#list>-->
-<#--      </#if>-->
-<#--    }<#if hasQuery>,-->
-<#--    queryTypeOptions: [-->
-<#--      <#if queryColumns??>-->
-<#--      <#list queryColumns as column>-->
-<#--      <#if column.queryType != 'BetWeen'>-->
-<#--      { key: '${column.changeColumnName}', display_name: '<#if column.remark != ''>${column.remark}<#else>${column.changeColumnName}</#if>' }<#if column_has_next>,</#if>-->
-<#--      </#if>-->
-<#--      </#list>-->
-<#--      </#if>-->
-<#--    ]-->
-<#--    </#if>-->
-<#--  }-->
-<#--},-->
+  data() {
+    return {
+      permission: {
+        add: ['admin', '<#if package.ModuleName??>${package.ModuleName}</#if>:${table.entityPath}:add'],
+        edit: ['admin', '<#if package.ModuleName??>${package.ModuleName}</#if>:${table.entityPath}:edit'],
+        del: ['admin', '<#if package.ModuleName??>${package.ModuleName}</#if>:${table.entityPath}:del']
+      }, <#if table.enableValidate>rules: {
+<#list table.fields as field>
+      <#if field.notNull>
+        ${field.propertyName}: [
+          { required: true, message: '<#if field.comment != ''>${column.comment}</#if>不能为空', trigger: 'blur' }
+        ],
+      </#if>
+</#list>
+      }</#if>
+    }
+  },
   methods: {
     // 钩子：在获取表格数据之前执行，false 则代表不获取数据
     [CRUD.HOOK.beforeRefresh]() {
