@@ -24,14 +24,14 @@ import java.util.Collection;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 代码生成-字段配置 Controller 类
+ * 代码生成-字段级别配置 Controller 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-02-26
+ * @since 2021-03-02
  */
 @RestController
 @RequestMapping("/generator/column")
-@Api(tags = "代码生成-字段界别配置 Controller 类")
+@Api(tags = "代码生成-字段级别配置 Controller 类")
 @RequiredArgsConstructor
 public class CodeColumnConfigController {
 
@@ -128,9 +128,10 @@ public class CodeColumnConfigController {
         return BaseResult.ok();
     }
 
-    @PostMapping("saveTableColumns")
-    public BaseResult saveTableColumns(@RequestBody TableColumnInfoDto entity) {
-        service.addOrSaveColumns(entity);
+    @ApiOperation("批量更新 CodeColumnConfig 记录")
+    @PostMapping("saveBatch")
+    public BaseResult saveBatch(@Validated(EditCheck.class) @RequestBody TableColumnInfoDto entity) {
+        service.saveOrUpdateBatch(entity.getColumns());
         return BaseResult.ok();
     }
 

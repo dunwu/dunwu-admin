@@ -35,6 +35,10 @@ import java.util.Map;
 @Accessors(chain = true)
 public class TableField {
 
+    /** schema 名称 */
+    private String schemaName;
+    /** table 名称 */
+    private String tableName;
     /** 字段名称（表字段） */
     private String name;
     /** 字段展示名称（实体字段） */

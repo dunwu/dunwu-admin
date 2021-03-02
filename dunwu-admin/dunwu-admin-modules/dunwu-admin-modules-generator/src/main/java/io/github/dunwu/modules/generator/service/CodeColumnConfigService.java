@@ -6,7 +6,6 @@ import io.github.dunwu.generator.engine.TemplateContent;
 import io.github.dunwu.modules.generator.entity.CodeColumnConfig;
 import io.github.dunwu.modules.generator.entity.dto.CodeColumnConfigDto;
 import io.github.dunwu.modules.generator.entity.dto.CodeTableConfigDto;
-import io.github.dunwu.modules.generator.entity.dto.TableColumnInfoDto;
 import io.github.dunwu.modules.generator.entity.query.CodeColumnConfigQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,10 +19,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 代码生成-字段配置 Service 接口
+ * 代码生成-字段级别配置 Service 接口
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-02-26
+ * @since 2021-03-02
  */
 public interface CodeColumnConfigService extends IService {
 
@@ -59,6 +58,8 @@ public interface CodeColumnConfigService extends IService {
      */
     boolean updateBatchById(Collection<CodeColumnConfig> list);
 
+    boolean saveOrUpdateBatch(Collection<CodeColumnConfig> list);
+
     /**
      * 根据 ID 删除一条 {@link CodeColumnConfig} 记录
      *
@@ -82,7 +83,7 @@ public interface CodeColumnConfigService extends IService {
      * @param pageable 分页查询条件
      * @return {@link Page<CodeColumnConfigDto>}
      */
-    Page<CodeColumnConfigDto> pojoPageByQuery(Object query, Pageable pageable);
+    Page<CodeColumnConfigDto> pojoPageByQuery(CodeColumnConfigQuery query, Pageable pageable);
 
     /**
      * 根据 query 查询 {@link CodeColumnConfigDto} 列表
@@ -159,7 +160,5 @@ public interface CodeColumnConfigService extends IService {
 
     List<TemplateContent> getPreviewList(CodeTableConfigDto tableConfig,
         List<CodeColumnConfigDto> columnConfigs);
-
-    void addOrSaveColumns(TableColumnInfoDto entity);
 
 }

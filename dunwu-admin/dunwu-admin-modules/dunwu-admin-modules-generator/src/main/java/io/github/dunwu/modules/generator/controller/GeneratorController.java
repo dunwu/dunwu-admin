@@ -10,7 +10,6 @@ import io.github.dunwu.modules.generator.entity.query.CodeColumnConfigQuery;
 import io.github.dunwu.modules.generator.entity.query.CodeTableConfigQuery;
 import io.github.dunwu.modules.generator.service.CodeColumnConfigService;
 import io.github.dunwu.modules.generator.service.CodeTableConfigService;
-import io.github.dunwu.modules.generator.service.GeneratorService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,14 +31,10 @@ import javax.servlet.http.HttpServletResponse;
 @Api(tags = "系统：代码生成管理")
 public class GeneratorController {
 
-    private final GeneratorService generatorService;
     private final CodeTableConfigService tableConfigService;
     private final CodeColumnConfigService columnConfigService;
 
-    public GeneratorController(GeneratorService generatorService,
-        CodeTableConfigService tableConfigService,
-        CodeColumnConfigService columnConfigService) {
-        this.generatorService = generatorService;
+    public GeneratorController(CodeTableConfigService tableConfigService, CodeColumnConfigService columnConfigService) {
         this.tableConfigService = tableConfigService;
         this.columnConfigService = columnConfigService;
     }
@@ -56,10 +51,10 @@ public class GeneratorController {
         }
 
         CodeTableConfigQuery codeTableConfigQuery = new CodeTableConfigQuery();
-        codeTableConfigQuery.setTableName(tableName);
+        codeTableConfigQuery.setName(tableName);
         CodeTableConfigDto tableConfig = tableConfigService.find(codeTableConfigQuery);
         CodeColumnConfigQuery codeColumnConfigQuery = new CodeColumnConfigQuery();
-        codeColumnConfigQuery.setTableName(tableConfig.getTableSchema()).setTableName(tableConfig.getTableName());
+        codeColumnConfigQuery.setTableName(tableConfig.getSchemaName()).setTableName(tableConfig.getName());
         List<CodeColumnConfigDto> columnConfigs = columnConfigService.pojoListByQuery(codeColumnConfigQuery);
 
         switch (type) {

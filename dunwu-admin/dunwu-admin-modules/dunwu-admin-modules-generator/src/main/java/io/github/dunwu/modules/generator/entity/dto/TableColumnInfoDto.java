@@ -1,6 +1,6 @@
 package io.github.dunwu.modules.generator.entity.dto;
 
-import io.github.dunwu.generator.config.po.CodeColumnConfigDto;
+import io.github.dunwu.modules.generator.entity.CodeColumnConfig;
 import lombok.Data;
 
 import java.util.Collection;
@@ -13,10 +13,10 @@ import java.util.Collection;
 public class TableColumnInfoDto {
 
     /** Schema名称 */
-    private String tableSchema;
+    private String schemaName;
     /** 表名称 */
     private String tableName;
     /** 表字段列表 */
-    private Collection<CodeColumnConfigDto> columns;
+    private Collection<CodeColumnConfig> columns;
 
 }

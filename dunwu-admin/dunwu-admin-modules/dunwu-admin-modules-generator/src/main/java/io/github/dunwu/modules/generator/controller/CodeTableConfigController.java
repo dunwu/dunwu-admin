@@ -135,7 +135,7 @@ public class CodeTableConfigController {
     @ApiOperation("查询数据库数据")
     @GetMapping(value = "all")
     public DataResult<Object> queryTables() {
-        return DataResult.ok(tableService.getTables());
+        return DataResult.ok(tableService.getTables(tableService.getCurrentSchema()));
     }
 
     @ApiOperation("查询数据库数据")
@@ -144,7 +144,13 @@ public class CodeTableConfigController {
         @RequestParam(defaultValue = "0") Integer page,
         @RequestParam(defaultValue = "10") Integer size) {
         int[] startEnd = PageUtil.transToStartEnd(page, size);
-        return DataResult.ok(tableService.getTables(name, startEnd));
+        return DataResult.ok(tableService.getTables(tableService.getCurrentSchema(), name, startEnd));
+    }
+
+    @PostMapping("saveTableColumns")
+    public BaseResult saveTableColumns(@RequestBody CodeTableConfigDto entity) {
+        service.addOrSaveColumns(entity);
+        return BaseResult.ok();
     }
 
 }

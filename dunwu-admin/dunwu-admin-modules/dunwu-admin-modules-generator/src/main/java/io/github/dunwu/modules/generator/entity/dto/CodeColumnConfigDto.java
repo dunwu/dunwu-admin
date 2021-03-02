@@ -1,52 +1,100 @@
 package io.github.dunwu.modules.generator.entity.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.github.dunwu.generator.config.po.TableField;
-import io.github.dunwu.modules.generator.util.GenUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 代码生成-字段配置 Dto 类
+ * 代码生成-字段级别配置 Dto 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-02-26
+ * @since 2021-03-02
  */
 @Data
-@NoArgsConstructor
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "CodeColumnConfigDto", description = "代码生成-字段配置")
-public class CodeColumnConfigDto extends TableField {
+@ApiModel(value = "CodeColumnConfigDto", description = "代码生成-字段级别配置")
+public class CodeColumnConfigDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "ID")
     private Long id;
 
-    @ApiModelProperty(value = "数据库Schema")
-    private String tableSchema;
+    @ApiModelProperty(value = "Schema名称")
+    private String schemaName;
 
-    @ApiModelProperty(value = "数据库Table")
+    @ApiModelProperty(value = "Table名称")
     private String tableName;
 
+    @ApiModelProperty(value = "Table ID")
+    private Long tableId;
+
+    @ApiModelProperty(value = "字段名称")
+    private String name;
+
+    @ApiModelProperty(value = "字段展示名称（实体字段）")
+    private String propertyName;
+
+    @ApiModelProperty(value = "字段注释")
+    private String comment;
+
+    @ApiModelProperty(value = "字段数据类型")
+    private String type;
+
+    @ApiModelProperty(value = "字段 Java 类型")
+    private String javaType;
+
     @ApiModelProperty(value = "字段KEY类型")
-    private String columnKey;
+    private String keyType;
+
+    @ApiModelProperty(value = "不允许为空")
+    private Boolean notNull;
+
+    @ApiModelProperty(value = "出现在表单")
+    private Boolean enableForm;
+
+    @ApiModelProperty(value = "出现在列表")
+    private Boolean enableList;
+
+    @ApiModelProperty(value = "出现在搜索")
+    private Boolean enableQuery;
+
+    @ApiModelProperty(value = "前端表单类型")
+    private String formType;
+
+    @ApiModelProperty(value = "前端列表类型")
+    private Boolean listType;
+
+    @ApiModelProperty(value = "前端搜索类型")
+    private String queryType;
+
+    @ApiModelProperty(value = "是否为排序字段")
+    private Boolean enableSort;
+
+    @ApiModelProperty(value = "排序类型")
+    private String sortType;
+
+    @ApiModelProperty(value = "日期表达式")
+    private String dateExpression;
 
     @ApiModelProperty(value = "字典名称")
     private String dictName;
 
+    @ApiModelProperty(value = "@TableField 填充属性")
+    private String fill;
+
     @ApiModelProperty(value = "扩展属性")
     private String extra;
 
-    @ApiModelProperty(value = "日期表达式")
-    private String dateExpression;
+    @ApiModelProperty(value = "状态")
+    private Boolean enabled;
 
     @ApiModelProperty(value = "备注")
     private String note;
@@ -64,27 +112,5 @@ public class CodeColumnConfigDto extends TableField {
     @ApiModelProperty(value = "更新时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime updateTime;
-
-    public CodeColumnConfigDto(String tableName, String name, Boolean notNull, String type, String note,
-        String columnKey, String extra) {
-
-        this.setListShow(true);
-        this.setFormShow(true);
-        this.setSearchShow(true);
-        this.setNotNull(notNull);
-
-        this.tableName = tableName;
-        this.setName(name);
-        this.setType(type);
-        this.columnKey = columnKey;
-        this.extra = extra;
-
-        if (GenUtil.PK.equalsIgnoreCase(columnKey) && GenUtil.EXTRA.equalsIgnoreCase(extra)) {
-            this.setNotNull(false);
-            this.setKeyFlag(true);
-            this.setKeyIdentityFlag(true);
-        }
-        this.note = note;
-    }
 
 }

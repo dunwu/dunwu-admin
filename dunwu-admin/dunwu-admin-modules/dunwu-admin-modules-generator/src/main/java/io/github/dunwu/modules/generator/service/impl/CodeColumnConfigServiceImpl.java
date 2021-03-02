@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.github.dunwu.data.mybatis.ServiceImpl;
 import io.github.dunwu.generator.CodeGenerator;
 import io.github.dunwu.generator.CodeGeneratorUtil;
+import io.github.dunwu.generator.config.*;
 import io.github.dunwu.generator.config.builder.ConfigBuilder;
 import io.github.dunwu.generator.config.po.TableField;
 import io.github.dunwu.generator.config.po.TableInfo;
@@ -18,13 +19,13 @@ import io.github.dunwu.modules.generator.entity.CodeColumnConfig;
 import io.github.dunwu.modules.generator.entity.dto.CodeColumnConfigDto;
 import io.github.dunwu.modules.generator.entity.dto.CodeTableConfigDto;
 import io.github.dunwu.modules.generator.entity.dto.ColumnInfoDto;
-import io.github.dunwu.modules.generator.entity.dto.TableColumnInfoDto;
 import io.github.dunwu.modules.generator.entity.query.CodeColumnConfigQuery;
 import io.github.dunwu.modules.generator.service.CodeColumnConfigService;
 import io.github.dunwu.modules.generator.service.TableService;
 import io.github.dunwu.web.util.ServletUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -40,10 +41,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 代码生成-字段配置 Service 类
+ * 代码生成-字段级别配置 Service 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-02-26
+ * @since 2021-03-02
  */
 @Slf4j
 @Service
@@ -81,6 +82,25 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
     }
 
     @Override
+    public boolean saveOrUpdateBatch(Collection<CodeColumnConfig> list) {
+        if (CollectionUtil.isEmpty(list)) {
+            return true;
+        }
+
+        CodeColumnConfig first = CollectionUtil.getFirst(list.iterator());
+        CodeColumnConfig query = new CodeColumnConfig();
+        query.setSchemaName(first.getSchemaName())
+             .setTableName(first.getTableName());
+        List<CodeColumnConfig> oldRecords = dao.listByQuery(query);
+        Set<Long> ids = oldRecords.stream().map(CodeColumnConfig::getId).collect(Collectors.toSet());
+        if (CollectionUtil.isNotEmpty(ids)) {
+            dao.removeByIds(ids);
+            return dao.saveBatch(list);
+        }
+        return dao.saveBatch(list);
+    }
+
+    @Override
     public boolean removeById(Serializable id) {
         return dao.removeById(id);
     }
@@ -91,8 +111,22 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
     }
 
     @Override
-    public Page<CodeColumnConfigDto> pojoPageByQuery(Object query, Pageable pageable) {
-        return dao.pojoPageByQuery(query, pageable, this::doToDto);
+    public Page<CodeColumnConfigDto> pojoPageByQuery(CodeColumnConfigQuery query, Pageable pageable) {
+        Page<CodeColumnConfigDto> page = dao.pojoPageByQuery(query, pageable, this::doToDto);
+        if (page == null || CollectionUtil.isEmpty(page.getContent())) {
+            List<TableInfo> tableInfos = queryTableInfo(query.getSchemaName(), query.getTableName());
+            TableInfo tableInfo = tableInfos.get(0);
+            CodeTableConfigDto codeTableConfigDto = BeanUtil.toBean(tableInfo, CodeTableConfigDto.class);
+            List<CodeColumnConfigDto> columns = new ArrayList<>();
+            if (CollectionUtil.isNotEmpty(tableInfo.getFields())) {
+                List<CodeColumnConfigDto> fields = tableInfo.getFields().stream().map(i -> {
+                    return BeanUtil.toBean(i, CodeColumnConfigDto.class);
+                }).collect(Collectors.toList());
+                columns.addAll(fields);
+            }
+            page = new PageImpl<>(columns, pageable, columns.size());
+        }
+        return page;
     }
 
     @Override
@@ -152,19 +186,19 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
         List<CodeColumnConfigDto> list = new ArrayList<>();
 
         // 如果没有指定 schema，默认为当前数据源连接的 schema
-        String tableSchema;
-        if (StrUtil.isNotBlank(query.getTableSchema())) {
-            tableSchema = query.getTableSchema();
+        String schemaName;
+        if (StrUtil.isNotBlank(query.getSchemaName())) {
+            schemaName = query.getSchemaName();
         } else {
-            tableSchema = getCurrentSchema();
+            schemaName = tableService.getCurrentSchema();
         }
 
         if (CollectionUtil.isNotEmpty(query.getTables())) {
             for (String tableName : query.getTables()) {
-                list.addAll(syncOneTable(tableSchema, tableName, query));
+                list.addAll(syncOneTable(schemaName, tableName, query));
             }
         } else {
-            list.addAll(syncOneTable(tableSchema, query.getTableName(), query));
+            list.addAll(syncOneTable(schemaName, query.getTableName(), query));
         }
 
         return list;
@@ -195,7 +229,7 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
         for (ColumnInfoDto c : columns) {
             CodeColumnConfig entity = null;
             for (CodeColumnConfig e : codeColumnConfigs) {
-                if (e.getColumnName().equalsIgnoreCase(c.getColumnName())) {
+                if (e.getName().equalsIgnoreCase(c.getColumnName())) {
                     // toEntity(e, c);
                     entities.add(e);
                     entity = e;
@@ -242,10 +276,6 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
         return generator.preview();
     }
 
-    private String getCurrentSchema() {
-        return jdbcTemplate.queryForObject("SELECT database()", String.class);
-    }
-
     public ConfigBuilder transToConfigBuilder(CodeTableConfigDto tableConfig) {
         TableInfo tableInfo = transToTableInfo(tableConfig);
         ConfigBuilder builder = CodeGeneratorUtil.initConfigBuilder();
@@ -285,17 +315,45 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
     //           .setExtra(item.getExtra());
     // }
 
-    @Override
-    public void addOrSaveColumns(TableColumnInfoDto entity) {
-        CodeColumnConfigQuery query = new CodeColumnConfigQuery();
-        query.setTableSchema(entity.getTableSchema());
-        query.setTableName(entity.getTableName());
-        List<CodeColumnConfigDto> oldColumns = pojoListByQuery(query);
-        Set<Serializable> ids = oldColumns.stream()
-                                          .map(i -> (Serializable) i.getId())
-                                          .collect(Collectors.toSet());
-        removeByIds(ids);
-        // saveBatch(entity.getColumns());
+    public List<TableInfo> queryTableInfo(String schemaName, String tableName) {
+
+        if (StrUtil.isBlank(schemaName)) {
+            schemaName = tableService.getCurrentSchema();
+        }
+
+        String url = StrUtil.format(
+            "jdbc:mysql://localhost:3306/{}?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8",
+            schemaName);
+        DataSourceConfig dataSourceConfig = new DataSourceConfig(url, "com.mysql.cj.jdbc.Driver", "root", "root",
+            schemaName);
+        PackageConfig packageConfig = new PackageConfig("io.github.dunwu.modules", "generator");
+        GlobalConfig globalConfig = new GlobalConfig();
+        globalConfig.setAuthor("dunwu").setOutputDir("E:\\Temp\\codes");
+        StrategyConfig strategyConfig = new StrategyConfig();
+        strategyConfig.setInclude(tableName);
+        TemplateConfig templateConfig = new TemplateConfig();
+
+        ConfigBuilder builder = new ConfigBuilder(dataSourceConfig, globalConfig, packageConfig, strategyConfig,
+            templateConfig);
+
+        List<TableInfo> tableInfoList = builder.queryTableInfoList();
+        // for (TableInfo table : tableInfoList) {
+        //     for (TableField field : table.getFields()) {
+        //         if (field.getName().equals("rating")) {
+        //             field.setFrontQueryType("Between");
+        //             field.setFrontFormType("Date");
+        //         } else {
+        //             field.setFrontQueryType("Equals");
+        //             field.setFrontFormType("Input");
+        //         }
+        //     }
+        // }
+        //
+        // builder.setTableInfoList(tableInfoList);
+        // CodeGenerator codeGenerator = new CodeGenerator(builder);
+        // codeGenerator.generate();
+        // AnsiColorUtil.YELLOW.println(JSONUtil.toJsonStr(builder.getTableInfoList()));
+        return tableInfoList;
     }
 
 }

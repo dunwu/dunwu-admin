@@ -13,13 +13,14 @@ import java.util.*;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 代码生成-字段配置 Dao 类
+ * 代码生成-字段级别配置 Dao 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-02-26
+ * @since 2021-03-02
  */
 @Dao
-public class CodeColumnConfigDaoImpl extends BaseExtDaoImpl<CodeColumnConfigMapper, CodeColumnConfig> implements CodeColumnConfigDao {
+public class CodeColumnConfigDaoImpl extends BaseExtDaoImpl<CodeColumnConfigMapper, CodeColumnConfig>
+    implements CodeColumnConfigDao {
 
     @Override
     public void exportDtoList(Collection<CodeColumnConfigDto> list, HttpServletResponse response) throws IOException {
@@ -27,20 +28,29 @@ public class CodeColumnConfigDaoImpl extends BaseExtDaoImpl<CodeColumnConfigMapp
         for (CodeColumnConfigDto item : list) {
             Map<String, Object> map = new LinkedHashMap<>();
             map.put("ID", item.getId());
-            map.put("数据库Schema", item.getTableSchema());
-            map.put("数据库Table", item.getTableName());
+            map.put("Schema名称", item.getSchemaName());
+            map.put("Table名称", item.getTableName());
+            map.put("Table ID", item.getTableId());
             map.put("字段名称", item.getName());
-            map.put("字段类型", item.getColumnType());
-            map.put("字段KEY类型", item.getColumnKey());
-            map.put("字段备注", item.getComment());
-            map.put("字典名称", item.getDictName());
-            map.put("扩展属性", item.getExtra());
-            // map.put("是否出现在表单", item.getFormShow());
-            // map.put("表单类型", item.getFormType());
-            // map.put("是否出现在列表", item.getListShow());
-            // map.put("不允许为空", item.getNotNull());
-            // map.put("查询类型", item.getQueryType());
+            map.put("字段展示名称（实体字段）", item.getPropertyName());
+            map.put("字段注释", item.getComment());
+            map.put("字段数据类型", item.getType());
+            map.put("字段 Java 类型", item.getJavaType());
+            map.put("字段KEY类型", item.getKeyType());
+            map.put("不允许为空", item.getNotNull());
+            map.put("出现在表单", item.getEnableForm());
+            map.put("出现在列表", item.getEnableList());
+            map.put("出现在搜索", item.getEnableQuery());
+            map.put("前端表单类型", item.getFormType());
+            map.put("前端列表类型", item.getListType());
+            map.put("前端搜索类型", item.getQueryType());
+            map.put("是否为排序字段", item.getEnableSort());
+            map.put("排序类型", item.getSortType());
             map.put("日期表达式", item.getDateExpression());
+            map.put("字典名称", item.getDictName());
+            map.put("@TableField 填充属性", item.getFill());
+            map.put("扩展属性", item.getExtra());
+            map.put("状态", item.getEnabled());
             map.put("备注", item.getNote());
             map.put("创建者", item.getCreateBy());
             map.put("更新者", item.getUpdateBy());

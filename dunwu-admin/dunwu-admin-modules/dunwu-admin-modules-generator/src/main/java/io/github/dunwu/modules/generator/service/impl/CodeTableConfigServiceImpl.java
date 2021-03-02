@@ -1,22 +1,29 @@
 package io.github.dunwu.modules.generator.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import io.github.dunwu.data.mybatis.ServiceImpl;
 import io.github.dunwu.modules.generator.dao.CodeTableConfigDao;
+import io.github.dunwu.modules.generator.entity.CodeColumnConfig;
 import io.github.dunwu.modules.generator.entity.CodeTableConfig;
+import io.github.dunwu.modules.generator.entity.dto.CodeColumnConfigDto;
 import io.github.dunwu.modules.generator.entity.dto.CodeTableConfigDto;
+import io.github.dunwu.modules.generator.entity.query.CodeColumnConfigQuery;
 import io.github.dunwu.modules.generator.entity.query.CodeTableConfigQuery;
+import io.github.dunwu.modules.generator.service.CodeColumnConfigService;
 import io.github.dunwu.modules.generator.service.CodeTableConfigService;
+import io.github.dunwu.modules.generator.service.TableService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -29,11 +36,14 @@ import javax.servlet.http.HttpServletResponse;
 public class CodeTableConfigServiceImpl extends ServiceImpl implements CodeTableConfigService {
 
     private final CodeTableConfigDao dao;
-    private final JdbcTemplate jdbcTemplate;
+    private final CodeColumnConfigService columnService;
+    private final TableService tableService;
 
-    public CodeTableConfigServiceImpl(CodeTableConfigDao dao, JdbcTemplate jdbcTemplate) {
+    public CodeTableConfigServiceImpl(CodeTableConfigDao dao,
+        CodeColumnConfigService columnService, TableService tableService) {
         this.dao = dao;
-        this.jdbcTemplate = jdbcTemplate;
+        this.columnService = columnService;
+        this.tableService = tableService;
     }
 
     @Override
@@ -126,15 +136,31 @@ public class CodeTableConfigServiceImpl extends ServiceImpl implements CodeTable
         CodeTableConfigDto tableConfigDto = dao.pojoByQuery(query, this::doToDto);
         if (tableConfigDto == null) {
             tableConfigDto = new CodeTableConfigDto();
-            String schema = StrUtil.isNotBlank(query.getSchemaName()) ? query.getSchemaName() : getCurrentSchema();
+            String schema = StrUtil.isNotBlank(query.getSchemaName()) ? query.getSchemaName()
+                : tableService.getCurrentSchema();
             tableConfigDto.setSchemaName(schema);
             tableConfigDto.setName(query.getName());
         }
         return tableConfigDto;
     }
 
-    private String getCurrentSchema() {
-        return jdbcTemplate.queryForObject("SELECT database()", String.class);
+    @Override
+    public void addOrSaveColumns(CodeTableConfigDto entity) {
+        CodeColumnConfigQuery query = new CodeColumnConfigQuery();
+        query.setSchemaName(entity.getSchemaName());
+        query.setTableName(entity.getName());
+        List<CodeColumnConfigDto> oldColumns = columnService.pojoListByQuery(query);
+        Set<Serializable> ids = oldColumns.stream()
+                                          .map(i -> (Serializable) i.getId())
+                                          .collect(Collectors.toSet());
+        removeByIds(ids);
+
+        if (CollectionUtil.isNotEmpty(entity.getColumns())) {
+            Collection<CodeColumnConfig> models = entity.getColumns().stream()
+                                                        .map(columnService::dtoToDo)
+                                                        .collect(Collectors.toList());
+            columnService.saveBatch(models);
+        }
     }
 
 }

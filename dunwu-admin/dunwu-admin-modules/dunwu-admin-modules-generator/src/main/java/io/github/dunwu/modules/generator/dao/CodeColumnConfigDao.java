@@ -9,10 +9,10 @@ import java.util.Collection;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 代码生成-字段配置 Dao 接口
+ * 代码生成-字段级别配置 Dao 接口
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-02-26
+ * @since 2021-03-02
  */
 public interface CodeColumnConfigDao extends IExtDao<CodeColumnConfig> {
 

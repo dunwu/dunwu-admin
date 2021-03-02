@@ -311,6 +311,8 @@ public class ConfigBuilder {
                 ResultSet results = preparedStatement.executeQuery()) {
                 while (results.next()) {
                     TableField field = new TableField();
+                    field.setSchemaName(dataSource.getSchemaName())
+                         .setTableName(tableInfo.getName());
                     String columnName = results.getString(dbQuery.fieldName());
                     // 避免多重主键设置，目前只取第一个找到ID，并放到list中的索引为0的位置
                     boolean isId;
@@ -330,6 +332,8 @@ public class ConfigBuilder {
                         field.setKeyFlag(true);
                         if (DbType.H2 == dbType || DbType.SQLITE == dbType || dbQuery.isKeyIdentity(results)) {
                             field.setKeyIdentityFlag(true);
+                            // 主键不允许在表单编辑
+                            field.setEnableForm(false);
                         }
                         haveId = true;
                     } else {
@@ -347,6 +351,11 @@ public class ConfigBuilder {
                     // 处理其它信息
                     field.setName(columnName);
                     field.setType(results.getString(dbQuery.fieldType()));
+                    field.setKeyType(results.getString(dbQuery.fieldKey()));
+                    if (StrUtil.isNotBlank(field.getKeyType())) {
+                        field.setKeyFlag(true);
+                        field.setEnableSort(true);
+                    }
                     INameConvert nameConvert = strategy.getNameConvert();
                     if (null != nameConvert) {
                         field.setPropertyName(nameConvert.propertyNameConvert(field));

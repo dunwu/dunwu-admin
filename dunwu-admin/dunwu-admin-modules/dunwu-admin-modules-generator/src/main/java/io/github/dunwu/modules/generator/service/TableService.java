@@ -10,21 +10,25 @@ import java.util.List;
  */
 public interface TableService {
 
+    String getCurrentSchema();
+
     /**
      * 获取所有table
      *
+     * @param schemaName schema 名
      * @return /
      */
-    Object getTables();
+    Object getTables(String schemaName);
 
     /**
      * 查询数据库元数据
      *
-     * @param name     表名
-     * @param startEnd 分页参数
+     * @param schemaName schema 名
+     * @param tableName  table 名
+     * @param startEnd   分页参数
      * @return /
      */
-    Object getTables(String name, int[] startEnd);
+    Object getTables(String schemaName, String tableName, int[] startEnd);
 
     List<CodeColumnConfigDto> getColumns(String tableName);
 

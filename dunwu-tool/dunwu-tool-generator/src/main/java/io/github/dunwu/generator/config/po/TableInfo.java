@@ -40,7 +40,8 @@ public class TableInfo {
 
     private final Set<String> importPackages = new HashSet<>();
     private boolean convert;
-
+    /** schema名称 */
+    private String schemaName;
     /** 表名 */
     private String name;
     /** 表备注 */

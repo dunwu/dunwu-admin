@@ -75,10 +75,15 @@ public class DataSourceConfig {
     public DataSourceConfig() {}
 
     public DataSourceConfig(String url, String driverName, String username, String password) {
+        this(url, driverName, username, password, null);
+    }
+
+    public DataSourceConfig(String url, String driverName, String username, String password, String schemaName) {
         this.url = url;
         this.driverName = driverName;
         this.username = username;
         this.password = password;
+        this.schemaName = schemaName;
     }
 
     /**

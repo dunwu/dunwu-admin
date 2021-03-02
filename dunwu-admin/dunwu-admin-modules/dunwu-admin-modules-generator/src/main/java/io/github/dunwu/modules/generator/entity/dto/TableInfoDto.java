@@ -11,12 +11,14 @@ import lombok.NoArgsConstructor;
  * @date 2019-01-02
  */
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class TableInfoDto {
 
+    private String schemaName;
+
     /** 表名称 */
-    private Object tableName;
+    private Object name;
 
     /** 创建日期 */
     private Object createTime;
@@ -27,7 +29,7 @@ public class TableInfoDto {
     /** 编码集 */
     private Object coding;
 
-    /** 备注 */
-    private Object note;
+    /** 注释 */
+    private Object comment;
 
 }

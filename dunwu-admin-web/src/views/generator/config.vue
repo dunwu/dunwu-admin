@@ -4,7 +4,7 @@
       <el-col style="margin-bottom: 10px">
         <el-card class="box-card" shadow="never">
           <div slot="header" class="clearfix">
-            <span class="role-span">表字段配置：{{ tableName }}</span>
+            <span class="role-span">{{ tableName }} 表字段配置</span>
             <el-button
               :loading="genLoading"
               icon="el-icon-s-promotion"
@@ -43,34 +43,104 @@
               v-loading="loading"
               :data="data"
               :max-height="tableHeight"
+              stripe
               size="small"
               style="width: 100%;margin-bottom: 15px"
             >
-              <el-table-column prop="columnName" label="字段名称" />
-              <el-table-column prop="columnType" label="字段类型" />
-              <el-table-column prop="note" label="字段描述">
+              <el-table-column prop="name" label="字段名称" width="150px" />
+              <el-table-column prop="comment" label="字段注释" width="150px" />
+              <el-table-column prop="type" label="字段数据类型" width="100px" />
+              <el-table-column prop="javaType" label="字段 Java 类型" width="100px" />
+              <el-table-column prop="keyType" label="字段KEY类型" />
+              <el-table-column label="日期表达式" width="150px">
                 <template slot-scope="scope">
-                  <el-input v-model="data[scope.$index].note" size="mini" class="edit-input" />
+                  <el-input
+                    v-if="data[scope.$index].type === 'datetime'"
+                    v-model="data[scope.$index].dateExpression"
+                    size="mini"
+                    class="edit-input"
+                  />
+                  <el-input
+                    v-else
+                    v-model="data[scope.$index].dateExpression"
+                    disabled
+                    size="mini"
+                    class="edit-input"
+                  />
                 </template>
               </el-table-column>
-              <el-table-column align="center" label="必填" width="70px">
+              <el-table-column label="字段展示名称" width="150px">
                 <template slot-scope="scope">
-                  <el-checkbox v-model="data[scope.$index].notNull" />
+                  <el-input v-model="data[scope.$index].propertyName" size="mini" class="edit-input" />
                 </template>
               </el-table-column>
-              <el-table-column align="center" label="列表" width="70px">
+              <el-table-column align="enabled" label="启用" width="70px">
                 <template slot-scope="scope">
-                  <el-checkbox v-model="data[scope.$index].listShow" />
+                  <el-checkbox v-model="data[scope.$index].enabled" />
                 </template>
               </el-table-column>
-              <el-table-column align="center" label="表单" width="70px">
+              <el-table-column align="center" label="非空" width="70px">
                 <template slot-scope="scope">
-                  <el-checkbox v-model="data[scope.$index].formShow" />
+                  <!--所有的键必须不为空-->
+                  <el-checkbox
+                    v-if="data[scope.$index].keyType === null || data[scope.$index].keyType === ''"
+                    v-model="data[scope.$index].notNull"
+                  />
+                  <el-checkbox v-else v-model="data[scope.$index].notNull" disabled />
+                </template>
+              </el-table-column>
+              <el-table-column align="center" label="出现在列表" width="70px">
+                <template slot-scope="scope">
+                  <el-checkbox v-model="data[scope.$index].enableList" />
+                </template>
+              </el-table-column>
+              <el-table-column align="center" label="出现在表单" width="70px">
+                <template slot-scope="scope">
+                  <el-checkbox v-if="data[scope.$index].keyType !== 'PRI'" v-model="data[scope.$index].enableForm" />
+                  <el-checkbox v-else v-model="data[scope.$index].enableForm" disabled />
+                </template>
+              </el-table-column>
+              <el-table-column align="center" label="出现在查询" width="70px">
+                <template slot-scope="scope">
+                  <el-checkbox v-model="data[scope.$index].enableQuery" />
+                </template>
+              </el-table-column>
+              <el-table-column align="center" label="允许排序" width="70px">
+                <template slot-scope="scope">
+                  <el-checkbox v-model="data[scope.$index].enableSort" />
+                </template>
+              </el-table-column>
+              <el-table-column label="列表类型">
+                <template slot-scope="scope">
+                  <el-select
+                    v-if="data[scope.$index].enableList"
+                    v-model="data[scope.$index].listType"
+                    filterable
+                    class="edit-input"
+                    clearable
+                    size="mini"
+                    placeholder="请选择"
+                  >
+                    <el-option label="文本" value="Text" />
+                    <el-option label="图片" value="Image" />
+                    <el-option label="日期" value="Date" />
+                  </el-select>
+                  <el-select
+                    v-else
+                    v-model="data[scope.$index].listType"
+                    filterable
+                    class="edit-input"
+                    clearable
+                    disabled
+                    size="mini"
+                    placeholder="请选择"
+                  />
                 </template>
               </el-table-column>
               <el-table-column label="表单类型">
                 <template slot-scope="scope">
                   <el-select
+                    v-if="data[scope.$index].enableForm"
                     v-model="data[scope.$index].formType"
                     filterable
                     class="edit-input"
@@ -84,11 +154,22 @@
                     <el-option label="下拉框" value="Select" />
                     <el-option label="日期框" value="Date" />
                   </el-select>
+                  <el-select
+                    v-else
+                    v-model="data[scope.$index].formType"
+                    filterable
+                    class="edit-input"
+                    disabled
+                    clearable
+                    size="mini"
+                    placeholder="请选择"
+                  />
                 </template>
               </el-table-column>
-              <el-table-column label="查询方式">
+              <el-table-column label="查询类型">
                 <template slot-scope="scope">
                   <el-select
+                    v-if="data[scope.$index].enableQuery"
                     v-model="data[scope.$index].queryType"
                     filterable
                     class="edit-input"
@@ -96,29 +177,50 @@
                     size="mini"
                     placeholder="请选择"
                   >
-                    <el-option label="=" value="=" />
-                    <el-option label="!=" value="!=" />
-                    <el-option label=">=" value=">=" />
-                    <el-option label="<=" value="<=" />
-                    <el-option label="Like" value="Like" />
-                    <el-option label="NotNull" value="NotNull" />
-                    <el-option label="BetWeen" value="BetWeen" />
+                    <el-option label="等于" value="=" />
+                    <el-option label="不等于" value="!=" />
+                    <el-option label="大于等于" value=">=" />
+                    <el-option label="小于等于" value="<=" />
+                    <el-option label="模糊匹配" value="Like" />
+                    <el-option label="非空" value="NotNull" />
+                    <el-option label="范围查询" value="BetWeen" />
                   </el-select>
+                  <el-select
+                    v-else
+                    v-model="data[scope.$index].queryType"
+                    filterable
+                    class="edit-input"
+                    clearable
+                    disabled
+                    size="mini"
+                    placeholder="请选择"
+                  />
                 </template>
               </el-table-column>
-              <el-table-column label="日期注解">
+              <el-table-column label="排序类型">
                 <template slot-scope="scope">
                   <el-select
-                    v-model="data[scope.$index].dateAnnotation"
+                    v-if="data[scope.$index].enableSort"
+                    v-model="data[scope.$index].sortType"
                     filterable
                     class="edit-input"
                     clearable
                     size="mini"
                     placeholder="请选择"
                   >
-                    <el-option label="自动创建时间" value="CreationTimestamp" />
-                    <el-option label="自动更新时间" value="UpdateTimestamp" />
+                    <el-option label="升序" value="asc" />
+                    <el-option label="降序" value="desc" />
                   </el-select>
+                  <el-select
+                    v-else
+                    v-model="data[scope.$index].sortType"
+                    filterable
+                    class="edit-input"
+                    clearable
+                    disabled
+                    size="mini"
+                    placeholder="请选择"
+                  />
                 </template>
               </el-table-column>
               <el-table-column label="关联字典">
@@ -180,10 +282,6 @@
               <el-input v-model="form.path" style="width: 40%" />
               <span style="color: #C0C0C0;margin-left: 10px;">输入views文件夹下的目录，不存在即创建</span>
             </el-form-item>
-            <!--            <el-form-item label="接口目录">-->
-            <!--              <el-input v-model="form.apiPath" style="width: 40%" />-->
-            <!--              <span style="color: #C0C0C0;margin-left: 10px;">Api存放路径[src/api]，为空则自动生成路径</span>-->
-            <!--            </el-form-item>-->
             <el-form-item label="去表前缀" prop="prefix">
               <el-input v-model="form.prefix" placeholder="默认不去除表前缀" style="width: 40%" />
               <span style="color: #C0C0C0;margin-left: 10px;">默认不去除表前缀，可自定义</span>
@@ -214,6 +312,8 @@ export default {
   data() {
     return {
       activeName: 'first',
+      tableId: null,
+      schemaName: '',
       tableName: '',
       tableHeight: 550,
       columnLoading: false,
@@ -246,10 +346,11 @@ export default {
   created() {
     this.tableHeight = document.documentElement.clientHeight - 385
     this.tableName = this.$route.params.tableName
+    this.schemaName = this.$route.params.schemaName
+    console.log('this.$route.params', this.$route.params)
     this.$nextTick(() => {
       this.init()
-      tableConfigApi.find({ tableName: this.tableName }).then(data => {
-        console.log('get', this.tableName, data)
+      tableConfigApi.find({ schemaName: this.schemaName, tableName: this.tableName }).then(data => {
         this.form = data
         // this.form.cover = this.form.cover.toString()
       })
@@ -260,15 +361,16 @@ export default {
   },
   methods: {
     beforeInit() {
-      this.url = 'api/generator/columns'
+      this.url = 'api/generator/column/page'
+      const schemaName = this.schemaName
       const tableName = this.tableName
-      this.params = { tableName }
+      this.params = { schemaName, tableName }
       return true
     },
     saveColumnConfig() {
       this.columnLoading = true
       generatorApi
-        .saveTableColumns({ tableName: this.tableName, columns: this.data })
+        .saveBatch({ schemaName: this.schemaName, tableName: this.tableName, columns: this.data })
         .then(res => {
           this.notify('保存成功', 'success')
           this.columnLoading = false
@@ -333,7 +435,7 @@ export default {
           this.notify('保存成功', 'success')
           // 生成代码
           generatorApi
-            .generator(this.tableName, 0)
+            .generator(this.schemaName, this.tableName, 0)
             .then(data => {
               this.genLoading = false
               this.notify('生成成功', 'success')
