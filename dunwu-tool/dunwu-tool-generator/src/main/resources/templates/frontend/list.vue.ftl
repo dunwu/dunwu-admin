@@ -107,7 +107,7 @@
 </template>
 
 <script>
-import ${table.entityPath}Api from './${table.entityPath}Api'
+import ${table.apiName} from './${table.apiName}'
 import CRUD, {crud, form, header, presenter} from '@crud/crud'
 import queryOperation from '@crud/Query.operation'
 import crudOperation from '@crud/CRUD.operation'
@@ -125,20 +125,20 @@ export default {
       url: 'api/<#if package.ModuleName??>/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen}<#else>${table.entityPath}</#if>',
       <#--idField: '${pkChangeColName}',-->
       sort: 'updateTime,desc',
-      crudMethod: { ...${table.entityPath}Api }
+      crudMethod: { ...${table.apiName} }
     })
   },
   data() {
     return {
-      permission: {
+      <#if table.enablePermission>permission: {
         add: ['admin', '<#if package.ModuleName??>${package.ModuleName}</#if>:${table.entityPath}:add'],
         edit: ['admin', '<#if package.ModuleName??>${package.ModuleName}</#if>:${table.entityPath}:edit'],
         del: ['admin', '<#if package.ModuleName??>${package.ModuleName}</#if>:${table.entityPath}:del']
-      }, <#if table.enableValidate>rules: {
+      }, </#if><#if table.enableValidate>rules: {
 <#list table.fields as field>
       <#if field.notNull>
         ${field.propertyName}: [
-          { required: true, message: '<#if field.comment != ''>${column.comment}</#if>不能为空', trigger: 'blur' }
+          { required: true, message: '<#if field.comment != ''>${field.comment}</#if>不能为空', trigger: 'blur' }
         ],
       </#if>
 </#list>

@@ -35,20 +35,24 @@ import java.util.Map;
 @Accessors(chain = true)
 public class TableField {
 
-    /** 字段名称 */
+    /** 字段名称（表字段） */
     private String name;
     /** 字段数据类型 */
     private String type;
+    /** 字段展示名称（实体字段） */
     private String propertyName;
+    /** 字段类型（Java 类型） */
     private IColumnType columnType;
-    /** 字段备注 */
+    /** 字段注释 */
     private String comment;
     private String fill;
-
+    /** 字段名称是否经过了转换 */
     private boolean convert;
+    /** 是否为Key */
     private boolean keyFlag = false;
+    /** Key类型 */
     private String keyType;
-    /** 主键是否为自增类型 */
+    /** 是否为自增主键 */
     private boolean keyIdentityFlag = true;
     /** 是否不允许为空 */
     private boolean notNull = true;
@@ -62,7 +66,12 @@ public class TableField {
     private String formType;
     /** 表单控件类型 */
     private String queryType;
+    /** 字典名称 */
     private String dictName;
+    /** 是否允许排序 */
+    private boolean enableSort = false;
+    /** 排序类型 */
+    private String sortType;
 
     /**
      * 自定义查询字段列表

@@ -53,7 +53,7 @@ public class TableInfo {
     private String fieldNames;
 
     /** 开启 权限校验 */
-    private boolean enablePermission = true;
+    private boolean enablePermission = false;
     /** 开启 搜索栏 */
     private boolean enableQuery = true;
     /** 开启 列表 */
