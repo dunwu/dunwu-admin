@@ -54,12 +54,12 @@ public class StrategyConfig {
     /**
      * 数据库表映射到实体的命名策略
      */
-    private NamingStrategy naming = NamingStrategy.no_change;
+    private NamingStrategy naming = NamingStrategy.underline_to_camel;
     /**
      * 数据库表字段映射到实体的命名策略
      * <p>未指定按照 naming 执行</p>
      */
-    private NamingStrategy columnNaming = null;
+    private NamingStrategy columnNaming = NamingStrategy.underline_to_camel;
     /**
      * 表前缀
      */

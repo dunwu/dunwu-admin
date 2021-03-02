@@ -133,9 +133,7 @@ public class CodeGeneratorUtil {
         String driverName = getProperty(properties, MybatisPlusGenProps.SPRING_DATASOURCE_DRIVER);
         String username = getProperty(properties, MybatisPlusGenProps.SPRING_DATASOURCE_USERNAME);
         String password = getProperty(properties, MybatisPlusGenProps.SPRING_DATASOURCE_PASSWORD);
-        DataSourceConfig config = new DataSourceConfig();
-        config.setUrl(url).setDriverName(driverName).setUsername(username).setPassword(password);
-        return config;
+        return new DataSourceConfig(url, driverName, username, password);
     }
 
     /**

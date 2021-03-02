@@ -29,7 +29,6 @@ import io.github.dunwu.generator.config.querys.H2Query;
 import io.github.dunwu.generator.config.rules.NamingStrategy;
 
 import java.io.File;
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -427,6 +426,13 @@ public class ConfigBuilder {
     // =====================================================================
 
     /**
+     * 获取数据源配置
+     */
+    public DataSourceConfig getDataSourceConfig() {
+        return dataSourceConfig;
+    }
+
+    /**
      * 获取全局配置信息
      */
     public GlobalConfig getGlobalConfig() {
@@ -628,7 +634,7 @@ public class ConfigBuilder {
     /**
      * 处理包配置
      *
-     * @param backendDir     后端代码生成路径
+     * @param globalConfig   GlobalConfig
      * @param packageConfig  PackageConfig
      * @param templateConfig TemplateConfig
      */

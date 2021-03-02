@@ -21,6 +21,8 @@ import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import java.io.File;
+
 /**
  * 全局配置
  *
@@ -54,15 +56,13 @@ public class GlobalConfig {
     private boolean baseResultMap = false;
     /** 是否在xml中添加二级缓存配置 */
     private boolean enableCache = false;
-    /**
-     * 时间类型对应策略
-     */
+    /** 时间类型对应策略 */
     private DateType dateType = DateType.TIME_PACK;
-
-    /**
-     * 开启 baseColumnList
-     */
+    /** 开启 baseColumnList */
     private boolean baseColumnList = false;
+    /** 指定生成的主键的ID类型 */
+    private IdType idType;
+
     /**
      * 各层文件名称方式，例如： %sAction 生成 UserAction %s 为占位符
      */
@@ -76,9 +76,21 @@ public class GlobalConfig {
     private String controllerName;
     private String apiName;
     private String listName;
-    /**
-     * 指定生成的主键的ID类型
-     */
-    private IdType idType;
+
+    public GlobalConfig() {}
+
+    public String getBackendDir() {
+        if (this.backendDir == null) {
+            this.backendDir = this.outputDir + File.separator + "backend";
+        }
+        return this.backendDir;
+    }
+
+    public String getFrontendDir() {
+        if (this.frontendDir == null) {
+            this.frontendDir = this.outputDir + File.separator + "frontend";
+        }
+        return this.frontendDir;
+    }
 
 }

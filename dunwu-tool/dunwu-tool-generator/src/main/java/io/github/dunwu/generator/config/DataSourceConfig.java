@@ -72,13 +72,27 @@ public class DataSourceConfig {
     /** 是否支持注释（部分数据库不支持） */
     private boolean commentSupported;
 
+    public DataSourceConfig() {}
+
+    public DataSourceConfig(String url, String driverName, String username, String password) {
+        this.url = url;
+        this.driverName = driverName;
+        this.username = username;
+        this.password = password;
+    }
+
+    /**
+     * 获取数据查询类型
+     *
+     * @return /
+     */
     public IDbQuery getDbQuery() {
         if (null == dbQuery) {
             DbType dbType = getDbType();
             DbQueryRegistry dbQueryRegistry = new DbQueryRegistry();
             // 默认 MYSQL
             dbQuery = Optional.ofNullable(dbQueryRegistry.getDbQuery(dbType))
-                .orElseGet(() -> dbQueryRegistry.getDbQuery(DbType.MYSQL));
+                              .orElseGet(() -> dbQueryRegistry.getDbQuery(DbType.MYSQL));
         }
         return dbQuery;
     }
@@ -138,7 +152,7 @@ public class DataSourceConfig {
             TypeConvertRegistry typeConvertRegistry = new TypeConvertRegistry();
             // 默认 MYSQL
             typeConvert = Optional.ofNullable(typeConvertRegistry.getTypeConvert(dbType))
-                .orElseGet(() -> typeConvertRegistry.getTypeConvert(DbType.MYSQL));
+                                  .orElseGet(() -> typeConvertRegistry.getTypeConvert(DbType.MYSQL));
         }
         return typeConvert;
     }
