@@ -17,7 +17,7 @@ package io.github.dunwu.generator.config.converts;
 
 import io.github.dunwu.generator.config.GlobalConfig;
 import io.github.dunwu.generator.config.ITypeConvert;
-import io.github.dunwu.generator.config.rules.DbColumnType;
+import io.github.dunwu.generator.config.rules.JavaColumnType;
 import io.github.dunwu.generator.config.rules.IColumnType;
 
 /**
@@ -32,36 +32,36 @@ public class DB2TypeConvert implements ITypeConvert {
     public IColumnType processTypeConvert(GlobalConfig globalConfig, String fieldType) {
         String t = fieldType.toLowerCase();
         if (t.contains("char")) {
-            return DbColumnType.STRING;
+            return JavaColumnType.STRING;
         } else if (t.contains("bigint")) {
-            return DbColumnType.LONG;
+            return JavaColumnType.LONG;
         } else if (t.contains("smallint")) {
-            return DbColumnType.BASE_SHORT;
+            return JavaColumnType.BASE_SHORT;
         } else if (t.contains("int")) {
-            return DbColumnType.INTEGER;
+            return JavaColumnType.INTEGER;
         } else if (t.contains("date") || t.contains("time")
             || t.contains("year") || t.contains("timestamp")) {
-            return DbColumnType.DATE;
+            return JavaColumnType.DATE;
         } else if (t.contains("text")) {
-            return DbColumnType.STRING;
+            return JavaColumnType.STRING;
         } else if (t.contains("bit")) {
-            return DbColumnType.BOOLEAN;
+            return JavaColumnType.BOOLEAN;
         } else if (t.contains("decimal")) {
-            return DbColumnType.BIG_DECIMAL;
+            return JavaColumnType.BIG_DECIMAL;
         } else if (t.contains("clob")) {
-            return DbColumnType.CLOB;
+            return JavaColumnType.CLOB;
         } else if (t.contains("blob")) {
-            return DbColumnType.BLOB;
+            return JavaColumnType.BLOB;
         } else if (t.contains("binary")) {
-            return DbColumnType.BYTE_ARRAY;
+            return JavaColumnType.BYTE_ARRAY;
         } else if (t.contains("float")) {
-            return DbColumnType.FLOAT;
+            return JavaColumnType.FLOAT;
         } else if (t.contains("double")) {
-            return DbColumnType.DOUBLE;
+            return JavaColumnType.DOUBLE;
         } else if (t.contains("json") || t.contains("enum")) {
-            return DbColumnType.STRING;
+            return JavaColumnType.STRING;
         }
-        return DbColumnType.STRING;
+        return JavaColumnType.STRING;
     }
 
 }

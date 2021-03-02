@@ -28,11 +28,11 @@ public class MyCodeGenerator {
             for (TableInfo table : tableInfoList) {
                 for (TableField field : table.getFields()) {
                     if (field.getName().equals("rating")) {
-                        field.setQueryType("Between");
-                        field.setFormType("Date");
+                        field.setFrontQueryType("Between");
+                        field.setFrontFormType("Date");
                     } else {
-                        field.setQueryType("Equals");
-                        field.setFormType("Input");
+                        field.setFrontQueryType("Equals");
+                        field.setFrontFormType("Input");
                     }
 
                 }

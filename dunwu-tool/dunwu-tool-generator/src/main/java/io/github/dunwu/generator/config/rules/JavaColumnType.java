@@ -21,7 +21,7 @@ package io.github.dunwu.generator.config.rules;
  * @author hubin
  * @since 2017-01-11
  */
-public enum DbColumnType implements IColumnType {
+public enum JavaColumnType implements IColumnType {
     // 基本类型
     BASE_BYTE("byte", null),
     BASE_SHORT("short", null),
@@ -75,7 +75,7 @@ public enum DbColumnType implements IColumnType {
      */
     private final String pkg;
 
-    DbColumnType(final String type, final String pkg) {
+    JavaColumnType(final String type, final String pkg) {
         this.type = type;
         this.pkg = pkg;
     }

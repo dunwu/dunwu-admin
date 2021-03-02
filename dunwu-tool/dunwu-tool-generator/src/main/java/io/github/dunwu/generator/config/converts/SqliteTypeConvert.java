@@ -17,7 +17,7 @@ package io.github.dunwu.generator.config.converts;
 
 import io.github.dunwu.generator.config.GlobalConfig;
 import io.github.dunwu.generator.config.ITypeConvert;
-import io.github.dunwu.generator.config.rules.DbColumnType;
+import io.github.dunwu.generator.config.rules.JavaColumnType;
 import io.github.dunwu.generator.config.rules.IColumnType;
 
 /**
@@ -32,52 +32,52 @@ public class SqliteTypeConvert implements ITypeConvert {
     public IColumnType processTypeConvert(GlobalConfig globalConfig, String fieldType) {
         String t = fieldType.toLowerCase();
         if (t.contains("bigint")) {
-            return DbColumnType.LONG;
+            return JavaColumnType.LONG;
         } else if (t.contains("tinyint(1)") || t.contains("boolean")) {
-            return DbColumnType.BOOLEAN;
+            return JavaColumnType.BOOLEAN;
         } else if (t.contains("int")) {
-            return DbColumnType.INTEGER;
+            return JavaColumnType.INTEGER;
         } else if (t.contains("text") || t.contains("char") || t.contains("enum")) {
-            return DbColumnType.STRING;
+            return JavaColumnType.STRING;
         } else if (t.contains("decimal") || t.contains("numeric")) {
-            return DbColumnType.BIG_DECIMAL;
+            return JavaColumnType.BIG_DECIMAL;
         } else if (t.contains("clob")) {
-            return DbColumnType.CLOB;
+            return JavaColumnType.CLOB;
         } else if (t.contains("blob")) {
-            return DbColumnType.BLOB;
+            return JavaColumnType.BLOB;
         } else if (t.contains("float")) {
-            return DbColumnType.FLOAT;
+            return JavaColumnType.FLOAT;
         } else if (t.contains("double")) {
-            return DbColumnType.DOUBLE;
+            return JavaColumnType.DOUBLE;
         } else if (t.contains("date") || t.contains("time") || t.contains("year")) {
             switch (globalConfig.getDateType()) {
                 case ONLY_DATE:
-                    return DbColumnType.DATE;
+                    return JavaColumnType.DATE;
                 case SQL_PACK:
                     switch (t) {
                         case "date":
-                            return DbColumnType.DATE_SQL;
+                            return JavaColumnType.DATE_SQL;
                         case "time":
-                            return DbColumnType.TIME;
+                            return JavaColumnType.TIME;
                         case "year":
-                            return DbColumnType.DATE_SQL;
+                            return JavaColumnType.DATE_SQL;
                         default:
-                            return DbColumnType.TIMESTAMP;
+                            return JavaColumnType.TIMESTAMP;
                     }
                 case TIME_PACK:
                     switch (t) {
                         case "date":
-                            return DbColumnType.LOCAL_DATE;
+                            return JavaColumnType.LOCAL_DATE;
                         case "time":
-                            return DbColumnType.LOCAL_TIME;
+                            return JavaColumnType.LOCAL_TIME;
                         case "year":
-                            return DbColumnType.YEAR;
+                            return JavaColumnType.YEAR;
                         default:
-                            return DbColumnType.LOCAL_DATE_TIME;
+                            return JavaColumnType.LOCAL_DATE_TIME;
                     }
             }
         }
-        return DbColumnType.STRING;
+        return JavaColumnType.STRING;
     }
 
 }

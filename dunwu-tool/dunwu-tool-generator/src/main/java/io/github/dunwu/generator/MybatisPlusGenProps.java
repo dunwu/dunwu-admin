@@ -9,31 +9,23 @@ package io.github.dunwu.generator;
 public enum MybatisPlusGenProps {
 
     // ------------------------------------- 数据源配置 -------------------------------------
-    /**
-     * 数据源 URL
-     */
+    /** 数据源 URL */
     SPRING_DATASOURCE_URL("spring.datasource.url", null),
-    /**
-     * 数据源驱动类
-     */
+    /** 数据源驱动类 */
     SPRING_DATASOURCE_DRIVER("spring.datasource.driver-class-name", null),
-    /**
-     * 数据源用户名
-     */
+    /** 数据源用户名 */
     SPRING_DATASOURCE_USERNAME("spring.datasource.username", null),
-    /**
-     * 数据源密码
-     */
+    /** 数据源密码 */
     SPRING_DATASOURCE_PASSWORD("spring.datasource.password", null),
 
     // ------------------------------------- 全局配置 -------------------------------------
-    /**
-     * 输出根路径
-     */
+    /** 输出根路径 */
     OUTPUT_DIR("mybatis.generator.gc.output.dir", System.getProperty("user.dir")),
-    /**
-     * 是否自动生成 Swagger 注解
-     */
+    /** 后端输出路径 */
+    BACKEND_DIR("mybatis.generator.gc.backend.dir", null),
+    /** 前端输出路径 */
+    FRONTEND_DIR("mybatis.generator.gc.frontend.dir", null),
+    /** 是否自动生成 Swagger 注解 */
     GC_ENABLE_SWAGGER("mybatis.generator.gc.enable.swagger", "true"),
     /**
      * 作者名

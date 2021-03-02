@@ -52,14 +52,15 @@ public class TableInfo {
     /** 字段名称，以逗号分隔 */
     private String fieldNames;
 
-    /** 开启 权限校验 */
+    /** 开启权限校验 */
     private boolean enablePermission = false;
-    /** 开启 搜索栏 */
+    /** 开启搜索 */
     private boolean enableQuery = true;
-    /** 开启 列表 */
+    /** 开启列表 */
     private boolean enableList = true;
-    /** 开启 表单 */
+    /** 开启表单 */
     private boolean enableForm = true;
+    /** 开启校验 */
     private boolean enableValidate = true;
 
     /******************* 以下为生成的后端文件名（开始） *******************/
@@ -137,8 +138,8 @@ public class TableInfo {
             this.fields = fields;
             // 收集导入包信息
             for (TableField field : fields) {
-                if (null != field.getColumnType() && null != field.getColumnType().getPkg()) {
-                    importPackages.add(field.getColumnType().getPkg());
+                if (null != field.getJavaType() && null != field.getJavaType().getPkg()) {
+                    importPackages.add(field.getJavaType().getPkg());
                 }
                 if (field.isKeyFlag()) {
                     // 主键

@@ -87,4 +87,8 @@ public interface ConstVal {
     String SUPER_DAO_IMPL_CLASS = "io.github.dunwu.data.mybatis.DaoImpl";
     String SUPER_SERVICE_CLASS = "io.github.dunwu.data.mybatis.IService";
     String SUPER_SERVICE_IMPL_CLASS = "io.github.dunwu.data.mybatis.ServiceImpl";
+
+    String JAVA_PATH = "/src/main/java";
+    String RESOURCES_PATH = "/src/main/resources";
+    String VIEWS_PATH = "/src/views";
 }

@@ -34,6 +34,10 @@ public class GlobalConfig {
 
     /** 生成文件的输出目录【默认 D 盘根目录】 */
     private String outputDir = "D://";
+    /** 后端代码生成路径 */
+    private String backendDir;
+    /** 前端代码生成路径 */
+    private String frontendDir;
     /** 是否覆盖已有文件 */
     private boolean fileOverride = false;
     /** 是否打开输出目录 */

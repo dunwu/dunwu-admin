@@ -17,7 +17,7 @@ package io.github.dunwu.generator.config.po;
 
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import io.github.dunwu.generator.config.StrategyConfig;
-import io.github.dunwu.generator.config.rules.DbColumnType;
+import io.github.dunwu.generator.config.rules.JavaColumnType;
 import io.github.dunwu.generator.config.rules.IColumnType;
 import io.github.dunwu.generator.config.rules.NamingStrategy;
 import lombok.Data;
@@ -37,17 +37,14 @@ public class TableField {
 
     /** 字段名称（表字段） */
     private String name;
-    /** 字段数据类型 */
-    private String type;
     /** 字段展示名称（实体字段） */
     private String propertyName;
-    /** 字段类型（Java 类型） */
-    private IColumnType columnType;
     /** 字段注释 */
     private String comment;
-    private String fill;
-    /** 字段名称是否经过了转换 */
-    private boolean convert;
+    /** 字段数据类型 */
+    private String type;
+    /** 字段类型（Java 类型） */
+    private IColumnType javaType;
     /** 是否为Key */
     private boolean keyFlag = false;
     /** Key类型 */
@@ -62,16 +59,24 @@ public class TableField {
     private boolean enableList = true;
     /** 是否出现在搜索 */
     private boolean enableQuery = true;
-    /** 表单控件类型 */
-    private String formType;
-    /** 表单控件类型 */
-    private String queryType;
+    /** 前端表单控件类型 */
+    private String frontFormType;
+    /** 前端搜索控件类型 */
+    private String frontQueryType;
+    /** 前端列表控件类型 */
+    private String frontListType;
     /** 字典名称 */
     private String dictName;
+    /** 日期表达式（只有当字段为时间类型时才有效） */
+    private String dateExpression;
     /** 是否允许排序 */
     private boolean enableSort = false;
     /** 排序类型 */
     private String sortType;
+    /** 字段名称是否经过了转换 */
+    private boolean convert;
+    /** {@link @TableField} 填充属性（可选） */
+    private String fill;
 
     /**
      * 自定义查询字段列表
@@ -111,8 +116,8 @@ public class TableField {
     }
 
     public String getPropertyType() {
-        if (null != columnType) {
-            return columnType.getType();
+        if (null != javaType) {
+            return javaType.getType();
         }
         return null;
     }
@@ -125,7 +130,7 @@ public class TableField {
             return propertyName.toUpperCase();
         }
         String setGetName = propertyName;
-        if (DbColumnType.BASE_BOOLEAN.getType().equalsIgnoreCase(columnType.getType())) {
+        if (JavaColumnType.BASE_BOOLEAN.getType().equalsIgnoreCase(javaType.getType())) {
             setGetName = StringUtils.removeIsPrefixIfBoolean(setGetName, Boolean.class);
         }
         // 第一个字母 小写、 第二个字母 大写 ，特殊处理

@@ -13,6 +13,7 @@ import io.github.dunwu.generator.config.rules.NamingStrategy;
 import io.github.dunwu.tool.util.PropertiesUtil;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -78,7 +79,7 @@ public class CodeGeneratorUtil {
         // 全局配置
         boolean enableSwagger = PropertiesUtil.getBoolean(properties,
             MybatisPlusGenProps.GC_ENABLE_SWAGGER.getKey(), false);
-        String outputDir = getProperty(properties, MybatisPlusGenProps.OUTPUT_DIR);
+
         String authorName = getProperty(properties, MybatisPlusGenProps.GC_AUTHOR_NAME);
 
         String xmlName = getProperty(properties, MybatisPlusGenProps.GC_XML_NAME);
@@ -89,11 +90,23 @@ public class CodeGeneratorUtil {
         String serviceImplName = getProperty(properties, MybatisPlusGenProps.GC_SERVICE_IMPL_NAME);
         String controllerName = getProperty(properties, MybatisPlusGenProps.GC_CONTROLLER_NAME);
 
+        String outputDir = getProperty(properties, MybatisPlusGenProps.OUTPUT_DIR);
+        String backendDir = getProperty(properties, MybatisPlusGenProps.BACKEND_DIR);
+        String frontendDir = getProperty(properties, MybatisPlusGenProps.FRONTEND_DIR);
+        if (StrUtil.isBlank(backendDir)) {
+            backendDir = outputDir + File.separator + "backend";
+        }
+        if (StrUtil.isBlank(frontendDir)) {
+            frontendDir = outputDir + File.separator + "frontend";
+        }
+
         GlobalConfig config = new GlobalConfig();
         config.setOpen(false)
               .setFileOverride(true)
               .setActiveRecord(false)
               .setOutputDir(outputDir)
+              .setBackendDir(backendDir)
+              .setFrontendDir(frontendDir)
               .setXmlName(xmlName)
               .setMapperName(mapperName)
               .setDaoName(daoName)

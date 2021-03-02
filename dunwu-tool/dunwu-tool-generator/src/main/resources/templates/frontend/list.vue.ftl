@@ -7,11 +7,11 @@
       <div v-if="crud.props.searchToggle">
         <!-- 搜索 -->
   <#list table.fields as field>
-    <#if field.queryType != 'Between'>
+    <#if field.frontQueryType != 'Between'>
         <label class="el-form-item-label"><#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if></label>
         <el-input v-model="query.${field.propertyName}" clearable placeholder="<#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if>" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
     </#if>
-    <#if field.queryType = 'Between'>
+    <#if field.frontQueryType = 'Between'>
         <date-range-picker
             v-model="query.${field.propertyName}"
             start-placeholder="${field.propertyName}Start"
@@ -37,17 +37,17 @@
   <#list table.fields as field>
     <#if field.enableForm>
         <el-form-item label="<#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if>"<#if field.notNull> prop="${field.propertyName}"</#if>>
-      <#if field.formType = 'Input'>
+      <#if field.frontFormType = 'Input'>
           <el-input v-model="form.${field.propertyName}" style="width: 370px;" />
-      <#elseif field.formType = 'Textarea'>
+      <#elseif field.frontFormType = 'Textarea'>
           <el-input v-model="form.${field.propertyName}" :rows="3" type="textarea" style="width: 370px;" />
-      <#elseif field.formType = 'Radio'>
+      <#elseif field.frontFormType = 'Radio'>
         <#if (field.dictName)?? && (field.dictName)!="">
           <el-radio v-model="form.${field.propertyName}" v-for="item in dict.${field.dictName}" :key="item.id" :label="item.value">{{ item.label }}</el-radio>
         <#else>
                 未设置字典，请手动设置 Radio
         </#if>
-      <#elseif field.formType = 'Select'>
+      <#elseif field.frontFormType = 'Select'>
         <#if (field.dictName)?? && (field.dictName)!="">
           <el-select v-model="form.${field.propertyName}" filterable placeholder="请选择">
             <el-option

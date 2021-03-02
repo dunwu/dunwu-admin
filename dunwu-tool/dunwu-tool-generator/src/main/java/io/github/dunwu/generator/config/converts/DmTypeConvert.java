@@ -17,7 +17,7 @@ package io.github.dunwu.generator.config.converts;
 
 import io.github.dunwu.generator.config.GlobalConfig;
 import io.github.dunwu.generator.config.ITypeConvert;
-import io.github.dunwu.generator.config.rules.DbColumnType;
+import io.github.dunwu.generator.config.rules.JavaColumnType;
 import io.github.dunwu.generator.config.rules.IColumnType;
 
 /**
@@ -36,7 +36,7 @@ public class DmTypeConvert implements ITypeConvert {
 
     interface Handler {
 
-        DbColumnType getDbColumnType(String fieldType);
+        JavaColumnType getDbColumnType(String fieldType);
 
     }
 
@@ -46,10 +46,10 @@ public class DmTypeConvert implements ITypeConvert {
     class BasicDataTypeHandler implements Handler {
 
         @Override
-        public DbColumnType getDbColumnType(String fieldType) {
+        public JavaColumnType getDbColumnType(String fieldType) {
             //字符数据类型: CHAR,CHARACTER,VARCHAR
             if (fieldType.contains("char")) {
-                return DbColumnType.STRING;
+                return JavaColumnType.STRING;
             }
             /**
              *  数值数据类型:
@@ -60,37 +60,37 @@ public class DmTypeConvert implements ITypeConvert {
                 || fieldType.contains("decimal")
                 || fieldType.contains("dec")
                 || fieldType.contains("money")) {
-                return DbColumnType.BIG_DECIMAL;
+                return JavaColumnType.BIG_DECIMAL;
             } else if (fieldType.contains("bit")
                 || fieldType.contains("bool")
                 || fieldType.contains("boolean")) {
-                return DbColumnType.BOOLEAN;
+                return JavaColumnType.BOOLEAN;
             } else if (fieldType.contains("integer") || fieldType.contains("int")) {
-                return DbColumnType.INTEGER;
+                return JavaColumnType.INTEGER;
             } else if (fieldType.contains("bigint")) {
-                return DbColumnType.BIG_INTEGER;
+                return JavaColumnType.BIG_INTEGER;
             } else if (fieldType.contains("tinyint")
                 || fieldType.contains("byte")
                 || fieldType.contains("smallint")
             ) {
-                return DbColumnType.INTEGER;
+                return JavaColumnType.INTEGER;
             } else if (fieldType.contains("binary")
                 || fieldType.contains("varbinary")
             ) {
-                return DbColumnType.BYTE_ARRAY;
+                return JavaColumnType.BYTE_ARRAY;
             }
             /**
              * 近似数值数据类型:
              * FLOAT
              */
             else if (fieldType.contains("float")) {
-                return DbColumnType.FLOAT;
+                return JavaColumnType.FLOAT;
             }
             /**
              * DOUBLE, DOUBLE PRECISION,REAL
              */
             else if (fieldType.contains("double") || fieldType.contains("real")) {
-                return DbColumnType.DOUBLE;
+                return JavaColumnType.DOUBLE;
             }
             return new DateTimeDataTypeHandler().getDbColumnType(fieldType);
         }
@@ -103,11 +103,11 @@ public class DmTypeConvert implements ITypeConvert {
     class DateTimeDataTypeHandler implements Handler {
 
         @Override
-        public DbColumnType getDbColumnType(String fieldType) {
+        public JavaColumnType getDbColumnType(String fieldType) {
             if (fieldType.contains("date")
                 || fieldType.contains("time")
                 || fieldType.contains("timestamp")) {
-                return DbColumnType.DATE;
+                return JavaColumnType.DATE;
             }
             return new MultimediaDataTypeHandler().getDbColumnType(fieldType);
         }
@@ -121,17 +121,17 @@ public class DmTypeConvert implements ITypeConvert {
     class MultimediaDataTypeHandler implements Handler {
 
         @Override
-        public DbColumnType getDbColumnType(String fieldType) {
+        public JavaColumnType getDbColumnType(String fieldType) {
             if (fieldType.contains("text") || fieldType.contains("longvarchar")) {
-                return DbColumnType.STRING;
+                return JavaColumnType.STRING;
             } else if (fieldType.contains("clob")) {
-                return DbColumnType.CLOB;
+                return JavaColumnType.CLOB;
             } else if (fieldType.contains("blob")) {
-                return DbColumnType.BLOB;
+                return JavaColumnType.BLOB;
             } else if (fieldType.contains("image")) {
-                return DbColumnType.BYTE_ARRAY;
+                return JavaColumnType.BYTE_ARRAY;
             }
-            return DbColumnType.STRING;
+            return JavaColumnType.STRING;
         }
 
     }

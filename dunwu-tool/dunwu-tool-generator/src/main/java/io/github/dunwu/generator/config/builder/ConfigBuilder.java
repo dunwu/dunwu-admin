@@ -29,6 +29,7 @@ import io.github.dunwu.generator.config.querys.H2Query;
 import io.github.dunwu.generator.config.rules.NamingStrategy;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -120,9 +121,9 @@ public class ConfigBuilder {
 
         // 包配置
         if (null == packageConfig) {
-            handlerPackage(this.templateConfig, this.globalConfig.getOutputDir(), new PackageConfig());
+            handlerPackage(this.globalConfig, new PackageConfig(), this.templateConfig);
         } else {
-            handlerPackage(this.templateConfig, this.globalConfig.getOutputDir(), packageConfig);
+            handlerPackage(this.globalConfig, packageConfig, this.templateConfig);
         }
 
         processTypes(this.strategyConfig);
@@ -353,7 +354,7 @@ public class ConfigBuilder {
                     } else {
                         field.setPropertyName(strategy, processName(field.getName(), strategy.getNaming(), strategy));
                     }
-                    field.setColumnType(dataSource.getTypeConvert().processTypeConvert(global, field));
+                    field.setJavaType(dataSource.getTypeConvert().processTypeConvert(global, field));
                     if (dataSource.isCommentSupported()) {
                         field.setComment(results.getString(dbQuery.fieldComment()));
                     }
@@ -627,28 +628,28 @@ public class ConfigBuilder {
     /**
      * 处理包配置
      *
-     * @param template  TemplateConfig
-     * @param outputDir
-     * @param config    PackageConfig
+     * @param backendDir     后端代码生成路径
+     * @param packageConfig  PackageConfig
+     * @param templateConfig TemplateConfig
      */
-    private void handlerPackage(TemplateConfig template, String outputDir, PackageConfig config) {
+    private void handlerPackage(GlobalConfig globalConfig, PackageConfig packageConfig, TemplateConfig templateConfig) {
         // 包信息
         packageInfo = new HashMap<>(11);
-        packageInfo.put(ConstVal.MODULE_NAME, config.getModuleName());
-        packageInfo.put(ConstVal.XML,
-            config.getXml() + (config.getModuleName() == null ? "" : StringPool.SLASH + config.getModuleName()));
-        packageInfo.put(ConstVal.ENTITY, joinPackage(config.getParent(), config.getEntity()));
-        packageInfo.put(ConstVal.DTO, joinPackage(config.getParent(), config.getDto()));
-        packageInfo.put(ConstVal.QUERY, joinPackage(config.getParent(), config.getQuery()));
-        packageInfo.put(ConstVal.MAPPER, joinPackage(config.getParent(), config.getMapper()));
-        packageInfo.put(ConstVal.DAO, joinPackage(config.getParent(), config.getDao()));
-        packageInfo.put(ConstVal.DAO_IMPL, joinPackage(config.getParent(), config.getDaoImpl()));
-        packageInfo.put(ConstVal.SERVICE, joinPackage(config.getParent(), config.getService()));
-        packageInfo.put(ConstVal.SERVICE_IMPL, joinPackage(config.getParent(), config.getServiceImpl()));
-        packageInfo.put(ConstVal.CONTROLLER, joinPackage(config.getParent(), config.getController()));
+        packageInfo.put(ConstVal.MODULE_NAME, packageConfig.getModuleName());
+        packageInfo.put(ConstVal.XML, packageConfig.getXml() +
+            (StrUtil.isBlank(packageConfig.getModuleName()) ? "" : StringPool.SLASH + packageConfig.getModuleName()));
+        packageInfo.put(ConstVal.ENTITY, joinPackage(packageConfig.getParent(), packageConfig.getEntity()));
+        packageInfo.put(ConstVal.DTO, joinPackage(packageConfig.getParent(), packageConfig.getDto()));
+        packageInfo.put(ConstVal.QUERY, joinPackage(packageConfig.getParent(), packageConfig.getQuery()));
+        packageInfo.put(ConstVal.MAPPER, joinPackage(packageConfig.getParent(), packageConfig.getMapper()));
+        packageInfo.put(ConstVal.DAO, joinPackage(packageConfig.getParent(), packageConfig.getDao()));
+        packageInfo.put(ConstVal.DAO_IMPL, joinPackage(packageConfig.getParent(), packageConfig.getDaoImpl()));
+        packageInfo.put(ConstVal.SERVICE, joinPackage(packageConfig.getParent(), packageConfig.getService()));
+        packageInfo.put(ConstVal.SERVICE_IMPL, joinPackage(packageConfig.getParent(), packageConfig.getServiceImpl()));
+        packageInfo.put(ConstVal.CONTROLLER, joinPackage(packageConfig.getParent(), packageConfig.getController()));
 
         // 自定义路径
-        Map<String, String> configPathInfo = config.getPathInfo();
+        Map<String, String> configPathInfo = packageConfig.getPathInfo();
         if (null != configPathInfo) {
             pathInfoMap = configPathInfo;
         } else {
@@ -656,27 +657,31 @@ public class ConfigBuilder {
             pathInfoMap = new HashMap<>(11);
 
             // 设置 MyBatis Plus 各个 java 文件的包路径
-            String javaDir = outputDir + "/backend/src/main/java";
-            addPathInfo(pathInfoMap, template.getEntity(getGlobalConfig().isKotlin()), javaDir, ConstVal.ENTITY_PATH,
-                ConstVal.ENTITY);
-            addPathInfo(pathInfoMap, template.getDto(), javaDir, ConstVal.DTO_PATH, ConstVal.DTO);
-            addPathInfo(pathInfoMap, template.getQuery(), javaDir, ConstVal.QUERY_PATH, ConstVal.QUERY);
-            addPathInfo(pathInfoMap, template.getMapper(), javaDir, ConstVal.MAPPER_PATH, ConstVal.MAPPER);
-            addPathInfo(pathInfoMap, template.getDao(), javaDir, ConstVal.DAO_PATH, ConstVal.DAO);
-            addPathInfo(pathInfoMap, template.getDaoImpl(), javaDir, ConstVal.DAO_IMPL_PATH, ConstVal.DAO_IMPL);
-            addPathInfo(pathInfoMap, template.getService(), javaDir, ConstVal.SERVICE_PATH, ConstVal.SERVICE);
-            addPathInfo(pathInfoMap, template.getServiceImpl(), javaDir, ConstVal.SERVICE_IMPL_PATH,
+            String javaDir = globalConfig.getBackendDir() +
+                ConstVal.JAVA_PATH.replaceAll("//", StringPool.BACK_SLASH + File.separator);
+            addPathInfo(pathInfoMap, templateConfig.getEntity(getGlobalConfig().isKotlin()), javaDir,
+                ConstVal.ENTITY_PATH, ConstVal.ENTITY);
+            addPathInfo(pathInfoMap, templateConfig.getDto(), javaDir, ConstVal.DTO_PATH, ConstVal.DTO);
+            addPathInfo(pathInfoMap, templateConfig.getQuery(), javaDir, ConstVal.QUERY_PATH, ConstVal.QUERY);
+            addPathInfo(pathInfoMap, templateConfig.getMapper(), javaDir, ConstVal.MAPPER_PATH, ConstVal.MAPPER);
+            addPathInfo(pathInfoMap, templateConfig.getDao(), javaDir, ConstVal.DAO_PATH, ConstVal.DAO);
+            addPathInfo(pathInfoMap, templateConfig.getDaoImpl(), javaDir, ConstVal.DAO_IMPL_PATH, ConstVal.DAO_IMPL);
+            addPathInfo(pathInfoMap, templateConfig.getService(), javaDir, ConstVal.SERVICE_PATH, ConstVal.SERVICE);
+            addPathInfo(pathInfoMap, templateConfig.getServiceImpl(), javaDir, ConstVal.SERVICE_IMPL_PATH,
                 ConstVal.SERVICE_IMPL);
-            addPathInfo(pathInfoMap, template.getController(), javaDir, ConstVal.CONTROLLER_PATH, ConstVal.CONTROLLER);
+            addPathInfo(pathInfoMap, templateConfig.getController(), javaDir, ConstVal.CONTROLLER_PATH,
+                ConstVal.CONTROLLER);
 
             // 设置 MyBatis Plus 的 Mapper.xml 文件的包路径
-            String resourcesDir = outputDir + "/backend/src/main/resources";
-            addPathInfo(pathInfoMap, template.getXml(), resourcesDir, ConstVal.XML_PATH, ConstVal.XML);
+            String resourcesDir = globalConfig.getBackendDir() +
+                ConstVal.RESOURCES_PATH.replaceAll("//", StringPool.BACK_SLASH + File.separator);
+            addPathInfo(pathInfoMap, templateConfig.getXml(), resourcesDir, ConstVal.XML_PATH, ConstVal.XML);
 
             // 设置前端文件的包路径
-            String viewsDir = outputDir + "/frontend/src/views";
-            addPathInfo(pathInfoMap, template.getApi(), viewsDir, ConstVal.API_PATH, ConstVal.MODULE_NAME);
-            addPathInfo(pathInfoMap, template.getList(), viewsDir, ConstVal.LIST_PATH, ConstVal.MODULE_NAME);
+            String viewsDir = globalConfig.getFrontendDir() +
+                ConstVal.VIEWS_PATH.replaceAll("//", StringPool.BACK_SLASH + File.separator);
+            addPathInfo(pathInfoMap, templateConfig.getApi(), viewsDir, ConstVal.API_PATH, ConstVal.MODULE_NAME);
+            addPathInfo(pathInfoMap, templateConfig.getList(), viewsDir, ConstVal.LIST_PATH, ConstVal.MODULE_NAME);
         }
     }
 
