@@ -305,7 +305,7 @@ public class GenUtil {
             }
 
             // 存储字段类型
-            listMap.put("columnType", colType);
+            listMap.put("javaType", colType);
             // 存储字原始段名称
             listMap.put("columnName", column.getColumnName());
             // 不为空

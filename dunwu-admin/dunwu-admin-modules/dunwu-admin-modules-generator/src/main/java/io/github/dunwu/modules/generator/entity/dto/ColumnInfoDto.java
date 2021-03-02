@@ -20,7 +20,7 @@ public class ColumnInfoDto {
     /** 列的名称 */
     private String columnName;
     /** 列的数据类型 */
-    private String columnType;
+    private String javaType;
     /** 列的Key类型 */
     private String columnKey;
     /** 列的默认值 */

@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
  * 代码生成-表级别配置 Service 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-02-28
+ * @since 2021-03-02
  */
 @Service
 public class CodeTableConfigServiceImpl extends ServiceImpl implements CodeTableConfigService {
@@ -126,9 +126,9 @@ public class CodeTableConfigServiceImpl extends ServiceImpl implements CodeTable
         CodeTableConfigDto tableConfigDto = dao.pojoByQuery(query, this::doToDto);
         if (tableConfigDto == null) {
             tableConfigDto = new CodeTableConfigDto();
-            String schema = StrUtil.isNotBlank(query.getTableSchema()) ? query.getTableSchema() : getCurrentSchema();
-            tableConfigDto.setTableSchema(schema);
-            tableConfigDto.setTableName(query.getTableName());
+            String schema = StrUtil.isNotBlank(query.getSchemaName()) ? query.getSchemaName() : getCurrentSchema();
+            tableConfigDto.setSchemaName(schema);
+            tableConfigDto.setName(query.getName());
         }
         return tableConfigDto;
     }

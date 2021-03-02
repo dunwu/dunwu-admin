@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
  * 代码生成-表级别配置 Dao 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-02-28
+ * @since 2021-03-02
  */
 @Dao
 public class CodeTableConfigDaoImpl extends BaseExtDaoImpl<CodeTableConfigMapper, CodeTableConfig> implements CodeTableConfigDao {
@@ -27,16 +27,24 @@ public class CodeTableConfigDaoImpl extends BaseExtDaoImpl<CodeTableConfigMapper
         for (CodeTableConfigDto item : list) {
             Map<String, Object> map = new LinkedHashMap<>();
             map.put("ID", item.getId());
-            map.put("数据库Schema", item.getTableSchema());
-            map.put("数据库Table", item.getTableName());
+            map.put("Schema名称", item.getSchemaName());
+            map.put("Table名称", item.getName());
+            map.put("Table注释", item.getComment());
+            map.put("开启权限校验", item.getEnablePermission());
+            map.put("开启搜索", item.getEnableQuery());
+            map.put("开启列表", item.getEnableList());
+            map.put("开启表单", item.getEnableForm());
+            map.put("开启校验", item.getEnableValidate());
             map.put("作者", item.getAuthor());
-            map.put("是否覆盖", item.getCover());
+            map.put("允许覆盖", item.getEnableCover());
+            map.put("开启Swagger", item.getEnableSwagger());
             map.put("模块名称", item.getModuleName());
-            map.put("至于哪个包下", item.getPack());
-            map.put("前端代码生成的路径", item.getPath());
-            map.put("前端Api文件路径", item.getApiPath());
+            map.put("包路径", item.getPackagePath());
+            map.put("输出路径", item.getOutputPath());
+            map.put("后端代码路径", item.getBackendPath());
+            map.put("前端代码路径", item.getFrontendPath());
             map.put("表前缀", item.getPrefix());
-            map.put("接口名称", item.getApiAlias());
+            map.put("REST接口名称", item.getApiUrl());
             mapList.add(map);
         }
         ServletUtil.downloadExcel(mapList, response);

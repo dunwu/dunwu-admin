@@ -43,7 +43,7 @@ public class CodeColumnConfig implements Serializable {
     private String columnName;
 
     @ApiModelProperty(value = "字段类型")
-    private String columnType;
+    private String javaType;
 
     @ApiModelProperty(value = "字段KEY类型")
     private String columnKey;

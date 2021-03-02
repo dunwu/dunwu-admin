@@ -4,6 +4,7 @@ import io.github.dunwu.data.core.BaseResult;
 import io.github.dunwu.data.core.DataListResult;
 import io.github.dunwu.data.core.DataResult;
 import io.github.dunwu.data.core.PageResult;
+import io.github.dunwu.data.util.PageUtil;
 import io.github.dunwu.data.validator.annotation.AddCheck;
 import io.github.dunwu.data.validator.annotation.EditCheck;
 import io.github.dunwu.modules.generator.entity.CodeTableConfig;
@@ -11,12 +12,9 @@ import io.github.dunwu.modules.generator.entity.dto.CodeTableConfigDto;
 import io.github.dunwu.modules.generator.entity.query.CodeTableConfigQuery;
 import io.github.dunwu.modules.generator.service.CodeTableConfigService;
 import io.github.dunwu.modules.generator.service.TableService;
-import io.github.dunwu.util.PageUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
  * 代码生成-表级别配置 Controller 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-02-28
+ * @since 2021-03-02
  */
 @RestController
 @RequestMapping("/generator/table")

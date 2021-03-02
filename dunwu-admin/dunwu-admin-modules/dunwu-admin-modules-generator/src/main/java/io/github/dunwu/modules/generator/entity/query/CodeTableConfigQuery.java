@@ -1,23 +1,19 @@
 package io.github.dunwu.modules.generator.entity.query;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import java.io.Serializable;
 import io.github.dunwu.data.core.annotation.QueryField;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
-import java.util.List;
+import java.io.Serializable;
 
 /**
  * 代码生成-表级别配置 Query 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-02-28
+ * @since 2021-03-02
  */
 @Data
 @Accessors(chain = true)
@@ -27,46 +23,76 @@ public class CodeTableConfigQuery implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "数据库Schema")
+    @ApiModelProperty(value = "Schema名称")
     @QueryField
-    private String tableSchema;
+    private String schemaName;
 
-    @ApiModelProperty(value = "数据库Table")
+    @ApiModelProperty(value = "Table名称")
     @QueryField
-    private String tableName;
+    private String name;
+
+    @ApiModelProperty(value = "Table注释")
+    @QueryField
+    private String comment;
+
+    @ApiModelProperty(value = "开启权限校验")
+    @QueryField
+    private Boolean enablePermission;
+
+    @ApiModelProperty(value = "开启搜索")
+    @QueryField
+    private Boolean enableQuery;
+
+    @ApiModelProperty(value = "开启列表")
+    @QueryField
+    private Boolean enableList;
+
+    @ApiModelProperty(value = "开启表单")
+    @QueryField
+    private Boolean enableForm;
+
+    @ApiModelProperty(value = "开启校验")
+    @QueryField
+    private Boolean enableValidate;
 
     @ApiModelProperty(value = "作者")
     @QueryField
     private String author;
 
-    @ApiModelProperty(value = "是否覆盖")
+    @ApiModelProperty(value = "允许覆盖")
     @QueryField
-    private Boolean cover;
+    private Boolean enableCover;
+
+    @ApiModelProperty(value = "开启Swagger")
+    @QueryField
+    private Boolean enableSwagger;
 
     @ApiModelProperty(value = "模块名称")
     @QueryField
     private String moduleName;
 
-    @ApiModelProperty(value = "至于哪个包下")
+    @ApiModelProperty(value = "包路径")
     @QueryField
-    private String pack;
+    private String packagePath;
 
-    @ApiModelProperty(value = "前端代码生成的路径")
+    @ApiModelProperty(value = "输出路径")
     @QueryField
-    private String path;
+    private String outputPath;
 
-    @ApiModelProperty(value = "前端Api文件路径")
+    @ApiModelProperty(value = "后端代码路径")
     @QueryField
-    private String apiPath;
+    private String backendPath;
+
+    @ApiModelProperty(value = "前端代码路径")
+    @QueryField
+    private String frontendPath;
 
     @ApiModelProperty(value = "表前缀")
     @QueryField
     private String prefix;
 
-    @ApiModelProperty(value = "接口名称")
+    @ApiModelProperty(value = "REST接口名称")
     @QueryField
-    private String apiAlias;
-
-
+    private String apiUrl;
 
 }

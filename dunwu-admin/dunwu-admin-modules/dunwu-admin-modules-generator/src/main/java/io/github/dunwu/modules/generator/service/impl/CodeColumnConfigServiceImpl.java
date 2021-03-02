@@ -7,9 +7,11 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.ZipUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.github.dunwu.data.mybatis.ServiceImpl;
+import io.github.dunwu.generator.CodeGenerator;
 import io.github.dunwu.generator.CodeGeneratorUtil;
-import io.github.dunwu.generator.MybatisPlusGenProps;
 import io.github.dunwu.generator.config.builder.ConfigBuilder;
+import io.github.dunwu.generator.config.po.TableField;
+import io.github.dunwu.generator.config.po.TableInfo;
 import io.github.dunwu.generator.engine.TemplateContent;
 import io.github.dunwu.modules.generator.dao.CodeColumnConfigDao;
 import io.github.dunwu.modules.generator.entity.CodeColumnConfig;
@@ -194,7 +196,7 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
             CodeColumnConfig entity = null;
             for (CodeColumnConfig e : codeColumnConfigs) {
                 if (e.getColumnName().equalsIgnoreCase(c.getColumnName())) {
-                    toEntity(e, c);
+                    // toEntity(e, c);
                     entities.add(e);
                     entity = e;
                 }
@@ -205,7 +207,7 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
             }
 
             entity = new CodeColumnConfig();
-            toEntity(entity, c);
+            // toEntity(entity, c);
             entities.add(entity);
         }
 
@@ -217,13 +219,15 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
     }
 
     @Override
-    public void generate(CodeTableConfigDto tableConfig, List<CodeColumnConfigDto> columnConfigs,
+    public void generate(CodeTableConfigDto tableConfigDto, List<CodeColumnConfigDto> columnConfigs,
         HttpServletRequest request, HttpServletResponse response) {
-        String tmpPath = System.getProperty("java.io.tmpdir") + File.separator + "dunwu";
-        Properties properties = getConfigs(tmpPath, tableConfig, columnConfigs);
-        new CodeGeneratorUtil(properties).generate();
-        String codePath = tmpPath + File.separator + "codes";
-        String zipFilePath = tmpPath + File.separator + "codes.zip";
+        // String tmpPath = System.getProperty("java.io.tmpdir") + File.separator + "dunwu";
+        // Properties properties = getConfigs(tmpPath, tableConfigDto, columnConfigs);
+        ConfigBuilder builder = transToConfigBuilder(tableConfigDto);
+
+        String codePath = builder.getGlobalConfig().getOutputDir() + File.separator + "codes";
+        String zipFilePath = builder.getGlobalConfig().getOutputDir() + File.separator + "codes.zip";
+
         FileUtil.mkdir(codePath);
         ZipUtil.zip(codePath, zipFilePath);
         log.info("代码已生成到：{}", zipFilePath);
@@ -233,53 +237,53 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
     @Override
     public List<TemplateContent> getPreviewList(CodeTableConfigDto tableConfig,
         List<CodeColumnConfigDto> columnConfigs) {
-        String tmpPath = System.getProperty("java.io.tmpdir") + "/dunwu";
-        Properties properties = getConfigs(tmpPath, tableConfig, columnConfigs);
-        ConfigBuilder builder = CodeGeneratorUtil.initConfigBuilder(properties);
-        return new CodeGeneratorUtil(properties).getPreviewList();
+        ConfigBuilder builder = CodeGeneratorUtil.initConfigBuilder();
+        CodeGenerator generator = new CodeGenerator(builder);
+        return generator.preview();
     }
 
     private String getCurrentSchema() {
         return jdbcTemplate.queryForObject("SELECT database()", String.class);
     }
 
-    @Override
-    public Properties getConfigs(String outputDir, CodeTableConfigDto tableConfig,
-        List<CodeColumnConfigDto> columnConfigs) {
-        Properties properties = new Properties();
-
-        // 全局性配置
-        properties.put(MybatisPlusGenProps.OUTPUT_DIR.getKey(), outputDir);
-        properties.put(MybatisPlusGenProps.GC_AUTHOR_NAME.getKey(), tableConfig.getAuthor());
-        properties.put(MybatisPlusGenProps.GC_ENABLE_SWAGGER.getKey(), "true");
-        properties.put("mybatis-plus.configuration.default-enum-type-handler",
-            "org.apache.ibatis.type.EnumOrdinalTypeHandler");
-
-        // 数据源相关配置
-        properties.put(MybatisPlusGenProps.SPRING_DATASOURCE_URL.getKey(),
-            "jdbc:mysql://localhost:3306/dunwu_admin?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8");
-        properties.put(MybatisPlusGenProps.SPRING_DATASOURCE_DRIVER.getKey(), "com.mysql.cj.jdbc.Driver");
-        properties.put(MybatisPlusGenProps.SPRING_DATASOURCE_USERNAME.getKey(), "root");
-        properties.put(MybatisPlusGenProps.SPRING_DATASOURCE_PASSWORD.getKey(), "root");
-
-        // 包、模块配置
-        properties.put(MybatisPlusGenProps.PC_PACKAGE_NAME.getKey(), tableConfig.getPack());
-        properties.put(MybatisPlusGenProps.PC_MODULE_NAME.getKey(), tableConfig.getModuleName());
-
-        properties.put(MybatisPlusGenProps.SC_TABLE_NAME.getKey(), tableConfig.getTableName());
-        return properties;
+    public ConfigBuilder transToConfigBuilder(CodeTableConfigDto tableConfig) {
+        TableInfo tableInfo = transToTableInfo(tableConfig);
+        ConfigBuilder builder = CodeGeneratorUtil.initConfigBuilder();
+        builder.getGlobalConfig()
+               .setAuthor(tableConfig.getAuthor())
+               .setBackendDir(tableConfig.getBackendPath())
+               .setFrontendDir(tableConfig.getFrontendPath())
+               .setFileOverride(tableConfig.getEnableCover());
+        builder.setTableInfoList(Collections.singletonList(tableInfo));
+        return builder;
     }
 
-    public void toEntity(CodeColumnConfig entity, ColumnInfoDto item) {
-        entity.setTableSchema(item.getTableSchema())
-              .setTableName(item.getTableName())
-              .setColumnName(item.getColumnName())
-              .setColumnType(item.getDataType())
-              .setColumnKey(item.getColumnKey())
-              .setColumnComment(item.getColumnComment())
-              .setNotNull(item.getIsNullable().equalsIgnoreCase("NO"))
-              .setExtra(item.getExtra());
+    public TableInfo transToTableInfo(CodeTableConfigDto tableConfigDto) {
+        List<TableField> fields = new ArrayList<>();
+        for (CodeColumnConfigDto column : tableConfigDto.getColumns()) {
+            TableField field = transToTableInfo(column);
+            fields.add(field);
+        }
+        TableInfo tableInfo = BeanUtil.toBean(tableConfigDto, TableInfo.class);
+        tableInfo.setFields(fields);
+        return tableInfo;
     }
+
+    public TableField transToTableInfo(CodeColumnConfigDto columnConfigDto) {
+        TableField tableField = BeanUtil.toBean(columnConfigDto, TableField.class);
+        return tableField;
+    }
+
+    // public void toEntity(CodeColumnConfig entity, ColumnInfoDto item) {
+    //     entity.setTableSchema(item.getTableSchema())
+    //           .setTableName(item.getTableName())
+    //           .setColumnName(item.getColumnName())
+    //           .setColumnType(item.getDataType())
+    //           .setColumnKey(item.getColumnKey())
+    //           .setColumnComment(item.getColumnComment())
+    //           .setNotNull(item.getIsNullable().equalsIgnoreCase("NO"))
+    //           .setExtra(item.getExtra());
+    // }
 
     @Override
     public void addOrSaveColumns(TableColumnInfoDto entity) {
@@ -291,7 +295,7 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
                                           .map(i -> (Serializable) i.getId())
                                           .collect(Collectors.toSet());
         removeByIds(ids);
-        saveBatch(entity.getColumns());
+        // saveBatch(entity.getColumns());
     }
 
 }

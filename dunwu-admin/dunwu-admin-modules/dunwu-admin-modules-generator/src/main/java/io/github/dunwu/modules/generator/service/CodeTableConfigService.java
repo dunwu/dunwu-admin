@@ -1,9 +1,9 @@
 package io.github.dunwu.modules.generator.service;
 
 import io.github.dunwu.data.core.annotation.QueryField;
+import io.github.dunwu.data.mybatis.IService;
 import io.github.dunwu.modules.generator.entity.CodeTableConfig;
 import io.github.dunwu.modules.generator.entity.dto.CodeTableConfigDto;
-import io.github.dunwu.data.mybatis.IService;
 import io.github.dunwu.modules.generator.entity.query.CodeTableConfigQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  * 代码生成-表级别配置 Service 接口
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-02-28
+ * @since 2021-03-02
  */
 public interface CodeTableConfigService extends IService {
 
