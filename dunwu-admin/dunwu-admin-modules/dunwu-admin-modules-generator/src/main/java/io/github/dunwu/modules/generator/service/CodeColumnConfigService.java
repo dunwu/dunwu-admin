@@ -91,7 +91,7 @@ public interface CodeColumnConfigService extends IService {
      * @param query 查询条件，根据 query 中的 {@link QueryField} 注解自动组装查询条件
      * @return {@link List<CodeColumnConfigDto>}
      */
-    List<CodeColumnConfigDto> pojoListByQuery(Object query);
+    List<CodeColumnConfigDto> pojoListByQuery(CodeColumnConfigQuery query);
 
     /**
      * 根据 id 查询 {@link CodeColumnConfigDto}

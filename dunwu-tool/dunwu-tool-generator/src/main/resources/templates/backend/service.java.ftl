@@ -75,19 +75,19 @@ public interface ${table.serviceName} extends ${superServiceClass} {
     /**
      * 根据 query 和 pageable 分页查询 {@link ${table.dtoName}}
      *
-     * @param query    查询条件，根据 query 中的 {@link QueryField} 注解自动组装查询条件
+     * @param query    查询条件，根据 ${table.queryName} 中的 {@link QueryField} 注解自动组装查询条件
      * @param pageable 分页查询条件
      * @return {@link Page<${table.dtoName}>}
      */
-    Page<${table.dtoName}> pojoPageByQuery(Object query, Pageable pageable);
+    Page<${table.dtoName}> pojoPageByQuery(${table.queryName} query, Pageable pageable);
 
     /**
      * 根据 query 查询 {@link ${table.dtoName}} 列表
      *
-     * @param query 查询条件，根据 query 中的 {@link QueryField} 注解自动组装查询条件
+     * @param query 查询条件，根据 ${table.queryName} 中的 {@link QueryField} 注解自动组装查询条件
      * @return {@link List<${table.dtoName}>}
      */
-    List<${table.dtoName}> pojoListByQuery(Object query);
+    List<${table.dtoName}> pojoListByQuery(${table.queryName} query);
 
     /**
      * 根据 id 查询 {@link ${table.dtoName}}
@@ -100,18 +100,18 @@ public interface ${table.serviceName} extends ${superServiceClass} {
     /**
      * 根据 query 查询 {@link ${table.dtoName}}
      *
-     * @param query 查询条件，根据 query 中的 {@link QueryField} 注解自动组装查询条件
+     * @param query 查询条件，根据 ${table.queryName} 中的 {@link QueryField} 注解自动组装查询条件
      * @return {@link List<${table.dtoName}>}
      */
-    ${table.dtoName} pojoByQuery(Object query);
+    ${table.dtoName} pojoByQuery(${table.queryName} query);
 
     /**
      * 根据 query 查询满足条件的记录数
      *
-     * @param query 查询条件，根据 query 中的 {@link QueryField} 注解自动组装查询条件
+     * @param query 查询条件，根据 ${table.queryName} 中的 {@link QueryField} 注解自动组装查询条件
      * @return {@link Integer}
      */
-    Integer countByQuery(Object query);
+    Integer countByQuery(${table.queryName} query);
 
     /**
      * 根据 id 列表查询 {@link ${table.dtoName}} 列表，并导出 excel 表单
@@ -125,12 +125,12 @@ public interface ${table.serviceName} extends ${superServiceClass} {
     /**
      * 根据 query 和 pageable 查询 {@link ${table.dtoName}} 列表，并导出 excel 表单
      *
-     * @param query    查询条件，根据 query 中的 {@link QueryField} 注解自动组装查询条件
+     * @param query    查询条件，根据 ${table.queryName} 中的 {@link QueryField} 注解自动组装查询条件
      * @param pageable 分页查询条件
      * @param response {@link HttpServletResponse} 实体
      * @throws IOException /
      */
-    void exportPage(Object query, Pageable pageable, HttpServletResponse response) throws IOException;
+    void exportPage(${table.queryName} query, Pageable pageable, HttpServletResponse response) throws IOException;
 
     /**
      * {@link ${entity}} 转为 {@link ${table.dtoName}}

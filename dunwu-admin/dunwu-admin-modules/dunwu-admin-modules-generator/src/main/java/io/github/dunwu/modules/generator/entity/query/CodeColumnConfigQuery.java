@@ -58,7 +58,7 @@ public class CodeColumnConfigQuery implements Serializable {
     @QueryField
     private String javaType;
 
-    @ApiModelProperty(value = "字段KEY类型")
+    @ApiModelProperty(value = "键类型")
     @QueryField
     private String keyType;
 
@@ -74,29 +74,37 @@ public class CodeColumnConfigQuery implements Serializable {
     @QueryField
     private Boolean enableList;
 
-    @ApiModelProperty(value = "出现在搜索")
+    @ApiModelProperty(value = "出现在查询")
     @QueryField
     private Boolean enableQuery;
 
-    @ApiModelProperty(value = "前端表单类型")
+    @ApiModelProperty(value = "允许排序")
+    @QueryField
+    private Boolean enableSort;
+
+    @ApiModelProperty(value = "允许校验")
+    @QueryField
+    private Boolean enableValidate;
+
+    @ApiModelProperty(value = "表单类型")
     @QueryField
     private String formType;
 
-    @ApiModelProperty(value = "前端列表类型")
+    @ApiModelProperty(value = "列表类型")
     @QueryField
-    private Boolean listShow;
+    private String listType;
 
-    @ApiModelProperty(value = "前端搜索类型")
+    @ApiModelProperty(value = "查询类型")
     @QueryField
     private String queryType;
-
-    @ApiModelProperty(value = "是否为排序字段")
-    @QueryField
-    private Boolean enableSort;
 
     @ApiModelProperty(value = "排序类型")
     @QueryField
     private String sortType;
+
+    @ApiModelProperty(value = "校验类型")
+    @QueryField
+    private String validateType;
 
     @ApiModelProperty(value = "日期表达式")
     @QueryField

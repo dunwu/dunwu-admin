@@ -1,10 +1,78 @@
 <template>
   <div class="app-container">
-    <el-row :gutter="15">
-      <el-col style="margin-bottom: 10px">
+    <el-tabs v-model="activeName" type="card">
+      <el-tab-pane label="全局级别配置" name="globalConfig">
+        <el-card shadow="never">
+          <div slot="header" class="clearfix">
+            <span class="role-span">全局级别配置</span>
+            <el-button
+              :loading="configLoading"
+              icon="el-icon-check"
+              size="mini"
+              style="float: right; padding: 6px 9px"
+              type="primary"
+              @click="saveTableConfig"
+            >
+              保存
+            </el-button>
+          </div>
+          <el-form ref="form" :model="form" :rules="rules" size="small" label-width="78px" />
+        </el-card>
+      </el-tab-pane>
+      <el-tab-pane label="表级别配置" name="tableConfig">
+        <el-card shadow="never">
+          <div slot="header" class="clearfix">
+            <span class="role-span">{{ tableName }} 表级别配置</span>
+            <el-button
+              :loading="configLoading"
+              icon="el-icon-check"
+              size="mini"
+              style="float: right; padding: 6px 9px"
+              type="primary"
+              @click="saveTableConfig"
+            >
+              保存
+            </el-button>
+          </div>
+          <el-form ref="form" :model="form" :rules="rules" size="small" label-width="78px">
+            <el-form-item label="作者名称" prop="author">
+              <el-input v-model="form.author" style="width: 40%" />
+              <span style="color: #C0C0C0;margin-left: 10px;">类上面的作者名称</span>
+            </el-form-item>
+            <el-form-item label="模块名称" prop="moduleName">
+              <el-input v-model="form.moduleName" style="width: 40%" />
+              <span style="color: #C0C0C0;margin-left: 10px;">模块的名称，请选择项目中已存在的模块</span>
+            </el-form-item>
+            <el-form-item label="至于包下" prop="pack">
+              <el-input v-model="form.pack" style="width: 40%" />
+              <span style="color: #C0C0C0;margin-left: 10px;">项目包的名称，生成的代码放到哪个包里面</span>
+            </el-form-item>
+            <el-form-item label="接口名称" prop="apiAlias">
+              <el-input v-model="form.apiAlias" style="width: 40%" />
+              <span style="color: #C0C0C0;margin-left: 10px;">接口的名称，用于控制器与接口文档中</span>
+            </el-form-item>
+            <el-form-item label="前端路径" prop="path">
+              <el-input v-model="form.path" style="width: 40%" />
+              <span style="color: #C0C0C0;margin-left: 10px;">输入views文件夹下的目录，不存在即创建</span>
+            </el-form-item>
+            <el-form-item label="去表前缀" prop="prefix">
+              <el-input v-model="form.prefix" placeholder="默认不去除表前缀" style="width: 40%" />
+              <span style="color: #C0C0C0;margin-left: 10px;">默认不去除表前缀，可自定义</span>
+            </el-form-item>
+            <el-form-item label="是否覆盖" prop="cover">
+              <el-radio-group v-model="form.cover" size="mini" style="width: 40%">
+                <el-radio-button label="true">是</el-radio-button>
+                <el-radio-button label="false">否</el-radio-button>
+              </el-radio-group>
+              <span style="color: #C0C0C0;margin-left: 10px;">谨防误操作，请慎重选择</span>
+            </el-form-item>
+          </el-form>
+        </el-card>
+      </el-tab-pane>
+      <el-tab-pane label="字段级别配置" name="columnConfig">
         <el-card class="box-card" shadow="never">
           <div slot="header" class="clearfix">
-            <span class="role-span">{{ tableName }} 表字段配置</span>
+            <span class="role-span">{{ tableName }} 字段级别配置</span>
             <el-button
               :loading="genLoading"
               icon="el-icon-s-promotion"
@@ -52,28 +120,6 @@
               <el-table-column prop="type" label="字段数据类型" width="100px" />
               <el-table-column prop="javaType" label="字段 Java 类型" width="100px" />
               <el-table-column prop="keyType" label="字段KEY类型" />
-              <el-table-column label="日期表达式" width="150px">
-                <template slot-scope="scope">
-                  <el-input
-                    v-if="data[scope.$index].type === 'datetime'"
-                    v-model="data[scope.$index].dateExpression"
-                    size="mini"
-                    class="edit-input"
-                  />
-                  <el-input
-                    v-else
-                    v-model="data[scope.$index].dateExpression"
-                    disabled
-                    size="mini"
-                    class="edit-input"
-                  />
-                </template>
-              </el-table-column>
-              <el-table-column label="字段展示名称" width="150px">
-                <template slot-scope="scope">
-                  <el-input v-model="data[scope.$index].propertyName" size="mini" class="edit-input" />
-                </template>
-              </el-table-column>
               <el-table-column align="enabled" label="启用" width="70px">
                 <template slot-scope="scope">
                   <el-checkbox v-model="data[scope.$index].enabled" />
@@ -108,6 +154,11 @@
               <el-table-column align="center" label="允许排序" width="70px">
                 <template slot-scope="scope">
                   <el-checkbox v-model="data[scope.$index].enableSort" />
+                </template>
+              </el-table-column>
+              <el-table-column align="center" label="允许校验" width="70px">
+                <template slot-scope="scope">
+                  <el-checkbox v-model="data[scope.$index].enableValidate" />
                 </template>
               </el-table-column>
               <el-table-column label="列表类型">
@@ -223,6 +274,32 @@
                   />
                 </template>
               </el-table-column>
+              <el-table-column label="校验类型">
+                <template slot-scope="scope">
+                  <el-select
+                    v-if="data[scope.$index].enableValidate"
+                    v-model="data[scope.$index].validateType"
+                    filterable
+                    class="edit-input"
+                    clearable
+                    size="mini"
+                    placeholder="请选择"
+                  >
+                    <el-option label="string" value="string" />
+                    <el-option label="number" value="number" />
+                  </el-select>
+                  <el-select
+                    v-else
+                    v-model="data[scope.$index].sortType"
+                    filterable
+                    class="edit-input"
+                    clearable
+                    disabled
+                    size="mini"
+                    placeholder="请选择"
+                  />
+                </template>
+              </el-table-column>
               <el-table-column label="关联字典">
                 <template slot-scope="scope">
                   <el-select
@@ -242,61 +319,33 @@
                   </el-select>
                 </template>
               </el-table-column>
+              <el-table-column label="字段展示名称" width="150px">
+                <template slot-scope="scope">
+                  <el-input v-model="data[scope.$index].propertyName" size="mini" class="edit-input" />
+                </template>
+              </el-table-column>
+              <el-table-column label="日期表达式" width="150px">
+                <template slot-scope="scope">
+                  <el-input
+                    v-if="data[scope.$index].type === 'datetime'"
+                    v-model="data[scope.$index].dateExpression"
+                    size="mini"
+                    class="edit-input"
+                  />
+                  <el-input
+                    v-else
+                    v-model="data[scope.$index].dateExpression"
+                    disabled
+                    size="mini"
+                    class="edit-input"
+                  />
+                </template>
+              </el-table-column>
             </el-table>
           </el-form>
         </el-card>
-      </el-col>
-      <el-col>
-        <el-card class="box-card" shadow="never">
-          <div slot="header" class="clearfix">
-            <span class="role-span">生成配置</span>
-            <el-button
-              :loading="configLoading"
-              icon="el-icon-check"
-              size="mini"
-              style="float: right; padding: 6px 9px"
-              type="primary"
-              @click="doSubmit"
-            >
-              保存
-            </el-button>
-          </div>
-          <el-form ref="form" :model="form" :rules="rules" size="small" label-width="78px">
-            <el-form-item label="作者名称" prop="author">
-              <el-input v-model="form.author" style="width: 40%" />
-              <span style="color: #C0C0C0;margin-left: 10px;">类上面的作者名称</span>
-            </el-form-item>
-            <el-form-item label="模块名称" prop="moduleName">
-              <el-input v-model="form.moduleName" style="width: 40%" />
-              <span style="color: #C0C0C0;margin-left: 10px;">模块的名称，请选择项目中已存在的模块</span>
-            </el-form-item>
-            <el-form-item label="至于包下" prop="pack">
-              <el-input v-model="form.pack" style="width: 40%" />
-              <span style="color: #C0C0C0;margin-left: 10px;">项目包的名称，生成的代码放到哪个包里面</span>
-            </el-form-item>
-            <el-form-item label="接口名称" prop="apiAlias">
-              <el-input v-model="form.apiAlias" style="width: 40%" />
-              <span style="color: #C0C0C0;margin-left: 10px;">接口的名称，用于控制器与接口文档中</span>
-            </el-form-item>
-            <el-form-item label="前端路径" prop="path">
-              <el-input v-model="form.path" style="width: 40%" />
-              <span style="color: #C0C0C0;margin-left: 10px;">输入views文件夹下的目录，不存在即创建</span>
-            </el-form-item>
-            <el-form-item label="去表前缀" prop="prefix">
-              <el-input v-model="form.prefix" placeholder="默认不去除表前缀" style="width: 40%" />
-              <span style="color: #C0C0C0;margin-left: 10px;">默认不去除表前缀，可自定义</span>
-            </el-form-item>
-            <el-form-item label="是否覆盖" prop="cover">
-              <el-radio-group v-model="form.cover" size="mini" style="width: 40%">
-                <el-radio-button label="true">是</el-radio-button>
-                <el-radio-button label="false">否</el-radio-button>
-              </el-radio-group>
-              <span style="color: #C0C0C0;margin-left: 10px;">谨防误操作，请慎重选择</span>
-            </el-form-item>
-          </el-form>
-        </el-card>
-      </el-col>
-    </el-row>
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 
@@ -311,7 +360,7 @@ export default {
   mixins: [crud],
   data() {
     return {
-      activeName: 'first',
+      activeName: 'tableConfig',
       tableId: null,
       schemaName: '',
       tableName: '',
@@ -347,7 +396,6 @@ export default {
     this.tableHeight = document.documentElement.clientHeight - 385
     this.tableName = this.$route.params.tableName
     this.schemaName = this.$route.params.schemaName
-    console.log('this.$route.params', this.$route.params)
     this.$nextTick(() => {
       this.init()
       tableConfigApi.find({ schemaName: this.schemaName, tableName: this.tableName }).then(data => {
@@ -361,7 +409,8 @@ export default {
   },
   methods: {
     beforeInit() {
-      this.url = 'api/generator/column/page'
+      this.url = 'api/generator/column'
+      this.tableType = 'list'
       const schemaName = this.schemaName
       const tableName = this.tableName
       this.params = { schemaName, tableName }
@@ -380,7 +429,7 @@ export default {
           console.log(err.response.data.message)
         })
     },
-    doSubmit() {
+    saveTableConfig() {
       this.$refs['form'].validate(valid => {
         if (valid) {
           this.configLoading = true

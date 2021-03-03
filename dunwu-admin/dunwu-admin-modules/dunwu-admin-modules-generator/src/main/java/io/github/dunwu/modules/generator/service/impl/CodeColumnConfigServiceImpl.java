@@ -130,8 +130,22 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
     }
 
     @Override
-    public List<CodeColumnConfigDto> pojoListByQuery(Object query) {
-        return dao.pojoListByQuery(query, this::doToDto);
+    public List<CodeColumnConfigDto> pojoListByQuery(CodeColumnConfigQuery query) {
+        List<CodeColumnConfigDto> dtos = dao.pojoListByQuery(query, this::doToDto);
+        if (CollectionUtil.isEmpty(dtos)) {
+            List<TableInfo> tableInfos = queryTableInfo(query.getSchemaName(), query.getTableName());
+            TableInfo tableInfo = tableInfos.get(0);
+            CodeTableConfigDto codeTableConfigDto = BeanUtil.toBean(tableInfo, CodeTableConfigDto.class);
+            List<CodeColumnConfigDto> columns = new ArrayList<>();
+            if (CollectionUtil.isNotEmpty(tableInfo.getFields())) {
+                List<CodeColumnConfigDto> fields = tableInfo.getFields().stream().map(i -> {
+                    return BeanUtil.toBean(i, CodeColumnConfigDto.class);
+                }).collect(Collectors.toList());
+                columns.addAll(fields);
+            }
+            dtos.addAll(columns);
+        }
+        return dtos;
     }
 
     @Override

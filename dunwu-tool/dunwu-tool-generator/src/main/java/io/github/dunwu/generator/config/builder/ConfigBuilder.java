@@ -353,8 +353,8 @@ public class ConfigBuilder {
                     field.setType(results.getString(dbQuery.fieldType()));
                     field.setKeyType(results.getString(dbQuery.fieldKey()));
                     if (StrUtil.isNotBlank(field.getKeyType())) {
-                        field.setKeyFlag(true);
                         field.setEnableSort(true);
+                        field.setEnableQuery(true);
                     }
                     INameConvert nameConvert = strategy.getNameConvert();
                     if (null != nameConvert) {

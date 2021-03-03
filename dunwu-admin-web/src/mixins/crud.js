@@ -14,6 +14,8 @@ export default {
       size: 10,
       // 总数据条数
       total: 0,
+      // 表类型
+      tableType: 'page',
       // 请求数据的url
       url: '',
       // 查询数据的参数
@@ -50,23 +52,54 @@ export default {
       if (!(await this.beforeInit())) {
         return
       }
+      console.log('init')
       return new Promise((resolve, reject) => {
         this.loading = true
         // 请求数据
-        initData(this.url, this.getQueryParame())
-          .then(data => {
-            this.total = data.totalElements
-            this.data = data.content
-            // time 毫秒后显示表格
-            setTimeout(() => {
+        if (this.tableType === 'tree') {
+          initData(this.url + '/treeList', this.getQueryParame())
+            .then(data => {
+              this.data = data
+              // time 毫秒后显示表格
+              setTimeout(() => {
+                this.loading = false
+              }, this.time)
+              resolve(data)
+            })
+            .catch(err => {
               this.loading = false
-            }, this.time)
-            resolve(data)
-          })
-          .catch(err => {
-            this.loading = false
-            reject(err)
-          })
+              reject(err)
+            })
+        } else if (this.tableType === 'list') {
+          initData(this.url + '/list', this.getQueryParame())
+            .then(data => {
+              this.data = data
+              // time 毫秒后显示表格
+              setTimeout(() => {
+                this.loading = false
+              }, this.time)
+              resolve(data)
+            })
+            .catch(err => {
+              this.loading = false
+              reject(err)
+            })
+        } else {
+          initData(this.url, this.getQueryParame())
+            .then(data => {
+              this.total = data.totalElements
+              this.data = data.content
+              // time 毫秒后显示表格
+              setTimeout(() => {
+                this.loading = false
+              }, this.time)
+              resolve(data)
+            })
+            .catch(err => {
+              this.loading = false
+              reject(err)
+            })
+        }
       })
     },
     beforeInit() {

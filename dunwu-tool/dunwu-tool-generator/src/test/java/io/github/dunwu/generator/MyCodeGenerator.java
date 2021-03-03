@@ -23,8 +23,8 @@ import java.util.Collection;
 public class MyCodeGenerator {
 
     public static void main(String[] args) {
-        generateByConfig();
-        // generateByProperties();
+        // generateByConfig();
+        generateByProperties();
     }
 
     public static void generateByConfig() {
