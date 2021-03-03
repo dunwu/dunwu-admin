@@ -1,14 +1,12 @@
 package io.github.dunwu.modules.generator.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.util.StrUtil;
 import io.github.dunwu.data.mybatis.ServiceImpl;
 import io.github.dunwu.modules.generator.dao.CodeGlobalConfigDao;
 import io.github.dunwu.modules.generator.entity.CodeGlobalConfig;
 import io.github.dunwu.modules.generator.entity.dto.CodeGlobalConfigDto;
 import io.github.dunwu.modules.generator.entity.query.CodeGlobalConfigQuery;
 import io.github.dunwu.modules.generator.service.CodeGlobalConfigService;
-import io.github.dunwu.util.SecurityUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -118,18 +116,6 @@ public class CodeGlobalConfigServiceImpl extends ServiceImpl implements CodeGlob
         }
 
         return BeanUtil.toBean(dto, CodeGlobalConfig.class);
-    }
-
-    @Override
-    public CodeGlobalConfigDto findByCurrentUser() {
-        String username = SecurityUtils.getCurrentUsername();
-        if (StrUtil.isBlank(username)) {
-            username = "admin";
-        }
-
-        CodeGlobalConfigQuery query = new CodeGlobalConfigQuery();
-        query.setCreateBy(username);
-        return pojoByQuery(query);
     }
 
 }

@@ -99,7 +99,6 @@ CREATE TABLE `code_table_config` (
     `schema_name`       VARCHAR(255) NOT NULL COMMENT 'Schema名称',
     `name`              VARCHAR(255) NOT NULL COMMENT 'Table名称',
     `comment`           VARCHAR(255) DEFAULT NULL COMMENT 'Table注释',
-    `enable_permission` BIT(1)       DEFAULT NULL COMMENT '开启权限校验',
     `enable_query`      BIT(1)       DEFAULT NULL COMMENT '开启搜索',
     `enable_list`       BIT(1)       DEFAULT NULL COMMENT '开启列表',
     `enable_form`       BIT(1)       DEFAULT NULL COMMENT '开启表单',

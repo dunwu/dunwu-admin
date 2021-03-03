@@ -1,10 +1,10 @@
 package io.github.dunwu.modules.generator.service;
 
 import io.github.dunwu.data.core.annotation.QueryField;
+import io.github.dunwu.data.mybatis.IService;
 import io.github.dunwu.modules.generator.entity.CodeGlobalConfig;
 import io.github.dunwu.modules.generator.entity.dto.CodeGlobalConfigDto;
 import io.github.dunwu.modules.generator.entity.query.CodeGlobalConfigQuery;
-import io.github.dunwu.data.mybatis.IService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -145,7 +145,5 @@ public interface CodeGlobalConfigService extends IService {
      * @return /
      */
     CodeGlobalConfig dtoToDo(CodeGlobalConfigDto dto);
-
-    CodeGlobalConfigDto findByCurrentUser();
 
 }
