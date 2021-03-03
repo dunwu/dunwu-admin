@@ -127,10 +127,10 @@ public class CodeTableConfigController {
         service.exportPage(query, pageable, response);
     }
 
-    @GetMapping("find")
-    public DataResult<CodeTableConfigDto> find(CodeTableConfigQuery query) {
-        return DataResult.ok(service.find(query));
-    }
+    // @GetMapping("find")
+    // public DataResult<CodeTableConfigDto> find(CodeTableConfigQuery query) {
+    //     return DataResult.ok(service.find(query));
+    // }
 
     @ApiOperation("查询数据库数据")
     @GetMapping(value = "all")

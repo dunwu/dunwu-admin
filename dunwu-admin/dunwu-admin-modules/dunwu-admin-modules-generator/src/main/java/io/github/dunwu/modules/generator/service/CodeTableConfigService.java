@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  * 代码生成-表级别配置 Service 接口
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-03-02
+ * @since 2021-03-03
  */
 public interface CodeTableConfigService extends IService {
 
@@ -73,19 +73,19 @@ public interface CodeTableConfigService extends IService {
     /**
      * 根据 query 和 pageable 分页查询 {@link CodeTableConfigDto}
      *
-     * @param query    查询条件，根据 query 中的 {@link QueryField} 注解自动组装查询条件
+     * @param query    查询条件，根据 CodeTableConfigQuery 中的 {@link QueryField} 注解自动组装查询条件
      * @param pageable 分页查询条件
      * @return {@link Page<CodeTableConfigDto>}
      */
-    Page<CodeTableConfigDto> pojoPageByQuery(Object query, Pageable pageable);
+    Page<CodeTableConfigDto> pojoPageByQuery(CodeTableConfigQuery query, Pageable pageable);
 
     /**
      * 根据 query 查询 {@link CodeTableConfigDto} 列表
      *
-     * @param query 查询条件，根据 query 中的 {@link QueryField} 注解自动组装查询条件
+     * @param query 查询条件，根据 CodeTableConfigQuery 中的 {@link QueryField} 注解自动组装查询条件
      * @return {@link List<CodeTableConfigDto>}
      */
-    List<CodeTableConfigDto> pojoListByQuery(Object query);
+    List<CodeTableConfigDto> pojoListByQuery(CodeTableConfigQuery query);
 
     /**
      * 根据 id 查询 {@link CodeTableConfigDto}
@@ -98,18 +98,18 @@ public interface CodeTableConfigService extends IService {
     /**
      * 根据 query 查询 {@link CodeTableConfigDto}
      *
-     * @param query 查询条件，根据 query 中的 {@link QueryField} 注解自动组装查询条件
+     * @param query 查询条件，根据 CodeTableConfigQuery 中的 {@link QueryField} 注解自动组装查询条件
      * @return {@link List<CodeTableConfigDto>}
      */
-    CodeTableConfigDto pojoByQuery(Object query);
+    CodeTableConfigDto pojoByQuery(CodeTableConfigQuery query);
 
     /**
      * 根据 query 查询满足条件的记录数
      *
-     * @param query 查询条件，根据 query 中的 {@link QueryField} 注解自动组装查询条件
+     * @param query 查询条件，根据 CodeTableConfigQuery 中的 {@link QueryField} 注解自动组装查询条件
      * @return {@link Integer}
      */
-    Integer countByQuery(Object query);
+    Integer countByQuery(CodeTableConfigQuery query);
 
     /**
      * 根据 id 列表查询 {@link CodeTableConfigDto} 列表，并导出 excel 表单
@@ -123,12 +123,12 @@ public interface CodeTableConfigService extends IService {
     /**
      * 根据 query 和 pageable 查询 {@link CodeTableConfigDto} 列表，并导出 excel 表单
      *
-     * @param query    查询条件，根据 query 中的 {@link QueryField} 注解自动组装查询条件
+     * @param query    查询条件，根据 CodeTableConfigQuery 中的 {@link QueryField} 注解自动组装查询条件
      * @param pageable 分页查询条件
      * @param response {@link HttpServletResponse} 实体
      * @throws IOException /
      */
-    void exportPage(Object query, Pageable pageable, HttpServletResponse response) throws IOException;
+    void exportPage(CodeTableConfigQuery query, Pageable pageable, HttpServletResponse response) throws IOException;
 
     /**
      * {@link CodeTableConfig} 转为 {@link CodeTableConfigDto}

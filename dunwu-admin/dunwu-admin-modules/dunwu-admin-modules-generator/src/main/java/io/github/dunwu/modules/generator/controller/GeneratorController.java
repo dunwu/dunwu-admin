@@ -9,6 +9,7 @@ import io.github.dunwu.exception.BadRequestException;
 import io.github.dunwu.generator.config.GlobalConfig;
 import io.github.dunwu.generator.engine.TemplateContent;
 import io.github.dunwu.modules.generator.entity.CodeGlobalConfig;
+import io.github.dunwu.modules.generator.entity.CodeTableConfig;
 import io.github.dunwu.modules.generator.entity.dto.CodeColumnConfigDto;
 import io.github.dunwu.modules.generator.entity.dto.CodeGlobalConfigDto;
 import io.github.dunwu.modules.generator.entity.dto.CodeTableConfigDto;
@@ -17,6 +18,7 @@ import io.github.dunwu.modules.generator.entity.query.CodeTableConfigQuery;
 import io.github.dunwu.modules.generator.service.CodeColumnConfigService;
 import io.github.dunwu.modules.generator.service.CodeTableConfigService;
 import io.github.dunwu.modules.generator.service.GeneratorService;
+import io.github.dunwu.util.SecurityUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Value;
@@ -84,7 +86,7 @@ public class GeneratorController {
 
     @ApiOperation("查询当前用户的 CodeGlobalConfigDto 配置")
     @GetMapping("global/find")
-    public DataResult<CodeGlobalConfigDto> find() {
+    public DataResult<CodeGlobalConfigDto> findGlobalConfigByCurrentUser() {
         CodeGlobalConfigDto dto = generatorService.findGlobalConfigByCurrentUser();
         if (dto == null) {
             GlobalConfig globalConfig = new GlobalConfig();
@@ -95,8 +97,28 @@ public class GeneratorController {
 
     @ApiOperation("保存当前用户的 CodeGlobalConfigDto 配置")
     @PostMapping("global/save")
-    public BaseResult save(@RequestBody CodeGlobalConfig entity) {
+    public BaseResult saveGlobalConfigByCurrentUser(@RequestBody CodeGlobalConfig entity) {
         generatorService.saveGlobalConfigByCurrentUser(entity);
+        return BaseResult.ok();
+    }
+
+    @ApiOperation("查询当前用户的 CodeGlobalConfigDto 配置")
+    @GetMapping("table/find")
+    public DataResult<CodeTableConfigDto> findTableConfigByCurrentUser(CodeTableConfigQuery query) {
+        CodeTableConfigDto dto = generatorService.findTableConfigByCurrentUser(query);
+        if (dto == null) {
+            dto = new CodeTableConfigDto();
+            dto.setSchemaName(query.getSchemaName())
+               .setName(query.getName())
+               .setAuthor(SecurityUtils.getCurrentUsername());
+        }
+        return DataResult.ok(dto);
+    }
+
+    @ApiOperation("保存当前用户的 CodeGlobalConfigDto 配置")
+    @PostMapping("table/save")
+    public BaseResult saveTableConfigByCurrentUser(@RequestBody CodeTableConfig entity) {
+        generatorService.saveTableConfigByCurrentUser(entity);
         return BaseResult.ok();
     }
 

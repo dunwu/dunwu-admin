@@ -46,4 +46,28 @@ export function saveGlobalConfig(data) {
   })
 }
 
-export default { generator: generatorApi, saveBatch, sync, findGlobalConfig, saveGlobalConfig }
+export function findTableConfig(params) {
+  return request({
+    url: 'api/generator/table/find',
+    method: 'get',
+    params
+  })
+}
+
+export function saveTableConfig(data) {
+  return request({
+    url: 'api/generator/table/save',
+    method: 'post',
+    data
+  })
+}
+
+export default {
+  generator: generatorApi,
+  saveBatch,
+  sync,
+  findGlobalConfig,
+  saveGlobalConfig,
+  findTableConfig,
+  saveTableConfig
+}

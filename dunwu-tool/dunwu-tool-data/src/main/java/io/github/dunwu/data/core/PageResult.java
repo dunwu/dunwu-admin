@@ -19,7 +19,7 @@ import java.util.List;
 @Data
 @ToString
 @Accessors(chain = true)
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class PageResult<T> extends BaseResult {
 
     private static final long serialVersionUID = 1L;

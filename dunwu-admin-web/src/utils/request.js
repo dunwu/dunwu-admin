@@ -5,6 +5,7 @@ import store from '../store'
 import { getToken } from '@/utils/auth'
 import Config from '@/settings'
 import Cookies from 'js-cookie'
+import Constant from '@/utils/constant'
 
 // 创建axios实例
 const service = axios.create({
@@ -44,13 +45,17 @@ service.interceptors.response.use(
         return Promise.reject('error')
       }
 
-      if (response.data.data) {
+      if (response.data.ok) {
         // 包装过的消息体，形式为：{"code":0,"data":{},"message":"成功","ok":true}
-        if (response.data.code !== 0) {
+        if (response.data.code !== Constant.SUCCESS) {
           Notification.error({ title: response.data.message, duration: 5000 })
           return Promise.reject('error')
         }
-        return response.data.data
+        if (response.data.data) {
+          return response.data.data
+        } else {
+          return null
+        }
       } else {
         return response.data
       }

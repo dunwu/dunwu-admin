@@ -12,7 +12,7 @@
 //  */
 // @Data
 // @Accessors(chain = true)
-// @EqualsAndHashCode(callSuper = true)
+// @EqualsAndHashCode(callSuper = false)
 // @ConfigurationProperties(prefix = "dunwu.hdfs")
 // public class HdfsProperties extends HdfsConfig {
 //

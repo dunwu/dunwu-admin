@@ -20,7 +20,7 @@ import java.util.List;
 @Data
 @ToString
 @Accessors(chain = true)
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class DataListResult<T> extends BaseResult {
 
     private static final long serialVersionUID = 1L;

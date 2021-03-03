@@ -17,7 +17,7 @@ import java.util.Map;
 @Data
 @ToString
 @Accessors(chain = true)
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class MapResult<K, V> extends BaseResult {
 
     private static final long serialVersionUID = 4812047024509186421L;

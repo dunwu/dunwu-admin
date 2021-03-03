@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
  * 代码生成-表级别配置 Service 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-03-02
+ * @since 2021-03-03
  */
 @Service
 public class CodeTableConfigServiceImpl extends ServiceImpl implements CodeTableConfigService {
@@ -77,12 +77,12 @@ public class CodeTableConfigServiceImpl extends ServiceImpl implements CodeTable
     }
 
     @Override
-    public Page<CodeTableConfigDto> pojoPageByQuery(Object query, Pageable pageable) {
+    public Page<CodeTableConfigDto> pojoPageByQuery(CodeTableConfigQuery query, Pageable pageable) {
         return dao.pojoPageByQuery(query, pageable, this::doToDto);
     }
 
     @Override
-    public List<CodeTableConfigDto> pojoListByQuery(Object query) {
+    public List<CodeTableConfigDto> pojoListByQuery(CodeTableConfigQuery query) {
         return dao.pojoListByQuery(query, this::doToDto);
     }
 
@@ -92,12 +92,12 @@ public class CodeTableConfigServiceImpl extends ServiceImpl implements CodeTable
     }
 
     @Override
-    public CodeTableConfigDto pojoByQuery(Object query) {
+    public CodeTableConfigDto pojoByQuery(CodeTableConfigQuery query) {
         return dao.pojoByQuery(query, this::doToDto);
     }
 
     @Override
-    public Integer countByQuery(Object query) {
+    public Integer countByQuery(CodeTableConfigQuery query) {
         return dao.countByQuery(query);
     }
 
@@ -108,7 +108,7 @@ public class CodeTableConfigServiceImpl extends ServiceImpl implements CodeTable
     }
 
     @Override
-    public void exportPage(Object query, Pageable pageable, HttpServletResponse response) throws IOException {
+    public void exportPage(CodeTableConfigQuery query, Pageable pageable, HttpServletResponse response) throws IOException {
         Page<CodeTableConfigDto> page = dao.pojoPageByQuery(query, pageable, this::doToDto);
         dao.exportDtoList(page.getContent(), response);
     }

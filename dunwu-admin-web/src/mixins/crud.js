@@ -52,7 +52,6 @@ export default {
       if (!(await this.beforeInit())) {
         return
       }
-      console.log('init')
       return new Promise((resolve, reject) => {
         this.loading = true
         // 请求数据

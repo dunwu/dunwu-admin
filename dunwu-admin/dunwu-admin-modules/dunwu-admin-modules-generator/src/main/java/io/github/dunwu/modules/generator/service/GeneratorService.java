@@ -1,7 +1,10 @@
 package io.github.dunwu.modules.generator.service;
 
 import io.github.dunwu.modules.generator.entity.CodeGlobalConfig;
+import io.github.dunwu.modules.generator.entity.CodeTableConfig;
 import io.github.dunwu.modules.generator.entity.dto.CodeGlobalConfigDto;
+import io.github.dunwu.modules.generator.entity.dto.CodeTableConfigDto;
+import io.github.dunwu.modules.generator.entity.query.CodeTableConfigQuery;
 
 /**
  * 代码生成服务接口
@@ -25,5 +28,9 @@ public interface GeneratorService {
      * @return /
      */
     boolean saveGlobalConfigByCurrentUser(CodeGlobalConfig entity);
+
+    CodeTableConfigDto findTableConfigByCurrentUser(CodeTableConfigQuery query);
+
+    boolean saveTableConfigByCurrentUser(CodeTableConfig entity);
 
 }

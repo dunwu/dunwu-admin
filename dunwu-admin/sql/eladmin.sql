@@ -34,16 +34,60 @@ CREATE TABLE `code_global_config` (
     `id_type`           VARCHAR(255) DEFAULT NULL COMMENT '主键类型',
     `date_type`         VARCHAR(255) DEFAULT NULL COMMENT '时间类型',
     `date_pattern`      VARCHAR(255) DEFAULT NULL COMMENT '时间格式化',
-    `create_by`     VARCHAR(255)  DEFAULT NULL COMMENT '创建者',
-    `update_by`     VARCHAR(255)  DEFAULT NULL COMMENT '更新者',
-    `create_time`   DATETIME      DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time`   DATETIME      DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `create_by`         VARCHAR(255) DEFAULT NULL COMMENT '创建者',
+    `update_by`         VARCHAR(255) DEFAULT NULL COMMENT '更新者',
+    `create_time`       DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time`       DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`) USING BTREE
 )
     ENGINE = INNODB
     DEFAULT CHARSET = `utf8`
     ROW_FORMAT = COMPACT
     COMMENT ='代码生成-全局配置';
+
+
+-- ----------------------------
+-- Table structure for code_table_config
+-- ----------------------------
+
+DROP TABLE IF EXISTS `code_table_config`;
+CREATE TABLE `code_table_config` (
+    `id`                BIGINT(20)   NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `schema_name`       VARCHAR(255) NOT NULL COMMENT 'Schema名称',
+    `name`              VARCHAR(255) NOT NULL COMMENT 'Table名称',
+    `comment`           VARCHAR(255) DEFAULT NULL COMMENT 'Table注释',
+    `enable_permission` BIT(1)       DEFAULT NULL COMMENT '开启权限校验',
+    `enable_override`   BIT(1)       DEFAULT NULL COMMENT '开启文件覆盖模式',
+    `enable_swagger2`   BIT(1)       DEFAULT NULL COMMENT '开启Swagger2',
+    `author`            VARCHAR(255) DEFAULT NULL COMMENT '作者',
+    `output_dir`        VARCHAR(255) DEFAULT NULL COMMENT '输出路径',
+    `backend_path`      VARCHAR(255) DEFAULT NULL COMMENT '后端代码路径',
+    `frontend_path`     VARCHAR(255) DEFAULT NULL COMMENT '前端代码路径',
+    `package_path`      VARCHAR(255) DEFAULT NULL COMMENT '包路径',
+    `id_type`           VARCHAR(255) DEFAULT NULL COMMENT '主键类型',
+    `date_type`         VARCHAR(255) DEFAULT NULL COMMENT '时间类型',
+    `date_pattern`      VARCHAR(255) DEFAULT NULL COMMENT '时间格式化',
+    `enable_query`      BIT(1)       DEFAULT NULL COMMENT '开启搜索',
+    `enable_list`       BIT(1)       DEFAULT NULL COMMENT '开启列表',
+    `enable_form`       BIT(1)       DEFAULT NULL COMMENT '开启表单',
+    `enable_validate`   BIT(1)       DEFAULT NULL COMMENT '开启校验',
+    `enable_cover`      BIT(1)       DEFAULT NULL COMMENT '允许覆盖',
+    `enable_swagger`    BIT(1)       DEFAULT NULL COMMENT '开启Swagger',
+    `module_name`       VARCHAR(255) DEFAULT NULL COMMENT '模块名称',
+    `output_path`       VARCHAR(255) DEFAULT NULL COMMENT '输出路径',
+    `table_prefix`      VARCHAR(255) DEFAULT NULL COMMENT '表前缀',
+    `api_base_url`      VARCHAR(255) DEFAULT NULL COMMENT 'REST接口根路径',
+    `create_by`         VARCHAR(255) DEFAULT NULL COMMENT '创建者',
+    `update_by`         VARCHAR(255) DEFAULT NULL COMMENT '更新者',
+    `create_time`       DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time`       DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`) USING BTREE,
+    UNIQUE `uniq_schema_table`(`schema_name`, `name`)
+)
+    ENGINE = InnoDB
+    DEFAULT CHARSET = `utf8`
+    ROW_FORMAT = COMPACT
+    COMMENT ='代码生成-表级别配置';
 
 -- ----------------------------
 -- Table structure for code_column_config
@@ -88,38 +132,6 @@ CREATE TABLE `code_column_config` (
     DEFAULT CHARSET = `utf8`
     ROW_FORMAT = COMPACT
     COMMENT ='代码生成-字段级别配置';
-
--- ----------------------------
--- Table structure for code_global_config
--- ----------------------------
-
-DROP TABLE IF EXISTS `code_table_config`;
-CREATE TABLE `code_table_config` (
-    `id`                BIGINT(20)   NOT NULL AUTO_INCREMENT COMMENT 'ID',
-    `schema_name`       VARCHAR(255) NOT NULL COMMENT 'Schema名称',
-    `name`              VARCHAR(255) NOT NULL COMMENT 'Table名称',
-    `comment`           VARCHAR(255) DEFAULT NULL COMMENT 'Table注释',
-    `enable_query`      BIT(1)       DEFAULT NULL COMMENT '开启搜索',
-    `enable_list`       BIT(1)       DEFAULT NULL COMMENT '开启列表',
-    `enable_form`       BIT(1)       DEFAULT NULL COMMENT '开启表单',
-    `enable_validate`   BIT(1)       DEFAULT NULL COMMENT '开启校验',
-    `author`            VARCHAR(255) DEFAULT NULL COMMENT '作者',
-    `enable_cover`      BIT(1)       DEFAULT NULL COMMENT '允许覆盖',
-    `enable_swagger`    BIT(1)       DEFAULT NULL COMMENT '开启Swagger',
-    `module_name`       VARCHAR(255) DEFAULT NULL COMMENT '模块名称',
-    `package_path`      VARCHAR(255) DEFAULT NULL COMMENT '包路径',
-    `output_path`       VARCHAR(255) DEFAULT NULL COMMENT '输出路径',
-    `backend_path`      VARCHAR(255) DEFAULT NULL COMMENT '后端代码路径',
-    `frontend_path`     VARCHAR(255) DEFAULT NULL COMMENT '前端代码路径',
-    `prefix`            VARCHAR(255) DEFAULT NULL COMMENT '表前缀',
-    `api_url`           VARCHAR(255) DEFAULT NULL COMMENT 'REST接口名称',
-    PRIMARY KEY (`id`) USING BTREE,
-    UNIQUE `uniq_schema_table`(`schema_name`, `name`)
-)
-    ENGINE = InnoDB
-    DEFAULT CHARSET = `utf8`
-    ROW_FORMAT = COMPACT
-    COMMENT ='代码生成-表级别配置';
 
 -- ----------------------------
 -- Table structure for mnt_app
