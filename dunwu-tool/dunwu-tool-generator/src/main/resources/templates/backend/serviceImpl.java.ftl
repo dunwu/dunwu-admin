@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import ${package.Entity}.${entity};
 import ${package.Dto}.${table.dtoName};
+import ${package.Query}.${table.queryName};
 import ${package.Dao}.${table.daoName};
 import ${package.Service}.${table.serviceName};
 import ${superServiceImplClassPackage};
@@ -24,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
  * @since ${date}
  */
 @Service
-<#if kotlin>
+<#if enableKotlin>
 open class ${table.serviceImplName} : ${superServiceImplClass}(), ${table.serviceName} {
 
 }

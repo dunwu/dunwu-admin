@@ -5,7 +5,7 @@ import ${pkg};
 </#list>
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.github.dunwu.data.validator.annotation.EditCheck;
-<#if swagger2>
+<#if enableSwagger2>
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 </#if>
@@ -35,12 +35,12 @@ import javax.validation.constraints.NotNull;
 <#if table.convert>
 @TableName("${table.name}")
 </#if>
-<#if swagger2>
+<#if enableSwagger2>
 @ApiModel(value = "${entity}", description = "${table.comment!}")
 </#if>
 <#if superEntityClass??>
-public class ${entity} extends ${superEntityClass}<#if activeRecord><${entity}></#if> {
-<#elseif activeRecord>
+public class ${entity} extends ${superEntityClass}<#if enableActiveRecord><${entity}></#if> {
+<#elseif enableActiveRecord>
 public class ${entity} extends Model<${entity}> {
 <#else>
 public class ${entity} implements Serializable {
@@ -56,7 +56,7 @@ public class ${entity} implements Serializable {
     </#if>
 
     <#if field.comment!?length gt 0>
-        <#if swagger2>
+        <#if enableSwagger2>
     @ApiModelProperty(value = "${field.comment}")
         <#else>
     /**
@@ -130,7 +130,7 @@ public class ${entity} implements Serializable {
 
     </#list>
 </#if>
-<#if activeRecord>
+<#if enableActiveRecord>
     @Override
     protected Serializable pkVal() {
     <#if keyPropertyName??>

@@ -102,8 +102,8 @@ public class CodeGeneratorUtil {
 
         GlobalConfig config = new GlobalConfig();
         config.setOpen(false)
-              .setFileOverride(true)
-              .setActiveRecord(false)
+              .setEnableOverride(true)
+              .setEnableActiveRecord(false)
               .setOutputDir(outputDir)
               .setBackendDir(backendDir)
               .setFrontendDir(frontendDir)
@@ -114,7 +114,7 @@ public class CodeGeneratorUtil {
               .setServiceName(serviceName)
               .setServiceImplName(serviceImplName)
               .setControllerName(controllerName)
-              .setSwagger2(enableSwagger);
+              .setEnableSwagger2(enableSwagger);
 
         if (StrUtil.isNotBlank(authorName)) {
             config.setAuthor(authorName);

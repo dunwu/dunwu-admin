@@ -225,7 +225,7 @@ public class ConfigBuilder {
         if (StringUtils.isNotBlank(strategy.getSuperEntityClass())) {
             // 自定义父类
             tableInfo.getImportPackages().add(strategy.getSuperEntityClass());
-        } else if (global.isActiveRecord()) {
+        } else if (global.isEnableActiveRecord()) {
             // 无父类开启 AR 模式
             tableInfo.getImportPackages()
                      .add(com.baomidou.mybatisplus.extension.activerecord.Model.class.getCanonicalName());
@@ -674,7 +674,7 @@ public class ConfigBuilder {
             // 设置 MyBatis Plus 各个 java 文件的包路径
             String javaDir = globalConfig.getBackendDir() +
                 ConstVal.JAVA_PATH.replaceAll("//", StringPool.BACK_SLASH + File.separator);
-            addPathInfo(pathInfoMap, templateConfig.getEntity(getGlobalConfig().isKotlin()), javaDir,
+            addPathInfo(pathInfoMap, templateConfig.getEntity(getGlobalConfig().isEnableKotlin()), javaDir,
                 ConstVal.ENTITY_PATH, ConstVal.ENTITY);
             addPathInfo(pathInfoMap, templateConfig.getDto(), javaDir, ConstVal.DTO_PATH, ConstVal.DTO);
             addPathInfo(pathInfoMap, templateConfig.getQuery(), javaDir, ConstVal.QUERY_PATH, ConstVal.QUERY);

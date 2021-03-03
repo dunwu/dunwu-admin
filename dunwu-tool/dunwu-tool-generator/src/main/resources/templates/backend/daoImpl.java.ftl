@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  * @since ${date}
  */
 @Dao
-<#if kotlin>
+<#if enableKotlin>
 open class ${table.daoImplName} : ${superDaoImplClass}<${table.mapperName}, ${entity}>(), ${table.daoName} {
 
 }

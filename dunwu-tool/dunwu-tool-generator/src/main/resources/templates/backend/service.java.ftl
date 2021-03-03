@@ -3,6 +3,7 @@ package ${package.Service};
 import io.github.dunwu.data.core.annotation.QueryField;
 import ${package.Entity}.${entity};
 import ${package.Dto}.${table.dtoName};
+import ${package.Query}.${table.queryName};
 import ${superServiceClassPackage};
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author ${author}
  * @since ${date}
  */
-<#if kotlin>
+<#if enableKotlin>
 interface ${table.serviceName} : ${superServiceClass}
 <#else>
 public interface ${table.serviceName} extends ${superServiceClass} {

@@ -1,6 +1,6 @@
 import axios from 'axios'
 import router from '@/router/routers'
-import { Notification, MessageBox } from 'element-ui'
+import { Notification } from 'element-ui'
 import store from '../store'
 import { getToken } from '@/utils/auth'
 import Config from '@/settings'
@@ -15,8 +15,8 @@ const service = axios.create({
 // request拦截器
 service.interceptors.request.use(
   config => {
-    // console.group('%c%s', 'color:blue', '[Http Request]')
-    // console.info('[request info]', config)
+    console.group('%c%s', 'color:blue', '[Http Request]')
+    console.info('[request info]', config)
     if (getToken()) {
       config.headers['Authorization'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
     }
@@ -33,8 +33,8 @@ service.interceptors.request.use(
 // response 拦截器
 service.interceptors.response.use(
   response => {
-    // console.info('[response info]', response)
-    // console.groupEnd()
+    console.info('[response info]', response)
+    console.groupEnd()
     if (response.status < 200 || response.status > 300) {
       Notification.error({ title: response.message, duration: 5000 })
       return Promise.reject('error')
@@ -63,10 +63,7 @@ service.interceptors.response.use(
       reader.readAsText(error.response.data, 'utf-8')
       reader.onload = function(e) {
         const errorMsg = JSON.parse(reader.result).message
-        Notification.error({
-          title: errorMsg,
-          duration: 5000
-        })
+        Notification.error({ title: errorMsg, duration: 5000 })
       }
     } else {
       let code = 0
@@ -74,14 +71,10 @@ service.interceptors.response.use(
         code = error.response.data.status
       } catch (e) {
         if (error.toString().indexOf('Error: timeout') !== -1) {
-          Notification.error({
-            title: '网络请求超时',
-            duration: 5000
-          })
+          Notification.error({ title: '网络请求超时', duration: 5000 })
           return Promise.reject(error)
         }
       }
-      console.log(code)
       if (code) {
         if (code === 401) {
           store.dispatch('LogOut').then(() => {
@@ -94,17 +87,11 @@ service.interceptors.response.use(
         } else {
           const errorMsg = error.response.data.message
           if (errorMsg !== undefined) {
-            Notification.error({
-              title: errorMsg,
-              duration: 5000
-            })
+            Notification.error({ title: errorMsg, duration: 5000 })
           }
         }
       } else {
-        Notification.error({
-          title: '接口请求失败',
-          duration: 5000
-        })
+        Notification.error({ title: '接口请求失败', duration: 5000 })
       }
     }
     return Promise.reject(error)

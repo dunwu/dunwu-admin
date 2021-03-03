@@ -45,8 +45,8 @@ public class TemplateConfig {
     private String api = ConstVal.TEMPLATE_API;
     private String list = ConstVal.TEMPLATE_LIST;
 
-    public String getEntity(boolean kotlin) {
-        return kotlin ? entityKt : entity;
+    public String getEntity(boolean enableKotlin) {
+        return enableKotlin ? entityKt : entity;
     }
 
 }

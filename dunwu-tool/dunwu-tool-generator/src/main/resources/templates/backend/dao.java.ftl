@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author ${author}
  * @since ${date}
  */
-<#if kotlin>
+<#if enableKotlin>
 interface ${table.daoName} : ${superDaoClass}<${entity}>
 <#else>
 public interface ${table.daoName} extends ${superDaoClass}<${entity}> {

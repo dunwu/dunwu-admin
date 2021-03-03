@@ -10,7 +10,7 @@ import ${package.Entity}.${entity};
 import ${package.Dto}.${table.dtoName};
 import ${package.Query}.${table.queryName};
 import ${package.Service}.${table.serviceName};
-<#if swagger2>
+<#if enableSwagger2>
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 </#if>
@@ -39,7 +39,7 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 </#if>
 @RequestMapping("<#if package.ModuleName??>/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen}<#else>${table.entityPath}</#if>")
-<#if swagger2>
+<#if enableSwagger2>
 @Api(tags = "${table.comment!} Controller 类")
 </#if>
 @RequiredArgsConstructor
@@ -51,14 +51,14 @@ public class ${table.controllerName} {
 
     private final ${table.serviceName} service;
 
-    <#if !swagger2>
+    <#if !enableSwagger2>
     public ${table.controllerName}(${table.serviceName} service) {
         this.service = service;
     }
     </#if>
 
     /** 添加一条 {@link ${entity}} 记录 */
-    <#if swagger2>
+    <#if enableSwagger2>
     @ApiOperation("添加一条 ${entity} 记录")
     </#if>
     @PostMapping("add")
@@ -68,7 +68,7 @@ public class ${table.controllerName} {
     }
 
     /** 批量添加 {@link ${entity}} 记录 */
-    <#if swagger2>
+    <#if enableSwagger2>
     @ApiOperation("批量添加 ${entity} 记录")
     </#if>
     @PostMapping("add/batch")
@@ -78,7 +78,7 @@ public class ${table.controllerName} {
     }
 
     /** 更新一条 {@link ${entity}} 记录 */
-    <#if swagger2>
+    <#if enableSwagger2>
     @ApiOperation("更新一条 ${entity} 记录")
     </#if>
     @PostMapping("edit")
@@ -88,7 +88,7 @@ public class ${table.controllerName} {
     }
 
     /** 批量更新 {@link ${entity}} 记录 */
-    <#if swagger2>
+    <#if enableSwagger2>
     @ApiOperation("批量更新 ${entity} 记录")
     </#if>
     @PostMapping("edit/batch")
@@ -97,7 +97,7 @@ public class ${table.controllerName} {
         return BaseResult.ok();
     }
 
-    <#if swagger2>
+    <#if enableSwagger2>
     @ApiOperation("删除一条 ${entity} 记录")
     </#if>
     @PostMapping("del/{id}")
@@ -106,7 +106,7 @@ public class ${table.controllerName} {
         return BaseResult.ok();
     }
 
-    <#if swagger2>
+    <#if enableSwagger2>
     @ApiOperation("根据 ID 集合批量删除 ${entity} 记录")
     </#if>
     @PostMapping("del/batch")
@@ -115,7 +115,7 @@ public class ${table.controllerName} {
         return BaseResult.ok();
     }
 
-    <#if swagger2>
+    <#if enableSwagger2>
     @ApiOperation("根据 query 条件，查询匹配条件的 ${table.dtoName} 列表")
     @GetMapping("list")
     </#if>
@@ -123,7 +123,7 @@ public class ${table.controllerName} {
         return DataListResult.ok(service.pojoListByQuery(query));
     }
 
-    <#if swagger2>
+    <#if enableSwagger2>
     @ApiOperation("根据 query 和 pageable 条件，分页查询 ${table.dtoName} 记录")
     </#if>
     @GetMapping("page")
@@ -131,7 +131,7 @@ public class ${table.controllerName} {
         return PageResult.ok(service.pojoPageByQuery(query, pageable));
     }
 
-    <#if swagger2>
+    <#if enableSwagger2>
     @ApiOperation("根据 query 条件，查询匹配条件的总记录数")
     </#if>
     @GetMapping("count")
@@ -140,7 +140,7 @@ public class ${table.controllerName} {
     }
 
     @GetMapping("{id}")
-    <#if swagger2>
+    <#if enableSwagger2>
     @ApiOperation("根据 ID 查询 ${table.dtoName} 记录")
     </#if>
     public DataResult<${table.dtoName}> getById(@PathVariable Serializable id) {

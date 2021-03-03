@@ -18,6 +18,34 @@ SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
+-- Table structure for code_global_config
+-- ----------------------------
+DROP TABLE IF EXISTS `code_global_config`;
+CREATE TABLE `code_global_config` (
+    `id`                BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `enable_permission` BIT(1)       DEFAULT NULL COMMENT '开启权限校验',
+    `enable_override`   BIT(1)       DEFAULT NULL COMMENT '开启文件覆盖模式',
+    `enable_swagger2`   BIT(1)       DEFAULT NULL COMMENT '开启Swagger2',
+    `author`            VARCHAR(255) DEFAULT NULL COMMENT '作者',
+    `output_dir`        VARCHAR(255) DEFAULT NULL COMMENT '输出路径',
+    `backend_path`      VARCHAR(255) DEFAULT NULL COMMENT '后端代码路径',
+    `frontend_path`     VARCHAR(255) DEFAULT NULL COMMENT '前端代码路径',
+    `package_path`      VARCHAR(255) DEFAULT NULL COMMENT '包路径',
+    `id_type`           VARCHAR(255) DEFAULT NULL COMMENT '主键类型',
+    `date_type`         VARCHAR(255) DEFAULT NULL COMMENT '时间类型',
+    `date_pattern`      VARCHAR(255) DEFAULT NULL COMMENT '时间格式化',
+    `create_by`     VARCHAR(255)  DEFAULT NULL COMMENT '创建者',
+    `update_by`     VARCHAR(255)  DEFAULT NULL COMMENT '更新者',
+    `create_time`   DATETIME      DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time`   DATETIME      DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`) USING BTREE
+)
+    ENGINE = INNODB
+    DEFAULT CHARSET = `utf8`
+    ROW_FORMAT = COMPACT
+    COMMENT ='代码生成-全局配置';
+
+-- ----------------------------
 -- Table structure for code_column_config
 -- ----------------------------
 DROP TABLE IF EXISTS `code_column_config`;

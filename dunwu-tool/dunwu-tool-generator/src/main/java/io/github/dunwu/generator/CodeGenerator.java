@@ -114,7 +114,7 @@ public class CodeGenerator {
         Collection<TableInfo> tableList = this.getAllTableInfoList(builder);
         for (TableInfo tableInfo : tableList) {
             /* ---------- 添加导入包 ---------- */
-            if (builder.getGlobalConfig().isActiveRecord()) {
+            if (builder.getGlobalConfig().isEnableActiveRecord()) {
                 // 开启 ActiveRecord 模式
                 tableInfo.setImportPackages(Model.class.getCanonicalName());
             }
@@ -137,7 +137,7 @@ public class CodeGenerator {
                 tableInfo.setImportPackages(builder.getSuperEntityClass());
                 importSerializable = false;
             }
-            if (builder.getGlobalConfig().isActiveRecord()) {
+            if (builder.getGlobalConfig().isEnableActiveRecord()) {
                 importSerializable = true;
             }
             if (importSerializable) {

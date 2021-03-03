@@ -83,7 +83,7 @@ public abstract class AbstractTemplateEngine {
             }
 
             TemplateContent entity = new TemplateContent(ConstVal.ENTITY, getMergeContent(objectMap,
-                templateFilePath(template.getEntity(getConfigBuilder().getGlobalConfig().isKotlin()))));
+                templateFilePath(template.getEntity(getConfigBuilder().getGlobalConfig().isEnableKotlin()))));
             templateContents.add(entity);
             TemplateContent dto = new TemplateContent(ConstVal.DTO,
                 getMergeContent(objectMap, templateFilePath(template.getDto())));
@@ -187,7 +187,7 @@ public abstract class AbstractTemplateEngine {
             String entityFile = String.format(
                 (pathInfoMap.get(ConstVal.ENTITY_PATH) + File.separator + "%s" + suffixJavaOrKt()), entityName);
             if (isCreate(FileType.ENTITY, entityFile)) {
-                writer(objectMap, templateFilePath(template.getEntity(getConfigBuilder().getGlobalConfig().isKotlin())),
+                writer(objectMap, templateFilePath(template.getEntity(getConfigBuilder().getGlobalConfig().isEnableKotlin())),
                     entityFile);
             }
         }
@@ -312,14 +312,14 @@ public abstract class AbstractTemplateEngine {
         objectMap.put("idType", globalConfig.getIdType() == null ? null : globalConfig.getIdType().toString());
         objectMap.put("logicDeleteFieldName", config.getStrategyConfig().getLogicDeleteFieldName());
         objectMap.put("versionFieldName", config.getStrategyConfig().getVersionFieldName());
-        objectMap.put("activeRecord", globalConfig.isActiveRecord());
-        objectMap.put("kotlin", globalConfig.isKotlin());
-        objectMap.put("swagger2", globalConfig.isSwagger2());
+        objectMap.put("enableActiveRecord", globalConfig.isEnableActiveRecord());
+        objectMap.put("enableKotlin", globalConfig.isEnableKotlin());
+        objectMap.put("enableSwagger2", globalConfig.isEnableSwagger2());
         objectMap.put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
         objectMap.put("table", tableInfo);
         objectMap.put("enableCache", globalConfig.isEnableCache());
-        objectMap.put("baseResultMap", globalConfig.isBaseResultMap());
-        objectMap.put("baseColumnList", globalConfig.isBaseColumnList());
+        objectMap.put("enableBaseResultMap", globalConfig.isEnableBaseResultMap());
+        objectMap.put("enableBaseColumnList", globalConfig.isEnableBaseColumnList());
         objectMap.put("entity", tableInfo.getEntityName());
         objectMap.put("entitySerialVersionUID", config.getStrategyConfig().isEntitySerialVersionUID());
         objectMap.put("entityColumnConstant", config.getStrategyConfig().isEntityColumnConstant());
@@ -393,14 +393,14 @@ public abstract class AbstractTemplateEngine {
         if (!exist) {
             file.getParentFile().mkdirs();
         }
-        return !exist || getConfigBuilder().getGlobalConfig().isFileOverride();
+        return !exist || getConfigBuilder().getGlobalConfig().isEnableOverride();
     }
 
     /**
      * 文件后缀
      */
     protected String suffixJavaOrKt() {
-        return getConfigBuilder().getGlobalConfig().isKotlin() ? ConstVal.KT_SUFFIX : ConstVal.JAVA_SUFFIX;
+        return getConfigBuilder().getGlobalConfig().isEnableKotlin() ? ConstVal.KT_SUFFIX : ConstVal.JAVA_SUFFIX;
     }
 
     public ConfigBuilder getConfigBuilder() {

@@ -297,7 +297,7 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
                .setAuthor(tableConfig.getAuthor())
                .setBackendDir(tableConfig.getBackendPath())
                .setFrontendDir(tableConfig.getFrontendPath())
-               .setFileOverride(tableConfig.getEnableCover());
+               .setEnableOverride(tableConfig.getEnableCover());
         builder.setTableInfoList(Collections.singletonList(tableInfo));
         return builder;
     }
