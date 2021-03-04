@@ -2,6 +2,7 @@ package io.github.dunwu.modules.generator.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.util.StrUtil;
 import io.github.dunwu.data.core.Result;
 import io.github.dunwu.data.util.PageUtil;
 import io.github.dunwu.data.validator.annotation.EditCheck;
@@ -126,8 +127,10 @@ public class GeneratorController {
             CopyOptions copyOptions = CopyOptions.create().setIgnoreProperties("id");
             dto = BeanUtil.toBean(globalConfigDto, CodeTableConfigDto.class, copyOptions);
             dto.setSchemaName(query.getSchemaName())
-               .setTableName(query.getTableName())
-               .setAuthor(globalConfigDto.getAuthor());
+               .setTableName(query.getTableName());
+            if (StrUtil.isBlank(globalConfigDto.getAuthor())) {
+                dto.setAuthor(globalConfigDto.getAuthor());
+            }
         }
         return Result.ok(dto);
     }

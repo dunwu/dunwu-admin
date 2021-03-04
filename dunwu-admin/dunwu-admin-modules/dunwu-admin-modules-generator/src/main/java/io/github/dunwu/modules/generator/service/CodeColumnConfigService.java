@@ -2,10 +2,8 @@ package io.github.dunwu.modules.generator.service;
 
 import io.github.dunwu.data.core.annotation.QueryField;
 import io.github.dunwu.data.mybatis.IService;
-import io.github.dunwu.generator.engine.CodeGenerateContentDto;
 import io.github.dunwu.modules.generator.entity.CodeColumnConfig;
 import io.github.dunwu.modules.generator.entity.dto.CodeColumnConfigDto;
-import io.github.dunwu.modules.generator.entity.dto.CodeTableConfigDto;
 import io.github.dunwu.modules.generator.entity.query.CodeColumnConfigQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +13,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -154,11 +151,5 @@ public interface CodeColumnConfigService extends IService {
 
     @Transactional(rollbackFor = Exception.class)
     List<CodeColumnConfigDto> syncTables(CodeColumnConfigQuery query);
-
-    void generate(CodeTableConfigDto tableConfig, List<CodeColumnConfigDto> columnConfigs,
-        HttpServletRequest request, HttpServletResponse response);
-
-    List<CodeGenerateContentDto> getPreviewList(CodeTableConfigDto tableConfig,
-        List<CodeColumnConfigDto> columnConfigs);
 
 }

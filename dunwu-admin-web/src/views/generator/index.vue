@@ -103,7 +103,7 @@ export default {
     toGenerate(row) {
       // 生成代码
       codeApi.generateCode({ schemaName: row.schemaName, tableName: row.tableName }).then(data => {
-        this.$notify({ title: '生成成功', type: 'success', duration: 3000 })
+        this.$notify({ title: '生成成功', type: 'success' })
       })
     },
     toDownload(row) {

@@ -181,7 +181,7 @@ export default {
             })
             .catch(err => {
               this.configLoading = false
-              this.$notify({ title: err, type: 'error' })
+              this.$notify({ title: '保存失败', type: 'error', message: err })
             })
         }
       })

@@ -3,7 +3,6 @@ package io.github.dunwu.modules.generator.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.ZipUtil;
 import io.github.dunwu.data.core.DataException;
@@ -71,7 +70,13 @@ public class GeneratorServiceImpl implements GeneratorService {
 
         CodeGlobalConfigQuery query = new CodeGlobalConfigQuery();
         query.setCreateBy(username);
-        return globalConfigService.pojoByQuery(query);
+        CodeGlobalConfigDto dto = globalConfigService.pojoByQuery(query);
+        if (dto != null) {
+            return dto;
+        }
+
+        GlobalConfig globalConfig = new GlobalConfig();
+        return BeanUtil.toBean(globalConfig, CodeGlobalConfigDto.class);
     }
 
     @Override

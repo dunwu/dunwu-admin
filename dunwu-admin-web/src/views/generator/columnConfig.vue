@@ -8,7 +8,7 @@
         size="mini"
         style="float: right; padding: 6px 9px;"
         type="success"
-        @click="toGen"
+        @click="toGenerate"
       >
         保存&生成
       </el-button>
@@ -290,8 +290,8 @@ export default {
       codeApi
         .saveColumnConfig({ schemaName: this.schemaName, tableName: this.tableName, columns: this.data })
         .then(res => {
-          this.$notify({ title: '保存成功', type: 'success' })
           this.configLoading = false
+          this.$notify({ title: '保存成功', type: 'success' })
         })
         .catch(err => {
           this.configLoading = false
@@ -311,27 +311,27 @@ export default {
           this.syncLoading = false
         })
     },
-    toGen() {
+    toGenerate() {
       this.genLoading = true
       codeApi
-        .save(this.data)
+        .saveColumnConfig({ schemaName: this.schemaName, tableName: this.tableName, columns: this.data })
         .then(res => {
           this.$notify({ title: '保存成功', type: 'success' })
           // 生成代码
           codeApi
-            .generator(this.schemaName, this.tableName, 0)
+            .generateCode({ schemaName: this.schemaName, tableName: this.tableName })
             .then(data => {
               this.genLoading = false
               this.$notify({ title: '生成代码成功', type: 'success' })
             })
             .catch(err => {
               this.genLoading = false
-              console.log(err.response.data.message)
+              this.$notify({ title: '生成代码失败', type: 'error', message: err })
             })
         })
         .catch(err => {
           this.genLoading = false
-          console.log(err.response.data.message)
+          this.$notify({ title: '保存失败', type: 'error', message: err })
         })
     }
   }

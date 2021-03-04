@@ -1,21 +1,13 @@
 package io.github.dunwu.modules.generator.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.ZipUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.github.dunwu.data.mybatis.ServiceImpl;
-import io.github.dunwu.generator.CodeGenerator;
-import io.github.dunwu.generator.CodeGeneratorUtil;
 import io.github.dunwu.generator.config.*;
 import io.github.dunwu.generator.config.builder.ConfigBuilder;
-import io.github.dunwu.generator.config.po.TableField;
 import io.github.dunwu.generator.config.po.TableInfo;
-import io.github.dunwu.generator.config.rules.JavaColumnType;
-import io.github.dunwu.generator.engine.CodeGenerateContentDto;
 import io.github.dunwu.modules.generator.dao.CodeColumnConfigDao;
 import io.github.dunwu.modules.generator.entity.CodeColumnConfig;
 import io.github.dunwu.modules.generator.entity.dto.CodeColumnConfigDto;
@@ -24,7 +16,6 @@ import io.github.dunwu.modules.generator.entity.dto.ColumnInfoDto;
 import io.github.dunwu.modules.generator.entity.query.CodeColumnConfigQuery;
 import io.github.dunwu.modules.generator.service.CodeColumnConfigService;
 import io.github.dunwu.modules.generator.service.TableService;
-import io.github.dunwu.web.util.ServletUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -34,12 +25,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -265,60 +257,6 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
         return entities.stream()
                        .map(this::doToDto)
                        .collect(Collectors.toList());
-    }
-
-    @Override
-    public void generate(CodeTableConfigDto tableConfigDto, List<CodeColumnConfigDto> columnConfigs,
-        HttpServletRequest request, HttpServletResponse response) {
-        // String tmpPath = System.getProperty("java.io.tmpdir") + File.separator + "dunwu";
-        // Properties properties = getConfigs(tmpPath, tableConfigDto, columnConfigs);
-        ConfigBuilder builder = transToConfigBuilder(tableConfigDto);
-
-        String codePath = builder.getGlobalConfig().getOutputDir() + File.separator + "codes";
-        String zipFilePath = builder.getGlobalConfig().getOutputDir() + File.separator + "codes.zip";
-
-        FileUtil.mkdir(codePath);
-        ZipUtil.zip(codePath, zipFilePath);
-        log.info("代码已生成到：{}", zipFilePath);
-        ServletUtil.downloadFile(request, response, new File(zipFilePath), true);
-    }
-
-    @Override
-    public List<CodeGenerateContentDto> getPreviewList(CodeTableConfigDto tableConfig,
-        List<CodeColumnConfigDto> columnConfigs) {
-        ConfigBuilder builder = CodeGeneratorUtil.initConfigBuilder();
-        CodeGenerator generator = new CodeGenerator(builder);
-        return generator.preview();
-    }
-
-    public ConfigBuilder transToConfigBuilder(CodeTableConfigDto tableConfig) {
-        TableInfo tableInfo = transToTableInfo(tableConfig);
-        ConfigBuilder builder = CodeGeneratorUtil.initConfigBuilder();
-        builder.getGlobalConfig()
-               .setAuthor(tableConfig.getAuthor())
-               .setBackendDir(tableConfig.getBackendPath())
-               .setFrontendDir(tableConfig.getFrontendPath())
-               .setEnableOverride(tableConfig.getEnableOverride());
-        builder.setTableInfoList(Collections.singletonList(tableInfo));
-        return builder;
-    }
-
-    public TableInfo transToTableInfo(CodeTableConfigDto tableConfigDto) {
-        List<TableField> fields = new ArrayList<>();
-        for (CodeColumnConfigDto column : tableConfigDto.getColumns()) {
-            TableField field = transToTableField(column);
-            fields.add(field);
-        }
-        TableInfo tableInfo = BeanUtil.toBean(tableConfigDto, TableInfo.class);
-        tableInfo.setFields(fields);
-        return tableInfo;
-    }
-
-    public TableField transToTableField(CodeColumnConfigDto columnConfigDto) {
-        CopyOptions copyOptions = CopyOptions.create().setIgnoreProperties("javaType");
-        TableField tableField = BeanUtil.toBean(columnConfigDto, TableField.class, copyOptions);
-        tableField.setJavaType(JavaColumnType.getJavaColumnTypeByType(columnConfigDto.getJavaType()));
-        return tableField;
     }
 
     public List<TableInfo> queryTableInfo(String schemaName, String tableName) {

@@ -1,5 +1,6 @@
 package io.github.dunwu.web.util;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
@@ -400,49 +401,24 @@ public class ServletUtil {
      * @param response /
      * @param file     /
      */
-    // public static void downloadFile(HttpServletResponse response, File file, boolean deleteOnExit) {
-    //     response.setContentType("multipart/form-data;charset=utf-8");
-    //     response.setContentLength((int) file.length());
-    //     FileInputStream inputStream = null;
-    //     ServletOutputStream outputStream = null;
-    //     try {
-    //         inputStream = new FileInputStream(file);
-    //         outputStream = response.getOutputStream();
-    //         response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
-    //         IoUtil.copy(inputStream, outputStream);
-    //         IoUtil.flush(outputStream);
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //     } finally {
-    //         IoUtil.close(inputStream);
-    //         IoUtil.close(outputStream);
-    //         if (deleteOnExit) {
-    //             FileUtil.del(file);
-    //         }
-    //     }
-    // }
-    public static void downloadFile(HttpServletRequest request, HttpServletResponse response, File file,
-        boolean deleteOnExit) {
-        response.setCharacterEncoding(request.getContentType());
-        response.setContentType("application/octet-stream");
-        FileInputStream fis = null;
+    public static void downloadFile(HttpServletRequest request, HttpServletResponse response,
+        File file, boolean deleteOnExit) {
+        response.setCharacterEncoding(request.getCharacterEncoding());
+        response.setContentType("multipart/form-data");
+        FileInputStream inputStream = null;
+        OutputStream outputStream = null;
         try {
-            fis = new FileInputStream(file);
-            response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
-            IoUtil.copy(fis, response.getOutputStream());
-            response.flushBuffer();
+            inputStream = new FileInputStream(file);
+            outputStream = new BufferedOutputStream(response.getOutputStream());
+            response.setHeader("Content-Disposition", "attachment;fileName=" + file.getName());
+            IoUtil.copy(inputStream, outputStream);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            e.printStackTrace();
         } finally {
-            if (fis != null) {
-                try {
-                    fis.close();
-                    if (deleteOnExit) {
-                        file.deleteOnExit();
-                    }
-                } catch (IOException e) {
-                    log.error(e.getMessage(), e);
-                }
+            IoUtil.close(outputStream);
+            IoUtil.close(inputStream);
+            if (deleteOnExit) {
+                FileUtil.del(file);
             }
         }
     }
