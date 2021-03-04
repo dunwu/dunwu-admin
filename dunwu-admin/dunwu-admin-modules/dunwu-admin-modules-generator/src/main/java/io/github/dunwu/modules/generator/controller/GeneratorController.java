@@ -2,29 +2,28 @@ package io.github.dunwu.modules.generator.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
-import io.github.dunwu.data.core.BaseResult;
-import io.github.dunwu.data.core.DataListResult;
-import io.github.dunwu.data.core.DataResult;
-import io.github.dunwu.data.core.constant.ResultStatus;
+import io.github.dunwu.data.core.Result;
 import io.github.dunwu.data.util.PageUtil;
+import io.github.dunwu.data.validator.annotation.EditCheck;
 import io.github.dunwu.exception.BadRequestException;
 import io.github.dunwu.generator.config.GlobalConfig;
 import io.github.dunwu.generator.engine.CodeGenerateContentDto;
 import io.github.dunwu.modules.generator.entity.CodeGlobalConfig;
 import io.github.dunwu.modules.generator.entity.CodeTableConfig;
-import io.github.dunwu.modules.generator.entity.dto.CodeColumnConfigDto;
 import io.github.dunwu.modules.generator.entity.dto.CodeGlobalConfigDto;
 import io.github.dunwu.modules.generator.entity.dto.CodeTableConfigDto;
+import io.github.dunwu.modules.generator.entity.dto.TableColumnInfoDto;
 import io.github.dunwu.modules.generator.entity.query.CodeColumnConfigQuery;
 import io.github.dunwu.modules.generator.entity.query.CodeTableConfigQuery;
 import io.github.dunwu.modules.generator.service.CodeColumnConfigService;
 import io.github.dunwu.modules.generator.service.CodeTableConfigService;
 import io.github.dunwu.modules.generator.service.GeneratorService;
 import io.github.dunwu.modules.generator.service.TableService;
-import io.github.dunwu.util.SecurityUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,8 +34,9 @@ import javax.servlet.http.HttpServletResponse;
  * @author Zheng Jie
  * @date 2019-01-02
  */
+@Slf4j
 @RestController
-@RequestMapping("generator")
+@RequestMapping("code")
 @Api(tags = "系统：代码生成管理")
 public class GeneratorController {
 
@@ -58,55 +58,34 @@ public class GeneratorController {
     private Boolean generatorEnabled;
 
     @ApiOperation("生成代码")
-    @PostMapping(value = "/{tableName}/{type}")
-    public DataListResult<CodeGenerateContentDto> generator(@PathVariable String tableName, @PathVariable Integer type,
-        HttpServletRequest request, HttpServletResponse response) {
-        if (!generatorEnabled && type == 0) {
+    @GetMapping(value = "generate/{schemaName}/{tableName}")
+    public Result generateCode(@PathVariable String schemaName, @PathVariable String tableName) {
+        if (!generatorEnabled) {
             throw new BadRequestException("此环境不允许生成代码，请选择预览或者下载查看！");
         }
 
         CodeTableConfigQuery codeTableConfigQuery = new CodeTableConfigQuery();
-        codeTableConfigQuery.setTableName(tableName);
-        CodeTableConfigDto tableConfig = tableConfigService.find(codeTableConfigQuery);
-        CodeColumnConfigQuery codeColumnConfigQuery = new CodeColumnConfigQuery();
-        codeColumnConfigQuery.setTableName(tableConfig.getSchemaName()).setTableName(tableConfig.getTableName());
-        List<CodeColumnConfigDto> columnConfigs = columnConfigService.pojoListByQuery(codeColumnConfigQuery);
-
-        switch (type) {
-            // 预览
-            case 1:
-                List<CodeGenerateContentDto> previewList = columnConfigService.getPreviewList(tableConfig,
-                    columnConfigs);
-                return DataListResult.ok(previewList);
-            // 生成
-            case 2:
-                columnConfigService.generate(tableConfig, columnConfigs, request, response);
-                return new DataListResult<>(ResultStatus.OK);
-            case 3:
-                columnConfigService.generate(tableConfig, columnConfigs, request, response);
-                return new DataListResult<>(ResultStatus.OK);
-            default:
-                throw new BadRequestException("没有这个选项");
-        }
+        codeTableConfigQuery.setSchemaName(schemaName).setTableName(tableName);
+        generatorService.generateCode(codeTableConfigQuery);
+        return Result.ok();
     }
 
     @ApiOperation("生成代码")
     @GetMapping(value = "preview/{schemaName}/{tableName}")
-    public DataListResult<CodeGenerateContentDto> previewGenerateCode(@PathVariable String schemaName,
-        @PathVariable String tableName) {
+    public Result previewCode(@PathVariable String schemaName, @PathVariable String tableName) {
         if (!generatorEnabled) {
             throw new BadRequestException("此环境不允许生成代码，请选择预览或者下载查看！");
         }
 
         CodeTableConfigQuery codeTableConfigQuery = new CodeTableConfigQuery();
         codeTableConfigQuery.setSchemaName(schemaName).setTableName(tableName);
-        List<CodeGenerateContentDto> previewList = generatorService.previewGenerateCode(codeTableConfigQuery);
-        return DataListResult.ok(previewList);
+        List<CodeGenerateContentDto> previewList = generatorService.previewCode(codeTableConfigQuery);
+        return Result.ok(previewList);
     }
 
     @ApiOperation("生成代码")
     @GetMapping(value = "download/{schemaName}/{tableName}")
-    public void downloadGenerateCode(@PathVariable String schemaName, @PathVariable String tableName,
+    public void downloadCode(@PathVariable String schemaName, @PathVariable String tableName,
         HttpServletRequest request, HttpServletResponse response) {
         if (!generatorEnabled) {
             throw new BadRequestException("此环境不允许生成代码，请选择预览或者下载查看！");
@@ -114,30 +93,30 @@ public class GeneratorController {
 
         CodeTableConfigQuery codeTableConfigQuery = new CodeTableConfigQuery();
         codeTableConfigQuery.setSchemaName(schemaName).setTableName(tableName);
-        generatorService.downloadGenerateCode(codeTableConfigQuery, request, response);
+        generatorService.downloadCode(codeTableConfigQuery, request, response);
     }
 
     @ApiOperation("查询当前用户的 CodeGlobalConfigDto 配置")
     @GetMapping("global/find")
-    public DataResult<CodeGlobalConfigDto> findGlobalConfigByCurrentUser() {
+    public Result findGlobalConfigByCurrentUser() {
         CodeGlobalConfigDto dto = generatorService.findGlobalConfigByCurrentUser();
         if (dto == null) {
             GlobalConfig globalConfig = new GlobalConfig();
             dto = BeanUtil.toBean(globalConfig, CodeGlobalConfigDto.class);
         }
-        return DataResult.ok(dto);
+        return Result.ok(dto);
     }
 
     @ApiOperation("保存当前用户的 CodeGlobalConfigDto 配置")
     @PostMapping("global/save")
-    public BaseResult saveGlobalConfigByCurrentUser(@RequestBody CodeGlobalConfig entity) {
+    public Result saveGlobalConfigByCurrentUser(@Validated(EditCheck.class) @RequestBody CodeGlobalConfig entity) {
         generatorService.saveGlobalConfigByCurrentUser(entity);
-        return BaseResult.ok();
+        return Result.ok();
     }
 
     @ApiOperation("查询当前用户的 CodeGlobalConfigDto 配置")
     @GetMapping("table/find/{schemaName}/{tableName}")
-    public DataResult<CodeTableConfigDto> findTableConfigByCurrentUser(@PathVariable String schemaName,
+    public Result findTableConfigByCurrentUser(@PathVariable String schemaName,
         @PathVariable String tableName) {
         CodeTableConfigQuery query = new CodeTableConfigQuery();
         query.setSchemaName(schemaName).setTableName(tableName);
@@ -150,23 +129,40 @@ public class GeneratorController {
                .setTableName(query.getTableName())
                .setAuthor(globalConfigDto.getAuthor());
         }
-        return DataResult.ok(dto);
+        return Result.ok(dto);
     }
 
     @ApiOperation("保存当前用户的 CodeGlobalConfigDto 配置")
     @PostMapping("table/save")
-    public BaseResult saveTableConfigByCurrentUser(@RequestBody CodeTableConfig entity) {
+    public Result saveTableConfigByCurrentUser(@Validated(EditCheck.class) @RequestBody CodeTableConfig entity) {
         generatorService.saveTableConfigByCurrentUser(entity);
-        return BaseResult.ok();
+        return Result.ok();
+    }
+
+    @ApiOperation("根据 query 条件，查询匹配条件的 CodeColumnConfigDto 列表")
+    @GetMapping("column/find/{schemaName}/{tableName}")
+    public Result findColumnConfigByCurrentUser(@PathVariable String schemaName,
+        @PathVariable String tableName) {
+        CodeColumnConfigQuery query = new CodeColumnConfigQuery();
+        query.setSchemaName(schemaName).setTableName(tableName);
+        return Result.ok(generatorService.findColumnConfigByCurrentUser(query));
+    }
+
+    @ApiOperation("批量更新 CodeColumnConfig 记录")
+    @PostMapping("column/saveBatch")
+    public Result saveColumnsConfigByCurrentUser(
+        @Validated(EditCheck.class) @RequestBody TableColumnInfoDto entity) {
+        generatorService.saveColumnsConfigByCurrentUser(entity);
+        return Result.ok();
     }
 
     @ApiOperation("查询数据库数据")
     @GetMapping(value = "table/all/page")
-    public DataResult<Object> queryTables(@RequestParam(defaultValue = "") String name,
+    public Result queryTables(@RequestParam(defaultValue = "") String name,
         @RequestParam(defaultValue = "0") Integer page,
         @RequestParam(defaultValue = "10") Integer size) {
         int[] startEnd = PageUtil.transToStartEnd(page, size);
-        return DataResult.ok(tableService.getTables(tableService.getCurrentSchema(), name, startEnd));
+        return Result.ok(tableService.getTables(tableService.getCurrentSchema(), name, startEnd));
     }
 
 }

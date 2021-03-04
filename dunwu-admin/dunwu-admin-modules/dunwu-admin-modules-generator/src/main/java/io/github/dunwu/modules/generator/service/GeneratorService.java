@@ -1,10 +1,14 @@
 package io.github.dunwu.modules.generator.service;
 
+import io.github.dunwu.generator.config.builder.ConfigBuilder;
 import io.github.dunwu.generator.engine.CodeGenerateContentDto;
 import io.github.dunwu.modules.generator.entity.CodeGlobalConfig;
 import io.github.dunwu.modules.generator.entity.CodeTableConfig;
+import io.github.dunwu.modules.generator.entity.dto.CodeColumnConfigDto;
 import io.github.dunwu.modules.generator.entity.dto.CodeGlobalConfigDto;
 import io.github.dunwu.modules.generator.entity.dto.CodeTableConfigDto;
+import io.github.dunwu.modules.generator.entity.dto.TableColumnInfoDto;
+import io.github.dunwu.modules.generator.entity.query.CodeColumnConfigQuery;
 import io.github.dunwu.modules.generator.entity.query.CodeTableConfigQuery;
 
 import java.util.List;
@@ -38,9 +42,15 @@ public interface GeneratorService {
 
     boolean saveTableConfigByCurrentUser(CodeTableConfig entity);
 
-    List<CodeGenerateContentDto> previewGenerateCode(CodeTableConfigQuery codeTableConfigQuery);
+    List<CodeColumnConfigDto> findColumnConfigByCurrentUser(CodeColumnConfigQuery query);
 
-    void downloadGenerateCode(CodeTableConfigQuery codeTableConfigQuery, HttpServletRequest request,
+    boolean saveColumnsConfigByCurrentUser(TableColumnInfoDto entity);
+
+    ConfigBuilder generateCode(CodeTableConfigQuery codeTableConfigQuery);
+
+    void downloadCode(CodeTableConfigQuery codeTableConfigQuery, HttpServletRequest request,
         HttpServletResponse response);
+
+    List<CodeGenerateContentDto> previewCode(CodeTableConfigQuery codeTableConfigQuery);
 
 }
