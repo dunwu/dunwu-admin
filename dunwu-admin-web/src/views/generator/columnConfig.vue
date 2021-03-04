@@ -13,7 +13,7 @@
         保存&生成
       </el-button>
       <el-button
-        :loading="columnLoading"
+        :loading="configLoading"
         icon="el-icon-check"
         size="mini"
         style="float: right; padding: 6px 9px;margin-right: 9px"
@@ -246,23 +246,19 @@
 </template>
 
 <script>
-import crud from '@/mixins/crud'
-import dictApi from '@/api/system/dict'
-import generatorApi from '@/api/generator/generatorApi'
+import codeApi from '@/api/generator/codeApi'
 export default {
   name: 'ColumnConfig',
   components: {},
-  mixins: [crud],
   data() {
     return {
-      activeName: 'globalConfig',
-      tableId: null,
       schemaName: '',
       tableName: '',
       tableHeight: 550,
-      columnLoading: false,
-      configLoading: false,
+      data: [],
       dicts: [],
+      loading: false,
+      configLoading: false,
       syncLoading: false,
       genLoading: false
     }
@@ -272,37 +268,39 @@ export default {
     this.tableName = this.$route.params.tableName
     this.schemaName = this.$route.params.schemaName
     this.$nextTick(() => {
-      this.init()
-      dictApi.list().then(data => {
-        this.dicts = data
-      })
+      this.findColumnConfig()
     })
   },
   methods: {
-    beforeInit() {
-      this.url = 'api/generator/column'
-      this.tableType = 'list'
-      const schemaName = this.schemaName
-      const tableName = this.tableName
-      this.params = { schemaName, tableName }
-      return true
-    },
-    saveColumnConfig() {
-      this.columnLoading = true
-      generatorApi
-        .saveBatch({ schemaName: this.schemaName, tableName: this.tableName, columns: this.data })
-        .then(res => {
-          this.$notify({ title: '保存成功', type: 'success' })
-          this.columnLoading = false
+    findColumnConfig() {
+      this.loading = true
+      codeApi
+        .findColumnConfig({ schemaName: this.schemaName, tableName: this.tableName })
+        .then(data => {
+          this.loading = false
+          this.data = data
         })
         .catch(err => {
-          this.columnLoading = false
+          this.loading = false
+          this.$notify({ title: err, type: 'error' })
+        })
+    },
+    saveColumnConfig() {
+      this.configLoading = true
+      codeApi
+        .saveColumnConfig({ schemaName: this.schemaName, tableName: this.tableName, columns: this.data })
+        .then(res => {
+          this.$notify({ title: '保存成功', type: 'success' })
+          this.configLoading = false
+        })
+        .catch(err => {
+          this.configLoading = false
           console.log(err.response.data.message)
         })
     },
     sync() {
       this.syncLoading = true
-      generatorApi
+      codeApi
         .sync([this.tableName])
         .then(() => {
           this.init()
@@ -315,12 +313,12 @@ export default {
     },
     toGen() {
       this.genLoading = true
-      generatorApi
+      codeApi
         .save(this.data)
         .then(res => {
           this.$notify({ title: '保存成功', type: 'success' })
           // 生成代码
-          generatorApi
+          codeApi
             .generator(this.schemaName, this.tableName, 0)
             .then(data => {
               this.genLoading = false

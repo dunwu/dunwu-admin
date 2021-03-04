@@ -400,25 +400,50 @@ public class ServletUtil {
      * @param response /
      * @param file     /
      */
-    public static void downloadFile(HttpServletResponse response, File file,
+    // public static void downloadFile(HttpServletResponse response, File file, boolean deleteOnExit) {
+    //     response.setContentType("multipart/form-data;charset=utf-8");
+    //     response.setContentLength((int) file.length());
+    //     FileInputStream inputStream = null;
+    //     ServletOutputStream outputStream = null;
+    //     try {
+    //         inputStream = new FileInputStream(file);
+    //         outputStream = response.getOutputStream();
+    //         response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
+    //         IoUtil.copy(inputStream, outputStream);
+    //         IoUtil.flush(outputStream);
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //     } finally {
+    //         IoUtil.close(inputStream);
+    //         IoUtil.close(outputStream);
+    //         if (deleteOnExit) {
+    //             FileUtil.del(file);
+    //         }
+    //     }
+    // }
+    public static void downloadFile(HttpServletRequest request, HttpServletResponse response, File file,
         boolean deleteOnExit) {
-        response.setContentType("application/octet-stream;charset=utf-8");
-        FileInputStream inputStream = null;
-        ServletOutputStream outputStream = null;
+        response.setCharacterEncoding(request.getContentType());
+        response.setContentType("application/octet-stream");
+        FileInputStream fis = null;
         try {
-            inputStream = new FileInputStream(file);
-            outputStream = response.getOutputStream();
+            fis = new FileInputStream(file);
             response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
-            IoUtil.copy(inputStream, outputStream);
-            IoUtil.flush(outputStream);
+            IoUtil.copy(fis, response.getOutputStream());
+            response.flushBuffer();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         } finally {
-            IoUtil.close(inputStream);
-            IoUtil.close(outputStream);
-            // if (deleteOnExit) {
-            //     FileUtil.del(file);
-            // }
+            if (fis != null) {
+                try {
+                    fis.close();
+                    if (deleteOnExit) {
+                        file.deleteOnExit();
+                    }
+                } catch (IOException e) {
+                    log.error(e.getMessage(), e);
+                }
+            }
         }
     }
 

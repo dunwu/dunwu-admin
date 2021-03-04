@@ -15,7 +15,7 @@
  */
 package io.github.dunwu.rest;
 
-import io.github.dunwu.modules.monitor.annotation.Log;
+import io.github.dunwu.modules.monitor.annotation.AppLog;
 import io.github.dunwu.domain.QiniuConfig;
 import io.github.dunwu.domain.QiniuContent;
 import io.github.dunwu.service.QiNiuService;
@@ -55,7 +55,7 @@ public class QiniuController {
         return new ResponseEntity<>(qiNiuService.find(), HttpStatus.OK);
     }
 
-    @Log("配置七牛云存储")
+    @AppLog("配置七牛云存储")
     @ApiOperation("配置七牛云存储")
     @PutMapping(value = "/config")
     public ResponseEntity<Object> updateConfig(@Validated @RequestBody QiniuConfig qiniuConfig){
@@ -76,7 +76,7 @@ public class QiniuController {
         return new ResponseEntity<>(qiNiuService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
-    @Log("上传文件")
+    @AppLog("上传文件")
     @ApiOperation("上传文件")
     @PostMapping
     public ResponseEntity<Object> upload(@RequestParam MultipartFile file){
@@ -88,7 +88,7 @@ public class QiniuController {
         return new ResponseEntity<>(map,HttpStatus.OK);
     }
 
-    @Log("同步七牛云数据")
+    @AppLog("同步七牛云数据")
     @ApiOperation("同步七牛云数据")
     @PostMapping(value = "/synchronize")
     public ResponseEntity<Object> synchronize(){
@@ -96,7 +96,7 @@ public class QiniuController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @Log("下载文件")
+    @AppLog("下载文件")
     @ApiOperation("下载文件")
     @GetMapping(value = "/download/{id}")
     public ResponseEntity<Object> download(@PathVariable Long id){
@@ -105,7 +105,7 @@ public class QiniuController {
         return new ResponseEntity<>(map,HttpStatus.OK);
     }
 
-    @Log("删除文件")
+    @AppLog("删除文件")
     @ApiOperation("删除文件")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Object> delete(@PathVariable Long id){
@@ -113,7 +113,7 @@ public class QiniuController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @Log("删除多张图片")
+    @AppLog("删除多张图片")
     @ApiOperation("删除多张图片")
     @DeleteMapping
     public ResponseEntity<Object> deleteAll(@RequestBody Long[] ids) {

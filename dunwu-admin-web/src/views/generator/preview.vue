@@ -9,7 +9,7 @@
 <script>
 import dictApi from '@/api/system/dict'
 import Java from '@/components/JavaEdit/index'
-import generatorApi from '@/api/generator/generatorApi'
+import codeApi from '@/api/generator/codeApi'
 export default {
   name: 'Preview',
   components: { Java },
@@ -24,8 +24,8 @@ export default {
     this.height = document.documentElement.clientHeight - 180 + 'px'
     const schemaName = this.$route.params.schemaName
     const tableName = this.$route.params.tableName
-    generatorApi
-      .previewGenerateCode({ schemaName, tableName })
+    codeApi
+      .previewCode({ schemaName, tableName })
       .then(data => {
         this.data = data
       })

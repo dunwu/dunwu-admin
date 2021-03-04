@@ -15,7 +15,7 @@
  */
 package io.github.dunwu.modules.mnt.rest;
 
-import io.github.dunwu.modules.monitor.annotation.Log;
+import io.github.dunwu.modules.monitor.annotation.AppLog;
 import io.github.dunwu.modules.mnt.domain.ServerDeploy;
 import io.github.dunwu.modules.mnt.service.ServerDeployService;
 import io.github.dunwu.modules.mnt.service.dto.ServerDeployQueryCriteria;
@@ -59,7 +59,7 @@ public class ServerDeployController {
     	return new ResponseEntity<>(serverDeployService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
-    @Log("新增服务器")
+    @AppLog("新增服务器")
     @ApiOperation(value = "新增服务器")
     @PostMapping
 	@PreAuthorize("@exp.check('serverDeploy:add')")
@@ -68,7 +68,7 @@ public class ServerDeployController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @Log("修改服务器")
+    @AppLog("修改服务器")
     @ApiOperation(value = "修改服务器")
     @PutMapping
 	@PreAuthorize("@exp.check('serverDeploy:edit')")
@@ -77,7 +77,7 @@ public class ServerDeployController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @Log("删除服务器")
+    @AppLog("删除服务器")
     @ApiOperation(value = "删除Server")
 	@DeleteMapping
 	@PreAuthorize("@exp.check('serverDeploy:del')")
@@ -86,7 +86,7 @@ public class ServerDeployController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-	@Log("测试连接服务器")
+	@AppLog("测试连接服务器")
 	@ApiOperation(value = "测试连接服务器")
 	@PostMapping("/testConnect")
 	@PreAuthorize("@exp.check('serverDeploy:add')")

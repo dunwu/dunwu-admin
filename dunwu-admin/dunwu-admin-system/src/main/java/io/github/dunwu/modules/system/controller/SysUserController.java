@@ -8,7 +8,7 @@ import io.github.dunwu.data.core.PageResult;
 import io.github.dunwu.data.validator.annotation.AddCheck;
 import io.github.dunwu.data.validator.annotation.EditCheck;
 import io.github.dunwu.exception.BadRequestException;
-import io.github.dunwu.modules.monitor.annotation.Log;
+import io.github.dunwu.modules.monitor.annotation.AppLog;
 import io.github.dunwu.modules.system.entity.SysUser;
 import io.github.dunwu.modules.system.entity.dto.SysUserDto;
 import io.github.dunwu.modules.system.entity.query.SysUserQuery;
@@ -48,7 +48,7 @@ public class SysUserController {
     private final PasswordEncoder passwordEncoder;
     private final VerifyService verifyService;
 
-    @Log("添加一条 SysUser 记录")
+    @AppLog("添加一条 SysUser 记录")
     @PreAuthorize("@exp.check('user:add')")
     @ApiOperation("添加一条 SysUser 记录")
     @PostMapping("add")
@@ -57,7 +57,7 @@ public class SysUserController {
         return BaseResult.ok();
     }
 
-    @Log("更新一条 SysUser 记录")
+    @AppLog("更新一条 SysUser 记录")
     @PreAuthorize("@exp.check('user:edit')")
     @ApiOperation("更新一条 SysUser 记录")
     @PostMapping("edit")
@@ -66,7 +66,7 @@ public class SysUserController {
         return BaseResult.ok();
     }
 
-    @Log("根据 ID 删除一条 SysUser 记录")
+    @AppLog("根据 ID 删除一条 SysUser 记录")
     @PreAuthorize("@exp.check('user:del')")
     @ApiOperation("删除一条 SysUser 记录")
     @PostMapping("del/{id}")
@@ -75,7 +75,7 @@ public class SysUserController {
         return BaseResult.ok();
     }
 
-    @Log("根据 ID 集合批量删除 SysUser 记录")
+    @AppLog("根据 ID 集合批量删除 SysUser 记录")
     @PreAuthorize("@exp.check('user:del')")
     @ApiOperation("根据 ID 集合批量删除 SysUser 记录")
     @PostMapping("del/batch")
@@ -127,7 +127,7 @@ public class SysUserController {
         service.exportList(ids, response);
     }
 
-    @Log("修改用户：个人中心")
+    @AppLog("修改用户：个人中心")
     @ApiOperation("修改用户：个人中心")
     @PostMapping("edit/center")
     public BaseResult center(@Validated(EditCheck.class) @RequestBody SysUserDto entity) {
@@ -151,7 +151,7 @@ public class SysUserController {
     //     return new ResponseEntity<>(userService.updateAvatar(avatar), HttpStatus.OK);
     // }
 
-    @Log("修改用户邮箱")
+    @AppLog("修改用户邮箱")
     @ApiOperation("修改用户邮箱")
     @PostMapping(value = "edit/email/{code}")
     public BaseResult updateEmail(@PathVariable String code,

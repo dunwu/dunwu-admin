@@ -16,7 +16,7 @@
 package io.github.dunwu.rest;
 
 import io.github.dunwu.annotation.AnonymousAccess;
-import io.github.dunwu.modules.monitor.annotation.Log;
+import io.github.dunwu.modules.monitor.annotation.AppLog;
 import io.github.dunwu.annotation.rest.AnonymousGetMapping;
 import io.github.dunwu.domain.AlipayConfig;
 import io.github.dunwu.domain.vo.TradeVo;
@@ -57,7 +57,7 @@ public class AliPayController {
         return new ResponseEntity<>(alipayService.find(), HttpStatus.OK);
     }
 
-    @Log("配置支付宝")
+    @AppLog("配置支付宝")
     @ApiOperation("配置支付宝")
     @PutMapping
     public ResponseEntity<Object> updateConfig(@Validated @RequestBody AlipayConfig alipayConfig) {
@@ -65,7 +65,7 @@ public class AliPayController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @Log("支付宝PC网页支付")
+    @AppLog("支付宝PC网页支付")
     @ApiOperation("PC网页支付")
     @PostMapping(value = "/toPayAsPC")
     public ResponseEntity<String> toPayAsPc(@Validated @RequestBody TradeVo trade) throws Exception {
@@ -75,7 +75,7 @@ public class AliPayController {
         return ResponseEntity.ok(payUrl);
     }
 
-    @Log("支付宝手机网页支付")
+    @AppLog("支付宝手机网页支付")
     @ApiOperation("手机网页支付")
     @PostMapping(value = "/toPayAsWeb")
     public ResponseEntity<String> toPayAsWeb(@Validated @RequestBody TradeVo trade) throws Exception {

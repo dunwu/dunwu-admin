@@ -1,7 +1,6 @@
 package io.github.dunwu.modules.generator.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.util.StrUtil;
 import io.github.dunwu.data.mybatis.ServiceImpl;
 import io.github.dunwu.modules.generator.dao.CodeTableConfigDao;
 import io.github.dunwu.modules.generator.entity.CodeTableConfig;
@@ -124,19 +123,6 @@ public class CodeTableConfigServiceImpl extends ServiceImpl implements CodeTable
         }
 
         return BeanUtil.toBean(dto, CodeTableConfig.class);
-    }
-
-    @Override
-    public CodeTableConfigDto find(CodeTableConfigQuery query) {
-        CodeTableConfigDto tableConfigDto = dao.pojoByQuery(query, this::doToDto);
-        if (tableConfigDto == null) {
-            tableConfigDto = new CodeTableConfigDto();
-            String schema = StrUtil.isNotBlank(query.getSchemaName()) ? query.getSchemaName()
-                : tableService.getCurrentSchema();
-            tableConfigDto.setSchemaName(schema);
-            tableConfigDto.setTableName(query.getTableName());
-        }
-        return tableConfigDto;
     }
 
 }

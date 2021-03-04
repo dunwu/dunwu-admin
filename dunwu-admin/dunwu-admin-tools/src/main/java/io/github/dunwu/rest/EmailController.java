@@ -15,7 +15,7 @@
  */
 package io.github.dunwu.rest;
 
-import io.github.dunwu.modules.monitor.annotation.Log;
+import io.github.dunwu.modules.monitor.annotation.AppLog;
 import io.github.dunwu.domain.EmailConfig;
 import io.github.dunwu.domain.vo.EmailVo;
 import io.github.dunwu.service.EmailService;
@@ -45,7 +45,7 @@ public class EmailController {
         return new ResponseEntity<>(emailService.find(),HttpStatus.OK);
     }
 
-    @Log("配置邮件")
+    @AppLog("配置邮件")
     @PutMapping
     @ApiOperation("配置邮件")
     public ResponseEntity<Object> updateConfig(@Validated @RequestBody EmailConfig emailConfig) throws Exception {
@@ -53,7 +53,7 @@ public class EmailController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @Log("发送邮件")
+    @AppLog("发送邮件")
     @PostMapping
     @ApiOperation("发送邮件")
     public ResponseEntity<Object> sendEmail(@Validated @RequestBody EmailVo emailVo){

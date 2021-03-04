@@ -1,7 +1,7 @@
 package io.github.dunwu.modules.monitor.service.impl;
 
 import cn.hutool.json.JSONUtil;
-import io.github.dunwu.modules.monitor.annotation.Log;
+import io.github.dunwu.modules.monitor.annotation.AppLog;
 import io.github.dunwu.modules.monitor.dao.LogRecordDao;
 import io.github.dunwu.modules.monitor.entity.LogRecord;
 import io.github.dunwu.modules.monitor.service.LogService;
@@ -39,7 +39,7 @@ public class LogServiceImpl implements LogService {
 
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
-        Log aopLog = method.getAnnotation(Log.class);
+        AppLog aopLog = method.getAnnotation(AppLog.class);
 
         // 方法路径
         String methodName = joinPoint.getTarget().getClass().getName() + "." + signature.getName() + "()";

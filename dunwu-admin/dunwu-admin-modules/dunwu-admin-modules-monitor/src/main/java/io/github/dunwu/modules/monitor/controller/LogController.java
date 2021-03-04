@@ -4,7 +4,7 @@ import io.github.dunwu.data.core.BaseResult;
 import io.github.dunwu.data.core.DataListResult;
 import io.github.dunwu.data.core.DataResult;
 import io.github.dunwu.data.core.PageResult;
-import io.github.dunwu.modules.monitor.annotation.Log;
+import io.github.dunwu.modules.monitor.annotation.AppLog;
 import io.github.dunwu.modules.monitor.dao.LogRecordDao;
 import io.github.dunwu.modules.monitor.entity.LogRecord;
 import io.github.dunwu.modules.monitor.entity.dto.LogDto;
@@ -37,7 +37,7 @@ public class LogController {
 
     private final LogRecordDao dao;
 
-    @Log("清空数据")
+    @AppLog("清空数据")
     @ApiOperation("根据 ID 批量删除 SysLog 记录")
     @PreAuthorize("@exp.check()")
     @PostMapping("clear")
@@ -48,7 +48,7 @@ public class LogController {
         return BaseResult.ok();
     }
 
-    @Log("批量删除数据")
+    @AppLog("批量删除数据")
     @ApiOperation("根据 ID 批量删除 SysLog 记录")
     @PreAuthorize("@exp.check()")
     @PostMapping("del/batch")
@@ -85,7 +85,7 @@ public class LogController {
         return DataResult.ok(dao.getById(id));
     }
 
-    @Log("导出 SysLog 数据")
+    @AppLog("导出 SysLog 数据")
     @ApiOperation("导出 SysLog 数据")
     @PreAuthorize("@exp.check()")
     @GetMapping("export/page")

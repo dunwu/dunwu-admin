@@ -15,7 +15,7 @@
  */
 package io.github.dunwu.modules.quartz.rest;
 
-import io.github.dunwu.modules.monitor.annotation.Log;
+import io.github.dunwu.modules.monitor.annotation.AppLog;
 import io.github.dunwu.exception.BadRequestException;
 import io.github.dunwu.modules.quartz.domain.QuartzJob;
 import io.github.dunwu.modules.quartz.service.QuartzJobService;
@@ -77,7 +77,7 @@ public class QuartzJobController {
         return new ResponseEntity<>(quartzJobService.queryAllLog(criteria,pageable), HttpStatus.OK);
     }
 
-    @Log("新增定时任务")
+    @AppLog("新增定时任务")
     @ApiOperation("新增定时任务")
     @PostMapping
     @PreAuthorize("@exp.check('timing:add')")
@@ -89,7 +89,7 @@ public class QuartzJobController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @Log("修改定时任务")
+    @AppLog("修改定时任务")
     @ApiOperation("修改定时任务")
     @PutMapping
     @PreAuthorize("@exp.check('timing:edit')")
@@ -98,7 +98,7 @@ public class QuartzJobController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @Log("更改定时任务状态")
+    @AppLog("更改定时任务状态")
     @ApiOperation("更改定时任务状态")
     @PutMapping(value = "/{id}")
     @PreAuthorize("@exp.check('timing:edit')")
@@ -107,7 +107,7 @@ public class QuartzJobController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @Log("执行定时任务")
+    @AppLog("执行定时任务")
     @ApiOperation("执行定时任务")
     @PutMapping(value = "/exec/{id}")
     @PreAuthorize("@exp.check('timing:edit')")
@@ -116,7 +116,7 @@ public class QuartzJobController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @Log("删除定时任务")
+    @AppLog("删除定时任务")
     @ApiOperation("删除定时任务")
     @DeleteMapping
     @PreAuthorize("@exp.check('timing:del')")

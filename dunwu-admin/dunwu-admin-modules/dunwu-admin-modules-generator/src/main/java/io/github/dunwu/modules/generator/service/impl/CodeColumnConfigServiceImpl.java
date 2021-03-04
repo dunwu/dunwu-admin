@@ -137,12 +137,11 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
         if (CollectionUtil.isEmpty(dtos)) {
             List<TableInfo> tableInfos = queryTableInfo(query.getSchemaName(), query.getTableName());
             TableInfo tableInfo = tableInfos.get(0);
-            CodeTableConfigDto codeTableConfigDto = BeanUtil.toBean(tableInfo, CodeTableConfigDto.class);
             List<CodeColumnConfigDto> columns = new ArrayList<>();
             if (CollectionUtil.isNotEmpty(tableInfo.getFields())) {
-                List<CodeColumnConfigDto> fields = tableInfo.getFields().stream().map(i -> {
-                    return BeanUtil.toBean(i, CodeColumnConfigDto.class);
-                }).collect(Collectors.toList());
+                List<CodeColumnConfigDto> fields = tableInfo.getFields().stream()
+                                                            .map(i -> BeanUtil.toBean(i, CodeColumnConfigDto.class))
+                                                            .collect(Collectors.toList());
                 columns.addAll(fields);
             }
             dtos.addAll(columns);
@@ -281,7 +280,7 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
         FileUtil.mkdir(codePath);
         ZipUtil.zip(codePath, zipFilePath);
         log.info("代码已生成到：{}", zipFilePath);
-        ServletUtil.downloadFile(response, new File(zipFilePath), true);
+        ServletUtil.downloadFile(request, response, new File(zipFilePath), true);
     }
 
     @Override

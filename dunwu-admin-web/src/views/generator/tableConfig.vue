@@ -13,7 +13,7 @@
         保存
       </el-button>
     </div>
-    <el-form ref="form" :model="form" :rules="rules" size="small" label-width="150px">
+    <el-form ref="form" v-loading="loading" :model="form" :rules="rules" size="small" label-width="150px">
       <el-form-item label="开启权限校验" prop="enablePermission">
         <el-radio-group v-model="form.enablePermission" size="mini" style="width: 40%">
           <el-radio-button label="true">是</el-radio-button>
@@ -103,18 +103,17 @@
 </template>
 
 <script>
-import dictApi from '@/api/system/dict'
-import generatorApi from '@/api/generator/generatorApi'
+import codeApi from '@/api/generator/codeApi'
 export default {
   name: 'TableConfig',
   components: {},
   data() {
     return {
+      loading: false,
+      configLoading: false,
       schemaName: '',
       tableName: '',
       tableHeight: 550,
-      configLoading: false,
-      dicts: [],
       form: {
         id: null,
         schemaName: null,
@@ -153,23 +152,27 @@ export default {
     this.schemaName = this.$route.params.schemaName
     this.$nextTick(() => {
       this.findTableConfig()
-      dictApi.list().then(data => {
-        this.dicts = data
-      })
     })
   },
   methods: {
-    beforeInit() {
-      const schemaName = this.schemaName
-      const tableName = this.tableName
-      this.params = { schemaName, tableName }
-      return true
+    findTableConfig() {
+      this.loading = true
+      codeApi
+        .findTableConfig({ schemaName: this.schemaName, tableName: this.tableName })
+        .then(data => {
+          this.loading = false
+          this.form = data
+        })
+        .catch(err => {
+          this.loading = false
+          this.$notify({ title: err, type: 'error' })
+        })
     },
     saveTableConfig() {
       this.$refs['form'].validate(valid => {
         if (valid) {
           this.configLoading = true
-          generatorApi
+          codeApi
             .saveTableConfig(this.form)
             .then(res => {
               this.configLoading = false
@@ -182,19 +185,6 @@ export default {
             })
         }
       })
-    },
-    findTableConfig() {
-      this.configLoading = true
-      generatorApi
-        .findTableConfig({ schemaName: this.schemaName, tableName: this.tableName })
-        .then(data => {
-          this.configLoading = false
-          this.form = data
-        })
-        .catch(err => {
-          this.configLoading = false
-          this.$notify({ title: err, type: 'error' })
-        })
     }
   }
 }

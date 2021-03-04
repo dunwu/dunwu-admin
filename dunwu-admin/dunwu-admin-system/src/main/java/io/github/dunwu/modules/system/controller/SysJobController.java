@@ -6,7 +6,7 @@ import io.github.dunwu.data.core.DataResult;
 import io.github.dunwu.data.core.PageResult;
 import io.github.dunwu.data.validator.annotation.AddCheck;
 import io.github.dunwu.data.validator.annotation.EditCheck;
-import io.github.dunwu.modules.monitor.annotation.Log;
+import io.github.dunwu.modules.monitor.annotation.AppLog;
 import io.github.dunwu.modules.system.entity.dto.SysJobDto;
 import io.github.dunwu.modules.system.entity.dto.SysRoleDto;
 import io.github.dunwu.modules.system.entity.query.SysJobQuery;
@@ -40,7 +40,7 @@ public class SysJobController {
     private final SysJobService service;
     private final SysRoleService roleService;
 
-    @Log("添加一条 SysJobDto 记录")
+    @AppLog("添加一条 SysJobDto 记录")
     @PreAuthorize("@exp.check('job:add')")
     @ApiOperation("添加一条 SysJobDto 记录")
     @PostMapping("add")
@@ -49,7 +49,7 @@ public class SysJobController {
         return BaseResult.ok();
     }
 
-    @Log("更新一条 SysJobDto 记录")
+    @AppLog("更新一条 SysJobDto 记录")
     @PreAuthorize("@exp.check('job:edit')")
     @ApiOperation("更新一条 SysJobDto 记录")
     @PostMapping("edit")
@@ -58,7 +58,7 @@ public class SysJobController {
         return BaseResult.ok();
     }
 
-    @Log("根据 ID 删除一条 SysJobDto 记录")
+    @AppLog("根据 ID 删除一条 SysJobDto 记录")
     @PreAuthorize("@exp.check('job:del')")
     @ApiOperation("根据 ID 删除一条 SysJobDto 记录")
     @PostMapping("del/{id}")
@@ -67,7 +67,7 @@ public class SysJobController {
         return BaseResult.ok();
     }
 
-    @Log("根据 ID 集合批量删除 SysJobDto 记录")
+    @AppLog("根据 ID 集合批量删除 SysJobDto 记录")
     @PreAuthorize("@exp.check('job:del')")
     @ApiOperation("根据 ID 集合批量删除 SysJobDto 记录")
     @PostMapping("del/batch")
@@ -126,7 +126,7 @@ public class SysJobController {
     }
 
     @PutMapping("roles/{jobId}")
-    @Log("更新岗位/角色记录")
+    @AppLog("更新岗位/角色记录")
     @PreAuthorize("@exp.check('job:edit')")
     @ApiOperation("更新一条 SysJobDto 记录")
     public BaseResult updateRolesByJobId(@PathVariable Long jobId, @RequestBody Collection<Long> roleIds) {

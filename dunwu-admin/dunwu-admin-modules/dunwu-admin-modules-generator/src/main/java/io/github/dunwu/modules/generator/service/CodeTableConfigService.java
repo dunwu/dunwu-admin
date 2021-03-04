@@ -146,6 +146,4 @@ public interface CodeTableConfigService extends IService {
      */
     CodeTableConfig dtoToDo(CodeTableConfigDto dto);
 
-    CodeTableConfigDto find(CodeTableConfigQuery query);
-
 }

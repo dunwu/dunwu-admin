@@ -15,7 +15,7 @@
  */
 package io.github.dunwu.modules.mnt.rest;
 
-import io.github.dunwu.modules.monitor.annotation.Log;
+import io.github.dunwu.modules.monitor.annotation.AppLog;
 import io.github.dunwu.modules.mnt.domain.Deploy;
 import io.github.dunwu.modules.mnt.domain.DeployHistory;
 import io.github.dunwu.modules.mnt.service.DeployService;
@@ -69,7 +69,7 @@ public class DeployController {
     	return new ResponseEntity<>(deployService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
-    @Log("新增部署")
+    @AppLog("新增部署")
     @ApiOperation(value = "新增部署")
     @PostMapping
 	@PreAuthorize("@exp.check('deploy:add')")
@@ -78,7 +78,7 @@ public class DeployController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @Log("修改部署")
+    @AppLog("修改部署")
     @ApiOperation(value = "修改部署")
     @PutMapping
 	@PreAuthorize("@exp.check('deploy:edit')")
@@ -87,7 +87,7 @@ public class DeployController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-	@Log("删除部署")
+	@AppLog("删除部署")
 	@ApiOperation(value = "删除部署")
 	@DeleteMapping
 	@PreAuthorize("@exp.check('deploy:del')")
@@ -96,7 +96,7 @@ public class DeployController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@Log("上传文件部署")
+	@AppLog("上传文件部署")
 	@ApiOperation(value = "上传文件部署")
 	@PostMapping(value = "/upload")
 	@PreAuthorize("@exp.check('deploy:edit')")
@@ -119,7 +119,7 @@ public class DeployController {
 		map.put("id",fileName);
 		return new ResponseEntity<>(map,HttpStatus.OK);
 	}
-	@Log("系统还原")
+	@AppLog("系统还原")
 	@ApiOperation(value = "系统还原")
 	@PostMapping(value = "/serverReduction")
 	@PreAuthorize("@exp.check('deploy:edit')")
@@ -127,7 +127,7 @@ public class DeployController {
 		String result = deployService.serverReduction(resources);
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
-	@Log("服务运行状态")
+	@AppLog("服务运行状态")
 	@ApiOperation(value = "服务运行状态")
 	@PostMapping(value = "/serverStatus")
 	@PreAuthorize("@exp.check('deploy:edit')")
@@ -135,7 +135,7 @@ public class DeployController {
 		String result = deployService.serverStatus(resources);
     	return new ResponseEntity<>(result,HttpStatus.OK);
 	}
-	@Log("启动服务")
+	@AppLog("启动服务")
 	@ApiOperation(value = "启动服务")
 	@PostMapping(value = "/startServer")
 	@PreAuthorize("@exp.check('deploy:edit')")
@@ -143,7 +143,7 @@ public class DeployController {
 		String result = deployService.startServer(resources);
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
-	@Log("停止服务")
+	@AppLog("停止服务")
 	@ApiOperation(value = "停止服务")
 	@PostMapping(value = "/stopServer")
 	@PreAuthorize("@exp.check('deploy:edit')")

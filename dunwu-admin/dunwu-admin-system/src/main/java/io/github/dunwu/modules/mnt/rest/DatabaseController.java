@@ -15,7 +15,7 @@
  */
 package io.github.dunwu.modules.mnt.rest;
 
-import io.github.dunwu.modules.monitor.annotation.Log;
+import io.github.dunwu.modules.monitor.annotation.AppLog;
 import io.github.dunwu.exception.BadRequestException;
 import io.github.dunwu.modules.mnt.domain.Database;
 import io.github.dunwu.modules.mnt.service.DatabaseService;
@@ -67,7 +67,7 @@ public class DatabaseController {
         return new ResponseEntity<>(databaseService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
-    @Log("新增数据库")
+    @AppLog("新增数据库")
     @ApiOperation(value = "新增数据库")
     @PostMapping
 	@PreAuthorize("@exp.check('database:add')")
@@ -76,7 +76,7 @@ public class DatabaseController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @Log("修改数据库")
+    @AppLog("修改数据库")
     @ApiOperation(value = "修改数据库")
     @PutMapping
 	@PreAuthorize("@exp.check('database:edit')")
@@ -85,7 +85,7 @@ public class DatabaseController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @Log("删除数据库")
+    @AppLog("删除数据库")
     @ApiOperation(value = "删除数据库")
     @DeleteMapping
 	@PreAuthorize("@exp.check('database:del')")
@@ -94,7 +94,7 @@ public class DatabaseController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-	@Log("测试数据库链接")
+	@AppLog("测试数据库链接")
 	@ApiOperation(value = "测试数据库链接")
 	@PostMapping("/testConnect")
 	@PreAuthorize("@exp.check('database:testConnect')")
@@ -102,7 +102,7 @@ public class DatabaseController {
 		return new ResponseEntity<>(databaseService.testConnection(resources),HttpStatus.CREATED);
 	}
 
-	@Log("执行SQL脚本")
+	@AppLog("执行SQL脚本")
 	@ApiOperation(value = "执行SQL脚本")
 	@PostMapping(value = "/upload")
 	@PreAuthorize("@exp.check('database:add')")

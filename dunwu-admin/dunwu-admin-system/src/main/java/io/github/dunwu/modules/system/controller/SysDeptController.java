@@ -6,7 +6,7 @@ import io.github.dunwu.data.core.DataResult;
 import io.github.dunwu.data.core.PageResult;
 import io.github.dunwu.data.validator.annotation.AddCheck;
 import io.github.dunwu.data.validator.annotation.EditCheck;
-import io.github.dunwu.modules.monitor.annotation.Log;
+import io.github.dunwu.modules.monitor.annotation.AppLog;
 import io.github.dunwu.modules.system.entity.dto.SysDeptDto;
 import io.github.dunwu.modules.system.entity.query.SysDeptQuery;
 import io.github.dunwu.modules.system.service.SysDeptService;
@@ -37,7 +37,7 @@ public class SysDeptController {
 
     private final SysDeptService service;
 
-    @Log("添加一条 SysDept 记录")
+    @AppLog("添加一条 SysDept 记录")
     @PreAuthorize("@exp.check('dept:add')")
     @ApiOperation("添加一条 SysDept 记录")
     @PostMapping("add")
@@ -46,7 +46,7 @@ public class SysDeptController {
         return BaseResult.ok();
     }
 
-    @Log("更新一条 SysDept 记录")
+    @AppLog("更新一条 SysDept 记录")
     @PreAuthorize("@exp.check('dept:edit')")
     @ApiOperation("更新一条 SysDept 记录")
     @PostMapping("edit")
@@ -55,7 +55,7 @@ public class SysDeptController {
         return BaseResult.ok();
     }
 
-    @Log("删除一条 SysDept 记录")
+    @AppLog("删除一条 SysDept 记录")
     @PreAuthorize("@exp.check('dept:del')")
     @ApiOperation("删除一条 SysDept 记录")
     @PostMapping("del/{id}")
@@ -64,7 +64,7 @@ public class SysDeptController {
         return BaseResult.ok();
     }
 
-    @Log("根据 ID 集合批量删除 SysDept 记录")
+    @AppLog("根据 ID 集合批量删除 SysDept 记录")
     @PreAuthorize("@exp.check('dept:del')")
     @ApiOperation("根据 ID 集合批量删除 SysDept 记录")
     @PostMapping("del/batch")

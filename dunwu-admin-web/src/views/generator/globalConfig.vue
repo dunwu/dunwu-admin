@@ -13,7 +13,7 @@
         保存
       </el-button>
     </div>
-    <el-form ref="form" :model="form" :rules="rules" size="small" label-width="150px">
+    <el-form ref="form" v-loading="loading" :model="form" :rules="rules" size="small" label-width="150px">
       <el-form-item label="开启权限校验" prop="enablePermission">
         <el-radio-group v-model="form.enablePermission" size="mini" style="width: 40%">
           <el-radio-button label="true">是</el-radio-button>
@@ -70,16 +70,15 @@
 </template>
 
 <script>
-import generatorApi from '@/api/generator/generatorApi'
+import codeApi from '@/api/generator/codeApi'
 export default {
   name: 'GlobalConfig',
   components: {},
   data() {
     return {
-      tableHeight: 550,
-      columnLoading: false,
+      loading: false,
       configLoading: false,
-      dicts: [],
+      tableHeight: 550,
       form: {
         id: null,
         enablePermission: false,
@@ -98,16 +97,32 @@ export default {
     }
   },
   created() {
+    this.tableHeight = document.documentElement.clientHeight - 385
+    this.tableName = this.$route.params.tableName
+    this.schemaName = this.$route.params.schemaName
     this.$nextTick(() => {
       this.findGlobalConfig()
     })
   },
   methods: {
+    findGlobalConfig() {
+      this.loading = true
+      codeApi
+        .findGlobalConfig()
+        .then(data => {
+          this.loading = false
+          this.form = data
+        })
+        .catch(err => {
+          this.loading = false
+          this.$notify({ title: err, type: 'error' })
+        })
+    },
     saveGlobalConfig() {
       this.$refs['form'].validate(valid => {
         if (valid) {
           this.configLoading = true
-          generatorApi
+          codeApi
             .saveGlobalConfig(this.form)
             .then(res => {
               this.configLoading = false
@@ -120,19 +135,6 @@ export default {
             })
         }
       })
-    },
-    findGlobalConfig() {
-      this.configLoading = true
-      generatorApi
-        .findGlobalConfig()
-        .then(data => {
-          this.configLoading = false
-          this.form = data
-        })
-        .catch(err => {
-          this.configLoading = false
-          this.$notify({ title: err, type: 'error' })
-        })
     }
   }
 }

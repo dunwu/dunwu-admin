@@ -6,7 +6,7 @@ import io.github.dunwu.data.core.DataResult;
 import io.github.dunwu.data.core.PageResult;
 import io.github.dunwu.data.validator.annotation.AddCheck;
 import io.github.dunwu.data.validator.annotation.EditCheck;
-import io.github.dunwu.modules.monitor.annotation.Log;
+import io.github.dunwu.modules.monitor.annotation.AppLog;
 import io.github.dunwu.modules.system.entity.dto.SysDictDto;
 import io.github.dunwu.modules.system.entity.query.SysDictQuery;
 import io.github.dunwu.modules.system.service.SysDictService;
@@ -39,7 +39,7 @@ public class SysDictController {
 
     private final SysDictService service;
 
-    @Log("添加一条 SysDictDto 记录")
+    @AppLog("添加一条 SysDictDto 记录")
     @PreAuthorize("@exp.check('dict:add')")
     @ApiOperation("添加一条 SysDictDto 记录")
     @PostMapping("add")
@@ -48,7 +48,7 @@ public class SysDictController {
         return BaseResult.ok();
     }
 
-    @Log("更新一条 SysDictDto 记录")
+    @AppLog("更新一条 SysDictDto 记录")
     @PreAuthorize("@exp.check('dict:edit')")
     @ApiOperation("更新一条 SysDictDto 记录")
     @PostMapping("edit")
@@ -57,7 +57,7 @@ public class SysDictController {
         return BaseResult.ok();
     }
 
-    @Log("根据 ID 删除一条 SysDictDto 记录")
+    @AppLog("根据 ID 删除一条 SysDictDto 记录")
     @PreAuthorize("@exp.check('dict:del')")
     @ApiOperation("删除一条 SysDictDto 记录")
     @PostMapping("del/{id}")
@@ -66,7 +66,7 @@ public class SysDictController {
         return BaseResult.ok();
     }
 
-    @Log("根据 ID 集合批量删除 SysDictDto 记录")
+    @AppLog("根据 ID 集合批量删除 SysDictDto 记录")
     @PreAuthorize("@exp.check('dict:del')")
     @ApiOperation("根据 ID 集合批量删除 SysDictDto 记录")
     @PostMapping("del/batch")

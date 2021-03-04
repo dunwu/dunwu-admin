@@ -15,7 +15,7 @@
  */
 package io.github.dunwu.modules.mnt.rest;
 
-import io.github.dunwu.modules.monitor.annotation.Log;
+import io.github.dunwu.modules.monitor.annotation.AppLog;
 import io.github.dunwu.modules.mnt.service.DeployHistoryService;
 import io.github.dunwu.modules.mnt.service.dto.DeployHistoryQueryCriteria;
 import io.swagger.annotations.Api;
@@ -57,7 +57,7 @@ public class DeployHistoryController {
         return new ResponseEntity<>(deployhistoryService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
-    @Log("删除DeployHistory")
+    @AppLog("删除DeployHistory")
     @ApiOperation(value = "删除部署历史")
 	@DeleteMapping
     @PreAuthorize("@exp.check('deployHistory:del')")

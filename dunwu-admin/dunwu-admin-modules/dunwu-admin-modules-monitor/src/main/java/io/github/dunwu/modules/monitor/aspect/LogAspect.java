@@ -1,5 +1,6 @@
 package io.github.dunwu.modules.monitor.aspect;
 
+import io.github.dunwu.modules.monitor.annotation.AppLog;
 import io.github.dunwu.modules.monitor.entity.LogRecord;
 import io.github.dunwu.modules.monitor.service.LogService;
 import io.github.dunwu.util.RequestHolder;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * {@link io.github.dunwu.modules.monitor.annotation.Log} 注解的处理器
+ * {@link AppLog} 注解的处理器
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
  * @since 2020-04-09
@@ -38,7 +39,7 @@ public class LogAspect {
     /**
      * AOP 切点
      */
-    @Pointcut("@annotation(io.github.dunwu.modules.monitor.annotation.Log)")
+    @Pointcut("@annotation(io.github.dunwu.modules.monitor.annotation.AppLog)")
     public void pointcut() { }
 
     /**

@@ -15,7 +15,7 @@
  */
 package io.github.dunwu.modules.mnt.rest;
 
-import io.github.dunwu.modules.monitor.annotation.Log;
+import io.github.dunwu.modules.monitor.annotation.AppLog;
 import io.github.dunwu.modules.mnt.domain.App;
 import io.github.dunwu.modules.mnt.service.AppService;
 import io.github.dunwu.modules.mnt.service.dto.AppQueryCriteria;
@@ -59,7 +59,7 @@ public class AppController {
         return new ResponseEntity<>(appService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
-    @Log("新增应用")
+    @AppLog("新增应用")
     @ApiOperation(value = "新增应用")
     @PostMapping
 	@PreAuthorize("@exp.check('app:add')")
@@ -68,7 +68,7 @@ public class AppController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @Log("修改应用")
+    @AppLog("修改应用")
     @ApiOperation(value = "修改应用")
     @PutMapping
 	@PreAuthorize("@exp.check('app:edit')")
@@ -77,7 +77,7 @@ public class AppController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @Log("删除应用")
+    @AppLog("删除应用")
     @ApiOperation(value = "删除应用")
 	@DeleteMapping
 	@PreAuthorize("@exp.check('app:del')")

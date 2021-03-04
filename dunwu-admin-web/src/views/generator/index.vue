@@ -52,21 +52,21 @@
       <el-table-column prop="createTime" label="创建日期" />
       <el-table-column label="操作" width="160px" align="center" fixed="right">
         <template slot-scope="scope">
-          <el-button size="mini" style="margin-right: 2px" type="text">
-            <router-link :to="'/sys-tools/generator/preview/' + scope.row.schemaName + '/' + scope.row.tableName">
-              预览
-            </router-link>
-          </el-button>
-          <el-button size="mini" style="margin-left: -1px;margin-right: 2px" type="text" @click="toDownload(scope.row)">
-            下载
-          </el-button>
-          <el-button size="mini" style="margin-left: -1px;margin-right: 2px" type="text">
+          <el-button size="mini" style="margin-left: -1px; " type="text">
             <router-link :to="'/sys-tools/generator/config/' + scope.row.schemaName + '/' + scope.row.tableName">
               配置
             </router-link>
           </el-button>
-          <el-button type="text" style="margin-left: -1px" size="mini" @click="toGen(scope.row.tableName)">
+          <el-button size="mini" style="margin-left: -1px;" type="text">
+            <router-link :to="'/sys-tools/generator/preview/' + scope.row.schemaName + '/' + scope.row.tableName">
+              预览
+            </router-link>
+          </el-button>
+          <el-button type="text" style="margin-left: -1px; " size="mini" @click="toGenerate(scope.row)">
             生成
+          </el-button>
+          <el-button size="mini" style="margin-left: -1px; " type="text" @click="toDownload(scope.row)">
+            下载
           </el-button>
         </template>
       </el-table-column>
@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import generatorApi from '@/api/generator/generatorApi'
+import codeApi from '@/api/generator/codeApi'
 import { downloadFile } from '@/utils/index'
 import CRUD, { presenter, header } from '@crud/crud'
 import queryOperation from '@crud/Query.operation'
@@ -88,7 +88,7 @@ export default {
   name: 'GeneratorIndex',
   components: { pagination, crudOperation, queryOperation },
   cruds() {
-    return CRUD({ url: 'api/generator/table/all' })
+    return CRUD({ url: 'api/code/table/all' })
   },
   mixins: [presenter(), header()],
   data() {
@@ -100,19 +100,15 @@ export default {
     this.crud.optShow = { add: false, edit: false, del: false, exportPage: false }
   },
   methods: {
-    toGen(name) {
+    toGenerate(row) {
       // 生成代码
-      generatorApi.generator(name, 2).then(data => {
-        this.$notify({
-          title: '生成成功',
-          type: 'success',
-          duration: 2500
-        })
+      codeApi.generateCode({ schemaName: row.schemaName, tableName: row.tableName }).then(data => {
+        this.$notify({ title: '生成成功', type: 'success', duration: 3000 })
       })
     },
     toDownload(row) {
       // 打包下载
-      generatorApi.downloadGenerateCode({ schemaName: row.schemaName, tableName: row.tableName }).then(data => {
+      codeApi.downloadCode({ schemaName: row.schemaName, tableName: row.tableName }).then(data => {
         downloadFile(data, row.tableName, 'zip')
       })
     },
@@ -122,7 +118,7 @@ export default {
         tables.push(val.tableName)
       })
       this.syncLoading = true
-      generatorApi
+      codeApi
         .sync(tables)
         .then(() => {
           this.crud.refresh()

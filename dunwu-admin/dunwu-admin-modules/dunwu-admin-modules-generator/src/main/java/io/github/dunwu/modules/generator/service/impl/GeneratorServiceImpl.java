@@ -207,10 +207,8 @@ public class GeneratorServiceImpl implements GeneratorService {
         CodeGenerator codeGenerator = new CodeGenerator(builder);
         codeGenerator.generate();
         String zipFilePath = tmpSchemaPath + File.separator + "codes.zip";
-        FileUtil.mkdir(tmpTablePath);
-        ZipUtil.zip(tmpTablePath, zipFilePath);
-
-        ServletUtil.downloadFile(response, new File(zipFilePath), true);
+        File zip = ZipUtil.zip(tmpTablePath, zipFilePath);
+        ServletUtil.downloadFile(request, response, zip, true);
     }
 
     @Override

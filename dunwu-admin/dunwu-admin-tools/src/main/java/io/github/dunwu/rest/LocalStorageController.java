@@ -15,7 +15,7 @@
  */
 package io.github.dunwu.rest;
 
-import io.github.dunwu.modules.monitor.annotation.Log;
+import io.github.dunwu.modules.monitor.annotation.AppLog;
 import io.github.dunwu.domain.LocalStorage;
 import io.github.dunwu.exception.BadRequestException;
 import io.github.dunwu.service.LocalStorageService;
@@ -81,7 +81,7 @@ public class LocalStorageController {
         return new ResponseEntity<>(localStorage, HttpStatus.OK);
     }
 
-    @Log("修改文件")
+    @AppLog("修改文件")
     @ApiOperation("修改文件")
     @PutMapping
     @PreAuthorize("@exp.check('storage:edit')")
@@ -90,7 +90,7 @@ public class LocalStorageController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @Log("删除文件")
+    @AppLog("删除文件")
     @DeleteMapping
     @ApiOperation("多选删除")
     public ResponseEntity<Object> delete(@RequestBody Long[] ids) {
