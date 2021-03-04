@@ -1,15 +1,11 @@
 package io.github.dunwu.modules.generator.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import io.github.dunwu.data.mybatis.ServiceImpl;
 import io.github.dunwu.modules.generator.dao.CodeTableConfigDao;
-import io.github.dunwu.modules.generator.entity.CodeColumnConfig;
 import io.github.dunwu.modules.generator.entity.CodeTableConfig;
-import io.github.dunwu.modules.generator.entity.dto.CodeColumnConfigDto;
 import io.github.dunwu.modules.generator.entity.dto.CodeTableConfigDto;
-import io.github.dunwu.modules.generator.entity.query.CodeColumnConfigQuery;
 import io.github.dunwu.modules.generator.entity.query.CodeTableConfigQuery;
 import io.github.dunwu.modules.generator.service.CodeColumnConfigService;
 import io.github.dunwu.modules.generator.service.CodeTableConfigService;
@@ -22,8 +18,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -108,7 +102,8 @@ public class CodeTableConfigServiceImpl extends ServiceImpl implements CodeTable
     }
 
     @Override
-    public void exportPage(CodeTableConfigQuery query, Pageable pageable, HttpServletResponse response) throws IOException {
+    public void exportPage(CodeTableConfigQuery query, Pageable pageable, HttpServletResponse response)
+        throws IOException {
         Page<CodeTableConfigDto> page = dao.pojoPageByQuery(query, pageable, this::doToDto);
         dao.exportDtoList(page.getContent(), response);
     }
@@ -139,28 +134,9 @@ public class CodeTableConfigServiceImpl extends ServiceImpl implements CodeTable
             String schema = StrUtil.isNotBlank(query.getSchemaName()) ? query.getSchemaName()
                 : tableService.getCurrentSchema();
             tableConfigDto.setSchemaName(schema);
-            tableConfigDto.setName(query.getName());
+            tableConfigDto.setTableName(query.getTableName());
         }
         return tableConfigDto;
-    }
-
-    @Override
-    public void addOrSaveColumns(CodeTableConfigDto entity) {
-        CodeColumnConfigQuery query = new CodeColumnConfigQuery();
-        query.setSchemaName(entity.getSchemaName());
-        query.setTableName(entity.getName());
-        List<CodeColumnConfigDto> oldColumns = columnService.pojoListByQuery(query);
-        Set<Serializable> ids = oldColumns.stream()
-                                          .map(i -> (Serializable) i.getId())
-                                          .collect(Collectors.toSet());
-        removeByIds(ids);
-
-        if (CollectionUtil.isNotEmpty(entity.getColumns())) {
-            Collection<CodeColumnConfig> models = entity.getColumns().stream()
-                                                        .map(columnService::dtoToDo)
-                                                        .collect(Collectors.toList());
-            columnService.saveBatch(models);
-        }
     }
 
 }

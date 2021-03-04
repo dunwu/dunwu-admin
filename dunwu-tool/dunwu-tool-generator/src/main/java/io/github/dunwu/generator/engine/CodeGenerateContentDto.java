@@ -6,12 +6,12 @@ package io.github.dunwu.generator.engine;
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
  * @since 2020-04-30
  */
-public class TemplateContent {
+public class CodeGenerateContentDto {
 
     private final String name;
     private final String content;
 
-    public TemplateContent(String name, String content) {
+    public CodeGenerateContentDto(String name, String content) {
         this.name = name;
         this.content = content;
     }

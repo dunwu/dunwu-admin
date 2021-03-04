@@ -1,10 +1,15 @@
 package io.github.dunwu.modules.generator.service;
 
+import io.github.dunwu.generator.engine.CodeGenerateContentDto;
 import io.github.dunwu.modules.generator.entity.CodeGlobalConfig;
 import io.github.dunwu.modules.generator.entity.CodeTableConfig;
 import io.github.dunwu.modules.generator.entity.dto.CodeGlobalConfigDto;
 import io.github.dunwu.modules.generator.entity.dto.CodeTableConfigDto;
 import io.github.dunwu.modules.generator.entity.query.CodeTableConfigQuery;
+
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 代码生成服务接口
@@ -32,5 +37,10 @@ public interface GeneratorService {
     CodeTableConfigDto findTableConfigByCurrentUser(CodeTableConfigQuery query);
 
     boolean saveTableConfigByCurrentUser(CodeTableConfig entity);
+
+    List<CodeGenerateContentDto> previewGenerateCode(CodeTableConfigQuery codeTableConfigQuery);
+
+    void downloadGenerateCode(CodeTableConfigQuery codeTableConfigQuery, HttpServletRequest request,
+        HttpServletResponse response);
 
 }

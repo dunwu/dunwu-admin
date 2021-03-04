@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
  * 代码生成-全局配置 Dto 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-03-03
+ * @since 2021-03-04
  */
 @Data
 @Accessors(chain = true)
@@ -33,8 +33,8 @@ public class CodeGlobalConfigDto implements Serializable {
     @ApiModelProperty(value = "开启文件覆盖模式")
     private Boolean enableOverride;
 
-    @ApiModelProperty(value = "开启Swagger2")
-    private Boolean enableSwagger2;
+    @ApiModelProperty(value = "开启Swagger")
+    private Boolean enableSwagger;
 
     @ApiModelProperty(value = "作者")
     private String author;

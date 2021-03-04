@@ -15,6 +15,8 @@
  */
 package io.github.dunwu.generator.config.rules;
 
+import cn.hutool.core.util.StrUtil;
+
 /**
  * 表字段类型
  *
@@ -88,5 +90,19 @@ public enum JavaColumnType implements IColumnType {
     @Override
     public String getPkg() {
         return pkg;
+    }
+
+    public static JavaColumnType getJavaColumnTypeByType(String type) {
+        if (StrUtil.isBlank(type)) {
+            return null;
+        }
+
+        JavaColumnType[] types = JavaColumnType.values();
+        for (JavaColumnType i : types) {
+            if (i.getType().equalsIgnoreCase(type)) {
+                return i;
+            }
+        }
+        return null;
     }
 }

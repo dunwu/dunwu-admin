@@ -1,22 +1,24 @@
 package io.github.dunwu.modules.generator.entity.query;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import java.time.LocalDateTime;
+import java.io.Serializable;
 import io.github.dunwu.data.core.annotation.QueryField;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
  * 代码生成-表级别配置 Query 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-03-03
+ * @since 2021-03-04
  */
 @Data
 @Accessors(chain = true)
@@ -32,7 +34,7 @@ public class CodeTableConfigQuery implements Serializable {
 
     @ApiModelProperty(value = "Table名称")
     @QueryField
-    private String name;
+    private String tableName;
 
     @ApiModelProperty(value = "Table注释")
     @QueryField
@@ -48,7 +50,7 @@ public class CodeTableConfigQuery implements Serializable {
 
     @ApiModelProperty(value = "开启Swagger2")
     @QueryField
-    private Boolean enableSwagger2;
+    private Boolean enableSwagger;
 
     @ApiModelProperty(value = "作者")
     @QueryField
@@ -78,41 +80,33 @@ public class CodeTableConfigQuery implements Serializable {
     @QueryField
     private String dateType;
 
-    @ApiModelProperty(value = "时间格式化")
+    @ApiModelProperty(value = "时间格式")
     @QueryField
     private String datePattern;
 
-    @ApiModelProperty(value = "开启搜索")
-    @QueryField
-    private Boolean enableQuery;
-
-    @ApiModelProperty(value = "开启列表")
-    @QueryField
-    private Boolean enableList;
-
-    @ApiModelProperty(value = "开启表单")
+    @ApiModelProperty(value = "允许表单")
     @QueryField
     private Boolean enableForm;
 
-    @ApiModelProperty(value = "开启校验")
+    @ApiModelProperty(value = "允许列表")
+    @QueryField
+    private Boolean enableList;
+
+    @ApiModelProperty(value = "允许查询")
+    @QueryField
+    private Boolean enableQuery;
+
+    @ApiModelProperty(value = "允许排序")
+    @QueryField
+    private Boolean enableSort;
+
+    @ApiModelProperty(value = "允许校验")
     @QueryField
     private Boolean enableValidate;
-
-    @ApiModelProperty(value = "允许覆盖")
-    @QueryField
-    private Boolean enableCover;
-
-    @ApiModelProperty(value = "开启Swagger")
-    @QueryField
-    private Boolean enableSwagger;
 
     @ApiModelProperty(value = "模块名称")
     @QueryField
     private String moduleName;
-
-    @ApiModelProperty(value = "输出路径")
-    @QueryField
-    private String outputPath;
 
     @ApiModelProperty(value = "表前缀")
     @QueryField
@@ -139,5 +133,7 @@ public class CodeTableConfigQuery implements Serializable {
     @QueryField(type = QueryField.QueryType.BETWEEN)
     @JsonFormat(shape = JsonFormat.Shape.ARRAY, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private List<LocalDateTime> updateTime;
+
+
 
 }

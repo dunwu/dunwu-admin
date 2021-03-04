@@ -7,11 +7,11 @@
       <div v-if="crud.props.searchToggle">
         <!-- 搜索 -->
   <#list table.fields as field>
-    <#if field.frontQueryType != 'Between'>
+    <#if field.queryType != 'Between'>
         <label class="el-form-item-label"><#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if></label>
         <el-input v-model="query.${field.propertyName}" clearable placeholder="<#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if>" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
     </#if>
-    <#if field.frontQueryType = 'Between'>
+    <#if field.queryType = 'Between'>
         <date-range-picker
             v-model="query.${field.propertyName}"
             start-placeholder="${field.propertyName}Start"
@@ -37,17 +37,17 @@
   <#list table.fields as field>
     <#if field.enableForm>
         <el-form-item label="<#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if>"<#if field.notNull> prop="${field.propertyName}"</#if>>
-      <#if field.frontFormType = 'Input'>
+      <#if field.formType = 'Input'>
           <el-input v-model="form.${field.propertyName}" style="width: 370px;" />
-      <#elseif field.frontFormType = 'Textarea'>
+      <#elseif field.formType = 'Textarea'>
           <el-input v-model="form.${field.propertyName}" :rows="3" type="textarea" style="width: 370px;" />
-      <#elseif field.frontFormType = 'Radio'>
+      <#elseif field.formType = 'Radio'>
         <#if (field.dictName)?? && (field.dictName)!="">
           <el-radio v-model="form.${field.propertyName}" v-for="item in dict.${field.dictName}" :key="item.id" :label="item.value">{{ item.label }}</el-radio>
         <#else>
                 未设置字典，请手动设置 Radio
         </#if>
-      <#elseif field.frontFormType = 'Select'>
+      <#elseif field.formType = 'Select'>
         <#if (field.dictName)?? && (field.dictName)!="">
           <el-select v-model="form.${field.propertyName}" filterable placeholder="请选择">
             <el-option
@@ -114,7 +114,7 @@ import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 
-const defaultForm = {<#if table.fields??><#list table.fields as field>${field.name}: null, </#list></#if>}
+const defaultForm = {<#if table.fields??><#list table.fields as field>${field.fieldName}: null, </#list></#if>}
 export default {
   name: '${table.entityPath}',
   components: {pagination, crudOperation, queryOperation, udOperation},

@@ -38,11 +38,11 @@ public class GlobalConfig {
     /** 开启权限校验 */
     private boolean enablePermission = false;
     /** 开启文件覆盖模式 */
-    private boolean enableOverride = false;
+    private boolean enableOverride = true;
     /** 开启 swagger2 模式 */
-    private boolean enableSwagger2 = false;
+    private boolean enableSwagger = true;
     /** 是否打开输出目录 */
-    private boolean open = true;
+    private boolean open = false;
     /** 开启 Kotlin 模式 */
     private boolean enableKotlin = false;
     /** 开启 ActiveRecord 模式 */

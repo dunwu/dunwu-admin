@@ -116,11 +116,11 @@ public class TableServiceImpl implements TableService {
     //     for (TableInfo table : tableInfoList) {
     //         for (TableField field : table.getFields()) {
     //             if (field.getName().equals("rating")) {
-    //                 field.setFrontQueryType("Between");
-    //                 field.setFrontFormType("Date");
+    //                 field.setQueryType("Between");
+    //                 field.setFormType("Date");
     //             } else {
-    //                 field.setFrontQueryType("Equals");
-    //                 field.setFrontFormType("Input");
+    //                 field.setQueryType("Equals");
+    //                 field.setFormType("Input");
     //             }
     //         }
     //     }

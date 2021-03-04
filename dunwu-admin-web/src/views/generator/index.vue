@@ -4,7 +4,7 @@
     <div class="head-container">
       <div v-if="crud.props.searchToggle">
         <el-input
-          v-model="query.name"
+          v-model="query.tableName"
           clearable
           size="small"
           placeholder="请输入表名"
@@ -45,7 +45,7 @@
       @selection-change="crud.selectionChangeHandler"
     >
       <el-table-column type="selection" width="55" />
-      <el-table-column :show-overflow-tooltip="true" prop="name" label="Table名称" />
+      <el-table-column :show-overflow-tooltip="true" prop="tableName" label="Table名称" />
       <el-table-column :show-overflow-tooltip="true" prop="comment" label="Table注释" />
       <el-table-column :show-overflow-tooltip="true" prop="engine" label="数据库引擎" />
       <el-table-column :show-overflow-tooltip="true" prop="coding" label="字符编码集" />
@@ -53,24 +53,19 @@
       <el-table-column label="操作" width="160px" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button size="mini" style="margin-right: 2px" type="text">
-            <router-link :to="'/sys-tools/generator/preview/' + scope.row.name">
+            <router-link :to="'/sys-tools/generator/preview/' + scope.row.schemaName + '/' + scope.row.tableName">
               预览
             </router-link>
           </el-button>
-          <el-button
-            size="mini"
-            style="margin-left: -1px;margin-right: 2px"
-            type="text"
-            @click="toDownload(scope.row.name)"
-          >
+          <el-button size="mini" style="margin-left: -1px;margin-right: 2px" type="text" @click="toDownload(scope.row)">
             下载
           </el-button>
           <el-button size="mini" style="margin-left: -1px;margin-right: 2px" type="text">
-            <router-link :to="'/sys-tools/generator/config/' + scope.row.schemaName + '/' + scope.row.name">
+            <router-link :to="'/sys-tools/generator/config/' + scope.row.schemaName + '/' + scope.row.tableName">
               配置
             </router-link>
           </el-button>
-          <el-button type="text" style="margin-left: -1px" size="mini" @click="toGen(scope.row.name)">
+          <el-button type="text" style="margin-left: -1px" size="mini" @click="toGen(scope.row.tableName)">
             生成
           </el-button>
         </template>
@@ -115,16 +110,16 @@ export default {
         })
       })
     },
-    toDownload(name) {
+    toDownload(row) {
       // 打包下载
-      generatorApi.generator(name, 3).then(data => {
-        downloadFile(data, name, 'zip')
+      generatorApi.downloadGenerateCode({ schemaName: row.schemaName, tableName: row.tableName }).then(data => {
+        downloadFile(data, row.tableName, 'zip')
       })
     },
     sync() {
       const tables = []
       this.crud.selections.forEach(val => {
-        tables.push(val.name)
+        tables.push(val.tableName)
       })
       this.syncLoading = true
       generatorApi

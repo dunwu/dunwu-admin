@@ -26,6 +26,10 @@ public class CodeColumnConfigQuery implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @ApiModelProperty(value = "Table ID")
+    @QueryField
+    private Long tableId;
+
     @ApiModelProperty(value = "Schema名称")
     @QueryField
     private String schemaName;
@@ -34,13 +38,9 @@ public class CodeColumnConfigQuery implements Serializable {
     @QueryField
     private String tableName;
 
-    @ApiModelProperty(value = "Table ID")
-    @QueryField
-    private Long tableId;
-
     @ApiModelProperty(value = "字段名称")
     @QueryField
-    private String name;
+    private String fieldName;
 
     @ApiModelProperty(value = "字段展示名称（实体字段）")
     @QueryField
@@ -106,9 +106,13 @@ public class CodeColumnConfigQuery implements Serializable {
     @QueryField
     private String validateType;
 
-    @ApiModelProperty(value = "日期表达式")
+    @ApiModelProperty(value = "时间类型")
     @QueryField
-    private String dateExpression;
+    private String dateType;
+
+    @ApiModelProperty(value = "时间格式")
+    @QueryField
+    private String datePattern;
 
     @ApiModelProperty(value = "字典名称")
     @QueryField
@@ -121,14 +125,6 @@ public class CodeColumnConfigQuery implements Serializable {
     @ApiModelProperty(value = "扩展属性")
     @QueryField
     private String extra;
-
-    @ApiModelProperty(value = "状态")
-    @QueryField
-    private Boolean enabled;
-
-    @ApiModelProperty(value = "备注")
-    @QueryField
-    private String note;
 
     @ApiModelProperty(value = "创建者")
     @QueryField

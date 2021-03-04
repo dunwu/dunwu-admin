@@ -44,7 +44,7 @@ public class LogRecordDaoImpl extends BaseExtDaoImpl<LogRecordMapper, LogRecord>
             map.put("请求耗时/毫秒", item.getRequestTime());
             mapList.add(map);
         }
-        ServletUtil.downloadExcel(mapList, response);
+        ServletUtil.downloadExcel(response, mapList);
     }
 
 }

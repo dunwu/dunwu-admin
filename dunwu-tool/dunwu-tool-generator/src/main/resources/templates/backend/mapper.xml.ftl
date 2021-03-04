@@ -12,15 +12,15 @@
     <resultMap id="BaseResultMap" type="${package.Entity}.${entity}">
 <#list table.fields as field>
 <#if field.keyFlag><#--生成主键排在第一位-->
-        <id column="${field.name}" property="${field.propertyName}" />
+        <id column="${field.fieldName}" property="${field.propertyName}" />
 </#if>
 </#list>
 <#list table.commonFields as field><#--生成公共字段 -->
-    <result column="${field.name}" property="${field.propertyName}" />
+    <result column="${field.fieldName}" property="${field.propertyName}" />
 </#list>
 <#list table.fields as field>
 <#if !field.keyFlag><#--生成普通字段 -->
-        <result column="${field.name}" property="${field.propertyName}" />
+        <result column="${field.fieldName}" property="${field.propertyName}" />
 </#if>
 </#list>
     </resultMap>
@@ -30,7 +30,7 @@
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
 <#list table.commonFields as field>
-        ${field.name},
+        ${field.fieldName},
 </#list>
         ${table.fieldNames}
     </sql>

@@ -46,7 +46,7 @@ public class SysDeptDaoImpl extends BaseExtDaoImpl<SysDeptMapper, SysDept> imple
             map.put("更新时间", item.getUpdateTime());
             mapList.add(map);
         }
-        ServletUtil.downloadExcel(mapList, response);
+        ServletUtil.downloadExcel(response, mapList);
     }
 
     @Override

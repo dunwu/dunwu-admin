@@ -48,9 +48,8 @@ export function saveGlobalConfig(data) {
 
 export function findTableConfig(params) {
   return request({
-    url: 'api/generator/table/find',
-    method: 'get',
-    params
+    url: 'api/generator/table/find/' + params.schemaName + '/' + params.tableName,
+    method: 'get'
   })
 }
 
@@ -62,10 +61,26 @@ export function saveTableConfig(data) {
   })
 }
 
+export function previewGenerateCode(params) {
+  return request({
+    url: 'api/generator/preview/' + params.schemaName + '/' + params.tableName,
+    method: 'get'
+  })
+}
+
+export function downloadGenerateCode(params) {
+  return request({
+    url: 'api/generator/download/' + params.schemaName + '/' + params.tableName,
+    method: 'get'
+  })
+}
+
 export default {
   generator: generatorApi,
   saveBatch,
   sync,
+  previewGenerateCode,
+  downloadGenerateCode,
   findGlobalConfig,
   saveGlobalConfig,
   findTableConfig,

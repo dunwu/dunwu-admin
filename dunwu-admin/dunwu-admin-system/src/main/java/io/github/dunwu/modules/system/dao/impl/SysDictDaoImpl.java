@@ -35,7 +35,7 @@ public class SysDictDaoImpl extends BaseExtDaoImpl<SysDictMapper, SysDict> imple
             map.put("更新者", item.getUpdateBy());
             mapList.add(map);
         }
-        ServletUtil.downloadExcel(mapList, response);
+        ServletUtil.downloadExcel(response, mapList);
     }
 
 }

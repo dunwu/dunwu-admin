@@ -22,10 +22,7 @@ import io.github.dunwu.generator.config.rules.NamingStrategy;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.IntStream;
 
 /**
@@ -43,7 +40,7 @@ public class TableInfo {
     /** schema名称 */
     private String schemaName;
     /** 表名 */
-    private String name;
+    private String tableName;
     /** 表备注 */
     private String comment;
     /** 表字段 */
@@ -52,6 +49,7 @@ public class TableInfo {
     private List<TableField> commonFields;
     /** 字段名称，以逗号分隔 */
     private String fieldNames;
+    private Map<String, TableField> fieldMap;
 
     /** 开启权限校验 */
     private boolean enablePermission = false;
@@ -114,20 +112,20 @@ public class TableInfo {
     }
 
     protected TableInfo setConvert(StrategyConfig strategyConfig) {
-        if (strategyConfig.containsTablePrefix(name) || strategyConfig.isEntityTableFieldAnnotationEnable()) {
+        if (strategyConfig.containsTablePrefix(tableName) || strategyConfig.isEntityTableFieldAnnotationEnable()) {
             // 包含前缀
             this.convert = true;
-        } else if (strategyConfig.isCapitalModeNaming(name)) {
+        } else if (strategyConfig.isCapitalModeNaming(tableName)) {
             // 包含
             this.convert = false;
         } else {
             // 转换字段
             if (NamingStrategy.underline_to_camel == strategyConfig.getColumnNaming()) {
                 // 包含大写处理
-                if (StringUtils.containsUpperCase(name)) {
+                if (StringUtils.containsUpperCase(tableName)) {
                     this.convert = true;
                 }
-            } else if (!entityName.equalsIgnoreCase(name)) {
+            } else if (!entityName.equalsIgnoreCase(tableName)) {
                 this.convert = true;
             }
         }
@@ -174,7 +172,7 @@ public class TableInfo {
      * 逻辑删除
      */
     public boolean isLogicDelete(String logicDeletePropertyName) {
-        return fields.parallelStream().anyMatch(tf -> tf.getName().equals(logicDeletePropertyName));
+        return fields.parallelStream().anyMatch(tf -> tf.getFieldName().equals(logicDeletePropertyName));
     }
 
     /**
@@ -187,14 +185,16 @@ public class TableInfo {
             IntStream.range(0, fields.size()).forEach(i -> {
                 TableField fd = fields.get(i);
                 if (i == fields.size() - 1) {
-                    names.append(fd.getName());
+                    names.append(fd.getFieldName());
                 } else {
-                    names.append(fd.getName()).append(", ");
+                    names.append(fd.getFieldName()).append(", ");
                 }
             });
             fieldNames = names.toString();
         }
         return fieldNames;
     }
+
+
 
 }

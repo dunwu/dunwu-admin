@@ -31,7 +31,7 @@ public class SysJobRoleDaoImpl extends BaseExtDaoImpl<SysJobRoleMapper, SysJobRo
             map.put("角色ID", item.getRoleId());
             mapList.add(map);
         }
-        ServletUtil.downloadExcel(mapList, response);
+        ServletUtil.downloadExcel(response, mapList);
     }
 
 }

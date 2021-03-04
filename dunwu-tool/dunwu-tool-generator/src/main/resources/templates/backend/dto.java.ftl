@@ -4,7 +4,7 @@ package ${package.Dto};
 import ${pkg};
 </#list>
 import com.fasterxml.jackson.annotation.JsonFormat;
-<#if enableSwagger2>
+<#if enableSwagger>
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 </#if>
@@ -32,7 +32,7 @@ import lombok.experimental.Accessors;
 <#if table.convert>
 @TableName("${table.name}")
 </#if>
-<#if enableSwagger2>
+<#if enableSwagger>
 @ApiModel(value = "${table.dtoName}", description = "${table.comment!}")
 </#if>
 <#if superEntityClass??>
@@ -53,7 +53,7 @@ public class ${table.dtoName} implements Serializable {
     </#if>
 
     <#if field.comment!?length gt 0>
-        <#if enableSwagger2>
+        <#if enableSwagger>
     @ApiModelProperty(value = "${field.comment}")
         <#else>
     /**
@@ -64,19 +64,19 @@ public class ${table.dtoName} implements Serializable {
     <#if field.fill??>
     <#-- -----   存在字段填充设置   ----->
         <#if field.convert>
-    @TableField(value = "${field.name}", fill = FieldFill.${field.fill})
+    @TableField(value = "${field.fieldName}", fill = FieldFill.${field.fill})
         <#else>
     @TableField(fill = FieldFill.${field.fill})
         </#if>
     <#elseif field.convert>
-    @TableField("${field.name}")
+    @TableField("${field.fieldName}")
     </#if>
     <#-- 乐观锁注解 -->
-    <#if (versionFieldName!"") == field.name>
+    <#if (versionFieldName!"") == field.fieldName>
     @Version
     </#if>
     <#-- 逻辑删除注解 -->
-    <#if (logicDeleteFieldName!"") == field.name>
+    <#if (logicDeleteFieldName!"") == field.fieldName>
     @TableLogic
     </#if>
     <#if (field.propertyType == "Date") || field.propertyType == "LocalDateTime">
@@ -112,7 +112,7 @@ public class ${table.dtoName} implements Serializable {
 
 <#if entityColumnConstant>
     <#list table.fields as field>
-    public static final String ${field.name?upper_case} = "${field.name}";
+    public static final String ${field.fieldName?upper_case} = "${field.fieldName}";
 
     </#list>
 </#if>

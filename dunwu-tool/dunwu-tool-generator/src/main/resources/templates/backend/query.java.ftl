@@ -5,7 +5,7 @@ import ${pkg};
 </#list>
 import io.github.dunwu.data.core.annotation.QueryField;
 import com.fasterxml.jackson.annotation.JsonFormat;
-<#if enableSwagger2>
+<#if enableSwagger>
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 </#if>
@@ -35,7 +35,7 @@ import java.util.List;
 <#if table.convert>
 @TableName("${table.name}")
 </#if>
-<#if enableSwagger2>
+<#if enableSwagger>
 @ApiModel(value = "${table.queryName}", description = "${table.comment!}")
 </#if>
 <#if superEntityClass??>
@@ -53,7 +53,7 @@ public class ${table.queryName} implements Serializable {
 <#list table.fields as field>
     <#if !field.keyFlag>
         <#if field.comment!?length gt 0>
-            <#if enableSwagger2>
+            <#if enableSwagger>
     @ApiModelProperty(value = "${field.comment}")
             <#else>
     /**
@@ -100,7 +100,7 @@ public class ${table.queryName} implements Serializable {
 
 <#if entityColumnConstant>
     <#list table.fields as field>
-    public static final String ${field.name?upper_case} = "${field.name}";
+    public static final String ${field.fieldName?upper_case} = "${field.fieldName}";
 
     </#list>
 </#if>

@@ -15,7 +15,7 @@ import java.util.List;
  * 代码生成-表级别配置 Dto 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-03-03
+ * @since 2021-03-04
  */
 @Data
 @Accessors(chain = true)
@@ -32,7 +32,7 @@ public class CodeTableConfigDto implements Serializable {
     private String schemaName;
 
     @ApiModelProperty(value = "Table名称")
-    private String name;
+    private String tableName;
 
     @ApiModelProperty(value = "Table注释")
     private String comment;
@@ -44,7 +44,7 @@ public class CodeTableConfigDto implements Serializable {
     private Boolean enableOverride;
 
     @ApiModelProperty(value = "开启Swagger2")
-    private Boolean enableSwagger2;
+    private Boolean enableSwagger;
 
     @ApiModelProperty(value = "作者")
     private String author;
@@ -67,32 +67,26 @@ public class CodeTableConfigDto implements Serializable {
     @ApiModelProperty(value = "时间类型")
     private String dateType;
 
-    @ApiModelProperty(value = "时间格式化")
+    @ApiModelProperty(value = "时间格式")
     private String datePattern;
 
-    @ApiModelProperty(value = "开启搜索")
-    private Boolean enableQuery;
-
-    @ApiModelProperty(value = "开启列表")
-    private Boolean enableList;
-
-    @ApiModelProperty(value = "开启表单")
+    @ApiModelProperty(value = "允许表单")
     private Boolean enableForm;
 
-    @ApiModelProperty(value = "开启校验")
+    @ApiModelProperty(value = "允许列表")
+    private Boolean enableList;
+
+    @ApiModelProperty(value = "允许查询")
+    private Boolean enableQuery;
+
+    @ApiModelProperty(value = "允许排序")
+    private Boolean enableSort;
+
+    @ApiModelProperty(value = "允许校验")
     private Boolean enableValidate;
-
-    @ApiModelProperty(value = "允许覆盖")
-    private Boolean enableCover;
-
-    @ApiModelProperty(value = "开启Swagger")
-    private Boolean enableSwagger;
 
     @ApiModelProperty(value = "模块名称")
     private String moduleName;
-
-    @ApiModelProperty(value = "输出路径")
-    private String outputPath;
 
     @ApiModelProperty(value = "表前缀")
     private String tablePrefix;

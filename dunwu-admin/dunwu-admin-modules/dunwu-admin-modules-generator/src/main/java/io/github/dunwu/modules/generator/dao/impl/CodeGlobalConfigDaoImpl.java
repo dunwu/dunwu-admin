@@ -30,7 +30,7 @@ public class CodeGlobalConfigDaoImpl extends BaseExtDaoImpl<CodeGlobalConfigMapp
             map.put("ID", item.getId());
             map.put("开启权限校验", item.getEnablePermission());
             map.put("开启文件覆盖模式", item.getEnableOverride());
-            map.put("开启Swagger2", item.getEnableSwagger2());
+            map.put("开启Swagger", item.getEnableSwagger());
             map.put("作者", item.getAuthor());
             map.put("输出路径", item.getOutputDir());
             map.put("后端代码路径", item.getBackendPath());
@@ -45,7 +45,7 @@ public class CodeGlobalConfigDaoImpl extends BaseExtDaoImpl<CodeGlobalConfigMapp
             map.put("更新时间", item.getUpdateTime());
             mapList.add(map);
         }
-        ServletUtil.downloadExcel(mapList, response);
+        ServletUtil.downloadExcel(response, mapList);
     }
 
 }

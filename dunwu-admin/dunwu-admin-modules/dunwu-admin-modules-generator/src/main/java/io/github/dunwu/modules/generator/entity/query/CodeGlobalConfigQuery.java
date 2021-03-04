@@ -34,9 +34,9 @@ public class CodeGlobalConfigQuery implements Serializable {
     @QueryField
     private Boolean enableOverride;
 
-    @ApiModelProperty(value = "开启Swagger2")
+    @ApiModelProperty(value = "开启Swagger")
     @QueryField
-    private Boolean enableSwagger2;
+    private Boolean enableSwagger;
 
     @ApiModelProperty(value = "作者")
     @QueryField

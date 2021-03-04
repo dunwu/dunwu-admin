@@ -39,8 +39,8 @@ public class CodeGlobalConfig implements Serializable {
     @ApiModelProperty(value = "开启文件覆盖模式")
     private Boolean enableOverride;
 
-    @ApiModelProperty(value = "开启Swagger2")
-    private Boolean enableSwagger2;
+    @ApiModelProperty(value = "开启Swagger")
+    private Boolean enableSwagger;
 
     @ApiModelProperty(value = "作者")
     private String author;

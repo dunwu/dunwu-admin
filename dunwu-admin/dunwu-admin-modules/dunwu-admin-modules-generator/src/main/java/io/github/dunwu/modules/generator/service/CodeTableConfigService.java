@@ -148,6 +148,4 @@ public interface CodeTableConfigService extends IService {
 
     CodeTableConfigDto find(CodeTableConfigQuery query);
 
-    void addOrSaveColumns(CodeTableConfigDto entity);
-
 }

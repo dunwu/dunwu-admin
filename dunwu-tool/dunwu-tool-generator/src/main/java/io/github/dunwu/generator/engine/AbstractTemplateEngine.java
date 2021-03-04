@@ -15,7 +15,6 @@
  */
 package io.github.dunwu.generator.engine;
 
-import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -28,7 +27,6 @@ import io.github.dunwu.generator.config.TemplateConfig;
 import io.github.dunwu.generator.config.builder.ConfigBuilder;
 import io.github.dunwu.generator.config.po.TableInfo;
 import io.github.dunwu.generator.config.rules.FileType;
-import io.github.dunwu.tool.io.AnsiColorUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,8 +64,8 @@ public abstract class AbstractTemplateEngine {
      * @throws IOException       /
      * @throws TemplateException /
      */
-    public List<TemplateContent> preview() throws IOException, TemplateException {
-        List<TemplateContent> templateContents = new ArrayList<>();
+    public List<CodeGenerateContentDto> preview() throws IOException, TemplateException {
+        List<CodeGenerateContentDto> codeGenerateContentDtos = new ArrayList<>();
 
         Collection<TableInfo> tableInfoList = getConfigBuilder().getTableInfoList();
         for (TableInfo tableInfo : tableInfoList) {
@@ -82,39 +80,45 @@ public abstract class AbstractTemplateEngine {
                 objectMap.put("cfg", injectionConfig.getMap());
             }
 
-            TemplateContent entity = new TemplateContent(ConstVal.ENTITY, getMergeContent(objectMap,
+            CodeGenerateContentDto entity = new CodeGenerateContentDto(ConstVal.ENTITY, getMergeContent(objectMap,
                 templateFilePath(template.getEntity(getConfigBuilder().getGlobalConfig().isEnableKotlin()))));
-            templateContents.add(entity);
-            TemplateContent dto = new TemplateContent(ConstVal.DTO,
+            codeGenerateContentDtos.add(entity);
+            CodeGenerateContentDto dto = new CodeGenerateContentDto(ConstVal.DTO,
                 getMergeContent(objectMap, templateFilePath(template.getDto())));
-            templateContents.add(dto);
-            TemplateContent query = new TemplateContent(ConstVal.QUERY,
+            codeGenerateContentDtos.add(dto);
+            CodeGenerateContentDto query = new CodeGenerateContentDto(ConstVal.QUERY,
                 getMergeContent(objectMap, templateFilePath(template.getQuery())));
-            templateContents.add(query);
-            TemplateContent mapper = new TemplateContent(ConstVal.MAPPER,
+            codeGenerateContentDtos.add(query);
+            CodeGenerateContentDto mapper = new CodeGenerateContentDto(ConstVal.MAPPER,
                 getMergeContent(objectMap, templateFilePath(template.getMapper())));
-            templateContents.add(mapper);
-            TemplateContent dao = new TemplateContent(ConstVal.DAO,
+            codeGenerateContentDtos.add(mapper);
+            CodeGenerateContentDto dao = new CodeGenerateContentDto(ConstVal.DAO,
                 getMergeContent(objectMap, templateFilePath(template.getDao())));
-            templateContents.add(dao);
-            TemplateContent daoImpl = new TemplateContent(ConstVal.DAO_IMPL,
+            codeGenerateContentDtos.add(dao);
+            CodeGenerateContentDto daoImpl = new CodeGenerateContentDto(ConstVal.DAO_IMPL,
                 getMergeContent(objectMap, templateFilePath(template.getDaoImpl())));
-            templateContents.add(daoImpl);
-            TemplateContent service = new TemplateContent(ConstVal.SERVICE,
+            codeGenerateContentDtos.add(daoImpl);
+            CodeGenerateContentDto service = new CodeGenerateContentDto(ConstVal.SERVICE,
                 getMergeContent(objectMap, templateFilePath(template.getService())));
-            templateContents.add(service);
-            TemplateContent serviceImpl = new TemplateContent(ConstVal.SERVICE_IMPL,
+            codeGenerateContentDtos.add(service);
+            CodeGenerateContentDto serviceImpl = new CodeGenerateContentDto(ConstVal.SERVICE_IMPL,
                 getMergeContent(objectMap, templateFilePath(template.getServiceImpl())));
-            templateContents.add(serviceImpl);
-            TemplateContent controller = new TemplateContent(ConstVal.CONTROLLER,
+            codeGenerateContentDtos.add(serviceImpl);
+            CodeGenerateContentDto controller = new CodeGenerateContentDto(ConstVal.CONTROLLER,
                 getMergeContent(objectMap, templateFilePath(template.getController())));
-            templateContents.add(controller);
-            // TemplateContent xml = new TemplateContent(ConstVal.XML,
-            //     getMergeContent(objectMap, templateFilePath(template.getXml())));
-            // templateContents.add(xml);
+            codeGenerateContentDtos.add(controller);
+            CodeGenerateContentDto xml = new CodeGenerateContentDto(ConstVal.XML,
+                getMergeContent(objectMap, templateFilePath(template.getXml())));
+            codeGenerateContentDtos.add(xml);
+            CodeGenerateContentDto api = new CodeGenerateContentDto(ConstVal.API,
+                getMergeContent(objectMap, templateFilePath(template.getApi())));
+            codeGenerateContentDtos.add(api);
+            CodeGenerateContentDto list = new CodeGenerateContentDto(ConstVal.LIST,
+                getMergeContent(objectMap, templateFilePath(template.getList())));
+            codeGenerateContentDtos.add(list);
         }
 
-        return templateContents;
+        return codeGenerateContentDtos;
     }
 
     /**
@@ -314,7 +318,7 @@ public abstract class AbstractTemplateEngine {
         objectMap.put("versionFieldName", config.getStrategyConfig().getVersionFieldName());
         objectMap.put("enableActiveRecord", globalConfig.isEnableActiveRecord());
         objectMap.put("enableKotlin", globalConfig.isEnableKotlin());
-        objectMap.put("enableSwagger2", globalConfig.isEnableSwagger2());
+        objectMap.put("enableSwagger", globalConfig.isEnableSwagger());
         objectMap.put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
         objectMap.put("table", tableInfo);
         objectMap.put("enableCache", globalConfig.isEnableCache());

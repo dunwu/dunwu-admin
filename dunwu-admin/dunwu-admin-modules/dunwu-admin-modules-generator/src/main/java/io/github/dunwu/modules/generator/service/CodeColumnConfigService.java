@@ -2,7 +2,7 @@ package io.github.dunwu.modules.generator.service;
 
 import io.github.dunwu.data.core.annotation.QueryField;
 import io.github.dunwu.data.mybatis.IService;
-import io.github.dunwu.generator.engine.TemplateContent;
+import io.github.dunwu.generator.engine.CodeGenerateContentDto;
 import io.github.dunwu.modules.generator.entity.CodeColumnConfig;
 import io.github.dunwu.modules.generator.entity.dto.CodeColumnConfigDto;
 import io.github.dunwu.modules.generator.entity.dto.CodeTableConfigDto;
@@ -158,7 +158,7 @@ public interface CodeColumnConfigService extends IService {
     void generate(CodeTableConfigDto tableConfig, List<CodeColumnConfigDto> columnConfigs,
         HttpServletRequest request, HttpServletResponse response);
 
-    List<TemplateContent> getPreviewList(CodeTableConfigDto tableConfig,
+    List<CodeGenerateContentDto> getPreviewList(CodeTableConfigDto tableConfig,
         List<CodeColumnConfigDto> columnConfigs);
 
 }

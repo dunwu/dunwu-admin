@@ -40,7 +40,7 @@ public class TableField {
     /** table 名称 */
     private String tableName;
     /** 字段名称（表字段） */
-    private String name;
+    private String fieldName;
     /** 字段展示名称（实体字段） */
     private String propertyName;
     /** 字段注释 */
@@ -64,11 +64,11 @@ public class TableField {
     /** 是否出现在搜索 */
     private boolean enableQuery = true;
     /** 前端表单控件类型 */
-    private String frontFormType;
+    private String formType;
     /** 前端搜索控件类型 */
-    private String frontQueryType;
+    private String queryType;
     /** 前端列表控件类型 */
-    private String frontListType;
+    private String listType;
     /** 字典名称 */
     private String dictName;
     /** 日期表达式（只有当字段为时间类型时才有效） */
@@ -103,16 +103,16 @@ public class TableField {
             this.convert = true;
             return this;
         }
-        if (strategyConfig.isCapitalModeNaming(name)) {
+        if (strategyConfig.isCapitalModeNaming(fieldName)) {
             this.convert = false;
         } else {
             // 转换字段
             if (NamingStrategy.underline_to_camel == strategyConfig.getColumnNaming()) {
                 // 包含大写处理
-                if (StringUtils.containsUpperCase(name)) {
+                if (StringUtils.containsUpperCase(fieldName)) {
                     this.convert = true;
                 }
-            } else if (!name.equals(propertyName)) {
+            } else if (!fieldName.equals(propertyName)) {
                 this.convert = true;
             }
         }

@@ -2,7 +2,7 @@ package io.github.dunwu.generator;
 
 import io.github.dunwu.generator.config.*;
 import io.github.dunwu.generator.config.po.TableInfo;
-import io.github.dunwu.generator.engine.TemplateContent;
+import io.github.dunwu.generator.engine.CodeGenerateContentDto;
 
 import java.util.Collection;
 import java.util.List;
@@ -23,7 +23,7 @@ public interface ICodeGenerator {
 
     void generate(Collection<TableInfo> tables);
 
-    List<TemplateContent> getPreviewList();
+    List<CodeGenerateContentDto> getPreviewList();
 
     /**
      * 全局配置

@@ -1,6 +1,7 @@
 package io.github.dunwu.modules.generator.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
@@ -13,7 +14,8 @@ import io.github.dunwu.generator.config.*;
 import io.github.dunwu.generator.config.builder.ConfigBuilder;
 import io.github.dunwu.generator.config.po.TableField;
 import io.github.dunwu.generator.config.po.TableInfo;
-import io.github.dunwu.generator.engine.TemplateContent;
+import io.github.dunwu.generator.config.rules.JavaColumnType;
+import io.github.dunwu.generator.engine.CodeGenerateContentDto;
 import io.github.dunwu.modules.generator.dao.CodeColumnConfigDao;
 import io.github.dunwu.modules.generator.entity.CodeColumnConfig;
 import io.github.dunwu.modules.generator.entity.dto.CodeColumnConfigDto;
@@ -243,7 +245,7 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
         for (ColumnInfoDto c : columns) {
             CodeColumnConfig entity = null;
             for (CodeColumnConfig e : codeColumnConfigs) {
-                if (e.getName().equalsIgnoreCase(c.getColumnName())) {
+                if (e.getFieldName().equalsIgnoreCase(c.getColumnName())) {
                     // toEntity(e, c);
                     entities.add(e);
                     entity = e;
@@ -279,11 +281,11 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
         FileUtil.mkdir(codePath);
         ZipUtil.zip(codePath, zipFilePath);
         log.info("代码已生成到：{}", zipFilePath);
-        ServletUtil.downloadFile(request, response, new File(zipFilePath), true);
+        ServletUtil.downloadFile(response, new File(zipFilePath), true);
     }
 
     @Override
-    public List<TemplateContent> getPreviewList(CodeTableConfigDto tableConfig,
+    public List<CodeGenerateContentDto> getPreviewList(CodeTableConfigDto tableConfig,
         List<CodeColumnConfigDto> columnConfigs) {
         ConfigBuilder builder = CodeGeneratorUtil.initConfigBuilder();
         CodeGenerator generator = new CodeGenerator(builder);
@@ -297,7 +299,7 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
                .setAuthor(tableConfig.getAuthor())
                .setBackendDir(tableConfig.getBackendPath())
                .setFrontendDir(tableConfig.getFrontendPath())
-               .setEnableOverride(tableConfig.getEnableCover());
+               .setEnableOverride(tableConfig.getEnableOverride());
         builder.setTableInfoList(Collections.singletonList(tableInfo));
         return builder;
     }
@@ -305,7 +307,7 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
     public TableInfo transToTableInfo(CodeTableConfigDto tableConfigDto) {
         List<TableField> fields = new ArrayList<>();
         for (CodeColumnConfigDto column : tableConfigDto.getColumns()) {
-            TableField field = transToTableInfo(column);
+            TableField field = transToTableField(column);
             fields.add(field);
         }
         TableInfo tableInfo = BeanUtil.toBean(tableConfigDto, TableInfo.class);
@@ -313,21 +315,12 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
         return tableInfo;
     }
 
-    public TableField transToTableInfo(CodeColumnConfigDto columnConfigDto) {
-        TableField tableField = BeanUtil.toBean(columnConfigDto, TableField.class);
+    public TableField transToTableField(CodeColumnConfigDto columnConfigDto) {
+        CopyOptions copyOptions = CopyOptions.create().setIgnoreProperties("javaType");
+        TableField tableField = BeanUtil.toBean(columnConfigDto, TableField.class, copyOptions);
+        tableField.setJavaType(JavaColumnType.getJavaColumnTypeByType(columnConfigDto.getJavaType()));
         return tableField;
     }
-
-    // public void toEntity(CodeColumnConfig entity, ColumnInfoDto item) {
-    //     entity.setTableSchema(item.getTableSchema())
-    //           .setTableName(item.getTableName())
-    //           .setColumnName(item.getColumnName())
-    //           .setColumnType(item.getDataType())
-    //           .setColumnKey(item.getColumnKey())
-    //           .setColumnComment(item.getColumnComment())
-    //           .setNotNull(item.getIsNullable().equalsIgnoreCase("NO"))
-    //           .setExtra(item.getExtra());
-    // }
 
     public List<TableInfo> queryTableInfo(String schemaName, String tableName) {
 
@@ -354,11 +347,11 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
         // for (TableInfo table : tableInfoList) {
         //     for (TableField field : table.getFields()) {
         //         if (field.getName().equals("rating")) {
-        //             field.setFrontQueryType("Between");
-        //             field.setFrontFormType("Date");
+        //             field.setQueryType("Between");
+        //             field.setFormType("Date");
         //         } else {
-        //             field.setFrontQueryType("Equals");
-        //             field.setFrontFormType("Input");
+        //             field.setQueryType("Equals");
+        //             field.setFormType("Input");
         //         }
         //     }
         // }

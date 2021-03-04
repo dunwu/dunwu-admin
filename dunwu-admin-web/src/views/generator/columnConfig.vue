@@ -44,16 +44,11 @@
         size="small"
         style="width: 100%;margin-bottom: 15px"
       >
-        <el-table-column prop="name" label="字段名称" width="150px" />
+        <el-table-column prop="fieldName" label="字段名称" width="150px" />
         <el-table-column prop="comment" label="字段注释" width="150px" />
         <el-table-column prop="type" label="字段数据类型" width="100px" />
         <el-table-column prop="javaType" label="字段 Java 类型" width="100px" />
         <el-table-column prop="keyType" label="字段KEY类型" />
-        <el-table-column align="enabled" label="启用" width="70px">
-          <template slot-scope="scope">
-            <el-checkbox v-model="data[scope.$index].enabled" />
-          </template>
-        </el-table-column>
         <el-table-column align="center" label="非空" width="70px">
           <template slot-scope="scope">
             <!--所有的键必须不为空-->
@@ -229,31 +224,12 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="关联字典">
-          <template slot-scope="scope">
-            <el-select
-              v-model="data[scope.$index].dictName"
-              filterable
-              class="edit-input"
-              clearable
-              size="mini"
-              placeholder="请选择"
-            >
-              <el-option
-                v-for="item in dicts"
-                :key="item.id"
-                :label="item.note === '' ? item.name : item.note"
-                :value="item.name"
-              />
-            </el-select>
-          </template>
-        </el-table-column>
         <el-table-column label="字段展示名称" width="150px">
           <template slot-scope="scope">
             <el-input v-model="data[scope.$index].propertyName" size="mini" class="edit-input" />
           </template>
         </el-table-column>
-        <el-table-column label="日期表达式" width="150px">
+        <el-table-column label="日期格式" width="150px">
           <template slot-scope="scope">
             <el-input
               v-if="data[scope.$index].type === 'datetime'"
@@ -272,7 +248,6 @@
 <script>
 import crud from '@/mixins/crud'
 import dictApi from '@/api/system/dict'
-import tableConfigApi from '@/api/generator/tableConfigApi'
 import generatorApi from '@/api/generator/generatorApi'
 export default {
   name: 'ColumnConfig',
@@ -289,27 +264,7 @@ export default {
       configLoading: false,
       dicts: [],
       syncLoading: false,
-      genLoading: false,
-      form: {
-        id: null,
-        tableName: '',
-        author: '',
-        pack: '',
-        path: '',
-        moduleName: '',
-        cover: 'false',
-        apiPath: '',
-        prefix: '',
-        apiAlias: null
-      },
-      rules: {
-        author: [{ required: true, message: '作者不能为空', trigger: 'blur' }],
-        pack: [{ required: true, message: '包路径不能为空', trigger: 'blur' }],
-        moduleName: [{ required: true, message: '包路径不能为空', trigger: 'blur' }],
-        path: [{ required: true, message: '前端路径不能为空', trigger: 'blur' }],
-        apiAlias: [{ required: true, message: '接口名称不能为空', trigger: 'blur' }],
-        cover: [{ required: true, message: '不能为空', trigger: 'blur' }]
-      }
+      genLoading: false
     }
   },
   created() {
@@ -318,9 +273,6 @@ export default {
     this.schemaName = this.$route.params.schemaName
     this.$nextTick(() => {
       this.init()
-      tableConfigApi.find({ schemaName: this.schemaName, tableName: this.tableName }).then(data => {
-        this.form = data
-      })
       dictApi.list().then(data => {
         this.dicts = data
       })

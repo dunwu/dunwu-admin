@@ -40,7 +40,7 @@ public class ${table.daoImplName} extends ${superDaoImplClass}<${table.mapperNam
             </#list>
             mapList.add(map);
         }
-        ServletUtil.downloadExcel(mapList, response);
+        ServletUtil.downloadExcel(response, mapList);
     }
 
 }

@@ -16,10 +16,11 @@ import javax.servlet.http.HttpServletResponse;
  * 代码生成-表级别配置 Dao 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-03-03
+ * @since 2021-03-04
  */
 @Dao
-public class CodeTableConfigDaoImpl extends BaseExtDaoImpl<CodeTableConfigMapper, CodeTableConfig> implements CodeTableConfigDao {
+public class CodeTableConfigDaoImpl extends BaseExtDaoImpl<CodeTableConfigMapper, CodeTableConfig>
+    implements CodeTableConfigDao {
 
     @Override
     public void exportDtoList(Collection<CodeTableConfigDto> list, HttpServletResponse response) throws IOException {
@@ -28,11 +29,11 @@ public class CodeTableConfigDaoImpl extends BaseExtDaoImpl<CodeTableConfigMapper
             Map<String, Object> map = new LinkedHashMap<>();
             map.put("ID", item.getId());
             map.put("Schema名称", item.getSchemaName());
-            map.put("Table名称", item.getName());
+            map.put("Table名称", item.getTableName());
             map.put("Table注释", item.getComment());
             map.put("开启权限校验", item.getEnablePermission());
             map.put("开启文件覆盖模式", item.getEnableOverride());
-            map.put("开启Swagger2", item.getEnableSwagger2());
+            map.put("开启Swagger2", item.getEnableSwagger());
             map.put("作者", item.getAuthor());
             map.put("输出路径", item.getOutputDir());
             map.put("后端代码路径", item.getBackendPath());
@@ -40,15 +41,13 @@ public class CodeTableConfigDaoImpl extends BaseExtDaoImpl<CodeTableConfigMapper
             map.put("包路径", item.getPackagePath());
             map.put("主键类型", item.getIdType());
             map.put("时间类型", item.getDateType());
-            map.put("时间格式化", item.getDatePattern());
-            map.put("开启搜索", item.getEnableQuery());
-            map.put("开启列表", item.getEnableList());
-            map.put("开启表单", item.getEnableForm());
-            map.put("开启校验", item.getEnableValidate());
-            map.put("允许覆盖", item.getEnableCover());
-            map.put("开启Swagger", item.getEnableSwagger());
+            map.put("时间格式", item.getDatePattern());
+            map.put("允许表单", item.getEnableForm());
+            map.put("允许列表", item.getEnableList());
+            map.put("允许查询", item.getEnableQuery());
+            map.put("允许排序", item.getEnableSort());
+            map.put("允许校验", item.getEnableValidate());
             map.put("模块名称", item.getModuleName());
-            map.put("输出路径", item.getOutputPath());
             map.put("表前缀", item.getTablePrefix());
             map.put("REST接口根路径", item.getApiBaseUrl());
             map.put("创建者", item.getCreateBy());
@@ -57,7 +56,7 @@ public class CodeTableConfigDaoImpl extends BaseExtDaoImpl<CodeTableConfigMapper
             map.put("更新时间", item.getUpdateTime());
             mapList.add(map);
         }
-        ServletUtil.downloadExcel(mapList, response);
+        ServletUtil.downloadExcel(response, mapList);
     }
 
 }

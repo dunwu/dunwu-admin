@@ -41,7 +41,7 @@ public class SysDictOptionDaoImpl extends BaseExtDaoImpl<SysDictOptionMapper, Sy
             map.put("更新时间", item.getUpdateTime());
             mapList.add(map);
         }
-        ServletUtil.downloadExcel(mapList, response);
+        ServletUtil.downloadExcel(response, mapList);
     }
 
     @Override

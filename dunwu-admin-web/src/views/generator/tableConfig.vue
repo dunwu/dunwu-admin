@@ -1,7 +1,7 @@
 <template>
   <el-card shadow="never">
     <div slot="header" class="clearfix">
-      <span class="role-span">{{ name }} 表级别配置</span>
+      <span class="role-span">{{ tableName }} 表级别配置</span>
       <el-button
         :loading="configLoading"
         icon="el-icon-check"
@@ -27,8 +27,8 @@
           <span style="color: #C0C0C0;margin-left: 10px;">生成文件如果存在，则覆盖文件</span>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="开启Swagger2" prop="enableSwagger2">
-        <el-radio-group v-model="form.enableSwagger2" size="mini" style="width: 40%">
+      <el-form-item label="开启Swagger2" prop="enableSwagger">
+        <el-radio-group v-model="form.enableSwagger" size="mini" style="width: 40%">
           <el-radio-button label="true">是</el-radio-button>
           <el-radio-button label="false">否</el-radio-button>
           <span style="color: #C0C0C0;margin-left: 10px;">是否开启 Swagger2</span>
@@ -92,9 +92,6 @@
       <el-form-item label="模块名称" prop="moduleName">
         <el-input v-model="form.moduleName" style="width: 40%" />
       </el-form-item>
-      <el-form-item label="输出路径" prop="outputPath">
-        <el-input v-model="form.outputPath" style="width: 40%" />
-      </el-form-item>
       <el-form-item label="表前缀" prop="tablePrefix">
         <el-input v-model="form.tablePrefix" style="width: 40%" />
       </el-form-item>
@@ -114,17 +111,17 @@ export default {
   data() {
     return {
       schemaName: '',
-      name: '',
+      tableName: '',
       tableHeight: 550,
       configLoading: false,
       dicts: [],
       form: {
         id: null,
         schemaName: null,
-        name: null,
+        tableName: null,
         enablePermission: false,
         enableOverride: false,
-        enableSwagger2: false,
+        enableSwagger: false,
         author: null,
         outputDir: null,
         backendPath: null,
@@ -138,7 +135,6 @@ export default {
         enableForm: true,
         enableValidate: true,
         moduleName: null,
-        outputPath: null,
         tablePrefix: null,
         apiBaseUrl: null
       },
@@ -153,7 +149,7 @@ export default {
   },
   created() {
     this.tableHeight = document.documentElement.clientHeight - 385
-    this.name = this.$route.params.tableName
+    this.tableName = this.$route.params.tableName
     this.schemaName = this.$route.params.schemaName
     this.$nextTick(() => {
       this.findTableConfig()
@@ -165,8 +161,8 @@ export default {
   methods: {
     beforeInit() {
       const schemaName = this.schemaName
-      const name = this.name
-      this.params = { schemaName, name }
+      const tableName = this.tableName
+      this.params = { schemaName, tableName }
       return true
     },
     saveTableConfig() {
@@ -190,7 +186,7 @@ export default {
     findTableConfig() {
       this.configLoading = true
       generatorApi
-        .findTableConfig({ schemaName: this.schemaName, name: this.name })
+        .findTableConfig({ schemaName: this.schemaName, tableName: this.tableName })
         .then(data => {
           this.configLoading = false
           this.form = data

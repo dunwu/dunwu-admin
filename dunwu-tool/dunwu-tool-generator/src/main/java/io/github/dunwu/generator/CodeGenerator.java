@@ -26,7 +26,7 @@ import io.github.dunwu.generator.config.builder.ConfigBuilder;
 import io.github.dunwu.generator.config.po.TableInfo;
 import io.github.dunwu.generator.engine.AbstractTemplateEngine;
 import io.github.dunwu.generator.engine.FreemarkerTemplateEngine;
-import io.github.dunwu.generator.engine.TemplateContent;
+import io.github.dunwu.generator.engine.CodeGenerateContentDto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
@@ -80,10 +80,10 @@ public class CodeGenerator {
      *
      * @return /
      */
-    public List<TemplateContent> preview() {
+    public List<CodeGenerateContentDto> preview() {
         log.debug(">>>>>>>> 准备自动生成源码文件预览列表");
 
-        List<TemplateContent> list = new ArrayList<>();
+        List<CodeGenerateContentDto> list = new ArrayList<>();
         try {
             list.addAll(templateEngine.preview());
             log.debug("<<<<<<<< 自动生成源码文件预览列表完成");

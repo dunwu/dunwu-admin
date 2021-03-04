@@ -114,7 +114,7 @@ public class CodeGeneratorUtil {
               .setServiceName(serviceName)
               .setServiceImplName(serviceImplName)
               .setControllerName(controllerName)
-              .setEnableSwagger2(enableSwagger);
+              .setEnableSwagger(enableSwagger);
 
         if (StrUtil.isNotBlank(authorName)) {
             config.setAuthor(authorName);

@@ -40,7 +40,7 @@ public class SysUserDaoImpl extends BaseExtDaoImpl<SysUserMapper, SysUser> imple
             map.put("更新者", item.getUpdateBy());
             mapList.add(map);
         }
-        ServletUtil.downloadExcel(mapList, response);
+        ServletUtil.downloadExcel(response, mapList);
     }
 
 }

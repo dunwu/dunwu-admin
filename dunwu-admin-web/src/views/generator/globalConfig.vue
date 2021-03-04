@@ -27,8 +27,8 @@
           <span style="color: #C0C0C0;margin-left: 10px;">生成文件如果存在，则覆盖文件</span>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="开启Swagger2" prop="enableSwagger2">
-        <el-radio-group v-model="form.enableSwagger2" size="mini" style="width: 40%">
+      <el-form-item label="开启Swagger2" prop="enableSwagger">
+        <el-radio-group v-model="form.enableSwagger" size="mini" style="width: 40%">
           <el-radio-button label="true">是</el-radio-button>
           <el-radio-button label="false">否</el-radio-button>
           <span style="color: #C0C0C0;margin-left: 10px;">是否开启 Swagger2</span>
@@ -84,7 +84,7 @@ export default {
         id: null,
         enablePermission: false,
         enableOverride: false,
-        enableSwagger2: false,
+        enableSwagger: false,
         author: null,
         outputDir: null,
         backendPath: null,

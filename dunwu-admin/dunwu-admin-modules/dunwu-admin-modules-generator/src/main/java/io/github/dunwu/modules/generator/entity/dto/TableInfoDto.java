@@ -18,7 +18,7 @@ public class TableInfoDto {
     private String schemaName;
 
     /** 表名称 */
-    private Object name;
+    private Object tableName;
 
     /** 创建日期 */
     private Object createTime;

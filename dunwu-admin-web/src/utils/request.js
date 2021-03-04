@@ -1,10 +1,10 @@
 import axios from 'axios'
-import router from '@/router/routers'
-import { Notification } from 'element-ui'
-import store from '../store'
-import { getToken } from '@/utils/auth'
-import Config from '@/settings'
 import Cookies from 'js-cookie'
+import { Notification } from 'element-ui'
+import router from '@/router/routers'
+import store from '@/store'
+import Config from '@/settings'
+import { getToken } from '@/utils/auth'
 import Constant from '@/utils/constant'
 
 // 创建axios实例
@@ -21,7 +21,7 @@ service.interceptors.request.use(
     if (getToken()) {
       config.headers['Authorization'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
     }
-    config.headers['Content-Type'] = 'application/json'
+    config.headers['Content-Type'] = 'application/json;charset=UTF-8'
     return config
   },
   error => {
@@ -37,6 +37,7 @@ service.interceptors.response.use(
     console.info('[response info]', response)
     console.groupEnd()
     if (response.status < 200 || response.status > 300) {
+      console.error('请求失败')
       Notification.error({ title: response.message, duration: 5000 })
       return Promise.reject('error')
     } else {
@@ -45,18 +46,20 @@ service.interceptors.response.use(
         return Promise.reject('error')
       }
 
-      if (response.data.ok) {
+      if (response.headers['content-type'].indexOf('application/json') !== -1) {
         // 包装过的消息体，形式为：{"code":0,"data":{},"message":"成功","ok":true}
         if (response.data.code !== Constant.SUCCESS) {
           Notification.error({ title: response.data.message, duration: 5000 })
           return Promise.reject('error')
         }
+
         if (response.data.data) {
           return response.data.data
         } else {
-          return null
+          return true
         }
       } else {
+        // console.log('response.data', response.data)
         return response.data
       }
     }
@@ -73,7 +76,7 @@ service.interceptors.response.use(
     } else {
       let code = 0
       try {
-        code = error.response.data.status
+        code = error.response.status
       } catch (e) {
         if (error.toString().indexOf('Error: timeout') !== -1) {
           Notification.error({ title: '网络请求超时', duration: 5000 })
@@ -90,9 +93,16 @@ service.interceptors.response.use(
         } else if (code === 403) {
           router.push({ path: '/401' })
         } else {
+          const statusText = error.response.statusText
           const errorMsg = error.response.data.message
-          if (errorMsg !== undefined) {
+          if (errorMsg) {
             Notification.error({ title: errorMsg, duration: 5000 })
+          } else {
+            if (statusText) {
+              Notification.error({ title: statusText, duration: 5000 })
+            } else {
+              Notification.error({ title: '接口请求失败', duration: 5000 })
+            }
           }
         }
       } else {

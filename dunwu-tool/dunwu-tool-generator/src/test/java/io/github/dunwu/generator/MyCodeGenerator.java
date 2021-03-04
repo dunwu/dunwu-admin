@@ -23,8 +23,8 @@ import java.util.Collection;
 public class MyCodeGenerator {
 
     public static void main(String[] args) {
-        // generateByConfig();
-        generateByProperties();
+        generateByConfig();
+        // generateByProperties();
     }
 
     public static void generateByConfig() {
@@ -33,9 +33,9 @@ public class MyCodeGenerator {
         DataSourceConfig dataSourceConfig = new DataSourceConfig(url, "com.mysql.cj.jdbc.Driver", "root", "root");
         PackageConfig packageConfig = new PackageConfig("io.github.dunwu.modules", "generator");
         GlobalConfig globalConfig = new GlobalConfig();
-        globalConfig.setAuthor("dunwu").setOutputDir("E:\\Temp\\codes");
+        globalConfig.setAuthor("<a href=\"mailto:forbreak@163.com\">Zhang Peng</a>").setOutputDir("E:\\Temp\\codes").setOpen(true).setEnableSwagger(true);
         StrategyConfig strategyConfig = new StrategyConfig();
-        strategyConfig.setInclude("code_column_config");
+        strategyConfig.setInclude("code_global_config");
         TemplateConfig templateConfig = new TemplateConfig();
 
         ConfigBuilder builder = new ConfigBuilder(dataSourceConfig, globalConfig, packageConfig, strategyConfig,
@@ -44,12 +44,12 @@ public class MyCodeGenerator {
         Collection<TableInfo> tableInfoList = builder.queryTableInfoList();
         for (TableInfo table : tableInfoList) {
             for (TableField field : table.getFields()) {
-                if (field.getName().equals("rating")) {
-                    field.setFrontQueryType("Between");
-                    field.setFrontFormType("Date");
+                if (field.getFieldName().equals("rating")) {
+                    field.setQueryType("Between");
+                    field.setFormType("Date");
                 } else {
-                    field.setFrontQueryType("Equals");
-                    field.setFrontFormType("Input");
+                    field.setQueryType("Equals");
+                    field.setFormType("Input");
                 }
             }
         }
@@ -67,12 +67,12 @@ public class MyCodeGenerator {
             Collection<TableInfo> tableInfoList = builder.queryTableInfoList();
             for (TableInfo table : tableInfoList) {
                 for (TableField field : table.getFields()) {
-                    if (field.getName().equals("rating")) {
-                        field.setFrontQueryType("Between");
-                        field.setFrontFormType("Date");
+                    if (field.getFieldName().equals("rating")) {
+                        field.setQueryType("Between");
+                        field.setFormType("Date");
                     } else {
-                        field.setFrontQueryType("Equals");
-                        field.setFrontFormType("Input");
+                        field.setQueryType("Equals");
+                        field.setFormType("Input");
                     }
                 }
             }

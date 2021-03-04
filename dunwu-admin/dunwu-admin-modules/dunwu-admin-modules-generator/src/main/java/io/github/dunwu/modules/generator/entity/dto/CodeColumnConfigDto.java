@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
  * 代码生成-字段级别配置 Dto 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-03-02
+ * @since 2021-03-04
  */
 @Data
 @Accessors(chain = true)
@@ -27,17 +27,17 @@ public class CodeColumnConfigDto implements Serializable {
     @ApiModelProperty(value = "ID")
     private Long id;
 
+    @ApiModelProperty(value = "Table ID")
+    private Long tableId;
+
     @ApiModelProperty(value = "Schema名称")
     private String schemaName;
 
     @ApiModelProperty(value = "Table名称")
     private String tableName;
 
-    @ApiModelProperty(value = "Table ID")
-    private Long tableId;
-
     @ApiModelProperty(value = "字段名称")
-    private String name;
+    private String fieldName;
 
     @ApiModelProperty(value = "字段展示名称（实体字段）")
     private String propertyName;
@@ -87,8 +87,11 @@ public class CodeColumnConfigDto implements Serializable {
     @ApiModelProperty(value = "校验类型")
     private String validateType;
 
-    @ApiModelProperty(value = "日期表达式")
-    private String dateExpression;
+    @ApiModelProperty(value = "时间类型")
+    private String dateType;
+
+    @ApiModelProperty(value = "时间格式")
+    private String datePattern;
 
     @ApiModelProperty(value = "字典名称")
     private String dictName;
@@ -98,12 +101,6 @@ public class CodeColumnConfigDto implements Serializable {
 
     @ApiModelProperty(value = "扩展属性")
     private String extra;
-
-    @ApiModelProperty(value = "状态")
-    private Boolean enabled;
-
-    @ApiModelProperty(value = "备注")
-    private String note;
 
     @ApiModelProperty(value = "创建者")
     private String createBy;

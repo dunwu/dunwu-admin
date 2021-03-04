@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import dictApi from '@/api/system/dict'
 import Java from '@/components/JavaEdit/index'
 import generatorApi from '@/api/generator/generatorApi'
 export default {
@@ -21,9 +22,10 @@ export default {
   },
   created() {
     this.height = document.documentElement.clientHeight - 180 + 'px'
+    const schemaName = this.$route.params.schemaName
     const tableName = this.$route.params.tableName
     generatorApi
-      .generator(tableName, 1)
+      .previewGenerateCode({ schemaName, tableName })
       .then(data => {
         this.data = data
       })
