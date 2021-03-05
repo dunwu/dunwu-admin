@@ -238,7 +238,6 @@ export default {
     },
     // 触发单选
     handleCurrentChange(val) {
-      console.log('handleCurrentChange before', val)
       if (val) {
         const _this = this
         // 清空菜单的选中
@@ -255,7 +254,6 @@ export default {
     },
     menuChange(menu) {
       // 获取该节点的所有子节点，id 包含自身
-      console.log('menuChange', menu)
       menuApi.childrenIds(menu.id).then(ids => {
         // 判断是否在 menuIds 中，如果存在则删除，否则添加
         if (this.menuIds.indexOf(menu.id) !== -1) {
@@ -294,7 +292,6 @@ export default {
         })
         .catch(err => {
           this.menuLoading = false
-          console.log(err.response.data.message)
         })
     },
     // 改变数据

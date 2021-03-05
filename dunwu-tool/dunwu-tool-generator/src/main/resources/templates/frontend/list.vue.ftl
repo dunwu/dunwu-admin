@@ -33,7 +33,7 @@
 <#if table.enableForm>
     <!--表单组件-->
     <el-dialog :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.title" width="500px">
-      <el-form ref="form" :model="form" size="small" label-width="80px">
+      <el-form ref="form" :model="form"<#if table.enableValidate> :rules="rules"</#if> size="small" label-width="80px">
   <#list table.fields as field>
     <#if field.enableForm>
         <el-form-item label="<#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if>"<#if field.notNull> prop="${field.propertyName}"</#if>>
@@ -90,15 +90,20 @@
       </#if>
     </#if>
   </#list>
+  <#if table.enablePermission>
         <el-table-column v-if="checkPer(['admin','<#if package.ModuleName??>${package.ModuleName}</#if>:${table.entityPath}:edit','<#if package.ModuleName??>${package.ModuleName}</#if>:${table.entityPath}:del'])" label="操作" width="150px" align="center">
           <template slot-scope="scope">
-            <udOperation
-              :data="scope.row"
-              :permission="permission"
-            />
+            <udOperation :data="scope.row" :permission="permission" />
           </template>
         </el-table-column>
-    </el-table>
+  <#else>
+        <el-table-column label="操作" width="150px" align="center">
+          <template slot-scope="scope">
+            <udOperation :data="scope.row" />
+          </template>
+        </el-table-column>
+  </#if>
+      </el-table>
 </#if>
 
     <!--分页组件-->
@@ -136,11 +141,19 @@ export default {
         del: ['admin', '<#if package.ModuleName??>${package.ModuleName}</#if>:${table.entityPath}:del']
       }, </#if><#if table.enableValidate>rules: {
 <#list table.fields as field>
-      <#if field.notNull>
+  <#if field.enableValidate>
         ${field.propertyName}: [
+    <#if field.validateType??>
+      <#if field.validateType == 'number'>
+          { required: true, message: '<#if field.comment != ''>${field.comment}</#if>必须为数字', trigger: 'blur', type: 'number' }
+      <#else>
           { required: true, message: '<#if field.comment != ''>${field.comment}</#if>不能为空', trigger: 'blur' }
-        ],
       </#if>
+    <#else>
+          { required: true, message: '<#if field.comment != ''>${field.comment}</#if>不能为空', trigger: 'blur' }
+    </#if>
+        ],
+  </#if>
 </#list>
       }</#if>
     }
@@ -154,5 +167,4 @@ export default {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

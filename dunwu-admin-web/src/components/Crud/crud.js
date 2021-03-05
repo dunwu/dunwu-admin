@@ -40,7 +40,7 @@ function CRUD(options) {
     // CRUD Method
     crudMethod: {
       add: form => {},
-      del: id => {},
+      delBatch: ids => {},
       edit: form => {},
       get: id => {}
     },
@@ -355,7 +355,7 @@ function CRUD(options) {
         dataStatus.delete = CRUD.STATUS.PROCESSING
       }
       return crud.crudMethod
-        .del(ids)
+        .delBatch(ids)
         .then(() => {
           if (delAll) {
             crud.delAllLoading = false

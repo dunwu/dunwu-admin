@@ -55,28 +55,33 @@ public class TableField {
     private String keyType;
     /** 是否为自增主键 */
     private boolean keyIdentityFlag = true;
-    /** 是否不允许为空 */
+    /** 不允许为空 */
     private boolean notNull = true;
-    /** 是否出现在表单 */
+    /** 出现在表单 */
     private boolean enableForm = true;
-    /** 是否出现在列表 */
+    /** 出现在列表 */
     private boolean enableList = true;
-    /** 是否出现在搜索 */
+    /** 出现在搜索 */
     private boolean enableQuery = true;
-    /** 前端表单控件类型 */
+    /** 允许排序 */
+    private boolean enableSort = false;
+    /** 允许校验 */
+    private Boolean enableValidate = false;
+    /** 表单类型 */
     private String formType;
-    /** 前端搜索控件类型 */
-    private String queryType;
-    /** 前端列表控件类型 */
+    /** 列表类型 */
     private String listType;
+    /** 查询类型 */
+    private String queryType;
+    /** 排序类型 */
+    private String sortType;
+    /** 校验类型 */
+    private String validateType;
     /** 字典名称 */
     private String dictName;
     /** 日期表达式（只有当字段为时间类型时才有效） */
     private String dateExpression;
-    /** 是否允许排序 */
-    private boolean enableSort = false;
-    /** 排序类型 */
-    private String sortType;
+
     /** 字段名称是否经过了转换 */
     private boolean convert;
     /** {@link @TableField} 填充属性（可选） */

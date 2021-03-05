@@ -51,26 +51,24 @@ public class ${table.queryName} implements Serializable {
 </#if>
 <#-- ----------  BEGIN 字段循环遍历  ---------->
 <#list table.fields as field>
-    <#if !field.keyFlag>
-        <#if field.comment!?length gt 0>
-            <#if enableSwagger>
+
+  <#if field.comment!?length gt 0>
+    <#if enableSwagger>
     @ApiModelProperty(value = "${field.comment}")
-            <#else>
+    <#else>
     /**
      * ${field.comment}
      */
-            </#if>
-        </#if>
-        <#if (field.propertyType == "Date") || (field.propertyType == "LocalDate") || field.propertyType == "LocalDateTime">
+    </#if>
+  </#if>
+  <#if (field.propertyType == "Date") || (field.propertyType == "LocalDate") || field.propertyType == "LocalDateTime">
     @QueryField(type = QueryField.QueryType.BETWEEN)
     @JsonFormat(shape = JsonFormat.Shape.ARRAY, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private List<${field.propertyType}> ${field.propertyName};
-        <#else>
+  <#else>
     @QueryField
     private ${field.propertyType} ${field.propertyName};
-        </#if>
-    </#if>
-
+  </#if>
 </#list>
 <#------------  END 字段循环遍历  ---------->
 

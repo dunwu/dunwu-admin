@@ -7,7 +7,7 @@ import store from '@/store'
  */
 export default {
   install(Vue) {
-    Vue.prototype.checkPer = (value) => {
+    Vue.prototype.checkPer = value => {
       if (value && value instanceof Array && value.length > 0) {
         const roles = store.getters && store.getters.roles
         const permissionRoles = value

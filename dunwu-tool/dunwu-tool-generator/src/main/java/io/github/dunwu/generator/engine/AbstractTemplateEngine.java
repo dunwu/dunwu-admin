@@ -15,6 +15,7 @@
  */
 package io.github.dunwu.generator.engine;
 
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -27,6 +28,7 @@ import io.github.dunwu.generator.config.TemplateConfig;
 import io.github.dunwu.generator.config.builder.ConfigBuilder;
 import io.github.dunwu.generator.config.po.TableInfo;
 import io.github.dunwu.generator.config.rules.FileType;
+import io.github.dunwu.tool.io.AnsiColorUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -147,7 +149,7 @@ public abstract class AbstractTemplateEngine {
                     }
                 }
 
-                // AnsiColorUtil.BOLD_BLUE.println(JSONUtil.toJsonStr(objectMap));
+                AnsiColorUtil.BOLD_BLUE.println(JSONUtil.toJsonStr(objectMap));
 
                 // 生成后端源码文件
                 outputBackendFiles(tableInfo, objectMap, pathInfoMap, template);

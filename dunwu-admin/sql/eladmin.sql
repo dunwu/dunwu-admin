@@ -1096,3 +1096,18 @@ CREATE TABLE `tool_qiniu_content` (
     COMMENT ='七牛云文件存储';
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+-- ----------------------------
+-- 用于测试的样例表
+-- ----------------------------
+CREATE TABLE `hello` (
+    `id`   BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `name` VARCHAR(255)        NOT NULL COMMENT '名字',
+    `age`  SMALLINT(3)         NOT NULL COMMENT '年龄',
+    PRIMARY KEY (`id`) USING BTREE,
+    UNIQUE KEY `uk_name`(`name`) USING BTREE
+)
+    ENGINE = InnoDB
+    AUTO_INCREMENT = 2
+    DEFAULT CHARSET = `utf8`
+    ROW_FORMAT = COMPACT COMMENT ='测试'
