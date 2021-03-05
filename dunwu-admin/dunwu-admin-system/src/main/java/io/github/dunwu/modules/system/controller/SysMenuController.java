@@ -136,8 +136,8 @@ public class SysMenuController {
 
     @PreAuthorize("@exp.check('menu:view')")
     @ApiOperation("根据ID获取所有孩子节点ID")
-    @PostMapping("childrenIds")
-    public DataListResult<Long> childrenIds(@RequestBody Long id) {
+    @GetMapping("childrenIds")
+    public DataListResult<Long> childrenIds(Long id) {
         List<Long> ids = new ArrayList<>();
         ids.add(id);
         ids.addAll(service.childrenIds(id));

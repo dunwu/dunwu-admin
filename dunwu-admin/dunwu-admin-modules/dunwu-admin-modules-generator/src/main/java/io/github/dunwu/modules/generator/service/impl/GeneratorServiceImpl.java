@@ -250,7 +250,10 @@ public class GeneratorServiceImpl implements GeneratorService {
         DataSourceConfig dataSourceConfig = new DataSourceConfig(url, "com.mysql.cj.jdbc.Driver", "root", "root");
 
         GlobalConfig globalConfig = new GlobalConfig();
-        globalConfig.setAuthor(tableConfigDto.getAuthor()).setOutputDir(tableConfigDto.getOutputDir());
+        globalConfig.setAuthor(tableConfigDto.getAuthor())
+                    .setOutputDir(tableConfigDto.getOutputDir())
+                    .setBackendDir(tableConfigDto.getBackendPath())
+                    .setFrontendDir(tableConfigDto.getFrontendPath());
 
         PackageConfig packageConfig = new PackageConfig(tableConfigDto.getPackagePath(),
             tableConfigDto.getModuleName());

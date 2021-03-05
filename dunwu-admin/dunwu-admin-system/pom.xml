@@ -30,6 +30,17 @@
         </exclusion>
       </exclusions>
     </dependency>
+    <dependency>
+      <groupId>io.github.dunwu</groupId>
+      <artifactId>dunwu-admin-modules-demo</artifactId>
+      <version>2.6</version>
+      <exclusions>
+        <exclusion>
+          <groupId>io.github.dunwu</groupId>
+          <artifactId>dunwu-admin-common</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
 
     <!-- tools 模块包含了 common 和 logging 模块 -->
     <dependency>
@@ -87,8 +98,6 @@
       <artifactId>jsch</artifactId>
       <version>0.1.55</version>
     </dependency>
-
-
   </dependencies>
 
   <!-- 打包 -->

@@ -72,7 +72,7 @@ public class PackageConfig {
     /**
      * Mapper包名
      */
-    private String mapper = "mapper";
+    private String mapper = "dao.mapper";
     /**
      * Mapper XML包名
      */

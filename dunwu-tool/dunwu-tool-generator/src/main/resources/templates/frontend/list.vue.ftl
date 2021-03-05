@@ -122,9 +122,9 @@ export default {
   cruds() {
     return CRUD({
       title: '${table.comment!}',
-      url: 'api/<#if package.ModuleName??>/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen}<#else>${table.entityPath}</#if>',
+      url: 'api<#if package.ModuleName??>/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen}<#else>${table.entityPath}</#if>',
       <#--idField: '${pkChangeColName}',-->
-      sort: 'updateTime,desc',
+      sort: 'id,asc',
       crudMethod: { ...${table.apiName} }
     })
   },

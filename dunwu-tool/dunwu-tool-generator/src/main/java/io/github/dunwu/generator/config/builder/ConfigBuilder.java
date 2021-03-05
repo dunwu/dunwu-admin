@@ -281,7 +281,7 @@ public class ConfigBuilder {
         if (StringUtils.isNotBlank(globalConfig.getDaoName())) {
             tableInfo.setDaoName(String.format(globalConfig.getDaoName(), entityName));
         } else {
-            tableInfo.setDaoName("I" + entityName + ConstVal.DAO);
+            tableInfo.setDaoName(entityName + ConstVal.DAO);
         }
         if (StringUtils.isNotBlank(globalConfig.getDaoImplName())) {
             tableInfo.setDaoImplName(String.format(globalConfig.getDaoImplName(), entityName));
@@ -291,7 +291,7 @@ public class ConfigBuilder {
         if (StringUtils.isNotBlank(globalConfig.getServiceName())) {
             tableInfo.setServiceName(String.format(globalConfig.getServiceName(), entityName));
         } else {
-            tableInfo.setServiceName("I" + entityName + ConstVal.SERVICE);
+            tableInfo.setServiceName(entityName + ConstVal.SERVICE);
         }
         if (StringUtils.isNotBlank(globalConfig.getServiceImplName())) {
             tableInfo.setServiceImplName(String.format(globalConfig.getServiceImplName(), entityName));

@@ -83,8 +83,8 @@ public interface ConstVal {
     String VM_LOAD_PATH_VALUE = "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader";
 
     String SUPER_MAPPER_CLASS = "com.baomidou.mybatisplus.core.mapper.BaseMapper";
-    String SUPER_DAO_CLASS = "io.github.dunwu.data.mybatis.IDao";
-    String SUPER_DAO_IMPL_CLASS = "io.github.dunwu.data.mybatis.DaoImpl";
+    String SUPER_DAO_CLASS = "io.github.dunwu.data.mybatis.IExtDao";
+    String SUPER_DAO_IMPL_CLASS = "io.github.dunwu.data.mybatis.BaseExtDaoImpl";
     String SUPER_SERVICE_CLASS = "io.github.dunwu.data.mybatis.IService";
     String SUPER_SERVICE_IMPL_CLASS = "io.github.dunwu.data.mybatis.ServiceImpl";
 
