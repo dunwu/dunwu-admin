@@ -3,26 +3,75 @@
     <!--工具栏-->
     <div class="head-container">
       <div v-if="crud.props.searchToggle">
-        <!-- 搜索 -->
-        <label class="el-form-item-label">ID</label>
-        <el-input v-model="query.id" clearable placeholder="ID" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
-        <label class="el-form-item-label">名字</label>
-        <el-input v-model="query.name" clearable placeholder="名字" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
-        <label class="el-form-item-label">年龄</label>
-        <el-input v-model="query.age" clearable placeholder="年龄" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
-        <queryOperation :crud="crud" />
+        <el-row>
+          <el-col :span="6">
+            <el-input
+              v-model="query.id"
+              clearable
+              placeholder="请输入ID"
+              style="width: 90%;"
+              class="filter-item"
+              @keyup.enter.native="crud.toQuery"
+            />
+          </el-col>
+          <el-col :span="6">
+            <el-input
+              v-model="query.name"
+              clearable
+              placeholder="请输入名字"
+              style="width: 90%;"
+              class="filter-item"
+              @keyup.enter.native="crud.toQuery"
+            />
+          </el-col>
+          <el-col :span="6">
+            <el-input
+              v-model="query.age"
+              clearable
+              placeholder="请输入年龄"
+              style="width: 90%;"
+              class="filter-item"
+              @keyup.enter.native="crud.toQuery"
+            />
+          </el-col>
+          <template v-if="crud.showExtendSearch">
+            <el-col :span="6">
+              <date-range-picker v-model="query.createTimeRange" class="date-item" style="width: 90%" />
+            </el-col>
+          </template>
+          <el-col :span="6">
+            <queryOperation :crud="crud" />
+            <el-button v-if="crud.showExtendSearch" type="text" @click="crud.toggleExtendSearch">
+              折叠
+              <i class="el-icon-arrow-up el-icon--right" />
+            </el-button>
+            <el-button v-else type="text" @click="crud.toggleExtendSearch">
+              展开
+              <i class="el-icon-arrow-down el-icon--right" />
+            </el-button>
+          </el-col>
+        </el-row>
       </div>
       <crudOperation :permission="permission" />
     </div>
 
     <!--表单组件-->
-    <el-dialog :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.title" width="500px">
+    <el-dialog
+      :close-on-click-modal="false"
+      :before-close="crud.cancelCU"
+      :visible.sync="crud.status.cu > 0"
+      :title="crud.status.title"
+      width="500px"
+    >
       <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
         <el-form-item label="名字" prop="name">
           <el-input v-model="form.name" style="width: 370px;" />
         </el-form-item>
         <el-form-item label="年龄" prop="age">
           <el-input v-model="form.age" style="width: 370px;" />
+        </el-form-item>
+        <el-form-item label="创建时间">
+          <el-input v-model="form.createTime" style="width: 370px;" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -31,18 +80,31 @@
       </div>
     </el-dialog>
 
-      <!--表格渲染-->
-    <el-table ref="table" v-loading="crud.loading" :data="crud.data" size="small" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
+    <!--表格渲染-->
+    <el-table
+      ref="table"
+      v-loading="crud.loading"
+      :data="crud.data"
+      size="small"
+      style="width: 100%;"
+      @selection-change="crud.selectionChangeHandler"
+    >
       <el-table-column type="selection" width="55" />
-        <el-table-column prop="id" label="ID" />
-        <el-table-column prop="name" label="名字" />
-        <el-table-column prop="age" label="年龄" />
-        <el-table-column v-if="checkPer(['admin','demo:hello:edit','demo:hello:del'])" label="操作" width="150px" align="center">
-          <template slot-scope="scope">
-            <udOperation :data="scope.row" :permission="permission" />
-          </template>
-        </el-table-column>
-      </el-table>
+      <el-table-column prop="id" label="ID" />
+      <el-table-column prop="name" label="名字" />
+      <el-table-column prop="age" label="年龄" />
+      <el-table-column prop="createTime" label="创建时间" />
+      <el-table-column
+        v-if="checkPer(['admin', 'demo:hello:edit', 'demo:hello:del'])"
+        label="操作"
+        width="150px"
+        align="center"
+      >
+        <template slot-scope="scope">
+          <udOperation :data="scope.row" :permission="permission" />
+        </template>
+      </el-table-column>
+    </el-table>
 
     <!--分页组件-->
     <pagination />
@@ -51,20 +113,21 @@
 
 <script>
 import HelloApi from './HelloApi'
-import CRUD, {crud, form, header, presenter} from '@crud/crud'
+import CRUD, { crud, form, header, presenter } from '@crud/crud'
 import queryOperation from '@crud/Query.operation'
 import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
+import DateRangePicker from '@/components/DateRangePicker'
 
-const defaultForm = {id: null, name: null, age: null, }
+const defaultForm = { id: null, name: null, age: null, create_time: null }
 export default {
-  name: 'hello',
-  components: {pagination, crudOperation, queryOperation, udOperation},
+  name: 'Hello',
+  components: { pagination, crudOperation, queryOperation, udOperation, DateRangePicker },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   cruds() {
     return CRUD({
-      title: '',
+      title: '测试',
       url: 'api/demo/hello',
       sort: 'id,asc',
       crudMethod: { ...HelloApi }
@@ -76,14 +139,8 @@ export default {
         add: ['admin', 'demo:hello:add'],
         edit: ['admin', 'demo:hello:edit'],
         del: ['admin', 'demo:hello:del']
-      }, rules: {
-        name: [
-          { required: true, message: '名字不能为空', trigger: 'blur' }
-        ],
-        age: [
-          { required: true, message: '年龄必须为数字', trigger: 'blur', type: 'number' }
-        ],
-      }
+      },
+      rules: {}
     }
   },
   methods: {

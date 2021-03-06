@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.github.dunwu.data.mybatis.ServiceImpl;
 import io.github.dunwu.generator.config.*;
 import io.github.dunwu.generator.config.builder.ConfigBuilder;
+import io.github.dunwu.generator.config.po.TableField;
 import io.github.dunwu.generator.config.po.TableInfo;
 import io.github.dunwu.modules.generator.dao.CodeColumnConfigDao;
 import io.github.dunwu.modules.generator.entity.CodeColumnConfig;
@@ -110,12 +111,11 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
         if (page == null || CollectionUtil.isEmpty(page.getContent())) {
             List<TableInfo> tableInfos = queryTableInfo(query.getSchemaName(), query.getTableName());
             TableInfo tableInfo = tableInfos.get(0);
-            CodeTableConfigDto codeTableConfigDto = BeanUtil.toBean(tableInfo, CodeTableConfigDto.class);
             List<CodeColumnConfigDto> columns = new ArrayList<>();
             if (CollectionUtil.isNotEmpty(tableInfo.getFields())) {
-                List<CodeColumnConfigDto> fields = tableInfo.getFields().stream().map(i -> {
-                    return BeanUtil.toBean(i, CodeColumnConfigDto.class);
-                }).collect(Collectors.toList());
+                List<CodeColumnConfigDto> fields = tableInfo.getFields().stream()
+                                                            .map(this::toCodeColumnConfigDto)
+                                                            .collect(Collectors.toList());
                 columns.addAll(fields);
             }
             page = new PageImpl<>(columns, pageable, columns.size());
@@ -132,7 +132,7 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
             List<CodeColumnConfigDto> columns = new ArrayList<>();
             if (CollectionUtil.isNotEmpty(tableInfo.getFields())) {
                 List<CodeColumnConfigDto> fields = tableInfo.getFields().stream()
-                                                            .map(i -> BeanUtil.toBean(i, CodeColumnConfigDto.class))
+                                                            .map(this::toCodeColumnConfigDto)
                                                             .collect(Collectors.toList());
                 columns.addAll(fields);
             }
@@ -280,24 +280,15 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
         ConfigBuilder builder = new ConfigBuilder(dataSourceConfig, globalConfig, packageConfig, strategyConfig,
             templateConfig);
 
-        List<TableInfo> tableInfoList = builder.queryTableInfoList();
-        // for (TableInfo table : tableInfoList) {
-        //     for (TableField field : table.getFields()) {
-        //         if (field.getName().equals("rating")) {
-        //             field.setQueryType("Between");
-        //             field.setFormType("Date");
-        //         } else {
-        //             field.setQueryType("Equals");
-        //             field.setFormType("Input");
-        //         }
-        //     }
-        // }
-        //
-        // builder.setTableInfoList(tableInfoList);
-        // CodeGenerator codeGenerator = new CodeGenerator(builder);
-        // codeGenerator.generate();
-        // AnsiColorUtil.YELLOW.println(JSONUtil.toJsonStr(builder.getTableInfoList()));
-        return tableInfoList;
+        return builder.queryTableInfoList();
+    }
+
+    public CodeColumnConfigDto toCodeColumnConfigDto(TableField field) {
+        CodeColumnConfigDto column = BeanUtil.toBean(field, CodeColumnConfigDto.class);
+        if (field.getJavaType() != null) {
+            column.setJavaType(field.getJavaType().getType());
+        }
+        return column;
     }
 
 }

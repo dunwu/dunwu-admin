@@ -152,13 +152,8 @@
               size="mini"
               placeholder="请选择"
             >
-              <el-option label="等于" value="=" />
-              <el-option label="不等于" value="!=" />
-              <el-option label="大于等于" value=">=" />
-              <el-option label="小于等于" value="<=" />
-              <el-option label="模糊匹配" value="Like" />
-              <el-option label="非空" value="NotNull" />
-              <el-option label="范围查询" value="BetWeen" />
+              <el-option label="普通查询" value="EQUALS" />
+              <el-option label="范围查询" value="BETWEEN" />
             </el-select>
             <el-select
               v-else
@@ -233,11 +228,11 @@
           <template slot-scope="scope">
             <el-input
               v-if="data[scope.$index].type === 'datetime'"
-              v-model="data[scope.$index].dateExpression"
+              v-model="data[scope.$index].datePattern"
               size="mini"
               class="edit-input"
             />
-            <el-input v-else v-model="data[scope.$index].dateExpression" disabled size="mini" class="edit-input" />
+            <el-input v-else v-model="data[scope.$index].datePattern" disabled size="mini" class="edit-input" />
           </template>
         </el-table-column>
       </el-table>

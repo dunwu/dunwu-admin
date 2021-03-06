@@ -23,14 +23,14 @@ import java.util.Collection;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- *  Controller 类
+ * 测试 Controller 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-03-05
+ * @since 2021-03-06
  */
 @RestController
 @RequestMapping("/demo/hello")
-@Api(tags = " Controller 类")
+@Api(tags = "测试 Controller 类")
 @RequiredArgsConstructor
 public class HelloController {
 

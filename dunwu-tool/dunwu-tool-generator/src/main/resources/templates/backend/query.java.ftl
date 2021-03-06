@@ -4,7 +4,6 @@ package ${package.Query};
 import ${pkg};
 </#list>
 import io.github.dunwu.data.core.annotation.QueryField;
-import com.fasterxml.jackson.annotation.JsonFormat;
 <#if enableSwagger>
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -45,12 +44,39 @@ public class ${entity} extends Model<${entity}> {
 <#else>
 public class ${table.queryName} implements Serializable {
 </#if>
-
 <#if entitySerialVersionUID>
+
     private static final long serialVersionUID = 1L;
 </#if>
 <#-- ----------  BEGIN 字段循环遍历  ---------->
-<#list table.fields as field>
+<#list table.queryFields as field>
+
+  <#if field.comment!?length gt 0>
+    <#if enableSwagger>
+    @ApiModelProperty(value = "${field.comment}")
+    <#else>
+    /** ${field.comment} */
+    </#if>
+  </#if>
+  <#if field.queryType == "BETWEEN">
+    <#if (field.javaType == "Date") || (field.javaType == "LocalDate") || field.javaType == "LocalDateTime">
+      <#if field.datePattern??>
+    @JsonFormat(shape = JsonFormat.Shape.ARRAY, pattern = "${field.datePattern}", timezone = "GMT+8")
+      </#if>
+    </#if>
+    @QueryField(type = QueryField.QueryType.BETWEEN)
+    private List<${field.javaType}> ${field.propertyName};
+  <#else>
+    <#if (field.javaType == "Date") || (field.javaType == "LocalDate") || field.javaType == "LocalDateTime">
+      <#if field.datePattern??>
+    @JsonFormat(pattern = "${field.datePattern}", timezone = "GMT+8")
+      </#if>
+    </#if>
+    @QueryField
+    private ${field.javaType} ${field.propertyName};
+  </#if>
+</#list>
+<#list table.queryExtFields as field>
 
   <#if field.comment!?length gt 0>
     <#if enableSwagger>
@@ -61,43 +87,68 @@ public class ${table.queryName} implements Serializable {
      */
     </#if>
   </#if>
-  <#if (field.propertyType == "Date") || (field.propertyType == "LocalDate") || field.propertyType == "LocalDateTime">
+  <#if (field.javaType == "Date") || (field.javaType == "LocalDate") || field.javaType == "LocalDateTime">
     @QueryField(type = QueryField.QueryType.BETWEEN)
     @JsonFormat(shape = JsonFormat.Shape.ARRAY, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private List<${field.propertyType}> ${field.propertyName};
+    private List<${field.javaType}> ${field.propertyName};
   <#else>
     @QueryField
-    private ${field.propertyType} ${field.propertyName};
+    private ${field.javaType} ${field.propertyName};
   </#if>
 </#list>
 <#------------  END 字段循环遍历  ---------->
-
 <#if !entityLombokModel>
-    <#list table.fields as field>
-        <#if field.propertyType == "boolean">
-            <#assign getprefix="is"/>
-        <#else>
-            <#assign getprefix="get"/>
-        </#if>
-    public ${field.propertyType} ${getprefix}${field.capitalName}() {
+
+  <#list table.queryFields as field>
+    <#if field.javaType == "boolean">
+        <#assign getprefix="is"/>
+    <#else>
+        <#assign getprefix="get"/>
+    </#if>
+    public ${field.javaType} ${getprefix}${field.capitalName}() {
         return ${field.propertyName};
     }
 
     <#if entityBuilderModel>
-    public ${entity} set${field.capitalName}(${field.propertyType} ${field.propertyName}) {
+    public ${entity} set${field.capitalName}(${field.javaType} ${field.propertyName}) {
     <#else>
-    public void set${field.capitalName}(${field.propertyType} ${field.propertyName}) {
+    public void set${field.capitalName}(${field.javaType} ${field.propertyName}) {
     </#if>
         this.${field.propertyName} = ${field.propertyName};
         <#if entityBuilderModel>
         return this;
         </#if>
     }
-    </#list>
-</#if>
+  </#list>
+  <#list table.queryExtFields as field>
+    <#if field.javaType == "boolean">
+        <#assign getprefix="is"/>
+    <#else>
+        <#assign getprefix="get"/>
+    </#if>
+    public ${field.javaType} ${getprefix}${field.capitalName}() {
+        return ${field.propertyName};
+    }
 
+    <#if entityBuilderModel>
+    public ${entity} set${field.capitalName}(${field.javaType} ${field.propertyName}) {
+    <#else>
+    public void set${field.capitalName}(${field.javaType} ${field.propertyName}) {
+    </#if>
+        this.${field.propertyName} = ${field.propertyName};
+        <#if entityBuilderModel>
+        return this;
+        </#if>
+    }
+  </#list>
+</#if>
 <#if entityColumnConstant>
-    <#list table.fields as field>
+
+    <#list table.queryFields as field>
+    public static final String ${field.fieldName?upper_case} = "${field.fieldName}";
+
+    </#list>
+    <#list table.queryExtFields as field>
     public static final String ${field.fieldName?upper_case} = "${field.fieldName}";
 
     </#list>
@@ -106,11 +157,18 @@ public class ${table.queryName} implements Serializable {
     @Override
     public String toString() {
         return "${entity}{" +
-    <#list table.fields as field>
+    <#list table.queryFields as field>
         <#if field_index==0>
             "${field.propertyName}=" + ${field.propertyName} +
         <#else>
             ", ${field.propertyName}=" + ${field.propertyName} +
+        </#if>
+    </#list>
+    <#list table.queryExtFields as field>
+        <#if field_index==0>
+          "${field.propertyName}=" + ${field.propertyName} +
+        <#else>
+          ", ${field.propertyName}=" + ${field.propertyName} +
         </#if>
     </#list>
         "}";

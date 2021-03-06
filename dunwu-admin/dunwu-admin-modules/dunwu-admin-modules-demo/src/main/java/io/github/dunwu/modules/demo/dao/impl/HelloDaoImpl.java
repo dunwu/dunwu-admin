@@ -13,10 +13,10 @@ import java.util.*;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- *  Dao 类
+ * 测试 Dao 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-03-05
+ * @since 2021-03-06
  */
 @Dao
 public class HelloDaoImpl extends BaseExtDaoImpl<HelloMapper, Hello> implements HelloDao {
@@ -29,6 +29,7 @@ public class HelloDaoImpl extends BaseExtDaoImpl<HelloMapper, Hello> implements 
             map.put("ID", item.getId());
             map.put("名字", item.getName());
             map.put("年龄", item.getAge());
+            map.put("创建时间", item.getCreateTime());
             mapList.add(map);
         }
         ServletUtil.downloadExcel(response, mapList);

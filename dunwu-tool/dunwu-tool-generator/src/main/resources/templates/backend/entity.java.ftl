@@ -3,19 +3,19 @@ package ${package.Entity};
 <#list table.importPackages as pkg>
 import ${pkg};
 </#list>
-import com.fasterxml.jackson.annotation.JsonFormat;
-import io.github.dunwu.data.validator.annotation.EditCheck;
 <#if enableSwagger>
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+</#if>
+<#if table.enableValidate>
+import io.github.dunwu.data.validator.annotation.EditCheck;
+import javax.validation.constraints.NotNull;
 </#if>
 <#if entityLombokModel>
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 </#if>
-
-import javax.validation.constraints.NotNull;
 
 /**
  * ${table.comment!}
@@ -91,28 +91,28 @@ public class ${entity} implements Serializable {
     <#if (logicDeleteFieldName!"") == field.fieldName>
     @TableLogic
     </#if>
-    <#if (field.propertyType == "Date") || field.propertyType == "LocalDateTime">
+    <#if (field.javaType == "Date") || field.javaType == "LocalDateTime">
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     </#if>
-    private ${field.propertyType} ${field.propertyName};
+    private ${field.javaType} ${field.propertyName};
 </#list>
 <#------------  END 字段循环遍历  ---------->
 
 <#if !entityLombokModel>
     <#list table.fields as field>
-        <#if field.propertyType == "boolean">
+        <#if field.javaType == "boolean">
             <#assign getprefix="is"/>
         <#else>
             <#assign getprefix="get"/>
         </#if>
-    public ${field.propertyType} ${getprefix}${field.capitalName}() {
+    public ${field.javaType} ${getprefix}${field.capitalName}() {
         return ${field.propertyName};
     }
 
     <#if entityBuilderModel>
-    public ${entity} set${field.capitalName}(${field.propertyType} ${field.propertyName}) {
+    public ${entity} set${field.capitalName}(${field.javaType} ${field.propertyName}) {
     <#else>
-    public void set${field.capitalName}(${field.propertyType} ${field.propertyName}) {
+    public void set${field.capitalName}(${field.javaType} ${field.propertyName}) {
     </#if>
         this.${field.propertyName} = ${field.propertyName};
         <#if entityBuilderModel>

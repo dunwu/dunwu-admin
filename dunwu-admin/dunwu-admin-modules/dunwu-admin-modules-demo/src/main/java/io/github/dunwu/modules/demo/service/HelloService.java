@@ -15,10 +15,10 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- *  Service 接口
+ * 测试 Service 接口
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-03-05
+ * @since 2021-03-06
  */
 public interface HelloService extends IService {
 

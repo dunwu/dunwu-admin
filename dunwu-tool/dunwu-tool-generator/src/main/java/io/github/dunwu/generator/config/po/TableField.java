@@ -17,8 +17,8 @@ package io.github.dunwu.generator.config.po;
 
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import io.github.dunwu.generator.config.StrategyConfig;
-import io.github.dunwu.generator.config.rules.JavaColumnType;
 import io.github.dunwu.generator.config.rules.IColumnType;
+import io.github.dunwu.generator.config.rules.JavaColumnType;
 import io.github.dunwu.generator.config.rules.NamingStrategy;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -80,7 +80,7 @@ public class TableField {
     /** 字典名称 */
     private String dictName;
     /** 日期表达式（只有当字段为时间类型时才有效） */
-    private String dateExpression;
+    private String datePattern;
 
     /** 字段名称是否经过了转换 */
     private boolean convert;
@@ -122,13 +122,6 @@ public class TableField {
             }
         }
         return this;
-    }
-
-    public String getPropertyType() {
-        if (null != javaType) {
-            return javaType.getType();
-        }
-        return null;
     }
 
     /**

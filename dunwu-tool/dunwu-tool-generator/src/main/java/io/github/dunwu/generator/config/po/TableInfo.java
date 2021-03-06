@@ -18,11 +18,15 @@ package io.github.dunwu.generator.config.po;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import io.github.dunwu.generator.config.StrategyConfig;
+import io.github.dunwu.generator.config.rules.JavaColumnType;
 import io.github.dunwu.generator.config.rules.NamingStrategy;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.IntStream;
 
 /**
@@ -45,6 +49,11 @@ public class TableInfo {
     private String comment;
     /** 表字段 */
     private List<TableField> fields;
+    private List<TableField> sortFields;
+    private List<TableField> listFields;
+    private List<TableField> formFields;
+    private List<TableField> queryFields;
+    private List<TableField> queryExtFields;
     /** 公共字段 */
     private List<TableField> commonFields;
     /** 字段名称，以逗号分隔 */
@@ -78,6 +87,7 @@ public class TableInfo {
     /******************* 以下为生成的前端文件名（结束） *******************/
     private String apiName;
     private String listName;
+
     /******************* 以下为生成的前端文件名（结束） *******************/
 
     public TableInfo setConvert(boolean convert) {
@@ -139,7 +149,11 @@ public class TableInfo {
             for (TableField field : fields) {
                 if (null != field.getJavaType() && null != field.getJavaType().getPkg()) {
                     importPackages.add(field.getJavaType().getPkg());
+                    if (JavaColumnType.isDateType(field.getJavaType())) {
+                        importPackages.add(com.fasterxml.jackson.annotation.JsonFormat.class.getCanonicalName());
+                    }
                 }
+
                 if (field.isKeyFlag()) {
                     // 主键
                     if (field.isConvert() || field.isKeyIdentityFlag()) {
@@ -194,7 +208,5 @@ public class TableInfo {
         }
         return fieldNames;
     }
-
-
 
 }

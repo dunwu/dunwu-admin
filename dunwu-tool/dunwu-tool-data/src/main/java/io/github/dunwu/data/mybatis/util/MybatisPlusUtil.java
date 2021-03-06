@@ -129,8 +129,8 @@ public class MybatisPlusUtil {
 
     public static String getKeyByStrategy(String key, QueryField queryField) {
         String finalKey;
-        if (StrUtil.isNotBlank(queryField.name())) {
-            finalKey = queryField.name();
+        if (StrUtil.isNotBlank(queryField.value())) {
+            finalKey = queryField.value();
         } else {
             finalKey = StrUtil.toUnderlineCase(key);
         }
@@ -151,7 +151,7 @@ public class MybatisPlusUtil {
     private static <T> void andConditionToQueryWrapper(QueryWrapper<T> wrapper, QueryField.QueryType type,
         String key, Object value) {
         switch (type) {
-            case EQUAL:
+            case EQUALS:
                 wrapper.and(w -> w.eq(key, value));
                 break;
             case LIKE:
@@ -202,7 +202,7 @@ public class MybatisPlusUtil {
     private static <T> void orConditionToQueryWrapper(QueryWrapper<T> wrapper, QueryField.QueryType type,
         String key, Object value) {
         switch (type) {
-            case EQUAL:
+            case EQUALS:
                 wrapper.or(w -> w.eq(key, value));
                 break;
             case LIKE:

@@ -9,10 +9,10 @@ import java.util.Collection;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- *  Dao 接口
+ * 测试 Dao 接口
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-03-05
+ * @since 2021-03-06
  */
 public interface HelloDao extends IExtDao<Hello> {
 

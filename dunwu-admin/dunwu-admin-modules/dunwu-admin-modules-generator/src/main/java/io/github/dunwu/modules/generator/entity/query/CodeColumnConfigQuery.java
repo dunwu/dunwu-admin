@@ -145,7 +145,7 @@ public class CodeColumnConfigQuery implements Serializable {
     private List<LocalDateTime> updateTime;
 
     @ApiModelProperty(value = "数据库Table")
-    @QueryField(name = "tableName", type = QueryField.QueryType.IN)
+    @QueryField(value = "tableName", type = QueryField.QueryType.IN)
     private List<String> tables;
 
 }

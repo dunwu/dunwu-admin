@@ -15,6 +15,7 @@
  */
 package io.github.dunwu.generator.config.builder;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.annotation.DbType;
@@ -256,7 +257,10 @@ public class ConfigBuilder {
         checkConfig();
 
         // 性能优化，只处理需执行表字段 github issues/219
-        convertTableFields(tableInfo, globalConfig, strategyConfig, dataSourceConfig);
+        if (CollectionUtil.isEmpty(tableInfo.getFields())) {
+            convertTableFields(tableInfo, globalConfig, strategyConfig, dataSourceConfig);
+        }
+        groupTableFields(tableInfo);
 
         String entityName;
         INameConvert nameConvert = strategyConfig.getNameConvert();
@@ -703,7 +707,6 @@ public class ConfigBuilder {
      */
     private TableInfo convertTableFields(TableInfo tableInfo,
         GlobalConfig global, StrategyConfig strategy, DataSourceConfig dataSource) {
-        boolean haveId = false;
         List<TableField> fieldList = new ArrayList<>();
         List<TableField> commonFieldList = new ArrayList<>();
         DbType dbType = dataSource.getDbType();
@@ -714,49 +717,59 @@ public class ConfigBuilder {
         try {
             String tableFieldsSql = dbQuery.tableFieldsSql();
             Set<String> h2PkColumns = new HashSet<>();
-            if (DbType.POSTGRE_SQL == dbType) {
-                tableFieldsSql = String.format(tableFieldsSql, dataSource.getSchemaName(), tableName);
-            } else if (DbType.KINGBASE_ES == dbType) {
-                tableFieldsSql = String.format(tableFieldsSql, dataSource.getSchemaName(), tableName);
-            } else if (DbType.DB2 == dbType) {
-                tableFieldsSql = String.format(tableFieldsSql, dataSource.getSchemaName(), tableName);
-            } else if (DbType.ORACLE == dbType) {
-                tableName = tableName.toUpperCase();
-                tableFieldsSql =
-                    String.format(tableFieldsSql.replace("#schema", dataSource.getSchemaName()), tableName);
-            } else if (DbType.DM == dbType) {
-                tableName = tableName.toUpperCase();
-                tableFieldsSql = String.format(tableFieldsSql, tableName);
-            } else if (DbType.H2 == dbType) {
-                tableName = tableName.toUpperCase();
-                try (PreparedStatement pkQueryStmt = connection.prepareStatement(
-                    String.format(H2Query.PK_QUERY_SQL, tableName));
-                     ResultSet pkResults = pkQueryStmt.executeQuery()) {
-                    while (pkResults.next()) {
-                        String primaryKey = pkResults.getString(dbQuery.fieldKey());
-                        if (Boolean.parseBoolean(primaryKey)) {
-                            h2PkColumns.add(pkResults.getString(dbQuery.fieldName()));
+
+            // 根据不同 SQL 类型，组织查询 SQL
+            switch (dbType) {
+                case POSTGRE_SQL:
+                case KINGBASE_ES:
+                case DB2:
+                    tableFieldsSql = String.format(tableFieldsSql, dataSource.getSchemaName(), tableName);
+                    break;
+                case ORACLE:
+                    tableName = tableName.toUpperCase();
+                    tableFieldsSql = String.format(tableFieldsSql.replace("#schema", dataSource.getSchemaName()),
+                        tableName);
+                    break;
+                case DM:
+                    tableName = tableName.toUpperCase();
+                    tableFieldsSql = String.format(tableFieldsSql, tableName);
+                    break;
+                case H2:
+                    tableName = tableName.toUpperCase();
+                    try (PreparedStatement pkQueryStmt = connection.prepareStatement(
+                        String.format(H2Query.PK_QUERY_SQL, tableName));
+                         ResultSet pkResults = pkQueryStmt.executeQuery()) {
+                        while (pkResults.next()) {
+                            String primaryKey = pkResults.getString(dbQuery.fieldKey());
+                            if (Boolean.parseBoolean(primaryKey)) {
+                                h2PkColumns.add(pkResults.getString(dbQuery.fieldName()));
+                            }
                         }
                     }
-                }
-                tableFieldsSql = String.format(tableFieldsSql, tableName);
-            } else {
-                tableFieldsSql = String.format(tableFieldsSql, tableName);
+                    tableFieldsSql = String.format(tableFieldsSql, tableName);
+                    break;
+                default:
+                    tableFieldsSql = String.format(tableFieldsSql, tableName);
+                    break;
             }
-            try (
-                PreparedStatement preparedStatement = connection.prepareStatement(tableFieldsSql);
-                ResultSet results = preparedStatement.executeQuery()) {
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(tableFieldsSql);
+                 ResultSet results = preparedStatement.executeQuery()) {
                 while (results.next()) {
                     String columnName = results.getString(dbQuery.fieldName());
-
                     TableField field;
                     if (MapUtil.isNotEmpty(fieldMap)) {
                         field = fieldMap.get(columnName);
                     } else {
                         field = new TableField();
                     }
+
                     field.setSchemaName(dataSource.getSchemaName())
                          .setTableName(tableInfo.getTableName());
+
+                    // 是否允许为空
+                    String nullAble = results.getString(dbQuery.nullAble());
+                    field.setNotNull("NO".equalsIgnoreCase(nullAble));
 
                     // 避免多重主键设置，目前只取第一个找到ID，并放到list中的索引为0的位置
                     boolean isId;
@@ -764,6 +777,11 @@ public class ConfigBuilder {
                         isId = h2PkColumns.contains(columnName);
                     } else {
                         String key = results.getString(dbQuery.fieldKey());
+                        field.setKeyType(key);
+                        if (StrUtil.isNotBlank(key)) {
+                            field.setEnableQuery(true);
+                        }
+
                         if (DbType.DB2 == dbType || DbType.SQLITE == dbType) {
                             isId = StringUtils.isNotBlank(key) && "1".equals(key);
                         } else {
@@ -772,17 +790,16 @@ public class ConfigBuilder {
                     }
 
                     // 处理ID
-                    if (isId && !haveId) {
+                    if (isId) {
+                        field.setEnableForm(false);
+                        field.setEnableSort(true);
+                        field.setSortType("asc");
                         field.setKeyFlag(true);
                         if (DbType.H2 == dbType || DbType.SQLITE == dbType || dbQuery.isKeyIdentity(results)) {
                             field.setKeyIdentityFlag(true);
-                            // 主键不允许在表单编辑
-                            field.setEnableForm(false);
                         }
-                        haveId = true;
-                    } else {
-                        field.setKeyFlag(false);
                     }
+
                     // 自定义字段查询
                     String[] fcs = dbQuery.fieldCustom();
                     if (null != fcs) {
@@ -795,16 +812,13 @@ public class ConfigBuilder {
                     // 处理其它信息
                     field.setFieldName(columnName);
                     field.setType(results.getString(dbQuery.fieldType()));
-                    field.setKeyType(results.getString(dbQuery.fieldKey()));
-                    if (StrUtil.isNotBlank(field.getKeyType())) {
-                        field.setEnableSort(true);
-                        field.setEnableQuery(true);
-                    }
+
                     INameConvert nameConvert = strategy.getNameConvert();
                     if (null != nameConvert) {
                         field.setPropertyName(nameConvert.propertyNameConvert(field));
                     } else {
-                        field.setPropertyName(strategy, processName(field.getFieldName(), strategy.getNaming(), strategy));
+                        field.setPropertyName(strategy,
+                            processName(field.getFieldName(), strategy.getNaming(), strategy));
                     }
                     field.setJavaType(dataSource.getTypeConvert().processTypeConvert(global, field));
                     if (dataSource.isCommentSupported()) {
@@ -831,6 +845,46 @@ public class ConfigBuilder {
         tableInfo.setFields(fieldList);
         tableInfo.setCommonFields(commonFieldList);
         return tableInfo;
+    }
+
+    public void groupTableFields(TableInfo tableInfo) {
+        if (tableInfo == null || CollectionUtil.isEmpty(tableInfo.getFields())) {
+            return;
+        }
+
+        List<TableField> listFields = new ArrayList<>();
+        List<TableField> formFields = new ArrayList<>();
+        List<TableField> queryFields = new ArrayList<>();
+        List<TableField> queryExtFields = new ArrayList<>();
+        List<TableField> sortFields = new ArrayList<>();
+
+        for (TableField field : tableInfo.getFields()) {
+            if (field.isEnableList()) {
+                listFields.add(field);
+            }
+
+            if (field.isEnableForm()) {
+                formFields.add(field);
+            }
+
+            if (field.isEnableQuery()) {
+                if (queryFields.size() < 3) {
+                    queryFields.add(field);
+                } else {
+                    queryExtFields.add(field);
+                }
+            }
+
+            if (field.isEnableSort()) {
+                sortFields.add(field);
+            }
+        }
+
+        tableInfo.setListFields(listFields)
+                 .setFormFields(formFields)
+                 .setQueryFields(queryFields)
+                 .setQueryExtFields(queryExtFields)
+                 .setSortFields(sortFields);
     }
 
     /**

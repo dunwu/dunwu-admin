@@ -92,4 +92,9 @@ public interface IDbQuery {
      */
     String[] fieldCustom();
 
+    /**
+     * 允许为空
+     */
+    String nullAble();
+
 }

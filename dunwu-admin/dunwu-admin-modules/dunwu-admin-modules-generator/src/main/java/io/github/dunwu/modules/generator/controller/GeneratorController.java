@@ -16,8 +16,6 @@ import io.github.dunwu.modules.generator.entity.dto.CodeTableConfigDto;
 import io.github.dunwu.modules.generator.entity.dto.TableColumnInfoDto;
 import io.github.dunwu.modules.generator.entity.query.CodeColumnConfigQuery;
 import io.github.dunwu.modules.generator.entity.query.CodeTableConfigQuery;
-import io.github.dunwu.modules.generator.service.CodeColumnConfigService;
-import io.github.dunwu.modules.generator.service.CodeTableConfigService;
 import io.github.dunwu.modules.generator.service.GeneratorService;
 import io.github.dunwu.modules.generator.service.TableService;
 import io.swagger.annotations.Api;
@@ -42,16 +40,11 @@ import javax.servlet.http.HttpServletResponse;
 public class GeneratorController {
 
     private final GeneratorService generatorService;
-    private final CodeTableConfigService tableConfigService;
-    private final CodeColumnConfigService columnConfigService;
     private final TableService tableService;
 
     public GeneratorController(GeneratorService generatorService,
-        CodeTableConfigService tableConfigService,
-        CodeColumnConfigService columnConfigService, TableService tableService) {
+        TableService tableService) {
         this.generatorService = generatorService;
-        this.tableConfigService = tableConfigService;
-        this.columnConfigService = columnConfigService;
         this.tableService = tableService;
     }
 
@@ -161,11 +154,11 @@ public class GeneratorController {
 
     @ApiOperation("查询数据库数据")
     @GetMapping(value = "table/all/page")
-    public Result queryTables(@RequestParam(defaultValue = "") String name,
+    public Result queryTables(@RequestParam(defaultValue = "") String tableName,
         @RequestParam(defaultValue = "0") Integer page,
         @RequestParam(defaultValue = "10") Integer size) {
         int[] startEnd = PageUtil.transToStartEnd(page, size);
-        return Result.ok(tableService.getTables(tableService.getCurrentSchema(), name, startEnd));
+        return Result.ok(tableService.getTables(tableService.getCurrentSchema(), tableName, startEnd));
     }
 
 }

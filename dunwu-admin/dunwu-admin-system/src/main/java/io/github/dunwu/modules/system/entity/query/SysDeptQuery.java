@@ -28,7 +28,7 @@ public class SysDeptQuery implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "ID")
-    @QueryField(type = QueryField.QueryType.IN, name = "id")
+    @QueryField(value = "id", type = QueryField.QueryType.IN)
     private Set<Long> ids;
 
     @ApiModelProperty(value = "上级部门ID")

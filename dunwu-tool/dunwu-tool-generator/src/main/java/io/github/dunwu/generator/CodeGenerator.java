@@ -146,7 +146,7 @@ public class CodeGenerator {
             // Boolean类型is前缀处理
             if (builder.getStrategyConfig().isEntityBooleanColumnRemoveIsPrefix()
                 && CollectionUtils.isNotEmpty(tableInfo.getFields())) {
-                tableInfo.getFields().stream().filter(field -> "boolean".equalsIgnoreCase(field.getPropertyType()))
+                tableInfo.getFields().stream().filter(field -> "boolean".equalsIgnoreCase(field.getJavaType().getType()))
                          .filter(field -> field.getPropertyName().startsWith("is"))
                          .forEach(field -> {
                              field.setConvert(true);

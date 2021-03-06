@@ -27,7 +27,7 @@ public class SysJobQuery implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @QueryField(name = "id", type = QueryField.QueryType.IN)
+    @QueryField(value = "id", type = QueryField.QueryType.IN)
     private Set<Long> ids;
 
     @ApiModelProperty(value = "部门ID")

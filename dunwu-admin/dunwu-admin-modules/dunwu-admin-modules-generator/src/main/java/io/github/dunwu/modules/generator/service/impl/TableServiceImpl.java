@@ -63,7 +63,7 @@ public class TableServiceImpl implements TableService {
     @Override
     public Object getTables(String schemaName, String tableName, int[] startEnd) {
         // 使用预编译防止sql注入
-        String sql = new StringBuilder("select table_name, create_time , engine, table_collation, table_comment")
+        String sql = new StringBuilder("select table_name, create_time, engine, table_collation, table_comment")
             .append(" from information_schema.tables")
             .append(" where table_schema = ?")
             .append(" and table_name like ? order by create_time desc")

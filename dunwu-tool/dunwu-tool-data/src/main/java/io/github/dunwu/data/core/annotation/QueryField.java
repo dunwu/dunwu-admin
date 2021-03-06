@@ -24,7 +24,7 @@ public @interface QueryField {
 
     String[] blurry() default {};
 
-    QueryType type() default QueryType.EQUAL;
+    QueryType type() default QueryType.EQUALS;
 
     String joinName() default "";
 
@@ -33,15 +33,11 @@ public @interface QueryField {
     NamingStrategy namingStrategy() default NamingStrategy.LOWER_UNDERLINE;
 
     enum QueryType {
-        EQUAL,
+        EQUALS,
         LIKE,
         NOT_LIKE,
         LIKE_LEFT,
         LIKE_RIGHT,
-        GREATER_THAN,
-        LESS_THAN,
-        INNER_LIKE,
-        LESS_THAN_NQ,
         IN,
         NOT_IN,
         BETWEEN,

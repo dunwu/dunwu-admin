@@ -23,7 +23,7 @@ public class SysDictQuery implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @QueryField(blurry = { "code", "name", "note" }, type = QueryField.QueryType.EQUAL)
+    @QueryField(blurry = { "code", "name", "note" }, type = QueryField.QueryType.EQUALS)
     private String blurry;
 
     @ApiModelProperty(value = "字典编码")

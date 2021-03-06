@@ -83,6 +83,11 @@ public enum JavaColumnType implements IColumnType {
     }
 
     @Override
+    public String toString() {
+        return type;
+    }
+
+    @Override
     public String getType() {
         return type;
     }
@@ -99,10 +104,23 @@ public enum JavaColumnType implements IColumnType {
 
         JavaColumnType[] types = JavaColumnType.values();
         for (JavaColumnType i : types) {
-            if (i.getType().equalsIgnoreCase(type)) {
+            if (i.getType().equals(type)) {
                 return i;
             }
         }
         return null;
+    }
+
+    public static boolean isDateType(IColumnType type) {
+        if (type == DATE
+            || type == DATE_SQL
+            || type == TIME
+            || type == TIMESTAMP
+            || type == LOCAL_DATE
+            || type == LOCAL_TIME
+            || type == LOCAL_DATE_TIME) {
+            return true;
+        }
+        return false;
     }
 }

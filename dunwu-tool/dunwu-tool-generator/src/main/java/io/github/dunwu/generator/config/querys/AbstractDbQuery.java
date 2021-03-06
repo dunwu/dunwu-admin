@@ -38,4 +38,8 @@ public abstract class AbstractDbQuery implements IDbQuery {
         return null;
     }
 
+    @Override
+    public String nullAble() {
+        return "NULL";
+    }
 }

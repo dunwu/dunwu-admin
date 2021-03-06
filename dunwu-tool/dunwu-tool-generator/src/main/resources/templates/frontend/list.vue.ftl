@@ -5,22 +5,59 @@
     <div class="head-container">
 <#if table.enableQuery>
       <div v-if="crud.props.searchToggle">
-        <!-- 搜索 -->
-  <#list table.fields as field>
-    <#if field.queryType != 'Between'>
-        <label class="el-form-item-label"><#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if></label>
-        <el-input v-model="query.${field.propertyName}" clearable placeholder="<#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if>" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+        <el-row>
+  <#list table.queryFields as field>
+    <#if field.queryType!='Between'>
+          <el-col :span="6">
+            <el-input
+                v-model="query.${field.propertyName}"
+                clearable
+                placeholder="请输入<#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if>"
+                style="width: 90%;"
+                class="filter-item"
+                @keyup.enter.native="crud.toQuery"
+            />
+          </el-col>
     </#if>
-    <#if field.queryType = 'Between'>
-        <date-range-picker
-            v-model="query.${field.propertyName}"
-            start-placeholder="${field.propertyName}Start"
-            end-placeholder="${field.propertyName}End"
-            class="date-item"
-        />
+    <#if field.queryType=='Between'>
+          <el-col :span="6">
+            <date-range-picker
+                v-model="query.${field.propertyName}"
+                start-placeholder="${field.propertyName}Start"
+                end-placeholder="${field.propertyName}End"
+                class="date-item"
+            />
+          </el-col>
     </#if>
   </#list>
-        <queryOperation :crud="crud" />
+  <#if table.queryExtFields??>
+    <#list table.queryExtFields as field>
+          <template v-if="crud.showExtendSearch">
+            <el-col :span="6">
+              <el-input
+                  v-model="query.${field.propertyName}"
+                  clearable
+                  placeholder="请输入<#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if>"
+                  style="width: 90%;"
+                  class="filter-item"
+                  @keyup.enter.native="crud.toQuery"
+              />
+            </el-col>
+          </template>
+    </#list>
+  </#if>
+          <el-col :span="6">
+            <queryOperation :crud="crud" />
+            <el-button v-if="crud.showExtendSearch" type="text" @click="crud.toggleExtendSearch">
+              折叠
+              <i class="el-icon-arrow-up el-icon--right" />
+            </el-button>
+            <el-button v-else type="text" @click="crud.toggleExtendSearch">
+              展开
+              <i class="el-icon-arrow-down el-icon--right" />
+            </el-button>
+          </el-col>
+        </el-row>
       </div>
   <#if table.enablePermission>
       <crudOperation :permission="permission" />
