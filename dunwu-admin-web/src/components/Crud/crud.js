@@ -134,6 +134,13 @@ function CRUD(options) {
       crud.page.page = 1
       crud.refresh()
     },
+    changeTableSort(val) {
+      // 转换 Element UI 的排序类型
+      const orderType = val.order === 'ascending' ? 'asc' : 'desc'
+      crud.sort = []
+      crud.sort.push(val.prop + ',' + orderType)
+      crud.refresh()
+    },
     // 刷新
     refresh() {
       if (!callVmHook(crud, CRUD.HOOK.beforeRefresh)) {

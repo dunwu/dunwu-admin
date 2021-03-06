@@ -86,7 +86,7 @@
     <!--表单组件-->
     <el-dialog :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.title" width="500px">
       <el-form ref="form" :model="form"<#if table.enableValidate> :rules="rules"</#if> size="small" label-width="80px">
-  <#list table.fields as field>
+  <#list table.formFields as field>
     <#if field.enableForm>
         <el-form-item label="<#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if>"<#if field.notNull> prop="${field.propertyName}"</#if>>
       <#if field.formType = 'Input'>
@@ -127,18 +127,25 @@
 
       <!--表格渲染-->
 <#if table.enableList>
-    <el-table ref="table" v-loading="crud.loading" :data="crud.data" size="small" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
+    <el-table
+        ref="table"
+        v-loading="crud.loading"
+        :data="crud.data"
+        size="small"
+        style="width: 100%;"
+        <#if table.enableSort>@sort-change="crud.changeTableSort"</#if>
+        @selection-change="crud.selectionChangeHandler">
       <el-table-column type="selection" width="55" />
   <#list table.fields as field>
     <#if field.enableList>
       <#if (field.dictName)?? && (field.dictName)!="">
-        <el-table-column prop="${field.propertyName}" label="<#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if>">
+        <el-table-column prop="${field.propertyName}" label="<#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if>"<#if field.enableSort> :sortable="'custom'"</#if>>
           <template slot-scope="scope">
             {{ dict.label.${field.dictName}[scope.row.${field.propertyName}] }}
           </template>
         </el-table-column>
       <#else>
-        <el-table-column prop="${field.propertyName}" label="<#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if>" />
+        <el-table-column prop="${field.propertyName}" label="<#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if>" <#if field.enableSort>:sortable="'custom'"</#if> />
       </#if>
     </#if>
   </#list>
@@ -172,7 +179,7 @@ import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import DateRangePicker from '@/components/DateRangePicker'
 
-const defaultForm = {<#if table.fields??><#list table.fields as field>${field.fieldName}: null, </#list></#if>}
+const defaultForm = {<#if table.formFields??><#list table.formFields as field> ${field.propertyName}: null,</#list></#if> }
 export default {
   name: '${table.entityPath}',
   components: { pagination, crudOperation, queryOperation, udOperation, DateRangePicker },

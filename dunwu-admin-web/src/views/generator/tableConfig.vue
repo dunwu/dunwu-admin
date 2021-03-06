@@ -65,12 +65,6 @@
       <el-form-item label="时间格式化" prop="datePattern">
         <el-input v-model="form.datePattern" style="width: 40%" />
       </el-form-item>
-      <el-form-item label="开启搜索" prop="enableQuery">
-        <el-radio-group v-model="form.enableQuery" size="mini" style="width: 40%">
-          <el-radio-button label="true">是</el-radio-button>
-          <el-radio-button label="false">否</el-radio-button>
-        </el-radio-group>
-      </el-form-item>
       <el-form-item label="开启列表" prop="enableList">
         <el-radio-group v-model="form.enableList" size="mini" style="width: 40%">
           <el-radio-button label="true">是</el-radio-button>
@@ -83,7 +77,19 @@
           <el-radio-button label="false">否</el-radio-button>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="开启校验" prop="enableValidate">
+      <el-form-item label="开启查询" prop="enableQuery">
+        <el-radio-group v-model="form.enableQuery" size="mini" style="width: 40%">
+          <el-radio-button label="true">是</el-radio-button>
+          <el-radio-button label="false">否</el-radio-button>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="允许排序" prop="enableSort">
+        <el-radio-group v-model="form.enableSort" size="mini" style="width: 40%">
+          <el-radio-button label="true">是</el-radio-button>
+          <el-radio-button label="false">否</el-radio-button>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="允许校验" prop="enableValidate">
         <el-radio-group v-model="form.enableValidate" size="mini" style="width: 40%">
           <el-radio-button label="true">是</el-radio-button>
           <el-radio-button label="false">否</el-radio-button>
@@ -132,6 +138,7 @@ export default {
         enableQuery: true,
         enableList: true,
         enableForm: true,
+        enableSort: true,
         enableValidate: true,
         moduleName: null,
         tablePrefix: null,

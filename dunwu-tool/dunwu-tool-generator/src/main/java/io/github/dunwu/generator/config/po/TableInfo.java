@@ -68,6 +68,8 @@ public class TableInfo {
     private boolean enableList = true;
     /** 开启表单 */
     private boolean enableForm = true;
+    /** 开启排序 */
+    private boolean enableSort = true;
     /** 开启校验 */
     private boolean enableValidate = true;
 
