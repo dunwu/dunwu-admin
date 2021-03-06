@@ -26,10 +26,10 @@ public class HelloDaoImpl extends BaseExtDaoImpl<HelloMapper, Hello> implements 
         List<Map<String, Object>> mapList = new ArrayList<>();
         for (HelloDto item : list) {
             Map<String, Object> map = new LinkedHashMap<>();
-            map.put("年龄", item.getAge());
-            map.put("创建时间", item.getCreateTime());
             map.put("ID", item.getId());
             map.put("名字", item.getName());
+            map.put("年龄", item.getAge());
+            map.put("创建时间", item.getCreateTime());
             mapList.add(map);
         }
         ServletUtil.downloadExcel(response, mapList);

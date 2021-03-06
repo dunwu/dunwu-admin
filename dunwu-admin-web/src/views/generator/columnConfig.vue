@@ -85,7 +85,7 @@
             <el-checkbox v-model="data[scope.$index].enableValidate" />
           </template>
         </el-table-column>
-        <el-table-column label="列表类型">
+        <el-table-column label="列表类型" width="150px">
           <template slot-scope="scope">
             <el-select
               v-if="data[scope.$index].enableList"
@@ -112,7 +112,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="表单类型">
+        <el-table-column label="表单类型" width="150px">
           <template slot-scope="scope">
             <el-select
               v-if="data[scope.$index].enableForm"
@@ -141,7 +141,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="查询类型">
+        <el-table-column label="查询类型" width="150px">
           <template slot-scope="scope">
             <el-select
               v-if="data[scope.$index].enableQuery"
@@ -167,7 +167,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="排序类型">
+        <el-table-column label="排序类型" width="100px">
           <template slot-scope="scope">
             <el-select
               v-if="data[scope.$index].enableSort"
@@ -193,7 +193,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="校验类型">
+        <el-table-column label="校验类型" width="150px">
           <template slot-scope="scope">
             <el-select
               v-if="data[scope.$index].enableValidate"

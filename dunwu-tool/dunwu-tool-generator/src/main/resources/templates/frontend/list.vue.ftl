@@ -35,6 +35,7 @@
   <#if table.queryExtFields??>
     <#list table.queryExtFields as field>
           <template v-if="crud.showExtendSearch">
+      <#if field.queryType!='BETWEEN'>
             <el-col :span="6">
               <el-input
                   v-model="query.${field.propertyName}"
@@ -45,6 +46,18 @@
                   @keyup.enter.native="crud.toQuery"
               />
             </el-col>
+      <#else>
+        <#if (field.javaType == "Date") || (field.javaType == "LocalDate") || field.javaType == "LocalDateTime">
+            <el-col :span="6">
+              <date-range-picker
+                  v-model="query.${field.propertyName}Range"
+                  class="date-item"
+                  style="width: 90%"
+              />
+            </el-col>
+        <#else>
+        </#if>
+      </#if>
           </template>
     </#list>
   </#if>

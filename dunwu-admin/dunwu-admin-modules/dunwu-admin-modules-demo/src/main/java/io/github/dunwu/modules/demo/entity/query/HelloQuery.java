@@ -26,12 +26,17 @@ public class HelloQuery implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @ApiModelProperty(value = "ID")
+    @QueryField
+    private Long id;
+
+    @ApiModelProperty(value = "名字")
+    @QueryField
+    private String name;
+
     @ApiModelProperty(value = "年龄")
     @QueryField
     private Integer age;
-
-    @QueryField(value = "age", type = QueryField.QueryType.BETWEEN)
-    private List<Integer> ageRange;
 
     @ApiModelProperty(value = "创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
@@ -41,12 +46,4 @@ public class HelloQuery implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.ARRAY, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @QueryField(value = "createTime", type = QueryField.QueryType.BETWEEN)
     private List<LocalDateTime> createTimeRange;
-
-    @ApiModelProperty(value = "ID")
-    @QueryField
-    private Long id;
-
-    @ApiModelProperty(value = "名字")
-    @QueryField
-    private String name;
 }

@@ -12,7 +12,6 @@ import io.github.dunwu.generator.config.po.TableInfo;
 import io.github.dunwu.modules.generator.dao.CodeColumnConfigDao;
 import io.github.dunwu.modules.generator.entity.CodeColumnConfig;
 import io.github.dunwu.modules.generator.entity.dto.CodeColumnConfigDto;
-import io.github.dunwu.modules.generator.entity.dto.CodeTableConfigDto;
 import io.github.dunwu.modules.generator.entity.dto.ColumnInfoDto;
 import io.github.dunwu.modules.generator.entity.query.CodeColumnConfigQuery;
 import io.github.dunwu.modules.generator.service.CodeColumnConfigService;
@@ -28,10 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
@@ -138,6 +134,9 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
             }
             dtos.addAll(columns);
         }
+        dtos = dtos.stream()
+                   .sorted(Comparator.comparing(CodeColumnConfigDto::getId))
+                   .collect(Collectors.toList());
         return dtos;
     }
 
