@@ -7,7 +7,7 @@
       <div v-if="crud.props.searchToggle">
         <el-row>
   <#list table.queryFields as field>
-    <#if field.queryType!='Between'>
+    <#if field.queryType!='BETWEEN'>
           <el-col :span="6">
             <el-input
                 v-model="query.${field.propertyName}"
@@ -18,16 +18,18 @@
                 @keyup.enter.native="crud.toQuery"
             />
           </el-col>
-    </#if>
-    <#if field.queryType=='Between'>
+    <#else>
+
+      <#if (field.javaType == "Date") || (field.javaType == "LocalDate") || field.javaType == "LocalDateTime">
           <el-col :span="6">
             <date-range-picker
-                v-model="query.${field.propertyName}"
-                start-placeholder="${field.propertyName}Start"
-                end-placeholder="${field.propertyName}End"
+                v-model="query.${field.propertyName}Range"
                 class="date-item"
+                style="width: 90%"
             />
           </el-col>
+      <#else>
+      </#if>
     </#if>
   </#list>
   <#if table.queryExtFields??>
@@ -155,17 +157,17 @@ import queryOperation from '@crud/Query.operation'
 import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
+import DateRangePicker from '@/components/DateRangePicker'
 
 const defaultForm = {<#if table.fields??><#list table.fields as field>${field.fieldName}: null, </#list></#if>}
 export default {
   name: '${table.entityPath}',
-  components: {pagination, crudOperation, queryOperation, udOperation},
+  components: { pagination, crudOperation, queryOperation, udOperation, DateRangePicker },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   cruds() {
     return CRUD({
       title: '${table.comment!}',
       url: 'api<#if package.ModuleName??>/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen}<#else>${table.entityPath}</#if>',
-      <#--idField: '${pkChangeColName}',-->
       sort: 'id,asc',
       crudMethod: { ...${table.apiName} }
     })

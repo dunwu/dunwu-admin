@@ -58,22 +58,22 @@ public class ${table.queryName} implements Serializable {
     /** ${field.comment} */
     </#if>
   </#if>
+  <#if (field.javaType == "Date") || (field.javaType == "LocalDate") || field.javaType == "LocalDateTime">
+    <#if field.datePattern??>
+    @JsonFormat(pattern = "${field.datePattern}", timezone = "GMT+8")
+    </#if>
+  </#if>
+    @QueryField
+    private ${field.javaType} ${field.propertyName};
   <#if field.queryType == "BETWEEN">
+
     <#if (field.javaType == "Date") || (field.javaType == "LocalDate") || field.javaType == "LocalDateTime">
       <#if field.datePattern??>
     @JsonFormat(shape = JsonFormat.Shape.ARRAY, pattern = "${field.datePattern}", timezone = "GMT+8")
       </#if>
     </#if>
-    @QueryField(type = QueryField.QueryType.BETWEEN)
-    private List<${field.javaType}> ${field.propertyName};
-  <#else>
-    <#if (field.javaType == "Date") || (field.javaType == "LocalDate") || field.javaType == "LocalDateTime">
-      <#if field.datePattern??>
-    @JsonFormat(pattern = "${field.datePattern}", timezone = "GMT+8")
-      </#if>
-    </#if>
-    @QueryField
-    private ${field.javaType} ${field.propertyName};
+    @QueryField(value = "${field.propertyName}", type = QueryField.QueryType.BETWEEN)
+    private List<${field.javaType}> ${field.propertyName}Range;
   </#if>
 </#list>
 <#list table.queryExtFields as field>
@@ -82,18 +82,25 @@ public class ${table.queryName} implements Serializable {
     <#if enableSwagger>
     @ApiModelProperty(value = "${field.comment}")
     <#else>
-    /**
-     * ${field.comment}
-     */
+    /** ${field.comment} */
     </#if>
   </#if>
   <#if (field.javaType == "Date") || (field.javaType == "LocalDate") || field.javaType == "LocalDateTime">
-    @QueryField(type = QueryField.QueryType.BETWEEN)
-    @JsonFormat(shape = JsonFormat.Shape.ARRAY, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private List<${field.javaType}> ${field.propertyName};
-  <#else>
+    <#if field.datePattern??>
+    @JsonFormat(pattern = "${field.datePattern}", timezone = "GMT+8")
+    </#if>
+  </#if>
     @QueryField
     private ${field.javaType} ${field.propertyName};
+  <#if field.queryType == "BETWEEN">
+
+      <#if (field.javaType == "Date") || (field.javaType == "LocalDate") || field.javaType == "LocalDateTime">
+          <#if field.datePattern??>
+    @JsonFormat(shape = JsonFormat.Shape.ARRAY, pattern = "${field.datePattern}", timezone = "GMT+8")
+          </#if>
+      </#if>
+    @QueryField(value = "${field.propertyName}", type = QueryField.QueryType.BETWEEN)
+    private List<${field.javaType}> ${field.propertyName}Range;
   </#if>
 </#list>
 <#------------  END 字段循环遍历  ---------->

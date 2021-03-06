@@ -8,7 +8,7 @@
         <!-- 搜索 -->
         <#if queryColumns??>
           <#list queryColumns as column>
-            <#if column.queryType != 'BetWeen'>
+            <#if column.queryType != 'BETWEEN'>
         <label class="el-form-item-label"><#if column.remark != ''>${column.remark}<#else>${column.changeColumnName}</#if></label>
         <el-input v-model="query.${column.changeColumnName}" clearable placeholder="<#if column.remark != ''>${column.remark}<#else>${column.changeColumnName}</#if>" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
             </#if>
@@ -16,7 +16,7 @@
         </#if>
   <#if betweens??>
     <#list betweens as column>
-      <#if column.queryType = 'BetWeen'>
+      <#if column.queryType = 'BETWEEN'>
         <date-range-picker
           v-model="query.${column.changeColumnName}"
           start-placeholder="${column.changeColumnName}Start"
@@ -150,7 +150,7 @@
       queryTypeOptions: [
         <#if queryColumns??>
         <#list queryColumns as column>
-        <#if column.queryType != 'BetWeen'>
+        <#if column.queryType != 'BETWEEN'>
         { key: '${column.changeColumnName}', display_name: '<#if column.remark != ''>${column.remark}<#else>${column.changeColumnName}</#if>' }<#if column_has_next>,</#if>
         </#if>
         </#list>
