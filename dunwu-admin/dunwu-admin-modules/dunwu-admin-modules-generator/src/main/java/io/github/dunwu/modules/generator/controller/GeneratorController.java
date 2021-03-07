@@ -2,6 +2,7 @@ package io.github.dunwu.modules.generator.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import io.github.dunwu.data.core.Result;
 import io.github.dunwu.data.util.PageUtil;
@@ -14,6 +15,7 @@ import io.github.dunwu.modules.generator.entity.CodeTableConfig;
 import io.github.dunwu.modules.generator.entity.dto.CodeGlobalConfigDto;
 import io.github.dunwu.modules.generator.entity.dto.CodeTableConfigDto;
 import io.github.dunwu.modules.generator.entity.dto.TableColumnInfoDto;
+import io.github.dunwu.modules.generator.entity.dto.TableSyncDto;
 import io.github.dunwu.modules.generator.entity.query.CodeColumnConfigQuery;
 import io.github.dunwu.modules.generator.entity.query.CodeTableConfigQuery;
 import io.github.dunwu.modules.generator.service.GeneratorService;
@@ -79,7 +81,7 @@ public class GeneratorController {
 
     @ApiOperation("生成代码")
     @GetMapping(value = "download/{schemaName}/{tableName}")
-    public void downloadCode(@PathVariable String schemaName, @PathVariable String tableName,
+    public Result downloadCode(@PathVariable String schemaName, @PathVariable String tableName,
         HttpServletRequest request, HttpServletResponse response) {
         if (!generatorEnabled) {
             throw new BadRequestException("此环境不允许生成代码，请选择预览或者下载查看！");
@@ -88,6 +90,18 @@ public class GeneratorController {
         CodeTableConfigQuery codeTableConfigQuery = new CodeTableConfigQuery();
         codeTableConfigQuery.setSchemaName(schemaName).setTableName(tableName);
         generatorService.downloadCode(codeTableConfigQuery, request, response);
+        return Result.ok();
+    }
+
+    @ApiOperation("生成代码")
+    @PostMapping(value = "table/sync")
+    public Result syncTable(@RequestBody TableSyncDto tableSyncDto) {
+        if (tableSyncDto == null || CollectionUtil.isEmpty(tableSyncDto.getTables())) {
+            throw new IllegalArgumentException("参数错误");
+        }
+
+        generatorService.syncTables(tableSyncDto);
+        return Result.ok();
     }
 
     @ApiOperation("查询当前用户的 CodeGlobalConfigDto 配置")

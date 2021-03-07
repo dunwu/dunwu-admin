@@ -6,6 +6,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.ZipUtil;
 import io.github.dunwu.data.core.DataException;
+import io.github.dunwu.data.core.GlobalException;
 import io.github.dunwu.generator.CodeGenerator;
 import io.github.dunwu.generator.config.*;
 import io.github.dunwu.generator.config.builder.ConfigBuilder;
@@ -16,17 +17,11 @@ import io.github.dunwu.generator.engine.CodeGenerateContentDto;
 import io.github.dunwu.modules.generator.entity.CodeColumnConfig;
 import io.github.dunwu.modules.generator.entity.CodeGlobalConfig;
 import io.github.dunwu.modules.generator.entity.CodeTableConfig;
-import io.github.dunwu.modules.generator.entity.dto.CodeColumnConfigDto;
-import io.github.dunwu.modules.generator.entity.dto.CodeGlobalConfigDto;
-import io.github.dunwu.modules.generator.entity.dto.CodeTableConfigDto;
-import io.github.dunwu.modules.generator.entity.dto.TableColumnInfoDto;
+import io.github.dunwu.modules.generator.entity.dto.*;
 import io.github.dunwu.modules.generator.entity.query.CodeColumnConfigQuery;
 import io.github.dunwu.modules.generator.entity.query.CodeGlobalConfigQuery;
 import io.github.dunwu.modules.generator.entity.query.CodeTableConfigQuery;
-import io.github.dunwu.modules.generator.service.CodeColumnConfigService;
-import io.github.dunwu.modules.generator.service.CodeGlobalConfigService;
-import io.github.dunwu.modules.generator.service.CodeTableConfigService;
-import io.github.dunwu.modules.generator.service.GeneratorService;
+import io.github.dunwu.modules.generator.service.*;
 import io.github.dunwu.util.SecurityUtils;
 import io.github.dunwu.web.util.ServletUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +30,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.Serializable;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -52,13 +48,62 @@ public class GeneratorServiceImpl implements GeneratorService {
     private final CodeGlobalConfigService globalConfigService;
     private final CodeTableConfigService tableConfigService;
     private final CodeColumnConfigService columnConfigService;
+    private final TableService tableService;
 
     public GeneratorServiceImpl(CodeGlobalConfigService globalConfigService,
         CodeTableConfigService tableConfigService,
-        CodeColumnConfigService columnConfigService) {
+        CodeColumnConfigService columnConfigService, TableService tableService) {
         this.globalConfigService = globalConfigService;
         this.tableConfigService = tableConfigService;
         this.columnConfigService = columnConfigService;
+        this.tableService = tableService;
+    }
+
+    @Override
+    public void syncTables(TableSyncDto tableSyncDto) {
+        for (String tableName : tableSyncDto.getTables()) {
+            syncOneTable(tableSyncDto.getSchemaName(), tableName);
+        }
+    }
+
+    private void syncOneTable(String schemaName, String tableName) {
+        String username = SecurityUtils.getCurrentUsername();
+        if (StrUtil.isBlank(username)) {
+            username = "admin";
+        }
+
+        CodeColumnConfigQuery columnQuery = new CodeColumnConfigQuery();
+        columnQuery.setSchemaName(schemaName)
+                   .setTableName(tableName)
+                   .setCreateBy(username);
+        List<CodeColumnConfigDto> codeColumnConfigDtos = columnConfigService.pojoListByQuery(columnQuery);
+        if (CollectionUtil.isEmpty(codeColumnConfigDtos)) {
+            return;
+        }
+        List<CodeColumnConfig> oldColumns = codeColumnConfigDtos.stream()
+                                                                .map(columnConfigService::dtoToDo)
+                                                                .collect(Collectors.toList());
+        Map<String, CodeColumnConfig> columnMap = oldColumns.stream()
+                                                            .collect(Collectors.toMap(CodeColumnConfig::getFieldName,
+                                                                Function.identity()));
+
+        TableInfo tableInfo = queryTableInfo(schemaName, tableName);
+        if (tableInfo == null) {
+            throw new GlobalException(StrUtil.format("未找到 {} 表信息", tableName));
+        }
+        List<CodeColumnConfig> newColumns = tableInfo.getFields().stream()
+                                                     .map(i -> transToCodeColumnConfig(i, schemaName, tableName))
+                                                     .collect(Collectors.toList());
+
+        List<CodeColumnConfig> mergeColumns = new ArrayList<>();
+        for (CodeColumnConfig n : newColumns) {
+            CodeColumnConfig entity = columnMap.getOrDefault(n.getFieldName(), n);
+            mergeColumns.add(entity);
+        }
+
+        Set<Serializable> ids = oldColumns.stream().map(CodeColumnConfig::getId).collect(Collectors.toSet());
+        columnConfigService.removeByIds(ids);
+        columnConfigService.saveBatch(mergeColumns);
     }
 
     @Override
@@ -115,7 +160,14 @@ public class GeneratorServiceImpl implements GeneratorService {
             username = "admin";
         }
         query.setCreateBy(username);
-        return columnConfigService.pojoListByQuery(query);
+        List<CodeColumnConfigDto> columnConfigRecords = columnConfigService.pojoListByQuery(query);
+        if (CollectionUtil.isNotEmpty(columnConfigRecords)) {
+            return columnConfigRecords;
+        }
+        TableInfo tableInfo = queryTableInfo(query.getSchemaName(), query.getTableName());
+        return tableInfo.getFields().stream()
+                        .map(i -> transToCodeColumnConfigDto(i, query.getSchemaName(), query.getTableName()))
+                        .collect(Collectors.toList());
     }
 
     @Override
@@ -130,33 +182,36 @@ public class GeneratorServiceImpl implements GeneratorService {
         query.setSchemaName(entity.getSchemaName())
              .setTableName(entity.getTableName())
              .setCreateBy(username);
+
         List<CodeColumnConfigDto> oldRecords = columnConfigService.pojoListByQuery(query);
-        Set<Serializable> ids = oldRecords.stream()
-                                          .map(CodeColumnConfigDto::getId)
-                                          .collect(Collectors.toSet());
-        if (CollectionUtil.isNotEmpty(ids)) {
-            columnConfigService.removeByIds(ids);
-            return columnConfigService.saveBatch(list);
+        if (CollectionUtil.isNotEmpty(oldRecords)) {
+            Set<Serializable> ids = oldRecords.stream()
+                                              .map(CodeColumnConfigDto::getId)
+                                              .collect(Collectors.toSet());
+
+            if (CollectionUtil.isNotEmpty(ids)) {
+                columnConfigService.removeByIds(ids);
+            }
         }
         return columnConfigService.saveBatch(list);
     }
 
     @Override
-    public ConfigBuilder generateCode(CodeTableConfigQuery codeTableConfigQuery) {
+    public ConfigBuilder generateCode(CodeTableConfigQuery query) {
         String username = SecurityUtils.getCurrentUsername();
         CodeGlobalConfigDto globalConfigDto = findGlobalConfigByCurrentUser();
         if (globalConfigDto == null) {
             throw new DataException("未配置全局配置");
         }
 
-        CodeTableConfigDto tableConfigDto = findTableConfigByCurrentUser(codeTableConfigQuery);
+        CodeTableConfigDto tableConfigDto = findTableConfigByCurrentUser(query);
         if (tableConfigDto == null) {
             throw new DataException("未配置表级别配置");
         }
 
         CodeColumnConfigQuery codeColumnConfigQuery = new CodeColumnConfigQuery();
-        codeColumnConfigQuery.setTableName(codeTableConfigQuery.getSchemaName())
-                             .setTableName(codeTableConfigQuery.getTableName())
+        codeColumnConfigQuery.setTableName(query.getSchemaName())
+                             .setTableName(query.getTableName())
                              .setCreateBy(username);
         List<CodeColumnConfigDto> columns = columnConfigService.pojoListByQuery(codeColumnConfigQuery);
         if (CollectionUtil.isEmpty(columns)) {
@@ -164,14 +219,14 @@ public class GeneratorServiceImpl implements GeneratorService {
         }
 
         tableConfigDto.setColumns(columns);
-        ConfigBuilder builder = transToConfigBuilder(globalConfigDto, tableConfigDto);
+        ConfigBuilder builder = transToConfigBuilder(tableConfigDto);
         CodeGenerator codeGenerator = new CodeGenerator(builder);
         codeGenerator.generate();
         return builder;
     }
 
     @Override
-    public void downloadCode(CodeTableConfigQuery codeTableConfigQuery, HttpServletRequest request,
+    public void downloadCode(CodeTableConfigQuery query, HttpServletRequest request,
         HttpServletResponse response) {
         String username = SecurityUtils.getCurrentUsername();
         CodeGlobalConfigDto globalConfigDto = findGlobalConfigByCurrentUser();
@@ -179,14 +234,14 @@ public class GeneratorServiceImpl implements GeneratorService {
             throw new DataException("未配置全局配置");
         }
 
-        CodeTableConfigDto tableConfigDto = findTableConfigByCurrentUser(codeTableConfigQuery);
+        CodeTableConfigDto tableConfigDto = findTableConfigByCurrentUser(query);
         if (tableConfigDto == null) {
             throw new DataException("未配置表级别配置");
         }
 
         CodeColumnConfigQuery codeColumnConfigQuery = new CodeColumnConfigQuery();
-        codeColumnConfigQuery.setTableName(codeTableConfigQuery.getSchemaName())
-                             .setTableName(codeTableConfigQuery.getTableName())
+        codeColumnConfigQuery.setTableName(query.getSchemaName())
+                             .setTableName(query.getTableName())
                              .setCreateBy(username);
         List<CodeColumnConfigDto> columns = columnConfigService.pojoListByQuery(codeColumnConfigQuery);
         if (CollectionUtil.isEmpty(columns)) {
@@ -197,8 +252,8 @@ public class GeneratorServiceImpl implements GeneratorService {
         String tmpSchemaPath = System.getProperty("java.io.tmpdir")
             + "dunwu"
             + File.separator
-            + codeTableConfigQuery.getSchemaName();
-        String tmpTablePath = tmpSchemaPath + File.separator + codeTableConfigQuery.getTableName();
+            + query.getSchemaName();
+        String tmpTablePath = tmpSchemaPath + File.separator + query.getTableName();
         globalConfigDto.setOutputDir(tmpTablePath)
                        .setBackendPath(tmpTablePath + "/backend")
                        .setFrontendPath(tmpTablePath + "/backend");
@@ -208,7 +263,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 
         log.info("临时代码生成路径：{}", tmpTablePath);
 
-        ConfigBuilder builder = transToConfigBuilder(globalConfigDto, tableConfigDto);
+        ConfigBuilder builder = transToConfigBuilder(tableConfigDto);
         CodeGenerator codeGenerator = new CodeGenerator(builder);
         codeGenerator.generate();
         String zipFilePath = tmpSchemaPath + File.separator + "codes.zip";
@@ -217,21 +272,21 @@ public class GeneratorServiceImpl implements GeneratorService {
     }
 
     @Override
-    public List<CodeGenerateContentDto> previewCode(CodeTableConfigQuery codeTableConfigQuery) {
+    public List<CodeGenerateContentDto> previewCode(CodeTableConfigQuery query) {
         String username = SecurityUtils.getCurrentUsername();
         CodeGlobalConfigDto globalConfigDto = findGlobalConfigByCurrentUser();
         if (globalConfigDto == null) {
             throw new DataException("未配置全局配置");
         }
 
-        CodeTableConfigDto tableConfigDto = findTableConfigByCurrentUser(codeTableConfigQuery);
+        CodeTableConfigDto tableConfigDto = findTableConfigByCurrentUser(query);
         if (tableConfigDto == null) {
             throw new DataException("未配置表级别配置");
         }
 
         CodeColumnConfigQuery codeColumnConfigQuery = new CodeColumnConfigQuery();
-        codeColumnConfigQuery.setTableName(codeTableConfigQuery.getSchemaName())
-                             .setTableName(codeTableConfigQuery.getTableName())
+        codeColumnConfigQuery.setTableName(query.getSchemaName())
+                             .setTableName(query.getTableName())
                              .setCreateBy(username);
         List<CodeColumnConfigDto> columns = columnConfigService.pojoListByQuery(codeColumnConfigQuery);
         if (CollectionUtil.isEmpty(columns)) {
@@ -239,12 +294,18 @@ public class GeneratorServiceImpl implements GeneratorService {
         }
 
         tableConfigDto.setColumns(columns);
-        ConfigBuilder builder = transToConfigBuilder(globalConfigDto, tableConfigDto);
+        ConfigBuilder builder = transToConfigBuilder(tableConfigDto);
         CodeGenerator codeGenerator = new CodeGenerator(builder);
         return codeGenerator.preview();
     }
 
-    public ConfigBuilder transToConfigBuilder(CodeGlobalConfigDto globalConfigDto, CodeTableConfigDto tableConfigDto) {
+    /**
+     * 将 {@link CodeTableConfigDto} 转为 {@link ConfigBuilder}
+     *
+     * @param tableConfigDto CodeTableConfigDto 对象
+     * @return /
+     */
+    public ConfigBuilder transToConfigBuilder(CodeTableConfigDto tableConfigDto) {
         String url =
             "jdbc:mysql://localhost:3306/eladmin?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8";
         DataSourceConfig dataSourceConfig = new DataSourceConfig(url, "com.mysql.cj.jdbc.Driver", "root", "root");
@@ -272,25 +333,92 @@ public class GeneratorServiceImpl implements GeneratorService {
         return builder;
     }
 
-    public TableInfo transToTableInfo(CodeTableConfigDto tableConfigDto) {
-        List<TableField> fields = new ArrayList<>();
-        Map<String, TableField> fieldNameMap = new HashMap<>(fields.size());
-        for (CodeColumnConfigDto column : tableConfigDto.getColumns()) {
-            TableField field = transToTableField(column);
-            fields.add(field);
-            fieldNameMap.put(field.getFieldName(), field);
+    /**
+     * 根据 schemaName、tableName 查询表的实际数据信息
+     *
+     * @param schemaName schema 名
+     * @param tableName  table 名
+     * @return /
+     */
+    private TableInfo queryTableInfo(String schemaName, String tableName) {
+        String username = SecurityUtils.getCurrentUsername();
+        if (StrUtil.isBlank(schemaName)) {
+            schemaName = tableService.getCurrentSchema();
         }
+
+        CodeTableConfigQuery tableQuery = new CodeTableConfigQuery();
+        tableQuery.setSchemaName(schemaName)
+                  .setTableName(tableName)
+                  .setCreateBy(username);
+        CodeTableConfigDto tableConfigDto = findTableConfigByCurrentUser(tableQuery);
+        if (tableConfigDto != null) {
+            ConfigBuilder configBuilder = transToConfigBuilder(tableConfigDto);
+            List<TableInfo> tableInfos = configBuilder.queryTableInfoList();
+            return tableInfos.get(0);
+        }
+
+        CodeGlobalConfigDto globalConfig = findGlobalConfigByCurrentUser();
+        CodeTableConfigDto newTableConfigDto = BeanUtil.toBean(globalConfig, CodeTableConfigDto.class);
+        return transToTableInfo(newTableConfigDto);
+    }
+
+    /**
+     * 将 {@link CodeTableConfigDto} 转为 {@link TableInfo}
+     *
+     * @param tableConfigDto CodeTableConfigDto 对象
+     * @return /
+     */
+    private TableInfo transToTableInfo(CodeTableConfigDto tableConfigDto) {
         TableInfo tableInfo = BeanUtil.toBean(tableConfigDto, TableInfo.class);
-        tableInfo.setFields(fields);
-        tableInfo.setFieldMap(fieldNameMap);
+
+        if (CollectionUtil.isNotEmpty(tableConfigDto.getColumns())) {
+            List<TableField> fields = new ArrayList<>();
+            Map<String, TableField> fieldNameMap = new HashMap<>(fields.size());
+            for (CodeColumnConfigDto column : tableConfigDto.getColumns()) {
+                TableField field = transToTableField(column);
+                fields.add(field);
+                fieldNameMap.put(field.getFieldName(), field);
+            }
+            tableInfo.setFields(fields);
+            tableInfo.setFieldMap(fieldNameMap);
+        }
+
         return tableInfo;
     }
 
-    public TableField transToTableField(CodeColumnConfigDto columnConfigDto) {
+    private CodeTableConfigDto transToCodeTableConfigDto(TableInfo table) {
+        return BeanUtil.toBean(table, CodeTableConfigDto.class);
+    }
+
+    /**
+     * 将 {@link CodeColumnConfigDto} 转为 {@link TableField}
+     *
+     * @param columnConfigDto CodeColumnConfigDto 对象
+     * @return /
+     */
+    private TableField transToTableField(CodeColumnConfigDto columnConfigDto) {
         CopyOptions copyOptions = CopyOptions.create().setIgnoreProperties("javaType");
         TableField tableField = BeanUtil.toBean(columnConfigDto, TableField.class, copyOptions);
         tableField.setJavaType(JavaColumnType.getJavaColumnTypeByType(columnConfigDto.getJavaType()));
         return tableField;
+    }
+
+    private CodeColumnConfigDto transToCodeColumnConfigDto(TableField field, String schemaName, String tableName) {
+        CodeColumnConfigDto column = BeanUtil.toBean(field, CodeColumnConfigDto.class);
+        column.setSchemaName(schemaName).setTableName(tableName);
+        if (field.getJavaType() != null) {
+            column.setJavaType(field.getJavaType().getType());
+        }
+        return column;
+    }
+
+    private CodeColumnConfig transToCodeColumnConfig(TableField field, String schemaName, String tableName) {
+        CodeColumnConfig column = BeanUtil.toBean(field, CodeColumnConfig.class);
+        column.setSchemaName(schemaName).setTableName(tableName);
+        if (field.getJavaType() != null) {
+            column.setJavaType(field.getJavaType().getType());
+        }
+        return column;
     }
 
 }

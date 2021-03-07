@@ -2,12 +2,10 @@ package io.github.dunwu.modules.generator.service;
 
 import io.github.dunwu.generator.config.builder.ConfigBuilder;
 import io.github.dunwu.generator.engine.CodeGenerateContentDto;
+import io.github.dunwu.modules.generator.entity.CodeColumnConfig;
 import io.github.dunwu.modules.generator.entity.CodeGlobalConfig;
 import io.github.dunwu.modules.generator.entity.CodeTableConfig;
-import io.github.dunwu.modules.generator.entity.dto.CodeColumnConfigDto;
-import io.github.dunwu.modules.generator.entity.dto.CodeGlobalConfigDto;
-import io.github.dunwu.modules.generator.entity.dto.CodeTableConfigDto;
-import io.github.dunwu.modules.generator.entity.dto.TableColumnInfoDto;
+import io.github.dunwu.modules.generator.entity.dto.*;
 import io.github.dunwu.modules.generator.entity.query.CodeColumnConfigQuery;
 import io.github.dunwu.modules.generator.entity.query.CodeTableConfigQuery;
 
@@ -24,9 +22,14 @@ import javax.servlet.http.HttpServletResponse;
 public interface GeneratorService {
 
     /**
+     * 同步表信息
+     */
+    void syncTables(TableSyncDto tableSyncDto);
+
+    /**
      * 查询当前用户的 CodeGlobalConfigDto 配置
      *
-     * @return
+     * @return /
      */
     CodeGlobalConfigDto findGlobalConfigByCurrentUser();
 
@@ -38,19 +41,60 @@ public interface GeneratorService {
      */
     boolean saveGlobalConfigByCurrentUser(CodeGlobalConfig entity);
 
+    /**
+     * 查询当前用户的 {@link CodeTableConfigDto} 配置
+     *
+     * @param query 查询实体
+     * @return /
+     */
     CodeTableConfigDto findTableConfigByCurrentUser(CodeTableConfigQuery query);
 
+    /**
+     * 保存当前用户的 {@link CodeTableConfig} 配置
+     *
+     * @param entity 实体
+     * @return /
+     */
     boolean saveTableConfigByCurrentUser(CodeTableConfig entity);
 
+    /**
+     * 查询当前用户的 {@link CodeColumnConfigDto} 配置
+     *
+     * @param query 查询实体
+     * @return /
+     */
     List<CodeColumnConfigDto> findColumnConfigByCurrentUser(CodeColumnConfigQuery query);
 
+    /**
+     * 保存当前用户的 {@link CodeColumnConfig} 配置
+     *
+     * @param entity 实体
+     * @return /
+     */
     boolean saveColumnsConfigByCurrentUser(TableColumnInfoDto entity);
 
-    ConfigBuilder generateCode(CodeTableConfigQuery codeTableConfigQuery);
+    /**
+     * 根据表级别配置、列级别配置生成代码
+     *
+     * @param query 查询实体
+     * @return /
+     */
+    ConfigBuilder generateCode(CodeTableConfigQuery query);
 
-    void downloadCode(CodeTableConfigQuery codeTableConfigQuery, HttpServletRequest request,
+    /**
+     * 根据表级别配置、列级别配置生成代码并下载到前端
+     *
+     * @param query 查询实体
+     */
+    void downloadCode(CodeTableConfigQuery query, HttpServletRequest request,
         HttpServletResponse response);
 
-    List<CodeGenerateContentDto> previewCode(CodeTableConfigQuery codeTableConfigQuery);
+    /**
+     * 根据表级别配置、列级别配置返回生成代码的预览内容
+     *
+     * @param query 查询实体
+     * @return /
+     */
+    List<CodeGenerateContentDto> previewCode(CodeTableConfigQuery query);
 
 }

@@ -119,7 +119,7 @@ export default {
       })
       this.syncLoading = true
       codeApi
-        .sync(tables)
+        .syncTables({ schemaName: 'eladmin', tables })
         .then(() => {
           this.crud.refresh()
           this.crud.notify('同步成功', CRUD.NOTIFICATION_TYPE.SUCCESS)

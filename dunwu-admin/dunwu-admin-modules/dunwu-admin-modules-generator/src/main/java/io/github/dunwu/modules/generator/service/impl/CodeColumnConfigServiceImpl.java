@@ -2,32 +2,24 @@ package io.github.dunwu.modules.generator.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.github.dunwu.data.mybatis.ServiceImpl;
-import io.github.dunwu.generator.config.*;
-import io.github.dunwu.generator.config.builder.ConfigBuilder;
-import io.github.dunwu.generator.config.po.TableField;
-import io.github.dunwu.generator.config.po.TableInfo;
 import io.github.dunwu.modules.generator.dao.CodeColumnConfigDao;
 import io.github.dunwu.modules.generator.entity.CodeColumnConfig;
 import io.github.dunwu.modules.generator.entity.dto.CodeColumnConfigDto;
-import io.github.dunwu.modules.generator.entity.dto.ColumnInfoDto;
 import io.github.dunwu.modules.generator.entity.query.CodeColumnConfigQuery;
 import io.github.dunwu.modules.generator.service.CodeColumnConfigService;
-import io.github.dunwu.modules.generator.service.TableService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
@@ -39,18 +31,10 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColumnConfigService {
 
     private final CodeColumnConfigDao dao;
-    private final TableService tableService;
-    private final JdbcTemplate jdbcTemplate;
-
-    public CodeColumnConfigServiceImpl(CodeColumnConfigDao dao,
-        TableService tableService, JdbcTemplate jdbcTemplate) {
-        this.dao = dao;
-        this.tableService = tableService;
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     @Override
     public boolean save(CodeColumnConfig entity) {
@@ -68,30 +52,6 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
     }
 
     @Override
-    public boolean updateBatchById(Collection<CodeColumnConfig> list) {
-        return dao.updateBatchById(list);
-    }
-
-    @Override
-    public boolean saveOrUpdateBatch(Collection<CodeColumnConfig> list) {
-        if (CollectionUtil.isEmpty(list)) {
-            return true;
-        }
-
-        CodeColumnConfig first = CollectionUtil.getFirst(list.iterator());
-        CodeColumnConfig query = new CodeColumnConfig();
-        query.setSchemaName(first.getSchemaName())
-             .setTableName(first.getTableName());
-        List<CodeColumnConfig> oldRecords = dao.listByQuery(query);
-        Set<Long> ids = oldRecords.stream().map(CodeColumnConfig::getId).collect(Collectors.toSet());
-        if (CollectionUtil.isNotEmpty(ids)) {
-            dao.removeByIds(ids);
-            return dao.saveBatch(list);
-        }
-        return dao.saveBatch(list);
-    }
-
-    @Override
     public boolean removeById(Serializable id) {
         return dao.removeById(id);
     }
@@ -103,41 +63,19 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
 
     @Override
     public Page<CodeColumnConfigDto> pojoPageByQuery(CodeColumnConfigQuery query, Pageable pageable) {
-        Page<CodeColumnConfigDto> page = dao.pojoPageByQuery(query, pageable, this::doToDto);
-        if (page == null || CollectionUtil.isEmpty(page.getContent())) {
-            List<TableInfo> tableInfos = queryTableInfo(query.getSchemaName(), query.getTableName());
-            TableInfo tableInfo = tableInfos.get(0);
-            List<CodeColumnConfigDto> columns = new ArrayList<>();
-            if (CollectionUtil.isNotEmpty(tableInfo.getFields())) {
-                List<CodeColumnConfigDto> fields = tableInfo.getFields().stream()
-                                                            .map(this::toCodeColumnConfigDto)
-                                                            .collect(Collectors.toList());
-                columns.addAll(fields);
-            }
-            page = new PageImpl<>(columns, pageable, columns.size());
-        }
-        return page;
+        return dao.pojoPageByQuery(query, pageable, this::doToDto);
     }
 
     @Override
     public List<CodeColumnConfigDto> pojoListByQuery(CodeColumnConfigQuery query) {
         List<CodeColumnConfigDto> dtos = dao.pojoListByQuery(query, this::doToDto);
         if (CollectionUtil.isEmpty(dtos)) {
-            List<TableInfo> tableInfos = queryTableInfo(query.getSchemaName(), query.getTableName());
-            TableInfo tableInfo = tableInfos.get(0);
-            List<CodeColumnConfigDto> columns = new ArrayList<>();
-            if (CollectionUtil.isNotEmpty(tableInfo.getFields())) {
-                List<CodeColumnConfigDto> fields = tableInfo.getFields().stream()
-                                                            .map(this::toCodeColumnConfigDto)
-                                                            .collect(Collectors.toList());
-                columns.addAll(fields);
-            }
-            dtos.addAll(columns);
+            return Collections.emptyList();
         }
-        dtos = dtos.stream()
+
+        return dtos.stream()
                    .sorted(Comparator.comparing(CodeColumnConfigDto::getId))
                    .collect(Collectors.toList());
-        return dtos;
     }
 
     @Override
@@ -183,111 +121,6 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
         }
 
         return BeanUtil.toBean(dto, CodeColumnConfig.class);
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public List<CodeColumnConfigDto> syncTables(CodeColumnConfigQuery query) {
-
-        List<CodeColumnConfigDto> list = new ArrayList<>();
-
-        // 如果没有指定 schema，默认为当前数据源连接的 schema
-        String schemaName;
-        if (StrUtil.isNotBlank(query.getSchemaName())) {
-            schemaName = query.getSchemaName();
-        } else {
-            schemaName = tableService.getCurrentSchema();
-        }
-
-        if (CollectionUtil.isNotEmpty(query.getTables())) {
-            for (String tableName : query.getTables()) {
-                list.addAll(syncOneTable(schemaName, tableName, query));
-            }
-        } else {
-            list.addAll(syncOneTable(schemaName, query.getTableName(), query));
-        }
-
-        return list;
-    }
-
-    private List<CodeColumnConfigDto> syncOneTable(String tableSchema, String tableName, CodeColumnConfigQuery query) {
-        if (StrUtil.isBlank(tableName)) {
-            throw new IllegalArgumentException("table_name must not be null");
-        }
-
-        StringBuilder sql = new StringBuilder(
-            "SELECT table_schema, table_name, column_name, is_nullable, data_type, column_key, column_default, column_comment, extra");
-        sql.append(" FROM information_schema.columns")
-           .append(" WHERE table_schema = ?")
-           .append(" AND table_name = ?")
-           .append(" ORDER BY ordinal_position").append(";");
-
-        Object[] params = new Object[] { tableSchema, tableName };
-        List<ColumnInfoDto> columns = jdbcTemplate.query(sql.toString(), params,
-            new BeanPropertyRowMapper<>(ColumnInfoDto.class));
-        if (CollectionUtil.isEmpty(columns)) {
-            dao.remove(Wrappers.query(new CodeColumnConfig().setTableName(query.getTableName())));
-            return new ArrayList<>();
-        }
-
-        List<CodeColumnConfig> entities = new ArrayList<>();
-        List<CodeColumnConfig> codeColumnConfigs = dao.listByQuery(query);
-        for (ColumnInfoDto c : columns) {
-            CodeColumnConfig entity = null;
-            for (CodeColumnConfig e : codeColumnConfigs) {
-                if (e.getFieldName().equalsIgnoreCase(c.getColumnName())) {
-                    // toEntity(e, c);
-                    entities.add(e);
-                    entity = e;
-                }
-            }
-
-            if (entity != null) {
-                continue;
-            }
-
-            entity = new CodeColumnConfig();
-            // toEntity(entity, c);
-            entities.add(entity);
-        }
-
-        dao.remove(Wrappers.query(new CodeColumnConfig().setTableName(tableName)));
-        dao.saveOrUpdateBatch(entities);
-        return entities.stream()
-                       .map(this::doToDto)
-                       .collect(Collectors.toList());
-    }
-
-    public List<TableInfo> queryTableInfo(String schemaName, String tableName) {
-
-        if (StrUtil.isBlank(schemaName)) {
-            schemaName = tableService.getCurrentSchema();
-        }
-
-        String url = StrUtil.format(
-            "jdbc:mysql://localhost:3306/{}?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8",
-            schemaName);
-        DataSourceConfig dataSourceConfig = new DataSourceConfig(url, "com.mysql.cj.jdbc.Driver", "root", "root",
-            schemaName);
-        PackageConfig packageConfig = new PackageConfig("io.github.dunwu.modules", "generator");
-        GlobalConfig globalConfig = new GlobalConfig();
-        globalConfig.setAuthor("dunwu").setOutputDir("E:\\Temp\\codes");
-        StrategyConfig strategyConfig = new StrategyConfig();
-        strategyConfig.setInclude(tableName);
-        TemplateConfig templateConfig = new TemplateConfig();
-
-        ConfigBuilder builder = new ConfigBuilder(dataSourceConfig, globalConfig, packageConfig, strategyConfig,
-            templateConfig);
-
-        return builder.queryTableInfoList();
-    }
-
-    public CodeColumnConfigDto toCodeColumnConfigDto(TableField field) {
-        CodeColumnConfigDto column = BeanUtil.toBean(field, CodeColumnConfigDto.class);
-        if (field.getJavaType() != null) {
-            column.setJavaType(field.getJavaType().getType());
-        }
-        return column;
     }
 
 }

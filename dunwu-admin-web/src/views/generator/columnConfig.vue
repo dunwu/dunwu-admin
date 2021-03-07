@@ -296,9 +296,9 @@ export default {
     sync() {
       this.syncLoading = true
       codeApi
-        .sync([this.tableName])
+        .syncTables({ schemaName: this.schemaName, tables: [this.tableName] })
         .then(() => {
-          this.init()
+          this.findColumnConfig()
           this.$notify({ title: '同步成功', type: 'success' })
           this.syncLoading = false
         })
@@ -316,12 +316,12 @@ export default {
           codeApi
             .generateCode({ schemaName: this.schemaName, tableName: this.tableName })
             .then(data => {
-              this.genLoading = false
               this.$notify({ title: '生成代码成功', type: 'success' })
+              this.genLoading = false
             })
             .catch(err => {
-              this.genLoading = false
               this.$notify({ title: '生成代码失败', type: 'error', message: err })
+              this.genLoading = false
             })
         })
         .catch(err => {

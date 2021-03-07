@@ -7,11 +7,11 @@ export function getAllTable() {
   })
 }
 
-export function sync(tables) {
+export function syncTables(data) {
   return request({
-    url: 'api/code/column/sync',
+    url: 'api/code/table/sync',
     method: 'post',
-    data: { tables }
+    data
   })
 }
 
@@ -82,7 +82,7 @@ export function previewCode(params) {
 }
 
 export default {
-  sync,
+  syncTables,
   generateCode,
   downloadCode,
   previewCode,

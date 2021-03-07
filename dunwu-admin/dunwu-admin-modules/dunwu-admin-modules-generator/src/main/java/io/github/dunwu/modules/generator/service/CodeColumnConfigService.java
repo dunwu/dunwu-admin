@@ -7,7 +7,6 @@ import io.github.dunwu.modules.generator.entity.dto.CodeColumnConfigDto;
 import io.github.dunwu.modules.generator.entity.query.CodeColumnConfigQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -46,16 +45,6 @@ public interface CodeColumnConfigService extends IService {
      * @return true / false
      */
     boolean updateById(CodeColumnConfig entity);
-
-    /**
-     * 根据 ID 批量更新 {@link CodeColumnConfig} 记录
-     *
-     * @param list {@link CodeColumnConfig} 数据实体列表
-     * @return true / false
-     */
-    boolean updateBatchById(Collection<CodeColumnConfig> list);
-
-    boolean saveOrUpdateBatch(Collection<CodeColumnConfig> list);
 
     /**
      * 根据 ID 删除一条 {@link CodeColumnConfig} 记录
@@ -148,8 +137,5 @@ public interface CodeColumnConfigService extends IService {
      * @return /
      */
     CodeColumnConfig dtoToDo(CodeColumnConfigDto dto);
-
-    @Transactional(rollbackFor = Exception.class)
-    List<CodeColumnConfigDto> syncTables(CodeColumnConfigQuery query);
 
 }

@@ -6,9 +6,7 @@ import io.github.dunwu.modules.generator.dao.CodeTableConfigDao;
 import io.github.dunwu.modules.generator.entity.CodeTableConfig;
 import io.github.dunwu.modules.generator.entity.dto.CodeTableConfigDto;
 import io.github.dunwu.modules.generator.entity.query.CodeTableConfigQuery;
-import io.github.dunwu.modules.generator.service.CodeColumnConfigService;
 import io.github.dunwu.modules.generator.service.CodeTableConfigService;
-import io.github.dunwu.modules.generator.service.TableService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,14 +27,9 @@ import javax.servlet.http.HttpServletResponse;
 public class CodeTableConfigServiceImpl extends ServiceImpl implements CodeTableConfigService {
 
     private final CodeTableConfigDao dao;
-    private final CodeColumnConfigService columnService;
-    private final TableService tableService;
 
-    public CodeTableConfigServiceImpl(CodeTableConfigDao dao,
-        CodeColumnConfigService columnService, TableService tableService) {
+    public CodeTableConfigServiceImpl(CodeTableConfigDao dao) {
         this.dao = dao;
-        this.columnService = columnService;
-        this.tableService = tableService;
     }
 
     @Override
