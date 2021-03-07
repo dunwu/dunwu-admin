@@ -10,26 +10,25 @@
     <#if field.queryType!='BETWEEN'>
           <el-col :span="6">
             <el-input
-                v-model="query.${field.propertyName}"
-                clearable
-                placeholder="请输入<#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if>"
-                style="width: 90%;"
-                class="filter-item"
-                @keyup.enter.native="crud.toQuery"
+              v-model="query.${field.propertyName}"
+              clearable
+              placeholder="请输入<#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if>"
+              style="width: 90%;"
+              class="filter-item"
+              @keyup.enter.native="crud.toQuery"
             />
           </el-col>
     <#else>
-
-      <#if (field.javaType == "Date") || (field.javaType == "LocalDate") || field.javaType == "LocalDateTime">
+    <#if (field.javaType == "Date") || (field.javaType == "LocalDate") || field.javaType == "LocalDateTime">
           <el-col :span="6">
             <date-range-picker
-                v-model="query.${field.propertyName}Range"
-                class="date-item"
-                style="width: 90%"
+              v-model="query.${field.propertyName}Range"
+              class="date-item"
+              style="width: 90%"
             />
           </el-col>
-      <#else>
-      </#if>
+    <#else>
+    </#if>
     </#if>
   </#list>
   <#if table.queryExtFields??>
@@ -38,24 +37,34 @@
       <#if field.queryType!='BETWEEN'>
             <el-col :span="6">
               <el-input
-                  v-model="query.${field.propertyName}"
-                  clearable
-                  placeholder="请输入<#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if>"
-                  style="width: 90%;"
-                  class="filter-item"
-                  @keyup.enter.native="crud.toQuery"
+                v-model="query.${field.propertyName}"
+                clearable
+                placeholder="请输入<#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if>"
+                style="width: 90%;"
+                class="filter-item"
+                @keyup.enter.native="crud.toQuery"
               />
             </el-col>
       <#else>
         <#if (field.javaType == "Date") || (field.javaType == "LocalDate") || field.javaType == "LocalDateTime">
             <el-col :span="6">
               <date-range-picker
-                  v-model="query.${field.propertyName}Range"
-                  class="date-item"
-                  style="width: 90%"
+                v-model="query.${field.propertyName}Range"
+                class="date-item"
+                style="width: 90%"
               />
             </el-col>
         <#else>
+            <el-col :span="6">
+              <el-input
+                v-model="query.${field.propertyName}"
+                clearable
+                placeholder="请输入<#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if>"
+                style="width: 90%;"
+                class="filter-item"
+                @keyup.enter.native="crud.toQuery"
+              />
+            </el-col>
         </#if>
       </#if>
           </template>
@@ -128,13 +137,12 @@
       <!--表格渲染-->
 <#if table.enableList>
     <el-table
-        ref="table"
-        v-loading="crud.loading"
-        :data="crud.data"
-        size="small"
-        style="width: 100%;"
-        <#if table.enableSort>@sort-change="crud.changeTableSort"</#if>
-        @selection-change="crud.selectionChangeHandler">
+      ref="table"
+      v-loading="crud.loading"
+      :data="crud.data"
+      <#if table.enableSort>@sort-change="crud.changeTableSort"</#if>
+      @selection-change="crud.selectionChangeHandler"
+    >
       <el-table-column type="selection" width="55" />
   <#list table.fields as field>
     <#if field.enableList>

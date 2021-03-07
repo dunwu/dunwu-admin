@@ -9,6 +9,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Query 类
@@ -39,5 +40,8 @@ public class MntDatabaseQuery implements Serializable {
     @ApiModelProperty(value = "创建时间")
     @QueryField
     private LocalDateTime createTime;
+
+    @QueryField(value = "createTime", type = QueryField.QueryType.BETWEEN)
+    private List<LocalDateTime> createTimeRange;
 
 }

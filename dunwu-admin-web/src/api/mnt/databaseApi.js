@@ -39,6 +39,19 @@ export function edit(data) {
   })
 }
 
+/**
+ * 根据 params 条件，查询匹配条件的列表
+ * @param params
+ * @returns {*}
+ */
+export function list(params) {
+  return request({
+    url: 'api/mnt/database/list',
+    method: 'get',
+    params
+  })
+}
+
 export function testDbConnection(data) {
   return request({
     url: 'api/mnt/database/testConnect',
@@ -47,4 +60,4 @@ export function testDbConnection(data) {
   })
 }
 
-export default { add, edit, delBatch, testDbConnection }
+export default { add, edit, delBatch, list, testDbConnection }

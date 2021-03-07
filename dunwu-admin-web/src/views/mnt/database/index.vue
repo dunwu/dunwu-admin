@@ -3,17 +3,54 @@
     <!--工具栏-->
     <div class="head-container">
       <div v-if="crud.props.searchToggle">
-        <!-- 搜索 -->
-        <el-input
-          v-model="query.blurry"
-          clearable
-          placeholder="模糊搜索"
-          style="width: 200px"
-          class="filter-item"
-          @keyup.enter.native="crud.toQuery"
-        />
-        <date-range-picker v-model="query.createTime" class="date-item" />
-        <queryOperation />
+        <el-row>
+          <el-col :span="6">
+            <el-input
+              v-model="query.id"
+              clearable
+              placeholder="请输入ID"
+              style="width: 90%;"
+              class="filter-item"
+              @keyup.enter.native="crud.toQuery"
+            />
+          </el-col>
+          <el-col :span="6">
+            <el-input
+              v-model="query.name"
+              clearable
+              placeholder="请输入名称"
+              style="width: 90%;"
+              class="filter-item"
+              @keyup.enter.native="crud.toQuery"
+            />
+          </el-col>
+          <el-col :span="6">
+            <el-input
+              v-model="query.jdbcUrl"
+              clearable
+              placeholder="请输入jdbc连接"
+              style="width: 90%;"
+              class="filter-item"
+              @keyup.enter.native="crud.toQuery"
+            />
+          </el-col>
+          <template v-if="crud.showExtendSearch">
+            <el-col :span="6">
+              <date-range-picker v-model="query.createTimeRange" class="date-item" style="width: 90%" />
+            </el-col>
+          </template>
+          <el-col :span="6">
+            <queryOperation :crud="crud" />
+            <el-button v-if="crud.showExtendSearch" type="text" @click="crud.toggleExtendSearch">
+              折叠
+              <i class="el-icon-arrow-up el-icon--right" />
+            </el-button>
+            <el-button v-else type="text" @click="crud.toggleExtendSearch">
+              展开
+              <i class="el-icon-arrow-down el-icon--right" />
+            </el-button>
+          </el-col>
+        </el-row>
       </div>
       <crudOperation :permission="permission">
         <el-button
@@ -96,7 +133,7 @@
 <script>
 import databaseApi from '@/api/mnt/databaseApi'
 import eForm from './execute'
-import CRUD, { presenter, header, form, crud } from '@crud/crud'
+import CRUD, { crud, form, header, presenter } from '@crud/crud'
 import queryOperation from '@crud/Query.operation'
 import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
