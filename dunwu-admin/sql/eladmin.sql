@@ -159,7 +159,7 @@ CREATE TABLE mnt_app (
 -- ----------------------------
 DROP TABLE IF EXISTS mnt_database;
 CREATE TABLE mnt_database (
-    db_id       VARCHAR(50)  NOT NULL COMMENT 'ID',
+    id          BIGINT(20)   NOT NULL AUTO_INCREMENT COMMENT 'ID',
     name        VARCHAR(255) NOT NULL COMMENT '名称',
     jdbc_url    VARCHAR(255) NOT NULL COMMENT 'jdbc连接',
     user_name   VARCHAR(255) NOT NULL COMMENT '账号',
@@ -168,7 +168,7 @@ CREATE TABLE mnt_database (
     update_by   VARCHAR(255) DEFAULT NULL COMMENT '更新者',
     create_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     update_time DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (db_id) USING BTREE
+    PRIMARY KEY (id) USING BTREE
 )
     ENGINE = InnoDB
     DEFAULT CHARSET = utf8

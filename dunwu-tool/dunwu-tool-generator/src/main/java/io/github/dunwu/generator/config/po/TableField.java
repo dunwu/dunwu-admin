@@ -68,19 +68,19 @@ public class TableField {
     /** 允许校验 */
     private Boolean enableValidate = false;
     /** 表单类型 */
-    private String formType;
+    private String formType = "Input";
     /** 列表类型 */
-    private String listType;
+    private String listType = "Text";
     /** 查询类型 */
-    private String queryType;
+    private String queryType = "EQUALS";
     /** 排序类型 */
-    private String sortType;
+    private String sortType = "asc";
     /** 校验类型 */
     private String validateType;
     /** 字典名称 */
     private String dictName;
     /** 日期表达式（只有当字段为时间类型时才有效） */
-    private String datePattern;
+    private String datePattern = "yyyy-MM-dd HH:mm:ss";
 
     /** 字段名称是否经过了转换 */
     private boolean convert;

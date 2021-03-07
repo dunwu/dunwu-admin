@@ -351,15 +351,20 @@ public class GeneratorServiceImpl implements GeneratorService {
                   .setTableName(tableName)
                   .setCreateBy(username);
         CodeTableConfigDto tableConfigDto = findTableConfigByCurrentUser(tableQuery);
+        ConfigBuilder configBuilder;
         if (tableConfigDto != null) {
-            ConfigBuilder configBuilder = transToConfigBuilder(tableConfigDto);
-            List<TableInfo> tableInfos = configBuilder.queryTableInfoList();
-            return tableInfos.get(0);
+            configBuilder = transToConfigBuilder(tableConfigDto);
+        } else {
+            CodeGlobalConfigDto globalConfig = findGlobalConfigByCurrentUser();
+            CodeTableConfigDto newTableConfigDto = BeanUtil.toBean(globalConfig, CodeTableConfigDto.class);
+            newTableConfigDto.setSchemaName(schemaName)
+                             .setTableName(tableName)
+                             .setCreateBy(username);
+            configBuilder = transToConfigBuilder(newTableConfigDto);
         }
 
-        CodeGlobalConfigDto globalConfig = findGlobalConfigByCurrentUser();
-        CodeTableConfigDto newTableConfigDto = BeanUtil.toBean(globalConfig, CodeTableConfigDto.class);
-        return transToTableInfo(newTableConfigDto);
+        List<TableInfo> tableInfos = configBuilder.queryTableInfoList();
+        return tableInfos.get(0);
     }
 
     /**
