@@ -1,8 +1,5 @@
 package io.github.dunwu.modules.mnt.entity.query;
 
-import java.time.LocalDateTime;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import java.io.Serializable;
 import io.github.dunwu.data.core.annotation.QueryField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -10,10 +7,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
-import java.util.List;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
- *  Query 类
+ * Query 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
  * @since 2021-03-07
@@ -28,7 +26,7 @@ public class MntDatabaseQuery implements Serializable {
 
     @ApiModelProperty(value = "ID")
     @QueryField
-    private String id;
+    private Long id;
 
     @ApiModelProperty(value = "名称")
     @QueryField
@@ -41,4 +39,5 @@ public class MntDatabaseQuery implements Serializable {
     @ApiModelProperty(value = "创建时间")
     @QueryField
     private LocalDateTime createTime;
+
 }

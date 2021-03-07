@@ -1,19 +1,16 @@
 package io.github.dunwu.modules.mnt.entity;
 
-import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import io.github.dunwu.data.validator.annotation.EditCheck;
-import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
 /**
- *
- *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
  * @since 2021-03-07
  */
@@ -26,7 +23,7 @@ public class MntDatabase implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "ID")
-    private String id;
+    private Long id;
 
     @ApiModelProperty(value = "名称")
     private String name;
@@ -53,6 +50,5 @@ public class MntDatabase implements Serializable {
     @ApiModelProperty(value = "更新时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime updateTime;
-
 
 }
