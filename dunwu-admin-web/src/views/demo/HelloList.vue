@@ -36,11 +36,7 @@
           </el-col>
           <template v-if="crud.showExtendSearch">
             <el-col :span="6">
-              <date-range-picker
-                v-model="query.createTimeRange"
-                class="date-item"
-                style="width: 90%"
-              />
+              <date-range-picker v-model="query.createTimeRange" class="date-item" style="width: 90%" />
             </el-col>
           </template>
           <el-col :span="6">
@@ -60,7 +56,13 @@
     </div>
 
     <!--表单组件-->
-    <el-dialog :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.title" width="500px">
+    <el-dialog
+      :close-on-click-modal="false"
+      :before-close="crud.cancelCU"
+      :visible.sync="crud.status.cu > 0"
+      :title="crud.status.title"
+      width="500px"
+    >
       <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
         <el-form-item label="名字" prop="name">
           <el-input v-model="form.name" :rows="3" type="textarea" style="width: 370px;" />
@@ -93,7 +95,12 @@
       <el-table-column prop="name" label="名字" />
       <el-table-column prop="age" label="年龄" :sortable="'custom'" />
       <el-table-column prop="createTime" label="创建时间" />
-      <el-table-column v-if="checkPer(['admin','demo:hello:edit','demo:hello:del'])" label="操作" width="150px" align="center">
+      <el-table-column
+        v-if="checkPer(['admin', 'demo:hello:edit', 'demo:hello:del'])"
+        label="操作"
+        width="150px"
+        align="center"
+      >
         <template slot-scope="scope">
           <udOperation :data="scope.row" :permission="permission" />
         </template>
@@ -133,8 +140,8 @@ export default {
         add: ['admin', 'demo:hello:add'],
         edit: ['admin', 'demo:hello:edit'],
         del: ['admin', 'demo:hello:del']
-      }, rules: {
-      }
+      },
+      rules: {}
     }
   },
   methods: {
