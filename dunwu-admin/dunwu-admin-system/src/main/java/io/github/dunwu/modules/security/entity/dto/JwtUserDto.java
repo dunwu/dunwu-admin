@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package io.github.dunwu.modules.security.service.dto;
+package io.github.dunwu.modules.security.entity.dto;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import io.github.dunwu.modules.system.entity.dto.SysUserDto;

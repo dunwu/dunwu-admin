@@ -34,8 +34,8 @@
 <script>
 import store from '@/store'
 import { validEmail } from '@/utils/validate'
-import { editEmail } from '@/api/system/user'
-import { resetEmail } from '@/api/system/code'
+import authApi from '@/api/auth'
+
 export default {
   props: {
     email: {
@@ -81,7 +81,7 @@ export default {
         this.codeLoading = true
         this.buttonName = '验证码发送中'
         const _this = this
-        resetEmail(this.form.email)
+        authApi.resetEmail(this.form.email)
           .then(res => {
             this.$message({
               showClose: true,
@@ -113,7 +113,7 @@ export default {
       this.$refs['form'].validate(valid => {
         if (valid) {
           this.loading = true
-          editEmail(this.form)
+          authApi.editEmail(this.form)
             .then(res => {
               this.loading = false
               this.resetForm()

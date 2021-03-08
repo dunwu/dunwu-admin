@@ -52,10 +52,10 @@ import static springfox.documentation.schema.AlternateTypeRules.newRule;
 @EnableSwagger2
 public class SwaggerConfig {
 
-    @Value("${jwt.header}")
+    @Value("${dunwu.web.security.jwt.token-header}")
     private String tokenHeader;
 
-    @Value("${jwt.token-start-with}")
+    @Value("${dunwu.web.security.jwt.token-start-with}")
     private String tokenStartWith;
 
     @Value("${swagger.enabled}")

@@ -1,31 +1,24 @@
 package io.github.dunwu.modules.system.controller;
 
-import io.github.dunwu.config.RsaProperties;
 import io.github.dunwu.data.core.Result;
-import io.github.dunwu.data.core.DataListResult;
-import io.github.dunwu.data.core.DataResult;
-import io.github.dunwu.data.core.PageResult;
 import io.github.dunwu.data.validator.annotation.AddCheck;
 import io.github.dunwu.data.validator.annotation.EditCheck;
-import io.github.dunwu.exception.BadRequestException;
 import io.github.dunwu.modules.monitor.annotation.AppLog;
-import io.github.dunwu.modules.system.entity.SysUser;
 import io.github.dunwu.modules.system.entity.dto.SysUserDto;
 import io.github.dunwu.modules.system.entity.query.SysUserQuery;
-import io.github.dunwu.modules.system.entity.vo.UserPassVo;
 import io.github.dunwu.modules.system.service.SysUserService;
-import io.github.dunwu.modules.system.service.VerifyService;
-import io.github.dunwu.util.RsaUtils;
-import io.github.dunwu.util.SecurityUtils;
-import io.github.dunwu.util.enums.CodeEnum;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -45,8 +38,6 @@ import javax.servlet.http.HttpServletResponse;
 public class SysUserController {
 
     private final SysUserService service;
-    private final PasswordEncoder passwordEncoder;
-    private final VerifyService verifyService;
 
     @AppLog("添加一条 SysUser 记录")
     @PreAuthorize("@exp.check('user:add')")
@@ -127,46 +118,9 @@ public class SysUserController {
         service.exportList(ids, response);
     }
 
-    @AppLog("修改用户：个人中心")
-    @ApiOperation("修改用户：个人中心")
-    @PostMapping("edit/center")
-    public Result center(@Validated(EditCheck.class) @RequestBody SysUserDto entity) {
-        if (!entity.getId().equals(SecurityUtils.getCurrentUserId())) {
-            throw new BadRequestException("不能修改他人资料");
-        }
-        service.updateCenter(entity);
-        return Result.ok();
-    }
-
-    @ApiOperation("修改用户密码")
-    @PostMapping("edit/password")
-    public Result updatePass(@RequestBody UserPassVo entity) throws Exception {
-        service.updatePass(entity);
-        return Result.ok();
-    }
-
     // @ApiOperation("修改头像")
     // @PostMapping(value = "/updateAvatar")
     // public ResponseEntity<Object> updateAvatar(@RequestParam MultipartFile avatar) {
     //     return new ResponseEntity<>(userService.updateAvatar(avatar), HttpStatus.OK);
     // }
-
-    @AppLog("修改用户邮箱")
-    @ApiOperation("修改用户邮箱")
-    @PostMapping(value = "edit/email/{code}")
-    public Result updateEmail(@PathVariable String code,
-        @Validated(EditCheck.class) @RequestBody SysUserDto entity) throws Exception {
-        String password = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, entity.getPassword());
-        SysUserDto userDto = service.pojoByUsername(SecurityUtils.getCurrentUsername());
-        if (!passwordEncoder.matches(password, userDto.getPassword())) {
-            throw new BadRequestException("密码错误");
-        }
-        verifyService.validated(CodeEnum.EMAIL_RESET_EMAIL_CODE.getKey() + entity.getEmail(), code);
-        SysUser user = new SysUser();
-        user.setId(entity.getId());
-        user.setPassword(passwordEncoder.encode(entity.getPassword()));
-        service.updateById(user);
-        return Result.ok();
-    }
-
 }

@@ -15,11 +15,11 @@
  */
 package io.github.dunwu.modules.security.config;
 
-import io.github.dunwu.modules.security.config.bean.LoginProperties;
-import io.github.dunwu.modules.security.config.bean.SecurityProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * @apiNote 配置文件转换Pojo类的 统一配置 类
@@ -29,15 +29,18 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ConfigBeanConfiguration {
 
+    /**
+     * 密码加密方式
+     */
     @Bean
-    @ConfigurationProperties(prefix = "login")
-    public LoginProperties loginProperties() {
-        return new LoginProperties();
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
-    @ConfigurationProperties(prefix = "jwt")
-    public SecurityProperties securityProperties() {
-        return new SecurityProperties();
+    @ConfigurationProperties(prefix = "dunwu.web.security")
+    public DunwuWebSecurityProperties securityProperties() {
+        return new DunwuWebSecurityProperties();
     }
+
 }

@@ -4,11 +4,9 @@ import io.github.dunwu.data.core.annotation.QueryField;
 import io.github.dunwu.data.mybatis.IService;
 import io.github.dunwu.modules.system.entity.SysUser;
 import io.github.dunwu.modules.system.entity.dto.SysUserDto;
-import io.github.dunwu.modules.system.entity.vo.UserPassVo;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -122,12 +120,6 @@ public interface SysUserService extends IService {
     boolean updateUserRelatedRecords(SysUserDto dto);
 
     SysUserDto pojoByUsername(String username);
-
-    @Transactional(rollbackFor = Exception.class)
-    void updateCenter(SysUserDto entity);
-
-    @Transactional(rollbackFor = Exception.class)
-    void updatePass(UserPassVo passVo) throws Exception;
 
     /**
      * 根据菜单查询用户

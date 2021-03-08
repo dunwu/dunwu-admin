@@ -2,14 +2,14 @@ package io.github.dunwu.modules.system.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import io.github.dunwu.config.RsaProperties;
 import io.github.dunwu.data.core.DataException;
 import io.github.dunwu.data.mybatis.ServiceImpl;
-import io.github.dunwu.data.redis.RedisHelper;
-import io.github.dunwu.exception.BadRequestException;
-import io.github.dunwu.exception.EntityExistException;
-import io.github.dunwu.modules.security.service.UserCacheClean;
-import io.github.dunwu.modules.system.dao.*;
+import io.github.dunwu.modules.system.dao.SysDeptDao;
+import io.github.dunwu.modules.system.dao.SysJobDao;
+import io.github.dunwu.modules.system.dao.SysRoleDao;
+import io.github.dunwu.modules.system.dao.SysRoleMenuDao;
+import io.github.dunwu.modules.system.dao.SysUserDao;
+import io.github.dunwu.modules.system.dao.SysUserRoleDao;
 import io.github.dunwu.modules.system.entity.SysRoleMenu;
 import io.github.dunwu.modules.system.entity.SysUser;
 import io.github.dunwu.modules.system.entity.SysUserRole;
@@ -17,15 +17,10 @@ import io.github.dunwu.modules.system.entity.dto.SysDeptDto;
 import io.github.dunwu.modules.system.entity.dto.SysJobDto;
 import io.github.dunwu.modules.system.entity.dto.SysRoleDto;
 import io.github.dunwu.modules.system.entity.dto.SysUserDto;
-import io.github.dunwu.modules.system.entity.vo.UserPassVo;
 import io.github.dunwu.modules.system.service.SysUserService;
 import io.github.dunwu.tool.bean.BeanUtil;
-import io.github.dunwu.util.CacheKey;
-import io.github.dunwu.util.RsaUtils;
-import io.github.dunwu.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -47,12 +42,12 @@ import javax.servlet.http.HttpServletResponse;
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
  * @since 2020-05-25
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SysUserServiceImpl extends ServiceImpl implements SysUserService {
 
     public static final String INIT_PASSWORD = "123456";
-    private final transient Logger log = LoggerFactory.getLogger(this.getClass());
 
     private final SysUserDao userDao;
     private final SysRoleDao roleDao;
@@ -61,9 +56,6 @@ public class SysUserServiceImpl extends ServiceImpl implements SysUserService {
     private final SysUserRoleDao userRoleDao;
     private final SysRoleMenuDao roleMenuDao;
     private final PasswordEncoder passwordEncoder;
-
-    private final RedisHelper redisHelper;
-    private final UserCacheClean userCacheClean;
 
     @Override
     public boolean save(SysUser entity) {
@@ -229,43 +221,6 @@ public class SysUserServiceImpl extends ServiceImpl implements SysUserService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void updateCenter(SysUserDto entity) {
-        SysUser user = userDao.getById(entity.getId());
-        SysUser query = new SysUser();
-        query.setPhone(entity.getPhone());
-        SysUser user1 = userDao.getOne(query);
-        if (user1 != null && !user.getId().equals(user1.getId())) {
-            throw new EntityExistException(SysUser.class, "phone", entity.getPhone());
-        }
-        user.setNickname(entity.getNickname());
-        user.setPhone(entity.getPhone());
-        user.setGender(entity.getGender());
-        userDao.updateById(user);
-        // 清理缓存
-        delCaches(user.getId(), user.getUsername());
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void updatePass(UserPassVo passVo) throws Exception {
-        String oldPass = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, passVo.getOldPass());
-        String newPass = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, passVo.getNewPass());
-        SysUserDto sysUserDto = pojoByUsername(SecurityUtils.getCurrentUsername());
-        if (!passwordEncoder.matches(oldPass, sysUserDto.getPassword())) {
-            throw new BadRequestException("修改失败，旧密码错误");
-        }
-        if (passwordEncoder.matches(newPass, sysUserDto.getPassword())) {
-            throw new BadRequestException("新密码不能与旧密码相同");
-        }
-        SysUser user = new SysUser();
-        user.setId(sysUserDto.getId());
-        user.setPassword(passwordEncoder.encode(newPass));
-        updateById(user);
-        flushCache(sysUserDto.getUsername());
-    }
-
-    @Override
     public List<SysUser> findByMenuId(Long menuId) {
         SysRoleMenu query1 = new SysRoleMenu();
         List<SysRoleMenu> roleMenus = roleMenuDao.list(query1);
@@ -283,25 +238,6 @@ public class SysUserServiceImpl extends ServiceImpl implements SysUserService {
     @Override
     public int countByRoles(Set<Long> roleIds) {
         return 0;
-    }
-
-    /**
-     * 清理缓存
-     *
-     * @param id /
-     */
-    public void delCaches(Long id, String username) {
-        redisHelper.del(CacheKey.USER_ID + id);
-        flushCache(username);
-    }
-
-    /**
-     * 清理 登陆时 用户缓存信息
-     *
-     * @param username /
-     */
-    private void flushCache(String username) {
-        userCacheClean.cleanUserCache(username);
     }
 
 }

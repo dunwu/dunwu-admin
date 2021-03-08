@@ -19,8 +19,12 @@ import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import io.github.dunwu.data.redis.RedisHelper;
-import io.github.dunwu.modules.security.config.bean.SecurityProperties;
-import io.jsonwebtoken.*;
+import io.github.dunwu.modules.security.config.DunwuWebSecurityProperties;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.JwtParser;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -43,20 +47,20 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 public class TokenProvider implements InitializingBean {
 
-    private final SecurityProperties properties;
+    private final DunwuWebSecurityProperties properties;
     private final RedisHelper redisHelper;
     public static final String AUTHORITIES_KEY = "user";
     private JwtParser jwtParser;
     private JwtBuilder jwtBuilder;
 
-    public TokenProvider(SecurityProperties properties, RedisHelper redisHelper) {
+    public TokenProvider(DunwuWebSecurityProperties properties, RedisHelper redisHelper) {
         this.properties = properties;
         this.redisHelper = redisHelper;
     }
 
     @Override
     public void afterPropertiesSet() {
-        byte[] keyBytes = Decoders.BASE64.decode(properties.getBase64Secret());
+        byte[] keyBytes = Decoders.BASE64.decode(properties.getJwt().getBase64Secret());
         Key key = Keys.hmacShaKeyFor(keyBytes);
         jwtParser = Jwts.parserBuilder()
                         .setSigningKey(key)
@@ -103,20 +107,20 @@ public class TokenProvider implements InitializingBean {
      */
     public void checkRenewal(String token) {
         // 判断是否续期token,计算token的过期时间
-        long time = redisHelper.getExpire(properties.getOnlineKey() + token) * 1000;
+        long time = redisHelper.getExpire(properties.getJwt().getOnlineKey() + token) * 1000;
         Date expireDate = DateUtil.offset(new Date(), DateField.MILLISECOND, (int) time);
         // 判断当前时间与过期时间的时间差
         long differ = expireDate.getTime() - System.currentTimeMillis();
         // 如果在续期检查的范围内，则续期
-        if (differ <= properties.getDetect()) {
-            long renew = time + properties.getRenew();
-            redisHelper.expire(properties.getOnlineKey() + token, renew, TimeUnit.MILLISECONDS);
+        if (differ <= properties.getJwt().getDetect()) {
+            long renew = time + properties.getJwt().getRenew();
+            redisHelper.expire(properties.getJwt().getOnlineKey() + token, renew, TimeUnit.MILLISECONDS);
         }
     }
 
     public String getToken(HttpServletRequest request) {
-        final String requestHeader = request.getHeader(properties.getHeader());
-        if (requestHeader != null && requestHeader.startsWith(properties.getTokenStartWith())) {
+        final String requestHeader = request.getHeader(properties.getJwt().getTokenHeader());
+        if (requestHeader != null && requestHeader.startsWith(properties.getJwt().getTokenStartWith())) {
             return requestHeader.substring(7);
         }
         return null;

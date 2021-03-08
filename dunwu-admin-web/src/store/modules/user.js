@@ -1,4 +1,4 @@
-import loginApi from '@/api/login'
+import authApi from '@/api/auth'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 
 const user = {
@@ -30,7 +30,7 @@ const user = {
     Login({ commit }, userInfo) {
       const rememberMe = userInfo.rememberMe
       return new Promise((resolve, reject) => {
-        loginApi
+        authApi
           .login(userInfo.username, userInfo.password, userInfo.code, userInfo.uuid)
           .then(res => {
             setToken(res.token, rememberMe)
@@ -49,7 +49,7 @@ const user = {
     // 获取用户信息
     GetInfo({ commit }) {
       return new Promise((resolve, reject) => {
-        loginApi
+        authApi
           .getInfo()
           .then(res => {
             setUserInfo(res, commit)
@@ -63,7 +63,7 @@ const user = {
     // 登出
     LogOut({ commit }) {
       return new Promise((resolve, reject) => {
-        loginApi
+        authApi
           .logout()
           .then(res => {
             logOut(commit)

@@ -9,9 +9,20 @@ import io.github.dunwu.data.mybatis.ServiceImpl;
 import io.github.dunwu.data.redis.RedisHelper;
 import io.github.dunwu.modules.security.exception.AuthException;
 import io.github.dunwu.modules.security.service.SecurityUtil;
-import io.github.dunwu.modules.security.service.UserCacheClean;
-import io.github.dunwu.modules.system.dao.*;
-import io.github.dunwu.modules.system.entity.*;
+import io.github.dunwu.modules.system.dao.SysDeptDao;
+import io.github.dunwu.modules.system.dao.SysJobRoleDao;
+import io.github.dunwu.modules.system.dao.SysMenuDao;
+import io.github.dunwu.modules.system.dao.SysRoleDao;
+import io.github.dunwu.modules.system.dao.SysRoleDeptDao;
+import io.github.dunwu.modules.system.dao.SysRoleMenuDao;
+import io.github.dunwu.modules.system.dao.SysUserRoleDao;
+import io.github.dunwu.modules.system.entity.SysDept;
+import io.github.dunwu.modules.system.entity.SysJobRole;
+import io.github.dunwu.modules.system.entity.SysMenu;
+import io.github.dunwu.modules.system.entity.SysRole;
+import io.github.dunwu.modules.system.entity.SysRoleDept;
+import io.github.dunwu.modules.system.entity.SysRoleMenu;
+import io.github.dunwu.modules.system.entity.SysUserRole;
 import io.github.dunwu.modules.system.entity.dto.SysDeptDto;
 import io.github.dunwu.modules.system.entity.dto.SysMenuDto;
 import io.github.dunwu.modules.system.entity.dto.SysRoleDto;
@@ -19,7 +30,6 @@ import io.github.dunwu.modules.system.entity.dto.SysUserDto;
 import io.github.dunwu.modules.system.service.SysRoleService;
 import io.github.dunwu.modules.system.service.SysUserService;
 import io.github.dunwu.tool.bean.BeanUtil;
-import io.github.dunwu.util.CacheKey;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -32,7 +42,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
@@ -58,7 +75,6 @@ public class SysRoleServiceImpl extends ServiceImpl implements SysRoleService {
     private final SysRoleDeptDao roleDeptDao;
 
     private final RedisHelper redisHelper;
-    private final UserCacheClean userCacheClean;
 
     @Override
     public boolean save(SysRole entity) {
@@ -299,23 +315,6 @@ public class SysRoleServiceImpl extends ServiceImpl implements SysRoleService {
                            .map(SysMenuDto::getPermission).collect(Collectors.toSet());
         return permissions.stream().map(SimpleGrantedAuthority::new)
                           .collect(Collectors.toList());
-    }
-
-    /**
-     * 清理缓存
-     *
-     * @param id /
-     */
-    public void delCaches(Long id, List<SysUser> users) {
-        users = CollectionUtil.isEmpty(users) ? userService.findByRoleId(id) : users;
-        if (CollectionUtil.isNotEmpty(users)) {
-            users.forEach(item -> userCacheClean.cleanUserCache(item.getUsername()));
-            Set<Long> userIds = users.stream().map(SysUser::getId).collect(Collectors.toSet());
-            redisHelper.hdel(CacheKey.DATA_USER, userIds);
-            redisHelper.hdel(CacheKey.MENU_USER, userIds);
-            redisHelper.hdel(CacheKey.ROLE_AUTH, userIds);
-        }
-        redisHelper.del(CacheKey.ROLE_ID + id);
     }
 
 }

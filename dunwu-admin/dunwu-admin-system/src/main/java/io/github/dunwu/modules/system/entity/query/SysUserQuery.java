@@ -43,11 +43,11 @@ public class SysUserQuery implements Serializable {
 
     @ApiModelProperty(value = "手机号")
     @QueryField
-    private String mobile;
+    private String phone;
 
     @ApiModelProperty(value = "性别")
     @QueryField
-    private String sex;
+    private String gender;
 
     @ApiModelProperty(value = "部门ID")
     @QueryField
@@ -56,10 +56,6 @@ public class SysUserQuery implements Serializable {
     @ApiModelProperty(value = "岗位ID")
     @QueryField
     private Long jobId;
-
-    @ApiModelProperty(value = "是否删除")
-    @QueryField
-    private Boolean deleted;
 
     @ApiModelProperty(value = "状态")
     @QueryField
