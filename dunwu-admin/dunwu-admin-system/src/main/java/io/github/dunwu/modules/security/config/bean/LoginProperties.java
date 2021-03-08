@@ -18,7 +18,7 @@ package io.github.dunwu.modules.security.config.bean;
 import com.wf.captcha.*;
 import com.wf.captcha.base.Captcha;
 import io.github.dunwu.exception.BadConfigurationException;
-import io.github.dunwu.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 import lombok.Data;
 
 import java.awt.*;
@@ -104,7 +104,7 @@ public class LoginProperties {
                     throw new BadConfigurationException("验证码配置信息错误！正确配置查看 LoginCodeEnum ");
             }
         }
-        if(StringUtils.isNotBlank(loginCode.getFontName())){
+        if(StrUtil.isNotBlank(loginCode.getFontName())){
             captcha.setFont(new Font(loginCode.getFontName(), Font.PLAIN, loginCode.getFontSize()));
         }
         return captcha;

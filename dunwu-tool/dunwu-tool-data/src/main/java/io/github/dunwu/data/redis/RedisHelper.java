@@ -2,7 +2,10 @@ package io.github.dunwu.data.redis;
 
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.*;
+import org.springframework.data.redis.core.Cursor;
+import org.springframework.data.redis.core.RedisConnectionUtils;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -209,9 +212,21 @@ public class RedisHelper {
      * @return Boolean
      */
     public Boolean expire(String key, Long time) {
+        return expire(key, time, TimeUnit.SECONDS);
+    }
+
+    /**
+     * 指定缓存失效时间
+     *
+     * @param key      键
+     * @param time     时间
+     * @param timeUnit 时间单位
+     * @return Boolean
+     */
+    public Boolean expire(String key, Long time, TimeUnit timeUnit) {
         try {
             if (time > 0) {
-                redisTemplate.expire(key, time, TimeUnit.SECONDS);
+                redisTemplate.expire(key, time, timeUnit);
             }
             return true;
         } catch (Exception e) {

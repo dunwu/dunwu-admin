@@ -1,11 +1,12 @@
 package io.github.dunwu.modules.monitor.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import io.github.dunwu.modules.monitor.annotation.AppLog;
 import io.github.dunwu.modules.monitor.dao.LogRecordDao;
 import io.github.dunwu.modules.monitor.entity.LogRecord;
 import io.github.dunwu.modules.monitor.service.LogService;
-import io.github.dunwu.util.StringUtils;
+import io.github.dunwu.util.net.IpUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -51,7 +52,8 @@ public class LogServiceImpl implements LogService {
         assert log != null;
         log.setRequestIp(ip);
 
-        log.setAddress(StringUtils.getCityInfo(log.getRequestIp()));
+        String address = IpUtil.getRegionName(log.getRequestIp());
+        log.setAddress(address);
         log.setMethod(methodName);
         log.setUsername(username);
         log.setParams(getParameter(method, joinPoint.getArgs()));
@@ -76,7 +78,7 @@ public class LogServiceImpl implements LogService {
             if (requestParam != null) {
                 Map<String, Object> map = new HashMap<>();
                 String key = parameters[i].getName();
-                if (!StringUtils.isEmpty(requestParam.value())) {
+                if (!StrUtil.isEmpty(requestParam.value())) {
                     key = requestParam.value();
                 }
                 map.put(key, args[i]);

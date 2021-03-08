@@ -27,32 +27,37 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 /**
  * @author Zheng Jie
  * @date 2019-6-4 14:59:48
  */
 @Slf4j
-@SuppressWarnings({"unchecked","all"})
+@SuppressWarnings({ "unchecked", "all" })
 public class QueryHelp {
 
     public static <R, Q> Predicate getPredicate(Root<R> root, Q query, CriteriaBuilder cb) {
         List<Predicate> list = new ArrayList<>();
-        if(query == null){
+        if (query == null) {
             return cb.and(list.toArray(new Predicate[0]));
         }
         // 数据权限验证
         DataPermission permission = query.getClass().getAnnotation(DataPermission.class);
-        if(permission != null){
+        if (permission != null) {
             // 获取数据权限
             List<Long> dataScopes = SecurityUtils.getCurrentUserDataScope();
-            if(CollectionUtil.isNotEmpty(dataScopes)){
-                if(StringUtils.isNotBlank(permission.joinName()) && StringUtils.isNotBlank(permission.fieldName())) {
+            if (CollectionUtil.isNotEmpty(dataScopes)) {
+                if (StrUtil.isNotBlank(permission.joinName()) && StrUtil.isNotBlank(permission.fieldName())) {
                     Join join = root.join(permission.joinName(), JoinType.LEFT);
-                    list.add(getExpression(permission.fieldName(),join, root).in(dataScopes));
-                } else if (StringUtils.isBlank(permission.joinName()) && StringUtils.isNotBlank(permission.fieldName())) {
-                    list.add(getExpression(permission.fieldName(),null, root).in(dataScopes));
+                    list.add(getExpression(permission.fieldName(), join, root).in(dataScopes));
+                } else if (StrUtil.isBlank(permission.joinName()) && StrUtil.isNotBlank(permission.fieldName())) {
+                    list.add(getExpression(permission.fieldName(), null, root).in(dataScopes));
                 }
             }
         }
@@ -80,7 +85,7 @@ public class QueryHelp {
                         List<Predicate> orPredicate = new ArrayList<>();
                         for (String s : blurrys) {
                             orPredicate.add(cb.like(root.get(s)
-                                    .as(String.class), "%" + val.toString() + "%"));
+                                                        .as(String.class), "%" + val.toString() + "%"));
                         }
                         Predicate[] p = new Predicate[orPredicate.size()];
                         list.add(cb.or(orPredicate.toArray(p)));
@@ -91,79 +96,82 @@ public class QueryHelp {
                         for (String name : joinNames) {
                             switch (q.join()) {
                                 case LEFT:
-                                    if(ObjectUtil.isNotNull(join) && ObjectUtil.isNotNull(val)){
+                                    if (ObjectUtil.isNotNull(join) && ObjectUtil.isNotNull(val)) {
                                         join = join.join(name, JoinType.LEFT);
                                     } else {
                                         join = root.join(name, JoinType.LEFT);
                                     }
                                     break;
                                 case RIGHT:
-                                    if(ObjectUtil.isNotNull(join) && ObjectUtil.isNotNull(val)){
+                                    if (ObjectUtil.isNotNull(join) && ObjectUtil.isNotNull(val)) {
                                         join = join.join(name, JoinType.RIGHT);
                                     } else {
                                         join = root.join(name, JoinType.RIGHT);
                                     }
                                     break;
                                 case INNER:
-                                    if(ObjectUtil.isNotNull(join) && ObjectUtil.isNotNull(val)){
+                                    if (ObjectUtil.isNotNull(join) && ObjectUtil.isNotNull(val)) {
                                         join = join.join(name, JoinType.INNER);
                                     } else {
                                         join = root.join(name, JoinType.INNER);
                                     }
                                     break;
-                                default: break;
+                                default:
+                                    break;
                             }
                         }
                     }
                     switch (q.type()) {
                         case EQUAL:
-                            list.add(cb.equal(getExpression(attributeName,join,root)
-                                    .as((Class<? extends Comparable>) fieldType),val));
+                            list.add(cb.equal(getExpression(attributeName, join, root)
+                                .as((Class<? extends Comparable>) fieldType), val));
                             break;
                         case GREATER_THAN:
-                            list.add(cb.greaterThanOrEqualTo(getExpression(attributeName,join,root)
-                                    .as((Class<? extends Comparable>) fieldType), (Comparable) val));
+                            list.add(cb.greaterThanOrEqualTo(getExpression(attributeName, join, root)
+                                .as((Class<? extends Comparable>) fieldType), (Comparable) val));
                             break;
                         case LESS_THAN:
-                            list.add(cb.lessThanOrEqualTo(getExpression(attributeName,join,root)
-                                    .as((Class<? extends Comparable>) fieldType), (Comparable) val));
+                            list.add(cb.lessThanOrEqualTo(getExpression(attributeName, join, root)
+                                .as((Class<? extends Comparable>) fieldType), (Comparable) val));
                             break;
                         case LESS_THAN_NQ:
-                            list.add(cb.lessThan(getExpression(attributeName,join,root)
-                                    .as((Class<? extends Comparable>) fieldType), (Comparable) val));
+                            list.add(cb.lessThan(getExpression(attributeName, join, root)
+                                .as((Class<? extends Comparable>) fieldType), (Comparable) val));
                             break;
                         case INNER_LIKE:
-                            list.add(cb.like(getExpression(attributeName,join,root)
-                                    .as(String.class), "%" + val.toString() + "%"));
+                            list.add(cb.like(getExpression(attributeName, join, root)
+                                .as(String.class), "%" + val.toString() + "%"));
                             break;
                         case LEFT_LIKE:
-                            list.add(cb.like(getExpression(attributeName,join,root)
-                                    .as(String.class), "%" + val.toString()));
+                            list.add(cb.like(getExpression(attributeName, join, root)
+                                .as(String.class), "%" + val.toString()));
                             break;
                         case RIGHT_LIKE:
-                            list.add(cb.like(getExpression(attributeName,join,root)
-                                    .as(String.class), val.toString() + "%"));
+                            list.add(cb.like(getExpression(attributeName, join, root)
+                                .as(String.class), val.toString() + "%"));
                             break;
                         case IN:
-                            if (CollUtil.isNotEmpty((Collection<Long>)val)) {
-                                list.add(getExpression(attributeName,join,root).in((Collection<Long>) val));
+                            if (CollUtil.isNotEmpty((Collection<Long>) val)) {
+                                list.add(getExpression(attributeName, join, root).in((Collection<Long>) val));
                             }
                             break;
                         case NOT_EQUAL:
-                            list.add(cb.notEqual(getExpression(attributeName,join,root), val));
+                            list.add(cb.notEqual(getExpression(attributeName, join, root), val));
                             break;
                         case NOT_NULL:
-                            list.add(cb.isNotNull(getExpression(attributeName,join,root)));
+                            list.add(cb.isNotNull(getExpression(attributeName, join, root)));
                             break;
                         case IS_NULL:
-                            list.add(cb.isNull(getExpression(attributeName,join,root)));
+                            list.add(cb.isNull(getExpression(attributeName, join, root)));
                             break;
                         case BETWEEN:
-                            List<Object> between = new ArrayList<>((List<Object>)val);
-                            list.add(cb.between(getExpression(attributeName, join, root).as((Class<? extends Comparable>) between.get(0).getClass()),
-                                    (Comparable) between.get(0), (Comparable) between.get(1)));
+                            List<Object> between = new ArrayList<>((List<Object>) val);
+                            list.add(cb.between(getExpression(attributeName, join, root).as(
+                                (Class<? extends Comparable>) between.get(0).getClass()),
+                                (Comparable) between.get(0), (Comparable) between.get(1)));
                             break;
-                        default: break;
+                        default:
+                            break;
                     }
                 }
                 field.setAccessible(accessible);
@@ -204,4 +212,5 @@ public class QueryHelp {
         }
         return fields;
     }
+
 }

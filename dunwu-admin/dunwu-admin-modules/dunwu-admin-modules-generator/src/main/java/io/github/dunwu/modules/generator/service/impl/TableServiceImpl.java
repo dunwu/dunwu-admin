@@ -2,14 +2,13 @@ package io.github.dunwu.modules.generator.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import io.github.dunwu.data.util.PageUtil;
 import io.github.dunwu.generator.CodeGeneratorUtil;
 import io.github.dunwu.generator.config.builder.ConfigBuilder;
 import io.github.dunwu.generator.config.po.TableInfo;
 import io.github.dunwu.modules.generator.entity.dto.CodeColumnConfigDto;
 import io.github.dunwu.modules.generator.entity.dto.TableInfoDto;
 import io.github.dunwu.modules.generator.service.TableService;
-import io.github.dunwu.util.PageUtil;
-import io.github.dunwu.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -43,7 +42,7 @@ public class TableServiceImpl implements TableService {
     @Override
     public Object getTables(String schemaName) {
 
-        if (StrUtil.isBlank(schemaName)) {
+        if (cn.hutool.core.util.StrUtil.isBlank(schemaName)) {
             log.error("schemaName 为空");
             return null;
         }
@@ -73,7 +72,7 @@ public class TableServiceImpl implements TableService {
         query.setFirstResult(startEnd[0]);
         query.setMaxResults(startEnd[1] - startEnd[0]);
         query.setParameter(1, schemaName);
-        query.setParameter(2, StringUtils.isNotBlank(tableName) ? ("%" + tableName + "%") : "%%");
+        query.setParameter(2, StrUtil.isNotBlank(tableName) ? ("%" + tableName + "%") : "%%");
         List<?> result = query.getResultList();
         List<TableInfoDto> tableInfoDtos = new ArrayList<>();
         for (Object obj : result) {
@@ -85,7 +84,7 @@ public class TableServiceImpl implements TableService {
         Query query1 = em.createNativeQuery(
             "SELECT COUNT(*) FROM `information_schema`.`tables` WHERE `table_schema` = (SELECT database())");
         Object totalElements = query1.getSingleResult();
-        return PageUtil.toPage(tableInfoDtos, totalElements);
+        return PageUtil.toMap(tableInfoDtos, totalElements);
     }
 
     @Override

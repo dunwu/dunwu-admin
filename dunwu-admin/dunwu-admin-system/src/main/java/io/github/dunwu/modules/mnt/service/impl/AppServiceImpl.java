@@ -15,6 +15,7 @@
  */
 package io.github.dunwu.modules.mnt.service.impl;
 
+import io.github.dunwu.data.util.PageUtil;
 import io.github.dunwu.exception.BadRequestException;
 import io.github.dunwu.modules.mnt.domain.App;
 import io.github.dunwu.modules.mnt.repository.AppRepository;
@@ -23,7 +24,6 @@ import io.github.dunwu.modules.mnt.service.dto.AppDto;
 import io.github.dunwu.modules.mnt.service.dto.AppQueryCriteria;
 import io.github.dunwu.modules.mnt.service.mapstruct.AppMapper;
 import io.github.dunwu.util.FileUtil;
-import io.github.dunwu.util.PageUtil;
 import io.github.dunwu.util.QueryHelp;
 import io.github.dunwu.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +50,7 @@ public class AppServiceImpl implements AppService {
     @Override
     public Object queryAll(AppQueryCriteria criteria, Pageable pageable){
         Page<App> page = appRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
-        return PageUtil.toPage(page.map(appMapper::toDto));
+        return PageUtil.toMap(page.map(appMapper::toDto));
     }
 
     @Override

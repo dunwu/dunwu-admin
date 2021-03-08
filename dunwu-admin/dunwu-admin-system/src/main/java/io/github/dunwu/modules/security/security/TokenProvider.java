@@ -18,8 +18,8 @@ package io.github.dunwu.modules.security.security;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
+import io.github.dunwu.data.redis.RedisHelper;
 import io.github.dunwu.modules.security.config.bean.SecurityProperties;
-import io.github.dunwu.util.RedisUtils;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -44,14 +44,14 @@ import javax.servlet.http.HttpServletRequest;
 public class TokenProvider implements InitializingBean {
 
     private final SecurityProperties properties;
-    private final RedisUtils redisUtils;
+    private final RedisHelper redisHelper;
     public static final String AUTHORITIES_KEY = "user";
     private JwtParser jwtParser;
     private JwtBuilder jwtBuilder;
 
-    public TokenProvider(SecurityProperties properties, RedisUtils redisUtils) {
+    public TokenProvider(SecurityProperties properties, RedisHelper redisHelper) {
         this.properties = properties;
-        this.redisUtils = redisUtils;
+        this.redisHelper = redisHelper;
     }
 
     @Override
@@ -59,26 +59,25 @@ public class TokenProvider implements InitializingBean {
         byte[] keyBytes = Decoders.BASE64.decode(properties.getBase64Secret());
         Key key = Keys.hmacShaKeyFor(keyBytes);
         jwtParser = Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build();
+                        .setSigningKey(key)
+                        .build();
         jwtBuilder = Jwts.builder()
-                .signWith(key, SignatureAlgorithm.HS512);
+                         .signWith(key, SignatureAlgorithm.HS512);
     }
 
     /**
-     * 创建Token 设置永不过期，
-     * Token 的时间有效性转到Redis 维护
+     * 创建Token 设置永不过期， Token 的时间有效性转到Redis 维护
      *
      * @param authentication /
      * @return /
      */
     public String createToken(Authentication authentication) {
         return jwtBuilder
-                // 加入ID确保生成的 Token 都不一致
-                .setId(IdUtil.simpleUUID())
-                .claim(AUTHORITIES_KEY, authentication.getName())
-                .setSubject(authentication.getName())
-                .compact();
+            // 加入ID确保生成的 Token 都不一致
+            .setId(IdUtil.simpleUUID())
+            .claim(AUTHORITIES_KEY, authentication.getName())
+            .setSubject(authentication.getName())
+            .compact();
     }
 
     /**
@@ -95,8 +94,8 @@ public class TokenProvider implements InitializingBean {
 
     public Claims getClaims(String token) {
         return jwtParser
-                .parseClaimsJws(token)
-                .getBody();
+            .parseClaimsJws(token)
+            .getBody();
     }
 
     /**
@@ -104,14 +103,14 @@ public class TokenProvider implements InitializingBean {
      */
     public void checkRenewal(String token) {
         // 判断是否续期token,计算token的过期时间
-        long time = redisUtils.getExpire(properties.getOnlineKey() + token) * 1000;
+        long time = redisHelper.getExpire(properties.getOnlineKey() + token) * 1000;
         Date expireDate = DateUtil.offset(new Date(), DateField.MILLISECOND, (int) time);
         // 判断当前时间与过期时间的时间差
         long differ = expireDate.getTime() - System.currentTimeMillis();
         // 如果在续期检查的范围内，则续期
         if (differ <= properties.getDetect()) {
             long renew = time + properties.getRenew();
-            redisUtils.expire(properties.getOnlineKey() + token, renew, TimeUnit.MILLISECONDS);
+            redisHelper.expire(properties.getOnlineKey() + token, renew, TimeUnit.MILLISECONDS);
         }
     }
 
@@ -122,4 +121,5 @@ public class TokenProvider implements InitializingBean {
         }
         return null;
     }
+
 }

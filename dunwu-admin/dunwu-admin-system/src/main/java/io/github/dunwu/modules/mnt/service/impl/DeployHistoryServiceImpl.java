@@ -23,7 +23,7 @@ import io.github.dunwu.modules.mnt.service.dto.DeployHistoryDto;
 import io.github.dunwu.modules.mnt.service.dto.DeployHistoryQueryCriteria;
 import io.github.dunwu.modules.mnt.service.mapstruct.DeployHistoryMapper;
 import io.github.dunwu.util.FileUtil;
-import io.github.dunwu.util.PageUtil;
+import io.github.dunwu.data.util.PageUtil;
 import io.github.dunwu.util.QueryHelp;
 import io.github.dunwu.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +50,7 @@ public class DeployHistoryServiceImpl implements DeployHistoryService {
     @Override
     public Object queryAll(DeployHistoryQueryCriteria criteria, Pageable pageable){
         Page<DeployHistory> page = deployhistoryRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
-        return PageUtil.toPage(page.map(deployhistoryMapper::toDto));
+        return PageUtil.toMap(page.map(deployhistoryMapper::toDto));
     }
 
     @Override

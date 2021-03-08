@@ -15,10 +15,15 @@
  */
 package io.github.dunwu.modules.security.service;
 
+import cn.hutool.core.util.StrUtil;
+import io.github.dunwu.data.redis.RedisHelper;
+import io.github.dunwu.data.util.PageUtil;
 import io.github.dunwu.modules.security.config.bean.SecurityProperties;
 import io.github.dunwu.modules.security.service.dto.JwtUserDto;
 import io.github.dunwu.modules.security.service.dto.OnlineUserDto;
-import io.github.dunwu.util.*;
+import io.github.dunwu.util.EncryptUtils;
+import io.github.dunwu.util.FileUtil;
+import io.github.dunwu.web.util.ServletUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +31,12 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -40,7 +50,7 @@ import javax.servlet.http.HttpServletResponse;
 public class OnlineUserService {
 
     private final SecurityProperties properties;
-    private final RedisUtils redisUtils;
+    private final RedisHelper redisHelper;
 
     /**
      * 保存在线用户信息
@@ -51,9 +61,10 @@ public class OnlineUserService {
      */
     public void save(JwtUserDto jwtUserDto, String token, HttpServletRequest request) {
         String dept = jwtUserDto.getUser().getDept().getName();
-        String ip = StringUtils.getIp(request);
-        String browser = StringUtils.getBrowser(request);
-        String address = StringUtils.getCityInfo(ip);
+        ServletUtil.RequestIdentityInfo requestIdentityInfo = ServletUtil.getRequestIdentityInfo(request);
+        String ip = requestIdentityInfo.getIp();
+        String browser = requestIdentityInfo.getBrowser();
+        String address = requestIdentityInfo.getLocation();
         OnlineUserDto onlineUserDto = null;
         try {
             onlineUserDto = new OnlineUserDto(jwtUserDto.getUsername(), jwtUserDto.getUser().getNickname(), dept,
@@ -61,7 +72,8 @@ public class OnlineUserService {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        redisUtils.set(properties.getOnlineKey() + token, onlineUserDto, properties.getTokenValidityInSeconds() / 1000);
+        redisHelper.set(properties.getOnlineKey() + token, onlineUserDto,
+            properties.getTokenValidityInSeconds() / 1000);
     }
 
     /**
@@ -73,8 +85,8 @@ public class OnlineUserService {
      */
     public Map<String, Object> getAll(String filter, Pageable pageable) {
         List<OnlineUserDto> onlineUserDtos = getAll(filter);
-        return PageUtil.toPage(
-            PageUtil.toPage(pageable.getPageNumber(), pageable.getPageSize(), onlineUserDtos),
+        return PageUtil.toMap(
+            PageUtil.toList(pageable.getPageNumber(), pageable.getPageSize(), onlineUserDtos),
             onlineUserDtos.size()
         );
     }
@@ -86,12 +98,12 @@ public class OnlineUserService {
      * @return /
      */
     public List<OnlineUserDto> getAll(String filter) {
-        List<String> keys = redisUtils.scan(properties.getOnlineKey() + "*");
+        List<String> keys = redisHelper.scan(properties.getOnlineKey() + "*");
         Collections.reverse(keys);
         List<OnlineUserDto> onlineUserDtos = new ArrayList<>();
         for (String key : keys) {
-            OnlineUserDto onlineUserDto = (OnlineUserDto) redisUtils.get(key);
-            if (StringUtils.isNotBlank(filter)) {
+            OnlineUserDto onlineUserDto = (OnlineUserDto) redisHelper.get(key);
+            if (StrUtil.isNotBlank(filter)) {
                 if (onlineUserDto.toString().contains(filter)) {
                     onlineUserDtos.add(onlineUserDto);
                 }
@@ -110,7 +122,7 @@ public class OnlineUserService {
      */
     public void kickOut(String key) {
         key = properties.getOnlineKey() + key;
-        redisUtils.del(key);
+        redisHelper.del(key);
     }
 
     /**
@@ -120,7 +132,7 @@ public class OnlineUserService {
      */
     public void logout(String token) {
         String key = properties.getOnlineKey() + token;
-        redisUtils.del(key);
+        redisHelper.del(key);
     }
 
     /**
@@ -152,7 +164,7 @@ public class OnlineUserService {
      * @return /
      */
     public OnlineUserDto getOne(String key) {
-        return (OnlineUserDto) redisUtils.get(key);
+        return (OnlineUserDto) redisHelper.get(key);
     }
 
     /**
@@ -169,9 +181,9 @@ public class OnlineUserService {
             if (onlineUserDto.getUserName().equals(userName)) {
                 try {
                     String token = EncryptUtils.desDecrypt(onlineUserDto.getKey());
-                    if (StringUtils.isNotBlank(igoreToken) && !igoreToken.equals(token)) {
+                    if (StrUtil.isNotBlank(igoreToken) && !igoreToken.equals(token)) {
                         this.kickOut(token);
-                    } else if (StringUtils.isBlank(igoreToken)) {
+                    } else if (StrUtil.isBlank(igoreToken)) {
                         this.kickOut(token);
                     }
                 } catch (Exception e) {

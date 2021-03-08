@@ -21,11 +21,10 @@ import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
+import io.github.dunwu.data.redis.RedisHelper;
 import io.github.dunwu.domain.vo.EmailVo;
 import io.github.dunwu.exception.BadRequestException;
 import io.github.dunwu.modules.system.service.VerifyService;
-import io.github.dunwu.util.RedisUtils;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,12 +36,15 @@ import java.util.Collections;
  * @date 2018-12-26
  */
 @Service
-@RequiredArgsConstructor
 public class VerifyServiceImpl implements VerifyService {
 
     @Value("${code.expiration}")
     private Long expiration;
-    private final RedisUtils redisUtils;
+    private final RedisHelper redisHelper;
+
+    public VerifyServiceImpl(RedisHelper redisHelper) {
+        this.redisHelper = redisHelper;
+    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -51,32 +53,34 @@ public class VerifyServiceImpl implements VerifyService {
         String content;
         String redisKey = key + email;
         // 如果不存在有效的验证码，就创建一个新的
-        TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("template", TemplateConfig.ResourceMode.CLASSPATH));
+        TemplateEngine engine = TemplateUtil.createEngine(
+            new TemplateConfig("template", TemplateConfig.ResourceMode.CLASSPATH));
         Template template = engine.getTemplate("email/email.ftl");
-        Object oldCode =  redisUtils.get(redisKey);
-        if(oldCode == null){
-            String code = RandomUtil.randomNumbers (6);
+        Object oldCode = redisHelper.get(redisKey);
+        if (oldCode == null) {
+            String code = RandomUtil.randomNumbers(6);
             // 存入缓存
-            if(!redisUtils.set(redisKey, code, expiration)){
+            if (!redisHelper.set(redisKey, code, expiration)) {
                 throw new BadRequestException("服务异常，请联系网站负责人");
             }
-            content = template.render(Dict.create().set("code",code));
-            emailVo = new EmailVo(Collections.singletonList(email),"DUNWU后台管理系统",content);
-        // 存在就再次发送原来的验证码
+            content = template.render(Dict.create().set("code", code));
+            emailVo = new EmailVo(Collections.singletonList(email), "DUNWU后台管理系统", content);
+            // 存在就再次发送原来的验证码
         } else {
-            content = template.render(Dict.create().set("code",oldCode));
-            emailVo = new EmailVo(Collections.singletonList(email),"DUNWU后台管理系统",content);
+            content = template.render(Dict.create().set("code", oldCode));
+            emailVo = new EmailVo(Collections.singletonList(email), "DUNWU后台管理系统", content);
         }
         return emailVo;
     }
 
     @Override
     public void validated(String key, String code) {
-        Object value = redisUtils.get(key);
-        if(value == null || !value.toString().equals(code)){
+        Object value = redisHelper.get(key);
+        if (value == null || !value.toString().equals(code)) {
             throw new BadRequestException("无效验证码");
         } else {
-            redisUtils.del(key);
+            redisHelper.del(key);
         }
     }
+
 }

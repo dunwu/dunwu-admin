@@ -40,9 +40,9 @@ import javax.servlet.http.HttpServletRequest;
  * @author Zheng Jie
  * 字符串工具类, 继承org.apache.commons.lang3.StringUtils类
  */
-public class StringUtils extends org.apache.commons.lang3.StringUtils {
+public class StrUtil extends org.apache.commons.lang3.StringUtils {
 
-    private static final Logger log = LoggerFactory.getLogger(StringUtils.class);
+    private static final Logger log = LoggerFactory.getLogger(StrUtil.class);
     private static boolean ipLocal = false;
     private static File file = null;
     private static DbConfig config;
@@ -51,7 +51,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
     static {
         SpringContextHolder.addCallBacks(() -> {
-            StringUtils.ipLocal = SpringContextHolder.getProperties("ip.local-parsing", false, Boolean.class);
+            StrUtil.ipLocal = SpringContextHolder.getProperties("ip.local-parsing", false, Boolean.class);
             if (ipLocal) {
                 /*
                  * 此文件为独享 ，不必关闭

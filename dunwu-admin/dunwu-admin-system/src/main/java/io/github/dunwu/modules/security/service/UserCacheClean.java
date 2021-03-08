@@ -16,7 +16,7 @@
 
 package io.github.dunwu.modules.security.service;
 
-import io.github.dunwu.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 import org.springframework.stereotype.Component;
 
 /**
@@ -34,7 +34,7 @@ public class UserCacheClean {
      * @param userName /
      */
     public void cleanUserCache(String userName) {
-        if (StringUtils.isNotEmpty(userName)) {
+        if (StrUtil.isNotEmpty(userName)) {
             UserDetailsServiceImpl.userDtoCache.remove(userName);
         }
     }

@@ -15,8 +15,6 @@
  */
 package io.github.dunwu.annotation;
 
-import io.github.dunwu.aspect.LimitType;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

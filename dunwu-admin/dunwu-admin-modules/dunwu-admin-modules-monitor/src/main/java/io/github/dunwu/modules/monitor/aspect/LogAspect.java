@@ -5,8 +5,8 @@ import io.github.dunwu.modules.monitor.entity.LogRecord;
 import io.github.dunwu.modules.monitor.service.LogService;
 import io.github.dunwu.util.RequestHolder;
 import io.github.dunwu.util.SecurityUtils;
-import io.github.dunwu.util.StringUtils;
 import io.github.dunwu.util.ThrowableUtil;
+import io.github.dunwu.web.util.ServletUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -55,8 +55,9 @@ public class LogAspect {
         LogRecord log = new LogRecord("INFO", System.currentTimeMillis() - currentTime.get());
         currentTime.remove();
         HttpServletRequest request = RequestHolder.getHttpServletRequest();
-        logService.save(SecurityUtils.getCurrentUsername(), StringUtils.getBrowser(request), StringUtils.getIp(request),
-            joinPoint, log);
+        ServletUtil.RequestIdentityInfo requestIdentityInfo = ServletUtil.getRequestIdentityInfo(request);
+        logService.save(SecurityUtils.getCurrentUsername(), requestIdentityInfo.getBrowser(),
+            requestIdentityInfo.getIp(), joinPoint, log);
         return result;
     }
 
@@ -72,8 +73,9 @@ public class LogAspect {
         currentTime.remove();
         log.setExceptionDetail(ThrowableUtil.getStackTrace(e).getBytes());
         HttpServletRequest request = RequestHolder.getHttpServletRequest();
-        logService.save(SecurityUtils.getCurrentUsername(), StringUtils.getBrowser(request), StringUtils.getIp(request),
-            (ProceedingJoinPoint) joinPoint, log);
+        ServletUtil.RequestIdentityInfo requestIdentityInfo = ServletUtil.getRequestIdentityInfo(request);
+        logService.save(SecurityUtils.getCurrentUsername(), requestIdentityInfo.getBrowser(),
+            requestIdentityInfo.getIp(), (ProceedingJoinPoint) joinPoint, log);
     }
 
 }

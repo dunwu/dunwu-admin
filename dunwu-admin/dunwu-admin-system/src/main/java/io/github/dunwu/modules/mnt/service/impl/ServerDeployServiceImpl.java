@@ -23,7 +23,7 @@ import io.github.dunwu.modules.mnt.service.dto.ServerDeployQueryCriteria;
 import io.github.dunwu.modules.mnt.service.mapstruct.ServerDeployMapper;
 import io.github.dunwu.modules.mnt.util.ExecuteShellUtil;
 import io.github.dunwu.util.FileUtil;
-import io.github.dunwu.util.PageUtil;
+import io.github.dunwu.data.util.PageUtil;
 import io.github.dunwu.util.QueryHelp;
 import io.github.dunwu.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +50,7 @@ public class ServerDeployServiceImpl implements ServerDeployService {
     @Override
     public Object queryAll(ServerDeployQueryCriteria criteria, Pageable pageable){
         Page<ServerDeploy> page = serverDeployRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
-        return PageUtil.toPage(page.map(serverDeployMapper::toDto));
+        return PageUtil.toMap(page.map(serverDeployMapper::toDto));
     }
 
     @Override

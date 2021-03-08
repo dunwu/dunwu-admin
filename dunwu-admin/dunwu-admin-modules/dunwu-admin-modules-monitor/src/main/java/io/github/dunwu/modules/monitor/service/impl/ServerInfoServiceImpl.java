@@ -5,7 +5,7 @@ import cn.hutool.core.date.DateUtil;
 import io.github.dunwu.modules.monitor.service.ServerInfoService;
 import io.github.dunwu.util.ElAdminConstant;
 import io.github.dunwu.util.FileUtil;
-import io.github.dunwu.util.StringUtils;
+import io.github.dunwu.util.net.IpUtil;
 import org.springframework.stereotype.Service;
 import oshi.SystemInfo;
 import oshi.hardware.CentralProcessor;
@@ -182,7 +182,7 @@ public class ServerInfoServiceImpl implements ServerInfoService {
         // 系统信息
         systemInfo.put("os", os.toString());
         systemInfo.put("day", formatBetween);
-        systemInfo.put("ip", StringUtils.getLocalIp());
+        systemInfo.put("ip", IpUtil.getLocalIp());
         return systemInfo;
     }
 

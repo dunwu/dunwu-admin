@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.github.dunwu.config.RsaProperties;
 import io.github.dunwu.data.core.DataException;
 import io.github.dunwu.data.mybatis.ServiceImpl;
+import io.github.dunwu.data.redis.RedisHelper;
 import io.github.dunwu.exception.BadRequestException;
 import io.github.dunwu.exception.EntityExistException;
 import io.github.dunwu.modules.security.service.UserCacheClean;
@@ -20,7 +21,6 @@ import io.github.dunwu.modules.system.entity.vo.UserPassVo;
 import io.github.dunwu.modules.system.service.SysUserService;
 import io.github.dunwu.tool.bean.BeanUtil;
 import io.github.dunwu.util.CacheKey;
-import io.github.dunwu.util.RedisUtils;
 import io.github.dunwu.util.RsaUtils;
 import io.github.dunwu.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
@@ -62,7 +62,7 @@ public class SysUserServiceImpl extends ServiceImpl implements SysUserService {
     private final SysRoleMenuDao roleMenuDao;
     private final PasswordEncoder passwordEncoder;
 
-    private final RedisUtils redisUtils;
+    private final RedisHelper redisHelper;
     private final UserCacheClean userCacheClean;
 
     @Override
@@ -291,7 +291,7 @@ public class SysUserServiceImpl extends ServiceImpl implements SysUserService {
      * @param id /
      */
     public void delCaches(Long id, String username) {
-        redisUtils.del(CacheKey.USER_ID + id);
+        redisHelper.del(CacheKey.USER_ID + id);
         flushCache(username);
     }
 

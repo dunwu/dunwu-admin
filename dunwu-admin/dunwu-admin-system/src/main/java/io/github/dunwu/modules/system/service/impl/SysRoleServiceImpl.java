@@ -1,10 +1,12 @@
 package io.github.dunwu.modules.system.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.github.dunwu.data.mybatis.ServiceImpl;
+import io.github.dunwu.data.redis.RedisHelper;
 import io.github.dunwu.modules.security.exception.AuthException;
 import io.github.dunwu.modules.security.service.SecurityUtil;
 import io.github.dunwu.modules.security.service.UserCacheClean;
@@ -18,8 +20,6 @@ import io.github.dunwu.modules.system.service.SysRoleService;
 import io.github.dunwu.modules.system.service.SysUserService;
 import io.github.dunwu.tool.bean.BeanUtil;
 import io.github.dunwu.util.CacheKey;
-import io.github.dunwu.util.RedisUtils;
-import io.github.dunwu.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -57,7 +57,7 @@ public class SysRoleServiceImpl extends ServiceImpl implements SysRoleService {
     private final SysRoleMenuDao roleMenuDao;
     private final SysRoleDeptDao roleDeptDao;
 
-    private final RedisUtils redisUtils;
+    private final RedisHelper redisHelper;
     private final UserCacheClean userCacheClean;
 
     @Override
@@ -295,7 +295,7 @@ public class SysRoleServiceImpl extends ServiceImpl implements SysRoleService {
 
         List<SysRoleDto> roles = pojoListByUserId(user.getId());
         permissions = roles.stream().flatMap(role -> role.getMenus().stream())
-                           .filter(menu -> StringUtils.isNotBlank(menu.getPermission()))
+                           .filter(menu -> StrUtil.isNotBlank(menu.getPermission()))
                            .map(SysMenuDto::getPermission).collect(Collectors.toSet());
         return permissions.stream().map(SimpleGrantedAuthority::new)
                           .collect(Collectors.toList());
@@ -311,11 +311,11 @@ public class SysRoleServiceImpl extends ServiceImpl implements SysRoleService {
         if (CollectionUtil.isNotEmpty(users)) {
             users.forEach(item -> userCacheClean.cleanUserCache(item.getUsername()));
             Set<Long> userIds = users.stream().map(SysUser::getId).collect(Collectors.toSet());
-            redisUtils.delByKeys(CacheKey.DATA_USER, userIds);
-            redisUtils.delByKeys(CacheKey.MENU_USER, userIds);
-            redisUtils.delByKeys(CacheKey.ROLE_AUTH, userIds);
+            redisHelper.hdel(CacheKey.DATA_USER, userIds);
+            redisHelper.hdel(CacheKey.MENU_USER, userIds);
+            redisHelper.hdel(CacheKey.ROLE_AUTH, userIds);
         }
-        redisUtils.del(CacheKey.ROLE_ID + id);
+        redisHelper.del(CacheKey.ROLE_ID + id);
     }
 
 }
