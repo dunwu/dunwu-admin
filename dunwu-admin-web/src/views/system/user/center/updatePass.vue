@@ -30,7 +30,7 @@
 
 <script>
 import store from '@/store'
-import { editPassword } from '@/api/system/user'
+import authApi from '@/api/auth'
 export default {
   data() {
     const confirmPass = (rule, value, callback) => {
@@ -67,7 +67,7 @@ export default {
       this.$refs['form'].validate(valid => {
         if (valid) {
           this.loading = true
-          editPassword(this.form)
+          authApi.editPassword(this.form)
             .then(res => {
               this.resetForm()
               this.$notify({
