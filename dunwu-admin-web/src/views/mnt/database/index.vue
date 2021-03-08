@@ -26,15 +26,25 @@
           </el-col>
           <el-col :span="6">
             <el-input
-              v-model="query.jdbcUrl"
+              v-model="query.schemaName"
               clearable
-              placeholder="请输入jdbc连接"
+              placeholder="请输入schema名"
               style="width: 90%;"
               class="filter-item"
               @keyup.enter.native="crud.toQuery"
             />
           </el-col>
           <template v-if="crud.showExtendSearch">
+            <el-col :span="6">
+              <el-input
+                v-model="query.jdbcUrl"
+                clearable
+                placeholder="请输入jdbc连接"
+                style="width: 90%;"
+                class="filter-item"
+                @keyup.enter.native="crud.toQuery"
+              />
+            </el-col>
             <el-col :span="6">
               <date-range-picker v-model="query.createTimeRange" class="date-item" style="width: 90%" />
             </el-col>
@@ -85,11 +95,14 @@
           <el-input v-model="form.jdbcUrl" style="width: 400px;" />
           <el-button :loading="loading" type="success" @click="testDbConnection">测试</el-button>
         </el-form-item>
-        <el-form-item label="账号" prop="userName">
-          <el-input v-model="form.userName" style="width: 450px;" />
+        <el-form-item label="账号" prop="username">
+          <el-input v-model="form.username" style="width: 450px;" />
         </el-form-item>
-        <el-form-item label="密码" prop="pwd">
-          <el-input v-model="form.pwd" type="password" style="width: 450px" />
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="form.password" type="password" style="width: 450px" />
+        </el-form-item>
+        <el-form-item label="schema名" prop="schemaName">
+          <el-input v-model="form.schemaName" style="width: 450px" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -111,7 +124,8 @@
       <el-table-column type="selection" width="55" />
       <el-table-column prop="name" width="130px" label="数据库名称" />
       <el-table-column prop="jdbcUrl" label="连接地址" />
-      <el-table-column prop="userName" width="200px" label="用户名" />
+      <el-table-column prop="username" width="200px" label="用户名" />
+      <el-table-column prop="schemaName" width="200px" label="schema名" />
       <el-table-column prop="createTime" width="200px" label="创建日期" />
       <el-table-column
         v-if="checkPer(['admin', 'database:edit', 'database:del'])"
@@ -140,7 +154,7 @@ import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import DateRangePicker from '@/components/DateRangePicker'
 
-const defaultForm = { id: null, name: null, jdbcUrl: 'jdbc:mysql://', userName: null, pwd: null }
+const defaultForm = { id: null, name: null, jdbcUrl: 'jdbc:mysql://', username: null, password: null }
 export default {
   name: 'DataBase',
   components: { eForm, pagination, crudOperation, queryOperation, udOperation, DateRangePicker },
@@ -162,8 +176,8 @@ export default {
       rules: {
         name: [{ required: true, message: '请输入数据库名称', trigger: 'blur' }],
         jdbcUrl: [{ required: true, message: '请输入数据库连接地址', trigger: 'blur' }],
-        userName: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
-        pwd: [{ required: true, message: '请输入数据库密码', trigger: 'blur' }]
+        username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+        password: [{ required: true, message: '请输入数据库密码', trigger: 'blur' }]
       }
     }
   },

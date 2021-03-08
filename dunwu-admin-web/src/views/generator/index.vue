@@ -1,49 +1,63 @@
 <template>
   <div class="app-container">
-    <!--工具栏-->
     <div class="head-container">
-      <div v-if="crud.props.searchToggle">
-        <el-input
-          v-model="query.tableName"
-          clearable
-          size="small"
-          placeholder="请输入表名"
-          style="width: 200px;"
-          class="filter-item"
-          @keyup.enter.native="crud.toQuery"
-        />
-        <queryOperation />
-      </div>
-      <crudOperation>
-        <el-tooltip
-          slot="right"
-          class="item"
-          effect="dark"
-          content="数据库中表字段变动时使用该功能"
-          placement="top-start"
-        >
-          <el-button
-            class="filter-item"
-            size="mini"
-            type="success"
-            icon="el-icon-refresh"
-            :loading="syncLoading"
-            :disabled="crud.selections.length === 0"
-            @click="sync"
+      <el-row>
+        <el-col :span="6">
+          <el-select
+            v-model="schemaName"
+            clearable
+            filterable
+            remote
+            placeholder="请输入Schema"
+            style="width: 90%"
+            :remote-method="querySchemas"
+            :loading="schemaLoading"
+            @change="selectSchema"
           >
-            同步
-          </el-button>
-        </el-tooltip>
-      </crudOperation>
+            <el-option
+              v-for="item in schemaOptions"
+              :key="item.schemaName"
+              :label="item.schemaName"
+              :value="item.schemaName"
+            />
+          </el-select>
+        </el-col>
+        <el-col :span="6">
+          <el-input
+            v-if="schemaName !== '' && schemaName !== null"
+            v-model="tableName"
+            placeholder="请输入表名"
+            style="width: 90%"
+            @keyup.enter.native="queryTables"
+          />
+          <el-input
+            v-else
+            v-model="tableName"
+            disabled
+            placeholder="请输入表名"
+            style="width: 90%"
+            @keyup.enter.native="queryTables"
+          />
+        </el-col>
+        <el-col :span="6">
+          <span style="width: 90%">
+            <el-button type="primary" icon="el-icon-search" @click="queryTables">
+              查询
+            </el-button>
+            <el-button type="primary" icon="el-icon-refresh-left" @click="resetQuery">
+              重置
+            </el-button>
+            <el-button type="info">
+              <router-link :to="'/mnt/mnt/database/'">
+                配置数据源
+              </router-link>
+            </el-button>
+          </span>
+        </el-col>
+      </el-row>
     </div>
     <!--表格渲染-->
-    <el-table
-      ref="table"
-      v-loading="crud.loading"
-      :data="crud.data"
-      style="width: 100%;"
-      @selection-change="crud.selectionChangeHandler"
-    >
+    <el-table ref="table" v-loading="loading" stripe :data="tables">
       <el-table-column type="selection" width="55" />
       <el-table-column :show-overflow-tooltip="true" prop="tableName" label="Table名称" />
       <el-table-column :show-overflow-tooltip="true" prop="comment" label="Table注释" />
@@ -71,33 +85,44 @@
         </template>
       </el-table-column>
     </el-table>
-    <!--分页组件-->
-    <pagination />
+    <el-pagination
+      :page-size.sync="page.size"
+      :total="page.total"
+      :current-page.sync="page.page"
+      style="margin-top: 8px;"
+      layout="total, sizes, prev, pager, next, jumper"
+      @size-change="sizeChangeHandler($event)"
+      @current-change="pageChangeHandler"
+    />
   </div>
 </template>
 
 <script>
 import codeApi from '@/api/generator/codeApi'
+import databaseApi from '@/api/mnt/databaseApi'
 import { downloadFile } from '@/utils/index'
-import CRUD, { presenter, header } from '@crud/crud'
-import queryOperation from '@crud/Query.operation'
-import crudOperation from '@crud/CRUD.operation'
-import pagination from '@crud/Pagination'
 
 export default {
   name: 'GeneratorIndex',
-  components: { pagination, crudOperation, queryOperation },
-  cruds() {
-    return CRUD({ url: 'api/code/table/all' })
-  },
-  mixins: [presenter(), header()],
+  mixins: [],
   data() {
     return {
-      syncLoading: false
+      loading: false,
+      schemaLoading: false,
+      syncLoading: false,
+      schemaName: null,
+      tableName: null,
+      schemaOptions: [],
+      tables: [],
+      page: {
+        page: 0,
+        size: 10,
+        total: 0
+      }
     }
   },
   created() {
-    this.crud.optShow = { add: false, edit: false, del: false, exportPage: false }
+    this.querySchemas()
   },
   methods: {
     toGenerate(row) {
@@ -110,24 +135,85 @@ export default {
       // 打包下载
       codeApi.downloadCode({ schemaName: row.schemaName, tableName: row.tableName }).then(data => {
         downloadFile(data, row.tableName, 'zip')
+        this.$notify({ title: '下载成功', type: 'success' })
       })
     },
-    sync() {
+    toSync() {
       const tables = []
       this.crud.selections.forEach(val => {
         tables.push(val.tableName)
       })
       this.syncLoading = true
       codeApi
-        .syncTables({ schemaName: 'eladmin', tables })
+        .syncTables({ schemaName: this.schemaName, tables })
         .then(() => {
           this.crud.refresh()
-          this.crud.notify('同步成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
           this.syncLoading = false
+          this.$notify({ title: '同步成功', type: 'success' })
         })
         .then(() => {
           this.syncLoading = false
         })
+    },
+    querySchemas(val) {
+      this.schemaLoading = true
+      if (val) {
+        databaseApi.list({ schemaName: val }).then(res => {
+          this.schemaOptions = res
+          this.schemaLoading = false
+          if (this.schemaOptions.length === 0) {
+            this.$notify({ title: '未找到数据源', type: 'warning', message: '请配置数据源' })
+          }
+        })
+      } else {
+        databaseApi.list().then(res => {
+          this.schemaOptions = res
+          this.schemaLoading = false
+          if (this.schemaOptions.length === 0) {
+            this.$notify({ title: '未找到数据源', type: 'warning', message: '请配置数据源' })
+          }
+        })
+      }
+    },
+    selectSchema(val) {
+      this.schemaName = val
+      this.queryTables(val)
+    },
+    queryTables() {
+      this.loading = true
+      codeApi
+        .getAllTableInSchema({
+          schemaName: this.schemaName,
+          tableName: this.tableName,
+          page: this.page.page - 1,
+          size: this.page.size
+        })
+        .then(res => {
+          this.loading = false
+          this.tables = res.content
+          this.page.total = res.totalElements
+        })
+        .catch(err => {
+          this.loading = false
+          this.$notify({ title: '查询表数据失败', type: 'error', message: err })
+        })
+    },
+    resetQuery() {
+      this.schemaName = null
+      this.tableName = null
+      this.tables = []
+      this.page.total = 0
+    },
+    // 当前页改变
+    pageChangeHandler(val) {
+      this.page.page = val
+      this.queryTables()
+    },
+    // 每页条数改变
+    sizeChangeHandler(val) {
+      this.page.size = val
+      this.page.page = 1
+      this.queryTables()
     }
   }
 }

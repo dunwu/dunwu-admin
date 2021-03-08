@@ -143,8 +143,8 @@ public class MntDatabaseController {
             File executeFile = new File(fileSavePath + fileName);
             FileUtil.del(executeFile);
             file.transferTo(executeFile);
-            String result =
-                SqlUtils.executeFile(database.getJdbcUrl(), database.getUserName(), database.getPwd(), executeFile);
+            String result = SqlUtils.executeFile(database.getJdbcUrl(), database.getUsername(),
+                database.getPassword(), executeFile);
             return Result.ok(result);
         } else {
             throw new BadRequestException("Database not exist");

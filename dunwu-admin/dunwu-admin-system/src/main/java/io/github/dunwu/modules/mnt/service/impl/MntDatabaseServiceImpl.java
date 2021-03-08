@@ -123,7 +123,7 @@ public class MntDatabaseServiceImpl extends ServiceImpl implements MntDatabaseSe
     @Override
     public boolean testConnection(MntDatabaseDto dto) {
         try {
-            return SqlUtils.testConnection(dto.getJdbcUrl(), dto.getUserName(), dto.getPwd());
+            return SqlUtils.testConnection(dto.getJdbcUrl(), dto.getUsername(), dto.getPassword());
         } catch (Exception e) {
             log.error(e.getMessage());
             return false;

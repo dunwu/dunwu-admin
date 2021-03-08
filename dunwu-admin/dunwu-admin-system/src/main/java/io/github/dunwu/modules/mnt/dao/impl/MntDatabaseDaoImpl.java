@@ -29,8 +29,8 @@ public class MntDatabaseDaoImpl extends BaseExtDaoImpl<MntDatabaseMapper, MntDat
             map.put("ID", item.getId());
             map.put("名称", item.getName());
             map.put("jdbc连接", item.getJdbcUrl());
-            map.put("账号", item.getUserName());
-            map.put("密码", item.getPwd());
+            map.put("账号", item.getUsername());
+            map.put("密码", item.getPassword());
             map.put("创建者", item.getCreateBy());
             map.put("更新者", item.getUpdateBy());
             mapList.add(map);

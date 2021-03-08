@@ -34,10 +34,13 @@ public class MntDatabaseDto implements Serializable {
     private String jdbcUrl;
 
     @ApiModelProperty(value = "账号")
-    private String userName;
+    private String username;
 
     @ApiModelProperty(value = "密码")
-    private String pwd;
+    private String password;
+
+    @ApiModelProperty(value = "Schema 名")
+    private String schemaName;
 
     @ApiModelProperty(value = "创建者")
     private String createBy;

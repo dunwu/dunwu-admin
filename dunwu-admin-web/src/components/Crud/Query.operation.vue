@@ -6,7 +6,7 @@
 <template>
   <span style="width: 90%">
     <el-button size="mini" type="primary" icon="el-icon-search" class="filter-item" @click="crud.toQuery">
-      搜索
+      查询
     </el-button>
     <el-button
       v-if="crud.optShow.reset"

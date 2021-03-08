@@ -1,9 +1,10 @@
 import request from '@/utils/request'
 
-export function getAllTable() {
+export function getAllTableInSchema(params) {
   return request({
-    url: 'api/code/table/all',
-    method: 'get'
+    url: 'api/code/table/all/page',
+    method: 'get',
+    params
   })
 }
 
@@ -82,6 +83,7 @@ export function previewCode(params) {
 }
 
 export default {
+  getAllTableInSchema,
   syncTables,
   generateCode,
   downloadCode,

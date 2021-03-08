@@ -168,11 +168,12 @@ public class GeneratorController {
 
     @ApiOperation("查询数据库数据")
     @GetMapping(value = "table/all/page")
-    public Result queryTables(@RequestParam(defaultValue = "") String tableName,
+    public Result queryTables(@RequestParam String schemaName,
+        @RequestParam(defaultValue = "") String tableName,
         @RequestParam(defaultValue = "0") Integer page,
         @RequestParam(defaultValue = "10") Integer size) {
         int[] startEnd = PageUtil.transToStartEnd(page, size);
-        return Result.ok(tableService.getTables(tableService.getCurrentSchema(), tableName, startEnd));
+        return Result.ok(tableService.getTables(schemaName, tableName, startEnd));
     }
 
 }

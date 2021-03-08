@@ -37,6 +37,14 @@ public class MntDatabaseQuery implements Serializable {
     @QueryField
     private String jdbcUrl;
 
+    @ApiModelProperty(value = "Schema 名")
+    @QueryField(type = QueryField.QueryType.LIKE_RIGHT)
+    private String schemaName;
+
+    @ApiModelProperty(value = "Schema 名")
+    @QueryField(value = "schemaName", type = QueryField.QueryType.LIKE_RIGHT)
+    private String schemaNameLike;
+
     @ApiModelProperty(value = "创建时间")
     @QueryField
     private LocalDateTime createTime;
