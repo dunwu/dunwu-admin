@@ -1,9 +1,6 @@
 package io.github.dunwu.modules.monitor.controller;
 
-import io.github.dunwu.data.core.BaseResult;
-import io.github.dunwu.data.core.DataListResult;
-import io.github.dunwu.data.core.DataResult;
-import io.github.dunwu.data.core.PageResult;
+import io.github.dunwu.data.core.Result;
 import io.github.dunwu.modules.monitor.annotation.AppLog;
 import io.github.dunwu.modules.monitor.dao.LogRecordDao;
 import io.github.dunwu.modules.monitor.entity.LogRecord;
@@ -41,48 +38,48 @@ public class LogController {
     @ApiOperation("根据 ID 批量删除 SysLog 记录")
     @PreAuthorize("@exp.check()")
     @PostMapping("clear")
-    public BaseResult clear() {
+    public Result clear() {
         List<LogRecord> list = dao.list();
         Set<Long> ids = list.stream().map(LogRecord::getId).collect(Collectors.toSet());
         dao.removeByIds(ids);
-        return BaseResult.ok();
+        return Result.ok();
     }
 
     @AppLog("批量删除数据")
     @ApiOperation("根据 ID 批量删除 SysLog 记录")
     @PreAuthorize("@exp.check()")
     @PostMapping("del/batch")
-    public BaseResult deleteByIds(@RequestBody Set<String> ids) {
+    public Result deleteByIds(@RequestBody Set<String> ids) {
         dao.removeByIds(ids);
-        return BaseResult.ok();
+        return Result.ok();
     }
 
     @PreAuthorize("@exp.check('job:view')")
     @ApiOperation("根据 query 条件，查询匹配条件的 SysJobDto 列表")
     @GetMapping("list")
-    public DataListResult<LogRecord> list(LogQuery query) {
-        return DataListResult.ok(dao.listByQuery(query));
+    public Result list(LogQuery query) {
+        return Result.ok(dao.listByQuery(query));
     }
 
     @PreAuthorize("@exp.check()")
     @ApiOperation("根据 query 和 pageable 条件，分页查询 SysLog 记录")
     @GetMapping("page")
-    public PageResult<LogRecord> page(LogQuery query, Pageable pageable) {
-        return PageResult.ok(dao.pageByQuery(query, pageable));
+    public Result page(LogQuery query, Pageable pageable) {
+        return Result.ok(dao.pageByQuery(query, pageable));
     }
 
     @ApiOperation("根据 entity 条件，查询 SysLog 总记录数")
     @PreAuthorize("@exp.check()")
     @GetMapping("count")
-    public DataResult<Integer> count(LogQuery query) {
-        return DataResult.ok(dao.countByQuery(query));
+    public Result count(LogQuery query) {
+        return Result.ok(dao.countByQuery(query));
     }
 
     @ApiOperation("根据 ID 查询 SysLog 记录")
     @PreAuthorize("@exp.check()")
     @GetMapping("{id}")
-    public DataResult<LogRecord> getById(@PathVariable String id) {
-        return DataResult.ok(dao.getById(id));
+    public Result getById(@PathVariable String id) {
+        return Result.ok(dao.getById(id));
     }
 
     @AppLog("导出 SysLog 数据")

@@ -1,9 +1,6 @@
 package io.github.dunwu.modules.system.controller;
 
-import io.github.dunwu.data.core.BaseResult;
-import io.github.dunwu.data.core.DataListResult;
-import io.github.dunwu.data.core.DataResult;
-import io.github.dunwu.data.core.PageResult;
+import io.github.dunwu.data.core.Result;
 import io.github.dunwu.data.validator.annotation.AddCheck;
 import io.github.dunwu.data.validator.annotation.EditCheck;
 import io.github.dunwu.modules.monitor.annotation.AppLog;
@@ -41,64 +38,64 @@ public class SysDictOptionController {
     @PreAuthorize("@exp.check('dict:add')")
     @ApiOperation("添加一条 SysDictOption 记录")
     @PostMapping("add")
-    public BaseResult add(@Validated(AddCheck.class) @RequestBody SysDictOptionDto entity) {
+    public Result add(@Validated(AddCheck.class) @RequestBody SysDictOptionDto entity) {
         service.save(entity);
-        return BaseResult.ok();
+        return Result.ok();
     }
 
     @AppLog("更新一条 SysDictOption 记录")
     @PreAuthorize("@exp.check('dict:edit')")
     @ApiOperation("更新一条 SysDictOption 记录")
     @PostMapping("edit")
-    public BaseResult edit(@Validated(EditCheck.class) @RequestBody SysDictOptionDto entity) {
+    public Result edit(@Validated(EditCheck.class) @RequestBody SysDictOptionDto entity) {
         service.updateById(entity);
-        return BaseResult.ok();
+        return Result.ok();
     }
 
     @AppLog("删除一条 SysDictOption 记录")
     @PreAuthorize("@exp.check('dict:del')")
     @ApiOperation("删除一条 SysDictOption 记录")
     @PostMapping("del/{id}")
-    public BaseResult deleteById(@PathVariable Serializable id) {
+    public Result deleteById(@PathVariable Serializable id) {
         service.removeById(id);
-        return BaseResult.ok();
+        return Result.ok();
     }
 
     @AppLog("根据 ID 集合批量删除 SysDictOption 记录")
     @PreAuthorize("@exp.check('dict:del')")
     @ApiOperation("根据 ID 集合批量删除 SysDictOption 记录")
     @PostMapping("del/batch")
-    public BaseResult deleteByIds(@RequestBody Collection<Serializable> ids) {
+    public Result deleteByIds(@RequestBody Collection<Serializable> ids) {
         service.removeByIds(ids);
-        return BaseResult.ok();
+        return Result.ok();
     }
 
     @PreAuthorize("@exp.check('dict:view')")
     @ApiOperation("根据 query 条件，查询匹配条件的 SysDictOptionDto 列表")
     @GetMapping("list")
-    public DataListResult<SysDictOptionDto> list(SysDictOptionQuery query) {
-        return DataListResult.ok(service.pojoListByQuery(query));
+    public Result list(SysDictOptionQuery query) {
+        return Result.ok(service.pojoListByQuery(query));
     }
 
     @PreAuthorize("@exp.check('dict:view')")
     @ApiOperation("根据 query 和 pageable 条件，分页查询 SysDictOptionDto 记录")
     @GetMapping("page")
-    public PageResult<SysDictOptionDto> page(SysDictOptionQuery query, Pageable pageable) {
-        return PageResult.ok(service.pojoPageByQuery(query, pageable));
+    public Result page(SysDictOptionQuery query, Pageable pageable) {
+        return Result.ok(service.pojoPageByQuery(query, pageable));
     }
 
     @PreAuthorize("@exp.check('dict:view')")
     @ApiOperation("根据 query 条件，查询匹配条件的总记录数")
     @GetMapping("count")
-    public DataResult<Integer> count(SysDictOptionQuery query) {
-        return DataResult.ok(service.countByQuery(query));
+    public Result count(SysDictOptionQuery query) {
+        return Result.ok(service.countByQuery(query));
     }
 
     @PreAuthorize("@exp.check('dict:view')")
     @ApiOperation("根据 ID 查询 SysDictOptionDto 记录")
     @GetMapping("{id}")
-    public DataResult<SysDictOptionDto> getById(@PathVariable Serializable id) {
-        return DataResult.ok(service.pojoById(id));
+    public Result getById(@PathVariable Serializable id) {
+        return Result.ok(service.pojoById(id));
     }
 
     @PreAuthorize("@exp.check('dict:view')")

@@ -1,16 +1,11 @@
 package io.github.dunwu.modules.system.controller;
 
-import io.github.dunwu.data.core.BaseResult;
-import io.github.dunwu.data.core.DataListResult;
-import io.github.dunwu.data.core.DataResult;
-import io.github.dunwu.data.core.PageResult;
+import io.github.dunwu.data.core.Result;
 import io.github.dunwu.data.validator.annotation.AddCheck;
 import io.github.dunwu.data.validator.annotation.EditCheck;
 import io.github.dunwu.modules.monitor.annotation.AppLog;
 import io.github.dunwu.modules.system.entity.SysMenu;
-import io.github.dunwu.modules.system.entity.dto.SysMenuDto;
 import io.github.dunwu.modules.system.entity.query.SysMenuQuery;
-import io.github.dunwu.modules.system.entity.vo.MenuVo;
 import io.github.dunwu.modules.system.service.SysMenuService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -45,64 +40,64 @@ public class SysMenuController {
     @PreAuthorize("@exp.check('menu:add')")
     @ApiOperation("添加一条 SysMenu 记录")
     @PostMapping("add")
-    public BaseResult add(@Validated(AddCheck.class) @RequestBody SysMenu entity) {
+    public Result add(@Validated(AddCheck.class) @RequestBody SysMenu entity) {
         service.save(entity);
-        return BaseResult.ok();
+        return Result.ok();
     }
 
     @AppLog("更新一条 SysMenu 记录")
     @PreAuthorize("@exp.check('menu:edit')")
     @ApiOperation("更新一条 SysMenu 记录")
     @PostMapping("edit")
-    public BaseResult edit(@Validated(EditCheck.class) @RequestBody SysMenu entity) {
+    public Result edit(@Validated(EditCheck.class) @RequestBody SysMenu entity) {
         service.updateById(entity);
-        return BaseResult.ok();
+        return Result.ok();
     }
 
     @AppLog("删除一条 SysMenu 记录")
     @PreAuthorize("@exp.check('menu:del')")
     @ApiOperation("删除一条 SysMenu 记录")
     @PostMapping("del/{id}")
-    public BaseResult deleteById(@PathVariable Serializable id) {
+    public Result deleteById(@PathVariable Serializable id) {
         service.removeById(id);
-        return BaseResult.ok();
+        return Result.ok();
     }
 
     @AppLog("根据 ID 集合批量删除 SysMenu 记录")
     @PreAuthorize("@exp.check('menu:del')")
     @ApiOperation("根据 ID 集合批量删除 SysMenu 记录")
     @PostMapping("del/batch")
-    public BaseResult deleteByIds(@RequestBody Collection<Serializable> ids) {
+    public Result deleteByIds(@RequestBody Collection<Serializable> ids) {
         service.removeByIds(ids);
-        return BaseResult.ok();
+        return Result.ok();
     }
 
     @PreAuthorize("@exp.check('menu:view')")
     @ApiOperation("根据 query 条件，查询匹配条件的 SysMenuDto 列表")
     @GetMapping("list")
-    public DataListResult<SysMenuDto> list(SysMenuQuery query) {
-        return DataListResult.ok(service.pojoListByQuery(query));
+    public Result list(SysMenuQuery query) {
+        return Result.ok(service.pojoListByQuery(query));
     }
 
     @PreAuthorize("@exp.check('menu:view')")
     @ApiOperation("根据 query 和 pageable 条件，分页查询 SysMenuDto 记录")
     @GetMapping("page")
-    public PageResult<SysMenuDto> page(SysMenuQuery query, Pageable pageable) {
-        return PageResult.ok(service.pojoPageByQuery(query, pageable));
+    public Result page(SysMenuQuery query, Pageable pageable) {
+        return Result.ok(service.pojoPageByQuery(query, pageable));
     }
 
     @PreAuthorize("@exp.check('menu:view')")
     @ApiOperation("根据 query 条件，查询匹配条件的总记录数")
     @GetMapping("count")
-    public DataResult<Integer> count(SysMenuQuery query) {
-        return DataResult.ok(service.countByQuery(query));
+    public Result count(SysMenuQuery query) {
+        return Result.ok(service.countByQuery(query));
     }
 
     @PreAuthorize("@exp.check('menu:view')")
     @ApiOperation("根据 ID 查询 SysMenu 记录")
     @GetMapping("{id}")
-    public DataResult<SysMenuDto> getById(@PathVariable Serializable id) {
-        return DataResult.ok(service.pojoById(id));
+    public Result getById(@PathVariable Serializable id) {
+        return Result.ok(service.pojoById(id));
     }
 
     @PreAuthorize("@exp.check('menu:view')")
@@ -123,31 +118,31 @@ public class SysMenuController {
     @PreAuthorize("@exp.check('menu:view')")
     @ApiOperation("根据 query 条件，返回 SysMenuDto 树形列表")
     @GetMapping("treeList")
-    public DataListResult<SysMenuDto> treeList(SysMenuQuery query) {
-        return DataListResult.ok(service.treeList(query));
+    public Result treeList(SysMenuQuery query) {
+        return Result.ok(service.treeList(query));
     }
 
     @PreAuthorize("@exp.check('menu:view')")
     @ApiOperation("根据ID获取同级与上级数据")
     @PostMapping("superiorTreeList")
-    public DataListResult<SysMenuDto> superiorTreeList(@RequestBody Collection<Serializable> ids) {
-        return DataListResult.ok(service.treeListByIds(ids));
+    public Result superiorTreeList(@RequestBody Collection<Serializable> ids) {
+        return Result.ok(service.treeListByIds(ids));
     }
 
     @PreAuthorize("@exp.check('menu:view')")
     @ApiOperation("根据ID获取所有孩子节点ID")
     @GetMapping("childrenIds")
-    public DataListResult<Long> childrenIds(Long id) {
+    public Result childrenIds(Long id) {
         List<Long> ids = new ArrayList<>();
         ids.add(id);
         ids.addAll(service.childrenIds(id));
-        return DataListResult.ok(ids);
+        return Result.ok(ids);
     }
 
     @ApiOperation("获取当前用户展示于前端的菜单列表")
     @GetMapping(value = "mine")
-    public DataListResult<MenuVo> mineList() {
-        return DataListResult.ok(service.buildMenuListForCurrentUser());
+    public Result mineList() {
+        return Result.ok(service.buildMenuListForCurrentUser());
     }
 
 }

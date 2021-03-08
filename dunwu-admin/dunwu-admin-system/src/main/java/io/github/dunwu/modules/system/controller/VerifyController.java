@@ -1,6 +1,6 @@
 package io.github.dunwu.modules.system.controller;
 
-import io.github.dunwu.data.core.BaseResult;
+import io.github.dunwu.data.core.Result;
 import io.github.dunwu.domain.vo.EmailVo;
 import io.github.dunwu.modules.system.service.VerifyService;
 import io.github.dunwu.service.EmailService;
@@ -28,23 +28,23 @@ public class VerifyController {
 
     @PostMapping(value = "/resetEmail")
     @ApiOperation("重置邮箱，发送验证码")
-    public BaseResult resetEmail(@RequestParam String email) {
+    public Result resetEmail(@RequestParam String email) {
         EmailVo emailVo = verificationCodeService.sendEmail(email, CodeEnum.EMAIL_RESET_EMAIL_CODE.getKey());
         emailService.send(emailVo, emailService.find());
-        return BaseResult.ok();
+        return Result.ok();
     }
 
     @PostMapping(value = "/email/resetPass")
     @ApiOperation("重置密码，发送验证码")
-    public BaseResult resetPass(@RequestParam String email) {
+    public Result resetPass(@RequestParam String email) {
         EmailVo emailVo = verificationCodeService.sendEmail(email, CodeEnum.EMAIL_RESET_PWD_CODE.getKey());
         emailService.send(emailVo, emailService.find());
-        return BaseResult.ok();
+        return Result.ok();
     }
 
     @GetMapping(value = "/validated")
     @ApiOperation("验证码验证")
-    public BaseResult validated(@RequestParam String email, @RequestParam String code,
+    public Result validated(@RequestParam String email, @RequestParam String code,
         @RequestParam Integer codeBi) {
         CodeBiEnum biEnum = CodeBiEnum.find(codeBi);
         switch (Objects.requireNonNull(biEnum)) {
@@ -57,7 +57,7 @@ public class VerifyController {
             default:
                 break;
         }
-        return BaseResult.ok();
+        return Result.ok();
     }
 
 }

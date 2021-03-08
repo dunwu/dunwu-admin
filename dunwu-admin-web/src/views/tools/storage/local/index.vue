@@ -40,7 +40,7 @@
             :on-error="handleError"
             :action="fileUploadApi + '?name=' + form.name"
           >
-            <div class="eladmin-upload"><i class="el-icon-upload" /> 添加文件</div>
+            <div class="dunwu-upload"><i class="el-icon-upload" /> 添加文件</div>
             <div slot="tip" class="el-upload__tip">可上传任意格式文件，且不超过100M</div>
           </el-upload>
         </el-form-item>
