@@ -54,7 +54,7 @@ public class TableField {
     /** Key类型 */
     private String keyType;
     /** 是否为自增主键 */
-    private boolean keyIdentityFlag = true;
+    private boolean keyIdentityFlag = false;
     /** 不允许为空 */
     private boolean notNull = true;
     /** 出现在表单 */

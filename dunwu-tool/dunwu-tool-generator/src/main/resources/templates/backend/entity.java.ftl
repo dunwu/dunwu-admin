@@ -13,11 +13,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 </#if>
+<#if table.importPackages??>
 
-<#list table.importPackages as pkg>
-
+  <#list table.importPackages as pkg>
 import ${pkg};
-</#list>
+  </#list>
+</#if>
 
 /**
  * ${table.comment!}

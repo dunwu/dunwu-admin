@@ -49,8 +49,8 @@ public class ${table.controllerName} {
 </#if>
 
     private final ${table.serviceName} service;
-
     <#if !enableSwagger>
+
     public ${table.controllerName}(${table.serviceName} service) {
         this.service = service;
     }
@@ -151,7 +151,6 @@ public class ${table.controllerName} {
     public Result getById(@PathVariable Serializable id) {
         return Result.ok(service.pojoById(id));
     }
-
 
     <#if enableSwagger>
     @ApiOperation("根据 ${table.queryName} 查询匹配条件的记录数")

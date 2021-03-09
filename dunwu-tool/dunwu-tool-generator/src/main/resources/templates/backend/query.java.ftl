@@ -10,11 +10,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 </#if>
-<#list table.importPackages as pkg>
+<#if table.importPackages??>
 
+  <#list table.importPackages as pkg>
 import ${pkg};
-</#list>
-
+  </#list>
+</#if>
 import java.util.List;
 
 /**

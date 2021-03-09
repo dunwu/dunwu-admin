@@ -30,6 +30,9 @@ public class CodeTableConfig implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
+    @ApiModelProperty(value = "数据库ID")
+    private Long dbId;
+
     @ApiModelProperty(value = "Schema名称")
     private String schemaName;
 

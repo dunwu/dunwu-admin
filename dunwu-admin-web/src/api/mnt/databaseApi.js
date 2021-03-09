@@ -66,6 +66,18 @@ export function page(params) {
 }
 
 /**
+ * 根据 ID 查询记录
+ * @param id
+ * @returns {*}
+ */
+export function getById(id) {
+  return request({
+    url: 'api/mnt/database/' + id,
+    method: 'get'
+  })
+}
+
+/**
  * 根据指定 id 列表，导出相应数据
  * @param ids
  * @returns {*}
@@ -103,4 +115,4 @@ export function testDbConnection(data) {
   })
 }
 
-export default { add, edit, delBatch, list, page, exportList, exportPage, testDbConnection }
+export default { add, edit, delBatch, list, page, getById, exportList, exportPage, testDbConnection }

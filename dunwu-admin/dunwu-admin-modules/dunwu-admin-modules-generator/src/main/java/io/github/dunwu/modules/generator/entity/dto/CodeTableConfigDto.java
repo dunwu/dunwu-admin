@@ -28,6 +28,9 @@ public class CodeTableConfigDto implements Serializable {
     @ApiModelProperty(value = "ID")
     private Long id;
 
+    @ApiModelProperty(value = "数据库ID")
+    private Long dbId;
+
     @ApiModelProperty(value = "Schema名称")
     private String schemaName;
 

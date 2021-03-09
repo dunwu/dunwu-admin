@@ -53,6 +53,7 @@ CREATE TABLE `code_global_config` (
 DROP TABLE IF EXISTS `code_table_config`;
 CREATE TABLE `code_table_config` (
     `id`                BIGINT(20)   NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `db_id`             BIGINT(20)   NOT NULL COMMENT '数据库ID',
     `schema_name`       VARCHAR(255) NOT NULL COMMENT 'Schema名称',
     `table_name`        VARCHAR(255) NOT NULL COMMENT 'Table名称',
     `comment`           VARCHAR(255) DEFAULT NULL COMMENT 'Table注释',

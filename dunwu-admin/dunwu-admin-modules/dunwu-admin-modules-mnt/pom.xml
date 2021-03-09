@@ -10,7 +10,7 @@
     <version>2.6</version>
   </parent>
 
-  <artifactId>dunwu-admin-modules-generator</artifactId>
+  <artifactId>dunwu-admin-modules-mnt</artifactId>
 
   <properties>
     <configuration.version>1.9</configuration.version>
@@ -24,10 +24,9 @@
     </dependency>
     <dependency>
       <groupId>io.github.dunwu</groupId>
-      <artifactId>dunwu-admin-modules-mnt</artifactId>
+      <artifactId>dunwu-admin-modules-monitor</artifactId>
       <version>2.6</version>
     </dependency>
-
     <dependency>
       <groupId>io.github.dunwu</groupId>
       <artifactId>dunwu-starter-mybatis</artifactId>
@@ -36,22 +35,23 @@
       <groupId>io.github.dunwu</groupId>
       <artifactId>dunwu-starter-web</artifactId>
     </dependency>
-    <dependency>
-      <groupId>io.github.dunwu</groupId>
-      <artifactId>dunwu-tool-generator</artifactId>
-    </dependency>
-
-    <!--模板引擎-->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-freemarker</artifactId>
-    </dependency>
 
     <!-- https://mvnrepository.com/artifact/commons-configuration/commons-configuration -->
     <dependency>
       <groupId>commons-configuration</groupId>
       <artifactId>commons-configuration</artifactId>
       <version>${configuration.version}</version>
+    </dependency>
+    <!-- linux的管理 -->
+    <dependency>
+      <groupId>ch.ethz.ganymed</groupId>
+      <artifactId>ganymed-ssh2</artifactId>
+      <version>build210</version>
+    </dependency>
+    <dependency>
+      <groupId>com.jcraft</groupId>
+      <artifactId>jsch</artifactId>
+      <version>0.1.55</version>
     </dependency>
   </dependencies>
 </project>

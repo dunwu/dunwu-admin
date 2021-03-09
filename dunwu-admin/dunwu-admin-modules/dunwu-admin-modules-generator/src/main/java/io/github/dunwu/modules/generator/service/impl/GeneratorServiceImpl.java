@@ -22,6 +22,8 @@ import io.github.dunwu.modules.generator.entity.query.CodeColumnConfigQuery;
 import io.github.dunwu.modules.generator.entity.query.CodeGlobalConfigQuery;
 import io.github.dunwu.modules.generator.entity.query.CodeTableConfigQuery;
 import io.github.dunwu.modules.generator.service.*;
+import io.github.dunwu.modules.mnt.entity.dto.MntDatabaseDto;
+import io.github.dunwu.modules.mnt.service.MntDatabaseService;
 import io.github.dunwu.util.SecurityUtils;
 import io.github.dunwu.web.util.ServletUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -48,14 +50,17 @@ public class GeneratorServiceImpl implements GeneratorService {
     private final CodeGlobalConfigService globalConfigService;
     private final CodeTableConfigService tableConfigService;
     private final CodeColumnConfigService columnConfigService;
+    private final MntDatabaseService databaseService;
     private final TableService tableService;
 
     public GeneratorServiceImpl(CodeGlobalConfigService globalConfigService,
         CodeTableConfigService tableConfigService,
-        CodeColumnConfigService columnConfigService, TableService tableService) {
+        CodeColumnConfigService columnConfigService,
+        MntDatabaseService databaseService, TableService tableService) {
         this.globalConfigService = globalConfigService;
         this.tableConfigService = tableConfigService;
         this.columnConfigService = columnConfigService;
+        this.databaseService = databaseService;
         this.tableService = tableService;
     }
 
@@ -219,7 +224,7 @@ public class GeneratorServiceImpl implements GeneratorService {
         }
 
         tableConfigDto.setColumns(columns);
-        ConfigBuilder builder = transToConfigBuilder(tableConfigDto);
+        ConfigBuilder builder = createConfigBuilder(tableConfigDto);
         CodeGenerator codeGenerator = new CodeGenerator(builder);
         codeGenerator.generate();
         return builder;
@@ -263,7 +268,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 
         log.info("临时代码生成路径：{}", tmpTablePath);
 
-        ConfigBuilder builder = transToConfigBuilder(tableConfigDto);
+        ConfigBuilder builder = createConfigBuilder(tableConfigDto);
         CodeGenerator codeGenerator = new CodeGenerator(builder);
         codeGenerator.generate();
         String zipFilePath = tmpSchemaPath + File.separator + "codes.zip";
@@ -294,7 +299,7 @@ public class GeneratorServiceImpl implements GeneratorService {
         }
 
         tableConfigDto.setColumns(columns);
-        ConfigBuilder builder = transToConfigBuilder(tableConfigDto);
+        ConfigBuilder builder = createConfigBuilder(tableConfigDto);
         CodeGenerator codeGenerator = new CodeGenerator(builder);
         return codeGenerator.preview();
     }
@@ -305,10 +310,19 @@ public class GeneratorServiceImpl implements GeneratorService {
      * @param tableConfigDto CodeTableConfigDto 对象
      * @return /
      */
-    public ConfigBuilder transToConfigBuilder(CodeTableConfigDto tableConfigDto) {
-        String url =
-            "jdbc:mysql://localhost:3306/eladmin?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8";
-        DataSourceConfig dataSourceConfig = new DataSourceConfig(url, "com.mysql.cj.jdbc.Driver", "root", "root");
+    public ConfigBuilder createConfigBuilder(CodeTableConfigDto tableConfigDto) {
+
+        if (tableConfigDto.getDbId() == null) {
+            throw new DataException("dbId 为空");
+        }
+
+        MntDatabaseDto databaseDto = databaseService.pojoById(tableConfigDto.getDbId());
+        if (databaseDto == null) {
+            throw new DataException(StrUtil.format("未找到数据库 dbId = {}", tableConfigDto.getDbId()));
+        }
+
+        DataSourceConfig dataSourceConfig = new DataSourceConfig(databaseDto.getJdbcUrl(), "com.mysql.cj.jdbc.Driver",
+            databaseDto.getUsername(), databaseDto.getPassword(), tableConfigDto.getSchemaName());
 
         GlobalConfig globalConfig = new GlobalConfig();
         globalConfig.setAuthor(tableConfigDto.getAuthor())
@@ -353,14 +367,14 @@ public class GeneratorServiceImpl implements GeneratorService {
         CodeTableConfigDto tableConfigDto = findTableConfigByCurrentUser(tableQuery);
         ConfigBuilder configBuilder;
         if (tableConfigDto != null) {
-            configBuilder = transToConfigBuilder(tableConfigDto);
+            configBuilder = createConfigBuilder(tableConfigDto);
         } else {
             CodeGlobalConfigDto globalConfig = findGlobalConfigByCurrentUser();
             CodeTableConfigDto newTableConfigDto = BeanUtil.toBean(globalConfig, CodeTableConfigDto.class);
             newTableConfigDto.setSchemaName(schemaName)
                              .setTableName(tableName)
                              .setCreateBy(username);
-            configBuilder = transToConfigBuilder(newTableConfigDto);
+            configBuilder = createConfigBuilder(newTableConfigDto);
         }
 
         List<TableInfo> tableInfos = configBuilder.queryTableInfoList();

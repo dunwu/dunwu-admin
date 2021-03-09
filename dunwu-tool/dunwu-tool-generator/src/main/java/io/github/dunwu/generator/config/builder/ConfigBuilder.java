@@ -131,16 +131,6 @@ public class ConfigBuilder {
         processTypes(this.strategyConfig);
     }
 
-    /**
-     * 获取所有的数据库表信息
-     */
-    public ConfigBuilder initTableInfoList() {
-        this.tableInfoList = new ArrayList<>();
-        List<TableInfo> tables = queryTableInfoList();
-        this.tableInfoList.addAll(tables);
-        return this;
-    }
-
     public List<TableInfo> queryTableInfoList() {
 
         checkConfig();
@@ -240,9 +230,6 @@ public class ConfigBuilder {
             e.printStackTrace();
         }
 
-        for (TableInfo table : includeTableList) {
-            processTable(table);
-        }
         return includeTableList;
     }
 
@@ -256,10 +243,7 @@ public class ConfigBuilder {
 
         checkConfig();
 
-        // 性能优化，只处理需执行表字段 github issues/219
-        if (CollectionUtil.isEmpty(tableInfo.getFields())) {
-            convertTableFields(tableInfo, globalConfig, strategyConfig, dataSourceConfig);
-        }
+        convertTableFields(tableInfo, globalConfig, strategyConfig, dataSourceConfig);
         groupTableFields(tableInfo);
 
         String entityName;
@@ -791,13 +775,17 @@ public class ConfigBuilder {
 
                     // 处理ID
                     if (isId) {
+                        field.setKeyFlag(true);
                         field.setEnableForm(false);
                         field.setEnableSort(true);
                         field.setSortType("asc");
-                        field.setKeyFlag(true);
                         if (DbType.H2 == dbType || DbType.SQLITE == dbType || dbQuery.isKeyIdentity(results)) {
                             field.setKeyIdentityFlag(true);
+                        } else {
+                            field.setKeyIdentityFlag(true);
                         }
+                    } else {
+                        field.setKeyFlag(false);
                     }
 
                     // 自定义字段查询
