@@ -110,18 +110,23 @@
 
 <script>
 import codeApi from '@/api/generator/codeApi'
+import databaseApi from '@/api/mnt/databaseApi'
 export default {
   name: 'TableConfig',
   components: {},
   data() {
     return {
       loading: false,
+      databaseLoading: false,
       configLoading: false,
+      dbId: null,
       schemaName: '',
       tableName: '',
       tableHeight: 550,
+      database: null,
       form: {
         id: null,
+        dbId: null,
         schemaName: null,
         tableName: null,
         enablePermission: false,
@@ -155,20 +160,36 @@ export default {
   },
   created() {
     this.tableHeight = document.documentElement.clientHeight - 385
+    this.dbId = this.$route.params.dbId
     this.tableName = this.$route.params.tableName
     this.schemaName = this.$route.params.schemaName
     this.$nextTick(() => {
-      this.findTableConfig()
+      this.findDatabase()
+      this.queryTableConfig()
     })
   },
   methods: {
-    findTableConfig() {
+    findDatabase() {
+      this.databaseLoading = false
+      databaseApi
+        .getById(this.dbId)
+        .then(data => {
+          this.database = data
+          console.log('database', this.database)
+          this.databaseLoading = true
+        })
+        .catch(err => {
+          this.loading = false
+        })
+    },
+    queryTableConfig() {
       this.loading = true
       codeApi
-        .findTableConfig({ schemaName: this.schemaName, tableName: this.tableName })
+        .queryTableConfig({ dbId: this.dbId, schemaName: this.schemaName, tableName: this.tableName })
         .then(data => {
           this.loading = false
           this.form = data
+          console.log('queryTableConfig', data)
         })
         .catch(err => {
           this.loading = false
@@ -179,12 +200,13 @@ export default {
       this.$refs['form'].validate(valid => {
         if (valid) {
           this.configLoading = true
+          this.form.dbId = this.dbId
           codeApi
             .saveTableConfig(this.form)
             .then(res => {
               this.configLoading = false
               this.$notify({ title: '保存成功', type: 'success' })
-              this.findTableConfig()
+              this.queryTableConfig()
             })
             .catch(err => {
               this.configLoading = false

@@ -16,9 +16,9 @@ export function syncTables(data) {
   })
 }
 
-export function findGlobalConfig() {
+export function queryGlobalConfig() {
   return request({
-    url: 'api/code/global/find',
+    url: 'api/code/global/query',
     method: 'get'
   })
 }
@@ -31,10 +31,11 @@ export function saveGlobalConfig(data) {
   })
 }
 
-export function findTableConfig(params) {
+export function queryTableConfig(params) {
   return request({
-    url: 'api/code/table/find/' + params.schemaName + '/' + params.tableName,
-    method: 'get'
+    url: 'api/code/table/query',
+    method: 'get',
+    params
   })
 }
 
@@ -46,9 +47,9 @@ export function saveTableConfig(data) {
   })
 }
 
-export function findColumnConfig(params) {
+export function queryColumnConfig(params) {
   return request({
-    url: 'api/code/column/find/' + params.schemaName + '/' + params.tableName,
+    url: 'api/code/column/query/' + params.schemaName + '/' + params.tableName,
     method: 'get'
   })
 }
@@ -88,10 +89,10 @@ export default {
   generateCode,
   downloadCode,
   previewCode,
-  findGlobalConfig,
+  queryGlobalConfig,
   saveGlobalConfig,
-  findTableConfig,
+  queryTableConfig,
   saveTableConfig,
-  findColumnConfig,
+  queryColumnConfig,
   saveColumnConfig
 }

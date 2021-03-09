@@ -14,12 +14,7 @@
             :loading="schemaLoading"
             @change="selectSchema"
           >
-            <el-option
-              v-for="item in schemaOptions"
-              :key="item.schemaName"
-              :label="item.schemaName"
-              :value="item.schemaName"
-            />
+            <el-option v-for="item in schemaOptions" :key="item.id" :label="item.schemaName" :value="item.id" />
           </el-select>
         </el-col>
         <el-col :span="6">
@@ -67,12 +62,16 @@
       <el-table-column label="操作" width="160px" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button size="mini" style="margin-left: -1px; " type="text">
-            <router-link :to="'/sys-tools/generator/config/' + scope.row.schemaName + '/' + scope.row.tableName">
+            <router-link
+              :to="'/sys-tools/generator/config/' + dbId + '/' + scope.row.schemaName + '/' + scope.row.tableName"
+            >
               配置
             </router-link>
           </el-button>
           <el-button size="mini" style="margin-left: -1px;" type="text">
-            <router-link :to="'/sys-tools/generator/preview/' + scope.row.schemaName + '/' + scope.row.tableName">
+            <router-link
+              :to="'/sys-tools/generator/preview/' + dbId + '/' + scope.row.schemaName + '/' + scope.row.tableName"
+            >
               预览
             </router-link>
           </el-button>
@@ -110,6 +109,7 @@ export default {
       loading: false,
       schemaLoading: false,
       syncLoading: false,
+      dbId: null,
       schemaName: null,
       tableName: null,
       schemaOptions: [],
@@ -176,8 +176,16 @@ export default {
       }
     },
     selectSchema(val) {
-      this.schemaName = val
-      this.queryTables(val)
+      console.log('selectSchema', val)
+      if (val) {
+        this.schemaOptions.forEach(i => {
+          if (val === i.id) {
+            this.dbId = i.id
+            this.schemaName = i.schemaName
+            this.queryTables(val)
+          }
+        })
+      }
     },
     queryTables() {
       this.loading = true

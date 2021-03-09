@@ -1,9 +1,7 @@
 package io.github.dunwu.modules.generator.controller;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.util.StrUtil;
 import io.github.dunwu.data.core.Result;
 import io.github.dunwu.data.util.PageUtil;
 import io.github.dunwu.data.validator.annotation.EditCheck;
@@ -13,7 +11,6 @@ import io.github.dunwu.generator.engine.CodeGenerateContentDto;
 import io.github.dunwu.modules.generator.entity.CodeGlobalConfig;
 import io.github.dunwu.modules.generator.entity.CodeTableConfig;
 import io.github.dunwu.modules.generator.entity.dto.CodeGlobalConfigDto;
-import io.github.dunwu.modules.generator.entity.dto.CodeTableConfigDto;
 import io.github.dunwu.modules.generator.entity.dto.TableColumnInfoDto;
 import io.github.dunwu.modules.generator.entity.dto.TableSyncDto;
 import io.github.dunwu.modules.generator.entity.query.CodeColumnConfigQuery;
@@ -105,9 +102,9 @@ public class GeneratorController {
     }
 
     @ApiOperation("查询当前用户的 CodeGlobalConfigDto 配置")
-    @GetMapping("global/find")
-    public Result findGlobalConfigByCurrentUser() {
-        CodeGlobalConfigDto dto = generatorService.findGlobalConfigByCurrentUser();
+    @GetMapping("global/query")
+    public Result queryGlobalConfigByCurrentUser() {
+        CodeGlobalConfigDto dto = generatorService.queryGlobalConfigByCurrentUser();
         if (dto == null) {
             GlobalConfig globalConfig = new GlobalConfig();
             dto = BeanUtil.toBean(globalConfig, CodeGlobalConfigDto.class);
@@ -123,23 +120,9 @@ public class GeneratorController {
     }
 
     @ApiOperation("查询当前用户的 CodeGlobalConfigDto 配置")
-    @GetMapping("table/find/{schemaName}/{tableName}")
-    public Result findTableConfigByCurrentUser(@PathVariable String schemaName,
-        @PathVariable String tableName) {
-        CodeTableConfigQuery query = new CodeTableConfigQuery();
-        query.setSchemaName(schemaName).setTableName(tableName);
-        CodeTableConfigDto dto = generatorService.findTableConfigByCurrentUser(query);
-        if (dto == null) {
-            CodeGlobalConfigDto globalConfigDto = generatorService.findGlobalConfigByCurrentUser();
-            CopyOptions copyOptions = CopyOptions.create().setIgnoreProperties("id");
-            dto = BeanUtil.toBean(globalConfigDto, CodeTableConfigDto.class, copyOptions);
-            dto.setSchemaName(query.getSchemaName())
-               .setTableName(query.getTableName());
-            if (StrUtil.isBlank(globalConfigDto.getAuthor())) {
-                dto.setAuthor(globalConfigDto.getAuthor());
-            }
-        }
-        return Result.ok(dto);
+    @GetMapping("table/query")
+    public Result queryTableConfigByCurrentUser(CodeTableConfigQuery query) {
+        return Result.ok(generatorService.queryOrCreateCodeTableConfig(query));
     }
 
     @ApiOperation("保存当前用户的 CodeGlobalConfigDto 配置")
@@ -150,12 +133,12 @@ public class GeneratorController {
     }
 
     @ApiOperation("根据 query 条件，查询匹配条件的 CodeColumnConfigDto 列表")
-    @GetMapping("column/find/{schemaName}/{tableName}")
-    public Result findColumnConfigByCurrentUser(@PathVariable String schemaName,
+    @GetMapping("column/query/{schemaName}/{tableName}")
+    public Result queryColumnConfigByCurrentUser(@PathVariable String schemaName,
         @PathVariable String tableName) {
         CodeColumnConfigQuery query = new CodeColumnConfigQuery();
         query.setSchemaName(schemaName).setTableName(tableName);
-        return Result.ok(generatorService.findColumnConfigByCurrentUser(query));
+        return Result.ok(generatorService.queryColumnConfigByCurrentUser(query));
     }
 
     @ApiOperation("批量更新 CodeColumnConfig 记录")
@@ -168,7 +151,7 @@ public class GeneratorController {
 
     @ApiOperation("查询数据库数据")
     @GetMapping(value = "table/all/page")
-    public Result queryTables(@RequestParam String schemaName,
+    public Result queryAllTables(@RequestParam String schemaName,
         @RequestParam(defaultValue = "") String tableName,
         @RequestParam(defaultValue = "0") Integer page,
         @RequestParam(defaultValue = "10") Integer size) {

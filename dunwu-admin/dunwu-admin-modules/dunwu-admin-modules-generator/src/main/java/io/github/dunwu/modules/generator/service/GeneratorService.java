@@ -31,7 +31,7 @@ public interface GeneratorService {
      *
      * @return /
      */
-    CodeGlobalConfigDto findGlobalConfigByCurrentUser();
+    CodeGlobalConfigDto queryGlobalConfigByCurrentUser();
 
     /**
      * 保存当前用户的 CodeGlobalConfigDto 配置
@@ -47,7 +47,7 @@ public interface GeneratorService {
      * @param query 查询实体
      * @return /
      */
-    CodeTableConfigDto findTableConfigByCurrentUser(CodeTableConfigQuery query);
+    CodeTableConfigDto queryTableConfigByCurrentUser(CodeTableConfigQuery query);
 
     /**
      * 保存当前用户的 {@link CodeTableConfig} 配置
@@ -63,7 +63,7 @@ public interface GeneratorService {
      * @param query 查询实体
      * @return /
      */
-    List<CodeColumnConfigDto> findColumnConfigByCurrentUser(CodeColumnConfigQuery query);
+    List<CodeColumnConfigDto> queryColumnConfigByCurrentUser(CodeColumnConfigQuery query);
 
     /**
      * 保存当前用户的 {@link CodeColumnConfig} 配置
@@ -96,5 +96,7 @@ public interface GeneratorService {
      * @return /
      */
     List<CodeGenerateContentDto> previewCode(CodeTableConfigQuery query);
+
+    CodeTableConfigDto queryOrCreateCodeTableConfig(CodeTableConfigQuery query);
 
 }

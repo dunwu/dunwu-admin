@@ -52,7 +52,7 @@
           </el-col>
         </el-row>
       </div>
-      <crudOperation />
+      <crudOperation :permission="permission" />
     </div>
 
     <!--表单组件-->
@@ -65,13 +65,13 @@
     >
       <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
         <el-form-item label="名字" prop="name">
-          <el-input v-model="form.name" :rows="3" type="textarea" style="width: 370px;" />
+          <el-input v-model="form.name" style="width: 370px;" />
         </el-form-item>
         <el-form-item label="年龄" prop="age">
-          <el-input-number v-model="form.age" style="width: 370px;" />
+          <el-input v-model="form.age" style="width: 370px;" />
         </el-form-item>
-        <el-form-item label="创建时间" prop="createTime">
-          <el-date-picker v-model="form.createTime" type="datetime" style="width: 370px;" />
+        <el-form-item label="创建时间">
+          <el-input v-model="form.createTime" style="width: 370px;" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -85,15 +85,13 @@
       ref="table"
       v-loading="crud.loading"
       :data="crud.data"
-      size="small"
-      style="width: 100%;"
       @sort-change="crud.changeTableSort"
       @selection-change="crud.selectionChangeHandler"
     >
       <el-table-column type="selection" width="55" />
       <el-table-column prop="id" label="ID" :sortable="'custom'" />
-      <el-table-column prop="name" label="名字" />
-      <el-table-column prop="age" label="年龄" :sortable="'custom'" />
+      <el-table-column prop="name" label="名字" :sortable="'custom'" />
+      <el-table-column prop="age" label="年龄" />
       <el-table-column prop="createTime" label="创建时间" />
       <el-table-column
         v-if="checkPer(['admin', 'demo:hello:edit', 'demo:hello:del'])"
@@ -102,7 +100,7 @@
         align="center"
       >
         <template slot-scope="scope">
-          <udOperation :data="scope.row" />
+          <udOperation :data="scope.row" :permission="permission" />
         </template>
       </el-table-column>
     </el-table>
@@ -136,10 +134,15 @@ export default {
   },
   data() {
     return {
+      permission: {
+        add: ['admin', 'demo:hello:add'],
+        edit: ['admin', 'demo:hello:edit'],
+        del: ['admin', 'demo:hello:del']
+      },
       rules: {
-        name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
-        age: [{ required: true, message: '请输入年龄', trigger: 'blur', type: 'number' }],
-        createTime: [{ required: true, message: '请输入创建时间', trigger: 'blur', type: 'date' }]
+        name: [{ required: true, message: '名字不能为空', trigger: 'blur' }],
+        age: [{ required: true, message: '年龄必须为数字', trigger: 'blur', type: 'number' }],
+        createTime: [{ required: true, message: '创建时间不能为空', trigger: 'blur' }]
       }
     }
   },

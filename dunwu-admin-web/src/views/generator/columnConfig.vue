@@ -269,14 +269,14 @@ export default {
     this.tableName = this.$route.params.tableName
     this.schemaName = this.$route.params.schemaName
     this.$nextTick(() => {
-      this.findColumnConfig()
+      this.queryColumnConfig()
     })
   },
   methods: {
-    findColumnConfig() {
+    queryColumnConfig() {
       this.loading = true
       codeApi
-        .findColumnConfig({ schemaName: this.schemaName, tableName: this.tableName })
+        .queryColumnConfig({ schemaName: this.schemaName, tableName: this.tableName })
         .then(data => {
           this.loading = false
           this.data = data
@@ -304,7 +304,7 @@ export default {
       codeApi
         .syncTables({ schemaName: this.schemaName, tables: [this.tableName] })
         .then(() => {
-          this.findColumnConfig()
+          this.queryColumnConfig()
           this.$notify({ title: '同步成功', type: 'success' })
           this.syncLoading = false
         })

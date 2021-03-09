@@ -101,14 +101,14 @@ export default {
     this.tableName = this.$route.params.tableName
     this.schemaName = this.$route.params.schemaName
     this.$nextTick(() => {
-      this.findGlobalConfig()
+      this.queryGlobalConfig()
     })
   },
   methods: {
-    findGlobalConfig() {
+    queryGlobalConfig() {
       this.loading = true
       codeApi
-        .findGlobalConfig()
+        .queryGlobalConfig()
         .then(data => {
           this.loading = false
           this.form = data
@@ -127,7 +127,7 @@ export default {
             .then(res => {
               this.configLoading = false
               this.$notify({ title: '保存成功', type: 'success' })
-              this.findGlobalConfig()
+              this.queryGlobalConfig()
             })
             .catch(err => {
               this.configLoading = false

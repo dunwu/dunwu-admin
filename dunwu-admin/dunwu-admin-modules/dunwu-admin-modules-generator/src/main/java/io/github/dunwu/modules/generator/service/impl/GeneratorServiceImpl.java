@@ -112,7 +112,7 @@ public class GeneratorServiceImpl implements GeneratorService {
     }
 
     @Override
-    public CodeGlobalConfigDto findGlobalConfigByCurrentUser() {
+    public CodeGlobalConfigDto queryGlobalConfigByCurrentUser() {
         String username = SecurityUtils.getCurrentUsername();
         if (StrUtil.isBlank(username)) {
             username = "admin";
@@ -140,7 +140,7 @@ public class GeneratorServiceImpl implements GeneratorService {
     }
 
     @Override
-    public CodeTableConfigDto findTableConfigByCurrentUser(CodeTableConfigQuery query) {
+    public CodeTableConfigDto queryTableConfigByCurrentUser(CodeTableConfigQuery query) {
         String username = SecurityUtils.getCurrentUsername();
         if (StrUtil.isBlank(username)) {
             username = "admin";
@@ -159,7 +159,7 @@ public class GeneratorServiceImpl implements GeneratorService {
     }
 
     @Override
-    public List<CodeColumnConfigDto> findColumnConfigByCurrentUser(CodeColumnConfigQuery query) {
+    public List<CodeColumnConfigDto> queryColumnConfigByCurrentUser(CodeColumnConfigQuery query) {
         String username = SecurityUtils.getCurrentUsername();
         if (StrUtil.isBlank(username)) {
             username = "admin";
@@ -204,12 +204,12 @@ public class GeneratorServiceImpl implements GeneratorService {
     @Override
     public ConfigBuilder generateCode(CodeTableConfigQuery query) {
         String username = SecurityUtils.getCurrentUsername();
-        CodeGlobalConfigDto globalConfigDto = findGlobalConfigByCurrentUser();
+        CodeGlobalConfigDto globalConfigDto = queryGlobalConfigByCurrentUser();
         if (globalConfigDto == null) {
             throw new DataException("未配置全局配置");
         }
 
-        CodeTableConfigDto tableConfigDto = findTableConfigByCurrentUser(query);
+        CodeTableConfigDto tableConfigDto = queryTableConfigByCurrentUser(query);
         if (tableConfigDto == null) {
             throw new DataException("未配置表级别配置");
         }
@@ -234,12 +234,12 @@ public class GeneratorServiceImpl implements GeneratorService {
     public void downloadCode(CodeTableConfigQuery query, HttpServletRequest request,
         HttpServletResponse response) {
         String username = SecurityUtils.getCurrentUsername();
-        CodeGlobalConfigDto globalConfigDto = findGlobalConfigByCurrentUser();
+        CodeGlobalConfigDto globalConfigDto = queryGlobalConfigByCurrentUser();
         if (globalConfigDto == null) {
             throw new DataException("未配置全局配置");
         }
 
-        CodeTableConfigDto tableConfigDto = findTableConfigByCurrentUser(query);
+        CodeTableConfigDto tableConfigDto = queryTableConfigByCurrentUser(query);
         if (tableConfigDto == null) {
             throw new DataException("未配置表级别配置");
         }
@@ -279,12 +279,12 @@ public class GeneratorServiceImpl implements GeneratorService {
     @Override
     public List<CodeGenerateContentDto> previewCode(CodeTableConfigQuery query) {
         String username = SecurityUtils.getCurrentUsername();
-        CodeGlobalConfigDto globalConfigDto = findGlobalConfigByCurrentUser();
+        CodeGlobalConfigDto globalConfigDto = queryGlobalConfigByCurrentUser();
         if (globalConfigDto == null) {
             throw new DataException("未配置全局配置");
         }
 
-        CodeTableConfigDto tableConfigDto = findTableConfigByCurrentUser(query);
+        CodeTableConfigDto tableConfigDto = queryTableConfigByCurrentUser(query);
         if (tableConfigDto == null) {
             throw new DataException("未配置表级别配置");
         }
@@ -347,6 +347,30 @@ public class GeneratorServiceImpl implements GeneratorService {
         return builder;
     }
 
+    @Override
+    public CodeTableConfigDto queryOrCreateCodeTableConfig(CodeTableConfigQuery query) {
+        String username = SecurityUtils.getCurrentUsername();
+        CodeTableConfigDto tableConfigDto = queryTableConfigByCurrentUser(query);
+        CodeGlobalConfigDto globalConfig = queryGlobalConfigByCurrentUser();
+        ConfigBuilder configBuilder;
+        if (tableConfigDto != null) {
+            configBuilder = createConfigBuilder(tableConfigDto);
+        } else {
+            CopyOptions copyOptions = CopyOptions.create().setIgnoreProperties("id");
+            tableConfigDto = BeanUtil.toBean(globalConfig, CodeTableConfigDto.class, copyOptions);
+            tableConfigDto.setDbId(query.getDbId())
+                          .setSchemaName(query.getSchemaName())
+                          .setTableName(query.getTableName())
+                          .setCreateBy(username);
+            configBuilder = createConfigBuilder(tableConfigDto);
+        }
+
+        List<TableInfo> tableInfos = configBuilder.queryTableInfoList();
+        TableInfo tableInfo = tableInfos.get(0);
+        tableConfigDto.setComment(tableInfo.getComment());
+        return tableConfigDto;
+    }
+
     /**
      * 根据 schemaName、tableName 查询表的实际数据信息
      *
@@ -361,15 +385,13 @@ public class GeneratorServiceImpl implements GeneratorService {
         }
 
         CodeTableConfigQuery tableQuery = new CodeTableConfigQuery();
-        tableQuery.setSchemaName(schemaName)
-                  .setTableName(tableName)
-                  .setCreateBy(username);
-        CodeTableConfigDto tableConfigDto = findTableConfigByCurrentUser(tableQuery);
+        tableQuery.setSchemaName(schemaName).setTableName(tableName);
+        CodeTableConfigDto tableConfigDto = queryTableConfigByCurrentUser(tableQuery);
+        CodeGlobalConfigDto globalConfig = queryGlobalConfigByCurrentUser();
         ConfigBuilder configBuilder;
         if (tableConfigDto != null) {
             configBuilder = createConfigBuilder(tableConfigDto);
         } else {
-            CodeGlobalConfigDto globalConfig = findGlobalConfigByCurrentUser();
             CodeTableConfigDto newTableConfigDto = BeanUtil.toBean(globalConfig, CodeTableConfigDto.class);
             newTableConfigDto.setSchemaName(schemaName)
                              .setTableName(tableName)
