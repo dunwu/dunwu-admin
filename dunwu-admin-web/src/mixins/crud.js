@@ -1,4 +1,4 @@
-import { initData, exportPage } from '@/api/data'
+import { initData } from '@/api/data'
 import { parseTime, downloadFile } from '@/utils/index'
 
 export default {
@@ -169,12 +169,12 @@ export default {
         duration: 2500
       })
     },
-    notify(title, type) {
-      this.$notify({
-        title: title,
-        type: type,
-        duration: 2500
-      })
+    notify(type, title, message) {
+      if (message) {
+        this.$notify({ title: title, type: type, message: message, duration: 2500 })
+      } else {
+        this.$notify({ title: title, type: type, duration: 2500 })
+      }
     },
     /**
      * 删除前可以调用 beforeDelMethod 做一些操作
@@ -366,9 +366,11 @@ export default {
     downloadMethod() {
       this.beforeInit()
       this.downloadLoading = true
-      exportPage(this.url + '/export', this.params)
+
+      this.crudMethod
+        .exportPage(this.getQueryParams())
         .then(result => {
-          this.downloadFile(result, this.title + '数据', 'xlsx')
+          downloadFile(result, this.title + '数据', 'xlsx')
           this.downloadLoading = false
         })
         .catch(() => {

@@ -68,7 +68,7 @@ public interface HelloService extends IService {
      * @param ids {@link Hello} 主键列表
      * @return true / false
      */
-    boolean removeByIds(Collection<Serializable> ids);
+    boolean removeByIds(Collection<? extends Serializable> ids);
 
     /**
      * 根据 query 和 pageable 分页查询 {@link HelloDto}
@@ -118,7 +118,7 @@ public interface HelloService extends IService {
      * @param response {@link HttpServletResponse} 实体
      * @throws IOException /
      */
-    void exportList(Collection<Serializable> ids, HttpServletResponse response) throws IOException;
+    void exportList(Collection<? extends Serializable> ids, HttpServletResponse response) throws IOException;
 
     /**
      * 根据 query 和 pageable 查询 {@link HelloDto} 列表，并导出 excel 表单

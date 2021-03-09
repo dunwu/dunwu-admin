@@ -59,7 +59,7 @@ public class HelloServiceImpl extends ServiceImpl implements HelloService {
     }
 
     @Override
-    public boolean removeByIds(Collection<Serializable> ids) {
+    public boolean removeByIds(Collection<? extends Serializable> ids) {
         return dao.removeByIds(ids);
     }
 
@@ -89,7 +89,7 @@ public class HelloServiceImpl extends ServiceImpl implements HelloService {
     }
 
     @Override
-    public void exportList(Collection<Serializable> ids, HttpServletResponse response) throws IOException {
+    public void exportList(Collection<? extends Serializable> ids, HttpServletResponse response) throws IOException {
         List<HelloDto> list = dao.pojoListByIds(ids, this::doToDto);
         dao.exportDtoList(list, response);
     }

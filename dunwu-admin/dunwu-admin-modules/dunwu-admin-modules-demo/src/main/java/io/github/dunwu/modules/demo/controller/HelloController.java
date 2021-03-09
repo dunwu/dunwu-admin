@@ -1,5 +1,7 @@
 package io.github.dunwu.modules.demo.controller;
 
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONUtil;
 import io.github.dunwu.data.core.Result;
 import io.github.dunwu.data.validator.annotation.AddCheck;
 import io.github.dunwu.data.validator.annotation.EditCheck;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -104,10 +107,12 @@ public class HelloController {
     }
 
     @ApiOperation("根据 ID 集合批量导出 HelloDto 列表数据")
-    @PostMapping("export/list")
-    public void exportList(@RequestBody Collection<Serializable> ids, HttpServletResponse response)
+    @GetMapping("export/list")
+    public void exportList(String ids, HttpServletResponse response)
         throws IOException {
-        service.exportList(ids, response);
+        JSONArray objects = JSONUtil.parseArray(ids);
+        List<Long> idList = objects.toList(Long.class);
+        service.exportList(idList, response);
     }
 
     @GetMapping("export/page")

@@ -52,6 +52,49 @@ export function list(params) {
   })
 }
 
+/**
+ * 根据 params 条件，查询匹配条件的分页列表
+ * @param params
+ * @returns {*}
+ */
+export function page(params) {
+  return request({
+    url: 'api/mnt/database/page',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 根据指定 id 列表，导出相应数据
+ * @param ids
+ * @returns {*}
+ */
+export function exportList(ids) {
+  return request({
+    url: 'api/mnt/database/export/list',
+    method: 'get',
+    responseType: 'blob',
+    params: {
+      ids: JSON.stringify(ids)
+    }
+  })
+}
+
+/**
+ * 根据 params 条件，导出符合查询条件的分页数据
+ * @param params
+ * @returns {*}
+ */
+export function exportPage(params) {
+  return request({
+    url: 'api/mnt/database/export/page',
+    method: 'get',
+    responseType: 'blob',
+    params
+  })
+}
+
 export function testDbConnection(data) {
   return request({
     url: 'api/mnt/database/testConnect',
@@ -60,4 +103,4 @@ export function testDbConnection(data) {
   })
 }
 
-export default { add, edit, delBatch, list, testDbConnection }
+export default { add, edit, delBatch, list, page, exportList, exportPage, testDbConnection }

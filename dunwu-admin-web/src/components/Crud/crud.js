@@ -1,4 +1,3 @@
-import { initData, exportPage } from '@/api/data'
 import { parseTime, downloadFile } from '@/utils/index'
 import Vue from 'vue'
 
@@ -39,10 +38,12 @@ function CRUD(options) {
     time: 50,
     // CRUD Method
     crudMethod: {
-      add: form => {},
+      add: data => {},
       delBatch: ids => {},
-      edit: form => {},
-      get: id => {}
+      edit: data => {},
+      list: params => {},
+      exportList: ids => {},
+      exportPage: params => {}
     },
     // 主页操作栏显示哪些按钮
     optShow: {
@@ -114,16 +115,16 @@ function CRUD(options) {
      * 通用的提示
      */
     submitSuccessNotify() {
-      crud.notify(crud.msg.submit, CRUD.NOTIFICATION_TYPE.SUCCESS)
+      crud.notify(CRUD.NOTIFICATION_TYPE.SUCCESS, crud.msg.submit)
     },
     addSuccessNotify() {
-      crud.notify(crud.msg.add, CRUD.NOTIFICATION_TYPE.SUCCESS)
+      crud.notify(CRUD.NOTIFICATION_TYPE.SUCCESS, crud.msg.add)
     },
     editSuccessNotify() {
-      crud.notify(crud.msg.edit, CRUD.NOTIFICATION_TYPE.SUCCESS)
+      crud.notify(CRUD.NOTIFICATION_TYPE.SUCCESS, crud.msg.edit)
     },
     delSuccessNotify() {
-      crud.notify(crud.msg.del, CRUD.NOTIFICATION_TYPE.SUCCESS)
+      crud.notify(CRUD.NOTIFICATION_TYPE.SUCCESS, crud.msg.del)
     },
     /**
      * 展开/折叠 扩展搜索栏
@@ -152,7 +153,8 @@ function CRUD(options) {
         crud.loading = true
         // 请求数据
         if (this.tableType === 'tree') {
-          initData(crud.url + '/treeList', crud.getQueryParams())
+          crud.crudMethod
+            .treeList(crud.getQueryParams())
             .then(data => {
               const table = crud.getTable()
               if (table && table.lazy) {
@@ -174,14 +176,15 @@ function CRUD(options) {
               reject(err)
             })
         } else {
-          initData(crud.url + '/page', crud.getQueryParams())
+          crud.crudMethod
+            .page(crud.getQueryParams())
             .then(data => {
-              const table = crud.getTable()
-              if (table && table.lazy) {
-                // 懒加载子节点数据，清掉已加载的数据
-                table.store.states.treeData = {}
-                table.store.states.lazyTreeNodeMap = {}
-              }
+              // const table = crud.getTable()
+              // if (table && table.lazy) {
+              //   // 懒加载子节点数据，清掉已加载的数据
+              //   table.store.states.treeData = {}
+              //   table.store.states.lazyTreeNodeMap = {}
+              // }
               crud.page.total = data.totalElements
               crud.data = data.content
               crud.resetDataStatus()
@@ -381,9 +384,9 @@ function CRUD(options) {
         })
     },
     /**
-     * 通用导出
+     * 通用导出数据方法
      */
-    doExport(data) {
+    doExport() {
       crud.downloadLoading = true
       const ids = []
       if (crud.selections instanceof Array) {
@@ -391,8 +394,9 @@ function CRUD(options) {
           ids.push(crud.getDataId(val))
         })
       }
-      console.log('doExport ids', ids)
+
       if (ids.length > 0) {
+        // 如果有选中记录，则导出选中的数据
         crud.crudMethod
           .exportList(ids)
           .then(result => {
@@ -403,6 +407,7 @@ function CRUD(options) {
             crud.downloadLoading = false
           })
       } else {
+        // 如果没有选中记录，则导出分页查询匹配的记录
         crud.crudMethod
           .exportPage(crud.getQueryParams())
           .then(result => {

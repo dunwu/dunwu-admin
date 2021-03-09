@@ -18,7 +18,7 @@ export function add(data) {
  * @param ids
  * @returns {*}
  */
-export function del(ids) {
+export function delBatch(ids) {
   return request({
     url: 'api/sys/role/del/batch',
     method: 'post',
@@ -53,6 +53,49 @@ export function list(params) {
 }
 
 /**
+ * 根据 params 条件，查询匹配条件的分页列表
+ * @param params
+ * @returns {*}
+ */
+export function page(params) {
+  return request({
+    url: 'api/sys/role/page',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 根据指定 id 列表，导出相应数据
+ * @param ids
+ * @returns {*}
+ */
+export function exportList(ids) {
+  return request({
+    url: 'api/sys/role/export/list',
+    method: 'get',
+    responseType: 'blob',
+    params: {
+      ids: JSON.stringify(ids)
+    }
+  })
+}
+
+/**
+ * 根据 params 条件，导出符合查询条件的分页数据
+ * @param params
+ * @returns {*}
+ */
+export function exportPage(params) {
+  return request({
+    url: 'api/sys/role/export/page',
+    method: 'get',
+    responseType: 'blob',
+    params
+  })
+}
+
+/**
  * 根据 ID 查询记录
  * @param id
  * @returns {*}
@@ -79,4 +122,4 @@ export function editMenu(data) {
   })
 }
 
-export default { add, edit, del, list, getById, editMenu, getLevel }
+export default { add, edit, delBatch, list, page, exportList, exportPage, getById, editMenu, getLevel }
