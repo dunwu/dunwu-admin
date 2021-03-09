@@ -68,9 +68,9 @@
           <el-input v-model="form.name" :rows="3" type="textarea" style="width: 370px;" />
         </el-form-item>
         <el-form-item label="年龄" prop="age">
-          <el-input v-model="form.age" style="width: 370px;" />
+          <el-input-number v-model="form.age" style="width: 370px;" />
         </el-form-item>
-        <el-form-item label="创建时间">
+        <el-form-item label="创建时间" prop="createTime">
           <el-date-picker v-model="form.createTime" type="datetime" style="width: 370px;" />
         </el-form-item>
       </el-form>
@@ -136,12 +136,11 @@ export default {
   },
   data() {
     return {
-      permission: {
-        add: ['admin', 'demo:hello:add'],
-        edit: ['admin', 'demo:hello:edit'],
-        del: ['admin', 'demo:hello:del']
-      },
-      rules: {}
+      rules: {
+        name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
+        age: [{ required: true, message: '请输入年龄', trigger: 'blur', type: 'number' }],
+        createTime: [{ required: true, message: '请输入创建时间', trigger: 'blur', type: 'date' }]
+      }
     }
   },
   methods: {

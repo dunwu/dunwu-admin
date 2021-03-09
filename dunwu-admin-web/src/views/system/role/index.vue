@@ -201,7 +201,7 @@ export default {
     [CRUD.HOOK.afterRefresh]() {
       this.$refs.menu.setCheckedKeys([])
     },
-    // 新增前初始化部门信息
+    // 添加前初始化部门信息
     [CRUD.HOOK.beforeToAdd]() {
       this.deptDatas = []
     },
@@ -286,11 +286,12 @@ export default {
       roleApi
         .editMenu(role)
         .then(() => {
-          this.crud.notify('保存成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+          this.crud.notify(CRUD.NOTIFICATION_TYPE.SUCCESS, '保存成功')
           this.menuLoading = false
           this.update()
         })
         .catch(err => {
+          this.crud.notify(CRUD.NOTIFICATION_TYPE.ERROR, '保存失败', err)
           this.menuLoading = false
         })
     },

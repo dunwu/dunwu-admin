@@ -90,7 +90,7 @@
               icon="el-icon-plus"
               @click="$refs.dictOption && $refs.dictOption.crud.toAdd()"
             >
-              新增
+              添加
             </el-button>
           </div>
           <dictOption ref="dictOption" :permission="permission" />

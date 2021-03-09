@@ -98,7 +98,9 @@ export default {
     },
     permission: {
       type: Object,
-      required: false
+      default: () => {
+        return {}
+      }
     },
     disabledEdit: {
       type: Boolean,

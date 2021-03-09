@@ -164,7 +164,7 @@ export default {
     // 执行
     execute(id) {
       crudJob.execution(id).then(res => {
-        this.crud.notify('执行成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+        this.crud.notify(CRUD.NOTIFICATION_TYPE.SUCCESS, '执行成功')
       }).catch(err => {
         console.log(err.response.data.message)
       })
@@ -176,7 +176,7 @@ export default {
       }
       crudJob.updateIsPause(id).then(res => {
         this.crud.toQuery()
-        this.crud.notify(status + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+        this.crud.notify(CRUD.NOTIFICATION_TYPE.SUCCESS, status + '成功')
       }).catch(err => {
         console.log(err.response.data.message)
       })

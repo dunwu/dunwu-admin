@@ -1,5 +1,5 @@
 <!--
-  - 表格公共操作按钮组合，包含 [ 新增、编辑、删除、导出 ] 按钮。
+  - 表格公共操作按钮组合，包含 [ 添加、编辑、删除、导出 ] 按钮。
   -->
 
 <template>
@@ -17,7 +17,7 @@
         icon="el-icon-plus"
         @click="crud.toAdd"
       >
-        新增
+        添加
       </el-button>
       <el-button
         v-if="crud.optShow.edit"
@@ -72,7 +72,7 @@
         icon="el-icon-plus"
         @click="crud.toAdd"
       >
-        新增
+        添加
       </el-button>
       <el-button
         v-if="crud.optShow.edit"

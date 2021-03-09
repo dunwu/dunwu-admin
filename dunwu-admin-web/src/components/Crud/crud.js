@@ -84,12 +84,12 @@ function CRUD(options) {
       // 标题
       get title() {
         const editTitle = this.edit > CRUD.STATUS.NORMAL ? `编辑${crud.title}` : crud.title
-        return this.add > CRUD.STATUS.NORMAL ? `新增${crud.title}` : editTitle
+        return this.add > CRUD.STATUS.NORMAL ? `添加${crud.title}` : editTitle
       }
     },
     msg: {
       submit: '提交成功',
-      add: '新增成功',
+      add: '添加成功',
       edit: '编辑成功',
       del: '删除成功'
     },
@@ -203,7 +203,7 @@ function CRUD(options) {
       })
     },
     /**
-     * 启动添加
+     * 启动添加操作
      */
     toAdd() {
       crud.resetForm()
@@ -215,7 +215,7 @@ function CRUD(options) {
       callVmHook(crud, CRUD.HOOK.afterToCU, crud.form)
     },
     /**
-     * 启动编辑
+     * 启动编辑操作
      * @param {*} data 数据项
      */
     toEdit(data) {
@@ -229,14 +229,14 @@ function CRUD(options) {
       callVmHook(crud, CRUD.HOOK.afterToCU, crud.form)
     },
     /**
-     * 启动删除
+     * 启动删除操作
      * @param {*} data 数据项
      */
     toDelete(data) {
       crud.getDataStatus(crud.getDataId(data)).delete = CRUD.STATUS.PREPARED
     },
     /**
-     * 取消删除
+     * 取消删除操作
      * @param {*} data 数据项
      */
     cancelDelete(data) {
@@ -247,7 +247,7 @@ function CRUD(options) {
       callVmHook(crud, CRUD.HOOK.afterDeleteCancel, data)
     },
     /**
-     * 取消新增/编辑
+     * 取消 添加/编辑 操作
      */
     cancelCU() {
       const addStatus = crud.status.add
@@ -278,7 +278,7 @@ function CRUD(options) {
       }
     },
     /**
-     * 提交新增/编辑
+     * 提交操作（添加/编辑）
      */
     submitCU() {
       if (!callVmHook(crud, CRUD.HOOK.beforeValidateCU)) {
@@ -593,12 +593,14 @@ function CRUD(options) {
     findVM(type) {
       return crud.vms.find(vm => vm && vm.type === type).vm
     },
-    notify(title, type = CRUD.NOTIFICATION_TYPE.INFO) {
-      crud.vms[0].vm.$notify({
-        title,
-        type,
-        duration: 2500
-      })
+    /**
+     * 显示全局的通知提醒消息
+     * @param type
+     * @param title
+     * @param message
+     */
+    notify(type = CRUD.NOTIFICATION_TYPE.INFO, title, message) {
+      crud.vms[0].vm.$notify({ type, title, message, duration: 2500 })
     },
     updateProp(name, value) {
       Vue.set(crud.props, name, value)
@@ -609,7 +611,7 @@ function CRUD(options) {
     getTable() {
       return this.findVM('presenter').$refs.table
     },
-    attchTable() {
+    attachTable() {
       const table = this.getTable()
       this.updateProp('table', table)
       const that = this
@@ -791,9 +793,9 @@ function presenter(crud) {
       }
     },
     mounted() {
-      // 如果table未实例化（例如使用了v-if），请稍后在适当时机crud.attchTable刷新table信息
+      // 如果table未实例化（例如使用了v-if），请稍后在适当时机crud.attachTable刷新table信息
       if (this.$refs.table !== undefined) {
-        this.crud.attchTable()
+        this.crud.attachTable()
       }
     }
   }

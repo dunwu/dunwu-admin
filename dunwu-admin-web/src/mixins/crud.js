@@ -24,7 +24,7 @@ export default {
       query: {},
       // 等待时间
       time: 50,
-      // 是否为新增类型的表单
+      // 是否为添加类型的表单
       isAdd: false,
       // 是否展示扩展搜索栏
       showExtendSearch: false,
@@ -150,7 +150,7 @@ export default {
     },
     addSuccessNotify() {
       this.$notify({
-        title: '新增成功',
+        title: '添加成功',
         type: 'success',
         duration: 2500
       })
@@ -245,11 +245,11 @@ export default {
         })
     },
     /**
-     * 显示新增弹窗前可以调用该方法
+     * 显示添加弹窗前可以调用该方法
      */
     beforeShowAddForm() {},
     /**
-     * 显示新增弹窗
+     * 显示添加弹窗
      */
     showAddFormDialog() {
       this.isAdd = true
@@ -274,7 +274,7 @@ export default {
       this.dialog = true
     },
     /**
-     * 新增方法
+     * 添加方法
      */
     addMethod() {
       this.crudMethod
@@ -292,11 +292,11 @@ export default {
         })
     },
     /**
-     * 新增后可以调用该方法
+     * 添加后可以调用该方法
      */
     afterAddMethod() {},
     /**
-     * 新增失败后调用该方法
+     * 添加失败后调用该方法
      */
     afterAddErrorMethod() {},
     /**
@@ -358,7 +358,7 @@ export default {
      * 获取弹窗的标题
      */
     getFormTitle() {
-      return this.isAdd ? `新增${this.title}` : `编辑${this.title}`
+      return this.isAdd ? `添加${this.title}` : `编辑${this.title}`
     },
     /**
      * 通用导出

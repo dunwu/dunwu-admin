@@ -7,7 +7,6 @@
 </template>
 
 <script>
-import dictApi from '@/api/system/dict'
 import Java from '@/components/JavaEdit/index'
 import codeApi from '@/api/generator/codeApi'
 export default {

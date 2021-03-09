@@ -265,7 +265,7 @@ export default {
     ...mapGetters(['user'])
   },
   created() {
-    this.crud.msg.add = '新增成功，默认密码：123456'
+    this.crud.msg.add = '添加成功，默认密码：123456'
   },
   mounted: function() {
     const that = this
@@ -288,7 +288,7 @@ export default {
         }
       })
     },
-    // 新增与编辑前做的操作
+    // 添加与编辑前做的操作
     [CRUD.HOOK.afterToCU](crud, form) {
       this.getRoles()
       if (form.id == null) {
@@ -300,7 +300,7 @@ export default {
       this.getJobs({ enabled: true })
       form.enabled = form.enabled.toString()
     },
-    // 新增前将多选的值设置为空
+    // 添加前将多选的值设置为空
     [CRUD.HOOK.beforeToAdd]() {
       this.roleDatas = []
     },
@@ -424,7 +424,7 @@ export default {
           userApi
             .edit(data)
             .then(res => {
-              this.crud.notify(this.dict.label.user_status[val] + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+              this.crud.notify(CRUD.NOTIFICATION_TYPE.SUCCESS, this.dict.label.user_status[val] + '成功')
             })
             .catch(() => {
               data.enabled = !data.enabled

@@ -148,7 +148,7 @@ export default {
       this.selectIndex = ''
       return true
     },
-    // 新增编辑前做的操作
+    // 添加编辑前做的操作
     [CRUD.HOOK.beforeToCU](crud, form) {
       this.initSelect()
       const deploys = []

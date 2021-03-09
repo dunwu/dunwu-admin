@@ -200,7 +200,7 @@ export default {
     }
   },
   methods: {
-    // 新增与编辑前做的操作
+    // 添加与编辑前做的操作
     [CRUD.HOOK.afterToCU](crud, form) {
       this.depts = []
       if (form.pid !== 0) {
@@ -289,7 +289,7 @@ export default {
           deptApi
             .edit(data)
             .then(res => {
-              this.crud.notify(this.dict.label.dept_status[val] + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+              this.crud.notify(CRUD.NOTIFICATION_TYPE.SUCCESS, this.dict.label.dept_status[val] + '成功')
             })
             .catch(err => {
               data.enabled = !data.enabled

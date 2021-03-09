@@ -241,7 +241,7 @@ export default {
     }
   },
   methods: {
-    // 新增与编辑前做的操作
+    // 添加与编辑前做的操作
     [CRUD.HOOK.afterToCU](crud, form) {
       this.menus = []
       if (form.id != null) {

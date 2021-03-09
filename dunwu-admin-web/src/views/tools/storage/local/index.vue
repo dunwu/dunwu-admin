@@ -9,7 +9,7 @@
         <queryOperation />
       </div>
       <crudOperation :permission="permission">
-        <!-- 新增 -->
+        <!-- 添加 -->
         <el-button
           slot="left"
           v-permission="['admin','storage:add']"
@@ -154,7 +154,7 @@ export default {
       return isLt2M
     },
     handleSuccess(response, file, fileList) {
-      this.crud.notify('上传成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+      this.crud.notify(CRUD.NOTIFICATION_TYPE.SUCCESS, '上传成功')
       this.$refs.upload.clearFiles()
       this.crud.status.add = CRUD.STATUS.NORMAL
       this.crud.resetForm()

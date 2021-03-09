@@ -177,7 +177,7 @@ export default {
     // 监听上传失败
     handleError(e, file, fileList) {
       const msg = JSON.parse(e.message)
-      this.crud.notify(msg.message, CRUD.NOTIFICATION_TYPE.ERROR)
+      this.crud.notify(CRUD.NOTIFICATION_TYPE.ERROR, msg.message)
     },
     // 下载文件
     download(id) {
