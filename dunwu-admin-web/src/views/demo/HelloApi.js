@@ -1,3 +1,4 @@
+import qs from 'qs'
 import request from '@/utils/request'
 
 /**
@@ -52,4 +53,32 @@ export function list(params) {
   })
 }
 
-export default { add, edit, delBatch, list }
+/**
+ * 根据 params 条件，查询匹配条件的列表
+ * @param data
+ * @returns {*}
+ */
+export function exportList(data) {
+  return request({
+    url: 'api/demo/hello/export/list',
+    method: 'post',
+    responseType: 'blob',
+    data
+  })
+}
+
+/**
+ * 根据 params 条件，导出符合查询条件的分页数据
+ * @param params
+ * @returns {*}
+ */
+export function exportPage(params) {
+  return request({
+    url: 'api/demo/hello/export/page',
+    method: 'get',
+    responseType: 'blob',
+    params
+  })
+}
+
+export default { add, edit, delBatch, list, exportList, exportPage }

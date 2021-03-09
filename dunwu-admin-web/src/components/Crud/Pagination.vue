@@ -1,5 +1,5 @@
 <!--
-  - 分页组件（Pagination）封装
+  - Element UI 分页组件（Pagination）封装
   -->
 
 <template>

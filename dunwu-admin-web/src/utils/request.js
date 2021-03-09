@@ -58,7 +58,6 @@ service.interceptors.response.use(
           return true
         }
       } else {
-        console.log('response.data', response.data)
         return response.data
       }
     }

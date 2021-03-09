@@ -94,6 +94,7 @@ export default {
           add: true,
           edit: true,
           del: true,
+          export: true,
           reset: false
         },
         queryOnPresenterCreated: false

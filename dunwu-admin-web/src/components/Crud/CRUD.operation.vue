@@ -32,14 +32,14 @@
         编辑
       </el-button>
       <el-button
-        v-if="crud.optShow.exportPage"
+        v-if="crud.optShow.export"
         :loading="crud.downloadLoading"
         :disabled="!crud.data.length"
         class="filter-item"
         size="mini"
         type="primary"
         icon="el-icon-download"
-        @click="crud.doExport"
+        @click="crud.doExport(crud.selections)"
       >
         导出
       </el-button>
@@ -86,7 +86,7 @@
         编辑
       </el-button>
       <el-button
-        v-if="crud.optShow.exportPage"
+        v-if="crud.optShow.export"
         :loading="crud.downloadLoading"
         :disabled="!crud.data.length"
         class="filter-item"

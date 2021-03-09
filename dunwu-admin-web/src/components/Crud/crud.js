@@ -49,11 +49,13 @@ function CRUD(options) {
       add: true,
       edit: true,
       del: true,
-      exportPage: true,
+      export: true,
       reset: true
     },
     // 自定义一些扩展属性
     props: {},
+    // 权限校验
+    enablePermission: false,
     // 在主页准备
     queryOnPresenterCreated: true,
     // 调试开关
@@ -349,11 +351,11 @@ function CRUD(options) {
       if (data instanceof Array) {
         delAll = true
         data.forEach(val => {
-          ids.push(this.getDataId(val))
+          ids.push(crud.getDataId(val))
         })
       } else {
         ids.push(this.getDataId(data))
-        dataStatus = crud.getDataStatus(this.getDataId(data))
+        dataStatus = crud.getDataStatus(crud.getDataId(data))
       }
       if (!callVmHook(crud, CRUD.HOOK.beforeDelete, data)) {
         return
@@ -381,16 +383,36 @@ function CRUD(options) {
     /**
      * 通用导出
      */
-    doExport() {
+    doExport(data) {
       crud.downloadLoading = true
-      exportPage(crud.url + '/export/page', crud.getQueryParams())
-        .then(result => {
-          downloadFile(result, crud.title + '数据', 'xlsx')
-          crud.downloadLoading = false
+      const ids = []
+      if (crud.selections instanceof Array) {
+        crud.selections.forEach(val => {
+          ids.push(crud.getDataId(val))
         })
-        .catch(() => {
-          crud.downloadLoading = false
-        })
+      }
+      console.log('doExport ids', ids)
+      if (ids.length > 0) {
+        crud.crudMethod
+          .exportList(ids)
+          .then(result => {
+            downloadFile(result, crud.title + '数据', 'xlsx')
+            crud.downloadLoading = false
+          })
+          .catch(() => {
+            crud.downloadLoading = false
+          })
+      } else {
+        crud.crudMethod
+          .exportPage(crud.getQueryParams())
+          .then(result => {
+            downloadFile(result, crud.title + '数据', 'xlsx')
+            crud.downloadLoading = false
+          })
+          .catch(() => {
+            crud.downloadLoading = false
+          })
+      }
     },
     /**
      * 获取查询参数
@@ -486,6 +508,7 @@ function CRUD(options) {
      */
     resetDataStatus() {
       const dataStatus = {}
+
       function resetStatus(datas) {
         datas.forEach(e => {
           dataStatus[crud.getDataId(e)] = {
@@ -497,6 +520,7 @@ function CRUD(options) {
           }
         })
       }
+
       resetStatus(crud.data)
       crud.dataStatus = dataStatus
     },

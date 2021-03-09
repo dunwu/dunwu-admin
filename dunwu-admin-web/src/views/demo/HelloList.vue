@@ -52,7 +52,7 @@
           </el-col>
         </el-row>
       </div>
-      <crudOperation :permission="permission" />
+      <crudOperation />
     </div>
 
     <!--表单组件-->
@@ -102,7 +102,7 @@
         align="center"
       >
         <template slot-scope="scope">
-          <udOperation :data="scope.row" :permission="permission" />
+          <udOperation :data="scope.row" />
         </template>
       </el-table-column>
     </el-table>
