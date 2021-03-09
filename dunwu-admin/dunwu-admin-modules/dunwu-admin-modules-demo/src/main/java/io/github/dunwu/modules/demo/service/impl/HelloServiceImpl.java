@@ -1,13 +1,12 @@
 package io.github.dunwu.modules.demo.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollectionUtil;
+import io.github.dunwu.data.mybatis.ServiceImpl;
+import io.github.dunwu.modules.demo.dao.HelloDao;
 import io.github.dunwu.modules.demo.entity.Hello;
 import io.github.dunwu.modules.demo.entity.dto.HelloDto;
 import io.github.dunwu.modules.demo.entity.query.HelloQuery;
-import io.github.dunwu.modules.demo.dao.HelloDao;
 import io.github.dunwu.modules.demo.service.HelloService;
-import io.github.dunwu.data.mybatis.ServiceImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
  * 测试 Service 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-03-06
+ * @since 2021-03-09
  */
 @Service
 public class HelloServiceImpl extends ServiceImpl implements HelloService {
@@ -64,13 +63,13 @@ public class HelloServiceImpl extends ServiceImpl implements HelloService {
     }
 
     @Override
-    public Page<HelloDto> pojoPageByQuery(HelloQuery query, Pageable pageable) {
-        return dao.pojoPageByQuery(query, pageable, this::doToDto);
+    public List<HelloDto> pojoListByQuery(HelloQuery query) {
+        return dao.pojoListByQuery(query, this::doToDto);
     }
 
     @Override
-    public List<HelloDto> pojoListByQuery(HelloQuery query) {
-        return dao.pojoListByQuery(query, this::doToDto);
+    public Page<HelloDto> pojoPageByQuery(HelloQuery query, Pageable pageable) {
+        return dao.pojoPageByQuery(query, pageable, this::doToDto);
     }
 
     @Override

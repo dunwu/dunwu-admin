@@ -1,10 +1,10 @@
 package io.github.dunwu.modules.demo.service;
 
 import io.github.dunwu.data.core.annotation.QueryField;
+import io.github.dunwu.data.mybatis.IService;
 import io.github.dunwu.modules.demo.entity.Hello;
 import io.github.dunwu.modules.demo.entity.dto.HelloDto;
 import io.github.dunwu.modules.demo.entity.query.HelloQuery;
-import io.github.dunwu.data.mybatis.IService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  * 测试 Service 接口
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-03-06
+ * @since 2021-03-09
  */
 public interface HelloService extends IService {
 
@@ -71,21 +71,21 @@ public interface HelloService extends IService {
     boolean removeByIds(Collection<? extends Serializable> ids);
 
     /**
-     * 根据 query 和 pageable 分页查询 {@link HelloDto}
+     * 根据 {@link HelloQuery} 查询 {@link HelloDto} 列表
+     *
+     * @param query 查询条件，根据 HelloQuery 中的 {@link QueryField} 注解自动组装查询条件
+     * @return {@link List<HelloDto>}
+     */
+    List<HelloDto> pojoListByQuery(HelloQuery query);
+
+    /**
+     * 根据 {@link HelloQuery} 和 {@link Pageable} 分页查询 {@link HelloDto} 列表
      *
      * @param query    查询条件，根据 HelloQuery 中的 {@link QueryField} 注解自动组装查询条件
      * @param pageable 分页查询条件
      * @return {@link Page<HelloDto>}
      */
     Page<HelloDto> pojoPageByQuery(HelloQuery query, Pageable pageable);
-
-    /**
-     * 根据 query 查询 {@link HelloDto} 列表
-     *
-     * @param query 查询条件，根据 HelloQuery 中的 {@link QueryField} 注解自动组装查询条件
-     * @return {@link List<HelloDto>}
-     */
-    List<HelloDto> pojoListByQuery(HelloQuery query);
 
     /**
      * 根据 id 查询 {@link HelloDto}
@@ -96,7 +96,7 @@ public interface HelloService extends IService {
     HelloDto pojoById(Serializable id);
 
     /**
-     * 根据 query 查询 {@link HelloDto}
+     * 根据 {@link HelloQuery} 查询 {@link HelloDto} 列表
      *
      * @param query 查询条件，根据 HelloQuery 中的 {@link QueryField} 注解自动组装查询条件
      * @return {@link List<HelloDto>}
@@ -104,7 +104,7 @@ public interface HelloService extends IService {
     HelloDto pojoByQuery(HelloQuery query);
 
     /**
-     * 根据 query 查询满足条件的记录数
+     * 根据 {@link HelloQuery} 查询匹配条件的记录数
      *
      * @param query 查询条件，根据 HelloQuery 中的 {@link QueryField} 注解自动组装查询条件
      * @return {@link Integer}
@@ -121,7 +121,7 @@ public interface HelloService extends IService {
     void exportList(Collection<? extends Serializable> ids, HttpServletResponse response) throws IOException;
 
     /**
-     * 根据 query 和 pageable 查询 {@link HelloDto} 列表，并导出 excel 表单
+     * 根据 {@link HelloQuery} 和 {@link Pageable} 分页查询 {@link HelloDto} 列表，并导出 excel 表单
      *
      * @param query    查询条件，根据 HelloQuery 中的 {@link QueryField} 注解自动组装查询条件
      * @param pageable 分页查询条件
@@ -131,7 +131,7 @@ public interface HelloService extends IService {
     void exportPage(HelloQuery query, Pageable pageable, HttpServletResponse response) throws IOException;
 
     /**
-     * {@link Hello} 转为 {@link HelloDto}
+     * 将 {@link Hello} 转为 {@link HelloDto}
      *
      * @param model 数据实体
      * @return /
@@ -139,7 +139,7 @@ public interface HelloService extends IService {
     HelloDto doToDto(Hello model);
 
     /**
-     * {@link HelloDto} 转为 {@link Hello}
+     * 将 {@link HelloDto} 转为 {@link Hello}
      *
      * @param dto Dto 实体
      * @return /

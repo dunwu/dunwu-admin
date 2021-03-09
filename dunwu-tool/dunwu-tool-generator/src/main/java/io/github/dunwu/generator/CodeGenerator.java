@@ -25,8 +25,8 @@ import freemarker.template.TemplateException;
 import io.github.dunwu.generator.config.builder.ConfigBuilder;
 import io.github.dunwu.generator.config.po.TableInfo;
 import io.github.dunwu.generator.engine.AbstractTemplateEngine;
-import io.github.dunwu.generator.engine.FreemarkerTemplateEngine;
 import io.github.dunwu.generator.engine.CodeGenerateContentDto;
+import io.github.dunwu.generator.engine.FreemarkerTemplateEngine;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
@@ -146,7 +146,8 @@ public class CodeGenerator {
             // Boolean类型is前缀处理
             if (builder.getStrategyConfig().isEntityBooleanColumnRemoveIsPrefix()
                 && CollectionUtils.isNotEmpty(tableInfo.getFields())) {
-                tableInfo.getFields().stream().filter(field -> "boolean".equalsIgnoreCase(field.getJavaType().getType()))
+                tableInfo.getFields().stream().filter(
+                    field -> "boolean".equalsIgnoreCase(field.getJavaType().getType()))
                          .filter(field -> field.getPropertyName().startsWith("is"))
                          .forEach(field -> {
                              field.setConvert(true);

@@ -1,19 +1,20 @@
 package io.github.dunwu.modules.demo.entity.dto;
 
-import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
 /**
  * 测试 Dto 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-03-06
+ * @since 2021-03-09
  */
 @Data
 @Accessors(chain = true)
@@ -35,6 +36,5 @@ public class HelloDto implements Serializable {
     @ApiModelProperty(value = "创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime createTime;
-
 
 }

@@ -1,7 +1,6 @@
 package ${package.ServiceImpl};
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollectionUtil;
 import ${package.Entity}.${entity};
 import ${package.Dto}.${table.dtoName};
 import ${package.Query}.${table.queryName};
@@ -64,18 +63,18 @@ public class ${table.serviceImplName} extends ${superServiceImplClass} implement
     }
 
     @Override
-    public boolean removeByIds(Collection<Serializable> ids) {
+    public boolean removeByIds(Collection<? extends Serializable> ids) {
         return dao.removeByIds(ids);
-    }
-
-    @Override
-    public Page<${table.dtoName}> pojoPageByQuery(${table.queryName} query, Pageable pageable) {
-        return dao.pojoPageByQuery(query, pageable, this::doToDto);
     }
 
     @Override
     public List<${table.dtoName}> pojoListByQuery(${table.queryName} query) {
         return dao.pojoListByQuery(query, this::doToDto);
+    }
+
+    @Override
+    public Page<${table.dtoName}> pojoPageByQuery(${table.queryName} query, Pageable pageable) {
+        return dao.pojoPageByQuery(query, pageable, this::doToDto);
     }
 
     @Override
@@ -94,7 +93,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass} implement
     }
 
     @Override
-    public void exportList(Collection<Serializable> ids, HttpServletResponse response) throws IOException {
+    public void exportList(Collection<? extends Serializable> ids, HttpServletResponse response) throws IOException {
         List<${table.dtoName}> list = dao.pojoListByIds(ids, this::doToDto);
         dao.exportDtoList(list, response);
     }

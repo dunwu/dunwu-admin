@@ -206,6 +206,12 @@
             >
               <el-option label="string" value="string" />
               <el-option label="number" value="number" />
+              <el-option label="boolean" value="boolean" />
+              <el-option label="integer" value="integer" />
+              <el-option label="float" value="float" />
+              <el-option label="url" value="url" />
+              <el-option label="email" value="email" />
+              <el-option label="date" value="date" />
             </el-select>
             <el-select
               v-else

@@ -144,4 +144,11 @@ public class TableField {
         return firstChar.toUpperCase() + setGetName.substring(1);
     }
 
+    public String getPropertyType() {
+        if (null != javaType) {
+            return javaType.getType();
+        }
+        return null;
+    }
+
 }

@@ -1,8 +1,5 @@
 package ${package.Entity};
 
-<#list table.importPackages as pkg>
-import ${pkg};
-</#list>
 <#if enableSwagger>
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -16,6 +13,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 </#if>
+
+<#list table.importPackages as pkg>
+
+import ${pkg};
+</#list>
 
 /**
  * ${table.comment!}
@@ -91,28 +93,28 @@ public class ${entity} implements Serializable {
     <#if (logicDeleteFieldName!"") == field.fieldName>
     @TableLogic
     </#if>
-    <#if (field.javaType == "Date") || field.javaType == "LocalDateTime">
+    <#if (field.propertyType == "Date") || (field.propertyType == "LocalDate") || field.propertyType == "LocalDateTime">
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     </#if>
-    private ${field.javaType} ${field.propertyName};
+    private ${field.propertyType} ${field.propertyName};
 </#list>
 <#------------  END 字段循环遍历  ---------->
 
 <#if !entityLombokModel>
     <#list table.fields as field>
-        <#if field.javaType == "boolean">
+        <#if field.propertyType == "boolean">
             <#assign getprefix="is"/>
         <#else>
             <#assign getprefix="get"/>
         </#if>
-    public ${field.javaType} ${getprefix}${field.capitalName}() {
+    public ${field.propertyType} ${getprefix}${field.capitalName}() {
         return ${field.propertyName};
     }
 
     <#if entityBuilderModel>
-    public ${entity} set${field.capitalName}(${field.javaType} ${field.propertyName}) {
+    public ${entity} set${field.capitalName}(${field.propertyType} ${field.propertyName}) {
     <#else>
-    public void set${field.capitalName}(${field.javaType} ${field.propertyName}) {
+    public void set${field.capitalName}(${field.propertyType} ${field.propertyName}) {
     </#if>
         this.${field.propertyName} = ${field.propertyName};
         <#if entityBuilderModel>

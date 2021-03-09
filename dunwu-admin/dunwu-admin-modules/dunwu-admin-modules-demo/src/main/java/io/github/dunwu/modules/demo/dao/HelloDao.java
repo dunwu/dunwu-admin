@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
  * 测试 Dao 接口
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-03-06
+ * @since 2021-03-09
  */
 public interface HelloDao extends IExtDao<Hello> {
 

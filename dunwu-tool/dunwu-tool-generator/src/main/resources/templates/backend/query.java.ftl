@@ -1,8 +1,5 @@
 package ${package.Query};
 
-<#list table.importPackages as pkg>
-import ${pkg};
-</#list>
 import io.github.dunwu.data.core.annotation.QueryField;
 <#if enableSwagger>
 import io.swagger.annotations.ApiModel;
@@ -13,6 +10,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 </#if>
+<#list table.importPackages as pkg>
+
+import ${pkg};
+</#list>
 
 import java.util.List;
 
@@ -58,22 +59,22 @@ public class ${table.queryName} implements Serializable {
     /** ${field.comment} */
     </#if>
   </#if>
-  <#if (field.javaType == "Date") || (field.javaType == "LocalDate") || field.javaType == "LocalDateTime">
+  <#if (field.propertyType == "Date") || (field.propertyType == "LocalDate") || field.propertyType == "LocalDateTime">
     <#if field.datePattern??>
     @JsonFormat(pattern = "${field.datePattern}", timezone = "GMT+8")
     </#if>
   </#if>
     @QueryField
-    private ${field.javaType} ${field.propertyName};
+    private ${field.propertyType} ${field.propertyName};
   <#if field.queryType == "BETWEEN">
 
-    <#if (field.javaType == "Date") || (field.javaType == "LocalDate") || field.javaType == "LocalDateTime">
+    <#if (field.propertyType == "Date") || (field.propertyType == "LocalDate") || field.propertyType == "LocalDateTime">
       <#if field.datePattern??>
     @JsonFormat(shape = JsonFormat.Shape.ARRAY, pattern = "${field.datePattern}", timezone = "GMT+8")
       </#if>
     </#if>
     @QueryField(value = "${field.propertyName}", type = QueryField.QueryType.BETWEEN)
-    private List<${field.javaType}> ${field.propertyName}Range;
+    private List<${field.propertyType}> ${field.propertyName}Range;
   </#if>
 </#list>
 <#list table.queryExtFields as field>
@@ -85,41 +86,41 @@ public class ${table.queryName} implements Serializable {
     /** ${field.comment} */
     </#if>
   </#if>
-  <#if (field.javaType == "Date") || (field.javaType == "LocalDate") || field.javaType == "LocalDateTime">
+  <#if (field.propertyType == "Date") || (field.propertyType == "LocalDate") || field.propertyType == "LocalDateTime">
     <#if field.datePattern??>
     @JsonFormat(pattern = "${field.datePattern}", timezone = "GMT+8")
     </#if>
   </#if>
     @QueryField
-    private ${field.javaType} ${field.propertyName};
+    private ${field.propertyType} ${field.propertyName};
   <#if field.queryType == "BETWEEN">
 
-      <#if (field.javaType == "Date") || (field.javaType == "LocalDate") || field.javaType == "LocalDateTime">
+      <#if (field.propertyType == "Date") || (field.propertyType == "LocalDate") || field.propertyType == "LocalDateTime">
           <#if field.datePattern??>
     @JsonFormat(shape = JsonFormat.Shape.ARRAY, pattern = "${field.datePattern}", timezone = "GMT+8")
           </#if>
       </#if>
     @QueryField(value = "${field.propertyName}", type = QueryField.QueryType.BETWEEN)
-    private List<${field.javaType}> ${field.propertyName}Range;
+    private List<${field.propertyType}> ${field.propertyName}Range;
   </#if>
 </#list>
 <#------------  END 字段循环遍历  ---------->
 <#if !entityLombokModel>
 
   <#list table.queryFields as field>
-    <#if field.javaType == "boolean">
+    <#if field.propertyType == "boolean">
         <#assign getprefix="is"/>
     <#else>
         <#assign getprefix="get"/>
     </#if>
-    public ${field.javaType} ${getprefix}${field.capitalName}() {
+    public ${field.propertyType} ${getprefix}${field.capitalName}() {
         return ${field.propertyName};
     }
 
     <#if entityBuilderModel>
-    public ${entity} set${field.capitalName}(${field.javaType} ${field.propertyName}) {
+    public ${entity} set${field.capitalName}(${field.propertyType} ${field.propertyName}) {
     <#else>
-    public void set${field.capitalName}(${field.javaType} ${field.propertyName}) {
+    public void set${field.capitalName}(${field.propertyType} ${field.propertyName}) {
     </#if>
         this.${field.propertyName} = ${field.propertyName};
         <#if entityBuilderModel>
@@ -128,19 +129,19 @@ public class ${table.queryName} implements Serializable {
     }
   </#list>
   <#list table.queryExtFields as field>
-    <#if field.javaType == "boolean">
+    <#if field.propertyType == "boolean">
         <#assign getprefix="is"/>
     <#else>
         <#assign getprefix="get"/>
     </#if>
-    public ${field.javaType} ${getprefix}${field.capitalName}() {
+    public ${field.propertyType} ${getprefix}${field.capitalName}() {
         return ${field.propertyName};
     }
 
     <#if entityBuilderModel>
-    public ${entity} set${field.capitalName}(${field.javaType} ${field.propertyName}) {
+    public ${entity} set${field.capitalName}(${field.propertyType} ${field.propertyName}) {
     <#else>
-    public void set${field.capitalName}(${field.javaType} ${field.propertyName}) {
+    public void set${field.capitalName}(${field.propertyType} ${field.propertyName}) {
     </#if>
         this.${field.propertyName} = ${field.propertyName};
         <#if entityBuilderModel>

@@ -19,7 +19,7 @@
             />
           </el-col>
     <#else>
-    <#if (field.javaType == "Date") || (field.javaType == "LocalDate") || field.javaType == "LocalDateTime">
+    <#if (field.propertyType == "Date") || (field.propertyType == "LocalDate") || field.propertyType == "LocalDateTime">
           <el-col :span="6">
             <date-range-picker
               v-model="query.${field.propertyName}Range"
@@ -46,7 +46,7 @@
               />
             </el-col>
       <#else>
-        <#if (field.javaType == "Date") || (field.javaType == "LocalDate") || field.javaType == "LocalDateTime">
+        <#if (field.propertyType == "Date") || (field.propertyType == "LocalDate") || field.propertyType == "LocalDateTime">
             <el-col :span="6">
               <date-range-picker
                 v-model="query.${field.propertyName}Range"
