@@ -9,7 +9,7 @@
               v-model="query.id"
               clearable
               placeholder="请输入ID"
-              style="width: 90%;"
+              style="width: 90%"
               class="filter-item"
               @keyup.enter.native="crud.toQuery"
             />
@@ -19,7 +19,7 @@
               v-model="query.name"
               clearable
               placeholder="请输入名字"
-              style="width: 90%;"
+              style="width: 90%"
               class="filter-item"
               @keyup.enter.native="crud.toQuery"
             />
@@ -29,7 +29,7 @@
               v-model="query.age"
               clearable
               placeholder="请输入年龄"
-              style="width: 90%;"
+              style="width: 90%"
               class="filter-item"
               @keyup.enter.native="crud.toQuery"
             />
@@ -52,7 +52,7 @@
           </el-col>
         </el-row>
       </div>
-      <crudOperation :permission="permission" />
+      <crudOperation />
     </div>
 
     <!--表单组件-->
@@ -65,13 +65,13 @@
     >
       <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
         <el-form-item label="名字" prop="name">
-          <el-input v-model="form.name" style="width: 370px;" />
+          <el-input v-model="form.name" style="width: 370px" />
         </el-form-item>
         <el-form-item label="年龄" prop="age">
-          <el-input v-model="form.age" style="width: 370px;" />
+          <el-input v-model="form.age" style="width: 370px" />
         </el-form-item>
         <el-form-item label="创建时间">
-          <el-input v-model="form.createTime" style="width: 370px;" />
+          <el-input v-model="form.createTime" style="width: 370px" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -93,14 +93,9 @@
       <el-table-column prop="name" label="名字" :sortable="'custom'" />
       <el-table-column prop="age" label="年龄" />
       <el-table-column prop="createTime" label="创建时间" />
-      <el-table-column
-        v-if="checkPer(['admin', 'demo:hello:edit', 'demo:hello:del'])"
-        label="操作"
-        width="150px"
-        align="center"
-      >
+      <el-table-column label="操作" width="150px" align="center">
         <template slot-scope="scope">
-          <udOperation :data="scope.row" :permission="permission" />
+          <udOperation :data="scope.row" />
         </template>
       </el-table-column>
     </el-table>
@@ -121,7 +116,7 @@ import DateRangePicker from '@/components/DateRangePicker'
 
 const defaultForm = { name: null, age: null, createTime: null }
 export default {
-  name: 'Hello',
+  name: 'hello',
   components: { pagination, crudOperation, queryOperation, udOperation, DateRangePicker },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   cruds() {
@@ -134,15 +129,10 @@ export default {
   },
   data() {
     return {
-      permission: {
-        add: ['admin', 'demo:hello:add'],
-        edit: ['admin', 'demo:hello:edit'],
-        del: ['admin', 'demo:hello:del']
-      },
       rules: {
-        name: [{ required: true, message: '名字不能为空', trigger: 'blur' }],
-        age: [{ required: true, message: '年龄必须为数字', trigger: 'blur', type: 'number' }],
-        createTime: [{ required: true, message: '创建时间不能为空', trigger: 'blur' }]
+        name: [{ required: true, trigger: 'blur', type: 'string' }],
+        age: [{ required: true, trigger: 'blur', type: 'number' }],
+        createTime: [{ required: true, trigger: 'blur', type: 'date' }]
       }
     }
   },

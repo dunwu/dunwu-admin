@@ -48,11 +48,7 @@
       <#else>
         <#if (field.propertyType == "Date") || (field.propertyType == "LocalDate") || field.propertyType == "LocalDateTime">
             <el-col :span="6">
-              <date-range-picker
-                v-model="query.${field.propertyName}Range"
-                class="date-item"
-                style="width: 90%"
-              />
+              <date-range-picker v-model="query.${field.propertyName}Range" class="date-item" style="width: 90%" />
             </el-col>
         <#else>
             <el-col :span="6">
@@ -93,7 +89,13 @@
 
 <#if table.enableForm>
     <!--表单组件-->
-    <el-dialog :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.title" width="500px">
+    <el-dialog
+      :close-on-click-modal="false"
+      :before-close="crud.cancelCU"
+      :visible.sync="crud.status.cu > 0"
+      :title="crud.status.title"
+      width="500px"
+    >
       <el-form ref="form" :model="form"<#if table.enableValidate> :rules="rules"</#if> size="small" label-width="80px">
   <#list table.formFields as field>
     <#if field.enableForm>
@@ -134,7 +136,7 @@
     </el-dialog>
 </#if>
 
-      <!--表格渲染-->
+    <!--表格渲染-->
 <#if table.enableList>
     <el-table
       ref="table"
@@ -147,30 +149,30 @@
   <#list table.fields as field>
     <#if field.enableList>
       <#if (field.dictName)?? && (field.dictName)!="">
-        <el-table-column prop="${field.propertyName}" label="<#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if>"<#if field.enableSort> :sortable="'custom'"</#if>>
-          <template slot-scope="scope">
-            {{ dict.label.${field.dictName}[scope.row.${field.propertyName}] }}
-          </template>
-        </el-table-column>
+      <el-table-column prop="${field.propertyName}" label="<#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if>"<#if field.enableSort> :sortable="'custom'"</#if>>
+        <template slot-scope="scope">
+          {{ dict.label.${field.dictName}[scope.row.${field.propertyName}] }}
+        </template>
+      </el-table-column>
       <#else>
-        <el-table-column prop="${field.propertyName}" label="<#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if>" <#if field.enableSort>:sortable="'custom'"</#if> />
+      <el-table-column prop="${field.propertyName}" label="<#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if>"<#if field.enableSort> :sortable="'custom'"</#if> />
       </#if>
     </#if>
   </#list>
   <#if table.enablePermission>
-        <el-table-column v-if="checkPer(['admin','<#if package.ModuleName??>${package.ModuleName}</#if>:${table.entityPath}:edit','<#if package.ModuleName??>${package.ModuleName}</#if>:${table.entityPath}:del'])" label="操作" width="150px" align="center">
-          <template slot-scope="scope">
-            <udOperation :data="scope.row" :permission="permission" />
-          </template>
-        </el-table-column>
+      <el-table-column v-if="checkPer(['admin','<#if package.ModuleName??>${package.ModuleName}</#if>:${table.entityPath}:edit','<#if package.ModuleName??>${package.ModuleName}</#if>:${table.entityPath}:del'])" label="操作" width="150px" align="center">
+        <template slot-scope="scope">
+          <udOperation :data="scope.row" :permission="permission" />
+        </template>
+      </el-table-column>
   <#else>
-        <el-table-column label="操作" width="150px" align="center">
-          <template slot-scope="scope">
-            <udOperation :data="scope.row" />
-          </template>
-        </el-table-column>
+      <el-table-column label="操作" width="150px" align="center">
+        <template slot-scope="scope">
+          <udOperation :data="scope.row" />
+        </template>
+      </el-table-column>
   </#if>
-      </el-table>
+    </el-table>
 </#if>
 
     <!--分页组件-->
@@ -180,7 +182,7 @@
 
 <script>
 import ${table.apiName} from './${table.apiName}'
-import CRUD, {crud, form, header, presenter} from '@crud/crud'
+import CRUD, { crud, form, header, presenter } from '@crud/crud'
 import queryOperation from '@crud/Query.operation'
 import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
@@ -211,11 +213,7 @@ export default {
   <#if field.enableValidate>
         ${field.propertyName}: [
     <#if field.validateType??>
-      <#if field.validateType == 'number'>
-          { required: true, message: '<#if field.comment != ''>${field.comment}</#if>必须为数字', trigger: 'blur', type: 'number' }
-      <#else>
-          { required: true, message: '<#if field.comment != ''>${field.comment}</#if>不能为空', trigger: 'blur' }
-      </#if>
+          { required: true, trigger: 'blur', type: '${field.validateType}' }
     <#else>
           { required: true, message: '<#if field.comment != ''>${field.comment}</#if>不能为空', trigger: 'blur' }
     </#if>
