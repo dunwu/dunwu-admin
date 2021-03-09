@@ -1,6 +1,11 @@
+<!--
+  - 表格公共操作按钮组合，包含 [ 新增、编辑、删除、导出 ] 按钮。
+  -->
+
 <template>
   <div class="crud-opts">
-    <span class="crud-opts-left">
+    <!--执行权限校验-->
+    <span v-if="crud.enablePermission" class="crud-opts-left">
       <!--左侧插槽-->
       <slot name="left" />
       <el-button
@@ -52,7 +57,59 @@
       >
         删除
       </el-button>
-
+      <!--右侧-->
+      <slot name="right" />
+    </span>
+    <!--不执行权限校验-->
+    <span v-else class="crud-opts-left">
+      <!--左侧插槽-->
+      <slot name="left" />
+      <el-button
+        v-if="crud.optShow.add"
+        class="filter-item"
+        size="mini"
+        type="primary"
+        icon="el-icon-plus"
+        @click="crud.toAdd"
+      >
+        新增
+      </el-button>
+      <el-button
+        v-if="crud.optShow.edit"
+        class="filter-item"
+        size="mini"
+        type="primary"
+        icon="el-icon-edit"
+        :disabled="crud.selections.length !== 1"
+        @click="crud.toEdit(crud.selections[0])"
+      >
+        编辑
+      </el-button>
+      <el-button
+        v-if="crud.optShow.exportPage"
+        :loading="crud.downloadLoading"
+        :disabled="!crud.data.length"
+        class="filter-item"
+        size="mini"
+        type="primary"
+        icon="el-icon-download"
+        @click="crud.doExport"
+      >
+        导出
+      </el-button>
+      <el-button
+        v-if="crud.optShow.del"
+        slot="reference"
+        class="filter-item"
+        type="danger"
+        icon="el-icon-delete"
+        size="mini"
+        :loading="crud.delAllLoading"
+        :disabled="crud.selections.length === 0"
+        @click="toDelete(crud.selections)"
+      >
+        删除
+      </el-button>
       <!--右侧-->
       <slot name="right" />
     </span>

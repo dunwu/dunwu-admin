@@ -1126,3 +1126,18 @@ CREATE TABLE `file_record` (
     ROW_FORMAT = COMPACT
     COMMENT ='文件记录';
 
+
+DROP TABLE IF EXISTS `hello`;
+CREATE TABLE `hello` (
+    `id`          BIGINT(20)   NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `name`        VARCHAR(255) NOT NULL COMMENT '名字',
+    `age`         SMALLINT(3)  NOT NULL COMMENT '年龄',
+    `create_time` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    PRIMARY KEY (`id`) USING BTREE,
+    UNIQUE KEY `uk_name`(`name`) USING BTREE
+)
+    ENGINE = InnoDB
+    AUTO_INCREMENT = 4
+    DEFAULT CHARSET = `utf8`
+    ROW_FORMAT = COMPACT COMMENT ='测试';
+
