@@ -5,7 +5,7 @@
   <parent>
     <artifactId>dunwu-admin</artifactId>
     <groupId>io.github.dunwu</groupId>
-    <version>2.6</version>
+    <version>1.0.1</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -22,17 +22,17 @@
     <dependency>
       <groupId>io.github.dunwu</groupId>
       <artifactId>dunwu-admin-modules-generator</artifactId>
-      <version>2.6</version>
+      <version>1.0.1</version>
     </dependency>
     <dependency>
       <groupId>io.github.dunwu</groupId>
       <artifactId>dunwu-admin-modules-mnt</artifactId>
-      <version>2.6</version>
+      <version>1.0.1</version>
     </dependency>
     <dependency>
       <groupId>io.github.dunwu</groupId>
       <artifactId>dunwu-admin-modules-demo</artifactId>
-      <version>2.6</version>
+      <version>1.0.1</version>
       <exclusions>
         <exclusion>
           <groupId>io.github.dunwu</groupId>
@@ -45,7 +45,7 @@
     <dependency>
       <groupId>io.github.dunwu</groupId>
       <artifactId>dunwu-admin-tools</artifactId>
-      <version>2.6</version>
+      <version>1.0.1</version>
     </dependency>
 
     <dependency>

@@ -7,7 +7,7 @@
   <parent>
     <groupId>io.github.dunwu</groupId>
     <artifactId>dunwu-admin-modules</artifactId>
-    <version>2.6</version>
+    <version>1.0.1</version>
   </parent>
 
   <artifactId>dunwu-admin-modules-generator</artifactId>
@@ -20,12 +20,12 @@
     <dependency>
       <groupId>io.github.dunwu</groupId>
       <artifactId>dunwu-admin-common</artifactId>
-      <version>2.6</version>
+      <version>1.0.1</version>
     </dependency>
     <dependency>
       <groupId>io.github.dunwu</groupId>
       <artifactId>dunwu-admin-modules-mnt</artifactId>
-      <version>2.6</version>
+      <version>1.0.1</version>
     </dependency>
 
     <dependency>

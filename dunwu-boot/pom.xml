@@ -7,12 +7,12 @@
   <parent>
     <groupId>io.github.dunwu</groupId>
     <artifactId>dunwu-tool</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <relativePath />
   </parent>
 
   <artifactId>dunwu-boot</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <packaging>pom</packaging>
   <name>dunwu-boot</name>
   <description>Dunwu Starters</description>
@@ -27,7 +27,7 @@
   </modules>
 
   <properties>
-    <dunwu-boot.version>1.0.0</dunwu-boot.version>
+    <dunwu-boot.version>1.0.1</dunwu-boot.version>
   </properties>
 
   <dependencyManagement>

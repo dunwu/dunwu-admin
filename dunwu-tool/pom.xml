@@ -6,7 +6,7 @@
 
   <groupId>io.github.dunwu</groupId>
   <artifactId>dunwu-tool</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <packaging>pom</packaging>
   <name>dunwu-tool</name>
   <description>Dunwu Project</description>
@@ -33,7 +33,7 @@
     <!-- ========================================================
          Core Versions
     ========================================================= -->
-    <dunwu-tool.version>1.0.0</dunwu-tool.version>
+    <dunwu-tool.version>1.0.1</dunwu-tool.version>
     <spring-boot.version>2.2.0.RELEASE</spring-boot.version>
     <hadoop.version>3.2.0</hadoop.version>
 
