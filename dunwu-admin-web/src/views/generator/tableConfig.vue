@@ -175,7 +175,6 @@ export default {
         .getById(this.dbId)
         .then(data => {
           this.database = data
-          console.log('database', this.database)
           this.databaseLoading = true
         })
         .catch(err => {
@@ -189,7 +188,6 @@ export default {
         .then(data => {
           this.loading = false
           this.form = data
-          console.log('queryTableConfig', data)
         })
         .catch(err => {
           this.loading = false

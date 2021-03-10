@@ -266,6 +266,7 @@ export default {
   },
   created() {
     this.tableHeight = document.documentElement.clientHeight - 385
+    this.dbId = this.$route.params.dbId
     this.tableName = this.$route.params.tableName
     this.schemaName = this.$route.params.schemaName
     this.$nextTick(() => {
@@ -276,7 +277,7 @@ export default {
     queryColumnConfig() {
       this.loading = true
       codeApi
-        .queryColumnConfig({ schemaName: this.schemaName, tableName: this.tableName })
+        .queryColumnConfig({ dbId: this.dbId, schemaName: this.schemaName, tableName: this.tableName })
         .then(data => {
           this.loading = false
           this.data = data
@@ -289,7 +290,12 @@ export default {
     saveColumnConfig() {
       this.configLoading = true
       codeApi
-        .saveColumnConfig({ schemaName: this.schemaName, tableName: this.tableName, columns: this.data })
+        .saveColumnConfig({
+          dbId: this.dbId,
+          schemaName: this.schemaName,
+          tableName: this.tableName,
+          columns: this.data
+        })
         .then(res => {
           this.configLoading = false
           this.$notify({ title: '保存成功', type: 'success' })

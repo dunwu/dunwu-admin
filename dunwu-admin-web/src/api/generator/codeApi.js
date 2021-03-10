@@ -49,8 +49,9 @@ export function saveTableConfig(data) {
 
 export function queryColumnConfig(params) {
   return request({
-    url: 'api/code/column/query/' + params.schemaName + '/' + params.tableName,
-    method: 'get'
+    url: 'api/code/column/query',
+    method: 'get',
+    params
   })
 }
 
