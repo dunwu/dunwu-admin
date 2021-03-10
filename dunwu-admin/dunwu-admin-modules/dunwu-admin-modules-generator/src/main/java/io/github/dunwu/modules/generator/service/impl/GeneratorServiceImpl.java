@@ -67,11 +67,11 @@ public class GeneratorServiceImpl implements GeneratorService {
     @Override
     public void syncTables(TableSyncDto tableSyncDto) {
         for (String tableName : tableSyncDto.getTables()) {
-            syncOneTable(tableSyncDto.getSchemaName(), tableName);
+            syncOneTable(tableSyncDto.getDbId(), tableSyncDto.getSchemaName(), tableName);
         }
     }
 
-    private void syncOneTable(String schemaName, String tableName) {
+    private void syncOneTable(Long dbId, String schemaName, String tableName) {
         String username = SecurityUtils.getCurrentUsername();
         if (StrUtil.isBlank(username)) {
             username = "admin";
@@ -92,7 +92,7 @@ public class GeneratorServiceImpl implements GeneratorService {
                                                             .collect(Collectors.toMap(CodeColumnConfig::getFieldName,
                                                                 Function.identity()));
 
-        TableInfo tableInfo = queryTableInfo(schemaName, tableName);
+        TableInfo tableInfo = queryTableInfo(dbId, schemaName, tableName);
         if (tableInfo == null) {
             throw new GlobalException(StrUtil.format("未找到 {} 表信息", tableName));
         }
@@ -169,7 +169,7 @@ public class GeneratorServiceImpl implements GeneratorService {
         if (CollectionUtil.isNotEmpty(columnConfigRecords)) {
             return columnConfigRecords;
         }
-        TableInfo tableInfo = queryTableInfo(query.getSchemaName(), query.getTableName());
+        TableInfo tableInfo = queryTableInfo(query.getDbId(), query.getSchemaName(), query.getTableName());
         return tableInfo.getFields().stream()
                         .map(i -> transToCodeColumnConfigDto(i, query.getSchemaName(), query.getTableName()))
                         .collect(Collectors.toList());
@@ -374,11 +374,12 @@ public class GeneratorServiceImpl implements GeneratorService {
     /**
      * 根据 schemaName、tableName 查询表的实际数据信息
      *
+     * @param dbId       数据库 ID
      * @param schemaName schema 名
      * @param tableName  table 名
      * @return /
      */
-    private TableInfo queryTableInfo(String schemaName, String tableName) {
+    private TableInfo queryTableInfo(Long dbId, String schemaName, String tableName) {
         String username = SecurityUtils.getCurrentUsername();
         if (StrUtil.isBlank(schemaName)) {
             schemaName = tableService.getCurrentSchema();
@@ -393,7 +394,8 @@ public class GeneratorServiceImpl implements GeneratorService {
             configBuilder = createConfigBuilder(tableConfigDto);
         } else {
             CodeTableConfigDto newTableConfigDto = BeanUtil.toBean(globalConfig, CodeTableConfigDto.class);
-            newTableConfigDto.setSchemaName(schemaName)
+            newTableConfigDto.setDbId(dbId)
+                             .setSchemaName(schemaName)
                              .setTableName(tableName)
                              .setCreateBy(username);
             configBuilder = createConfigBuilder(newTableConfigDto);

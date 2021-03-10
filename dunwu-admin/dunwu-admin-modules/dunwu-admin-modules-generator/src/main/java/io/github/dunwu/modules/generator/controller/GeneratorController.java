@@ -126,11 +126,8 @@ public class GeneratorController {
     }
 
     @ApiOperation("根据 query 条件，查询匹配条件的 CodeColumnConfigDto 列表")
-    @GetMapping("column/query/{schemaName}/{tableName}")
-    public Result queryColumnConfigByCurrentUser(@PathVariable String schemaName,
-        @PathVariable String tableName) {
-        CodeColumnConfigQuery query = new CodeColumnConfigQuery();
-        query.setSchemaName(schemaName).setTableName(tableName);
+    @GetMapping("column/query")
+    public Result queryColumnConfigByCurrentUser(CodeColumnConfigQuery query) {
         return Result.ok(generatorService.queryColumnConfigByCurrentUser(query));
     }
 

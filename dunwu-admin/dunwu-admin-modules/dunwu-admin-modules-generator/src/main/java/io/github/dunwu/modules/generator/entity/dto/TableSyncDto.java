@@ -11,6 +11,8 @@ import java.util.List;
 @Data
 public class TableSyncDto {
 
+    private Long dbId;
+
     private String schemaName;
 
     /** 表名称 */
