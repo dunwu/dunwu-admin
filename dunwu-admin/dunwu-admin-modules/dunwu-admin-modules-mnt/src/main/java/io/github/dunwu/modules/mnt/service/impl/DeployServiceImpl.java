@@ -18,7 +18,6 @@ package io.github.dunwu.modules.mnt.service.impl;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import io.github.dunwu.data.util.PageUtil;
-import io.github.dunwu.exception.BadRequestException;
 import io.github.dunwu.modules.mnt.domain.App;
 import io.github.dunwu.modules.mnt.domain.Deploy;
 import io.github.dunwu.modules.mnt.domain.DeployHistory;
@@ -45,8 +44,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.io.IOException;
 import java.util.*;
@@ -129,12 +130,12 @@ public class DeployServiceImpl implements DeployService {
         DeployDto deploy = findById(id);
         if (deploy == null) {
             sendMsg("部署信息不存在", MsgType.ERROR);
-            throw new BadRequestException("部署信息不存在");
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "文件只能上传在opt目录或者home目录");
         }
         AppDto app = deploy.getApp();
         if (app == null) {
             sendMsg("包对应应用信息不存在", MsgType.ERROR);
-            throw new BadRequestException("包对应应用信息不存在");
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "包对应应用信息不存在");
         }
         int port = app.getPort();
         //这个是服务器部署路径
@@ -355,7 +356,7 @@ public class DeployServiceImpl implements DeployService {
         App app = deployInfo.getApp();
         if (app == null) {
             sendMsg("应用信息不存在：" + resources.getAppName(), MsgType.ERROR);
-            throw new BadRequestException("应用信息不存在：" + resources.getAppName());
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "应用信息不存在：" + resources.getAppName());
         }
         String backupPath = app.getBackupPath() + FILE_SEPARATOR;
         backupPath += resources.getAppName() + FILE_SEPARATOR + deployDate;
@@ -402,7 +403,7 @@ public class DeployServiceImpl implements DeployService {
         ServerDeployDto serverDeployDTO = serverDeployService.findByIp(ip);
         if (serverDeployDTO == null) {
             sendMsg("IP对应服务器信息不存在：" + ip, MsgType.ERROR);
-            throw new BadRequestException("IP对应服务器信息不存在：" + ip);
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "IP对应服务器信息不存在：" + ip);
         }
         return new ExecuteShellUtil(ip, serverDeployDTO.getAccount(), serverDeployDTO.getPassword(),
             serverDeployDTO.getPort());
@@ -412,7 +413,7 @@ public class DeployServiceImpl implements DeployService {
         ServerDeployDto serverDeployDTO = serverDeployService.findByIp(ip);
         if (serverDeployDTO == null) {
             sendMsg("IP对应服务器信息不存在：" + ip, MsgType.ERROR);
-            throw new BadRequestException("IP对应服务器信息不存在：" + ip);
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "IP对应服务器信息不存在：" + ip);
         }
         return ScpClientUtil.getInstance(ip, serverDeployDTO.getPort(), serverDeployDTO.getAccount(),
             serverDeployDTO.getPassword());

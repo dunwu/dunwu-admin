@@ -16,7 +16,6 @@
 package io.github.dunwu.modules.mnt.service.impl;
 
 import io.github.dunwu.data.util.PageUtil;
-import io.github.dunwu.exception.BadRequestException;
 import io.github.dunwu.modules.mnt.domain.App;
 import io.github.dunwu.modules.mnt.repository.AppRepository;
 import io.github.dunwu.modules.mnt.service.AppService;
@@ -29,17 +28,19 @@ import io.github.dunwu.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.io.IOException;
 import java.util.*;
 import javax.servlet.http.HttpServletResponse;
 
 /**
-* @author zhanghouying
-* @date 2019-08-24
-*/
+ * @author zhanghouying
+ * @date 2019-08-24
+ */
 @Service
 @RequiredArgsConstructor
 public class AppServiceImpl implements AppService {
@@ -48,20 +49,23 @@ public class AppServiceImpl implements AppService {
     private final AppMapper appMapper;
 
     @Override
-    public Object queryAll(AppQueryCriteria criteria, Pageable pageable){
-        Page<App> page = appRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
+    public Object queryAll(AppQueryCriteria criteria, Pageable pageable) {
+        Page<App> page = appRepository.findAll(
+            (root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder),
+            pageable);
         return PageUtil.toMap(page.map(appMapper::toDto));
     }
 
     @Override
-    public List<AppDto> queryAll(AppQueryCriteria criteria){
-        return appMapper.toDto(appRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
+    public List<AppDto> queryAll(AppQueryCriteria criteria) {
+        return appMapper.toDto(appRepository.findAll(
+            (root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder)));
     }
 
     @Override
     public AppDto findById(Long id) {
-		App app = appRepository.findById(id).orElseGet(App::new);
-        ValidationUtil.isNull(app.getId(),"App","id",id);
+        App app = appRepository.findById(id).orElseGet(App::new);
+        ValidationUtil.isNull(app.getId(), "App", "id", id);
         return appMapper.toDto(app);
     }
 
@@ -77,22 +81,22 @@ public class AppServiceImpl implements AppService {
     public void update(App resources) {
         verification(resources);
         App app = appRepository.findById(resources.getId()).orElseGet(App::new);
-        ValidationUtil.isNull(app.getId(),"App","id",resources.getId());
+        ValidationUtil.isNull(app.getId(), "App", "id", resources.getId());
         app.copy(resources);
         appRepository.save(app);
     }
 
-    private void verification(App resources){
+    private void verification(App resources) {
         String opt = "/opt";
         String home = "/home";
         if (!(resources.getUploadPath().startsWith(opt) || resources.getUploadPath().startsWith(home))) {
-            throw new BadRequestException("文件只能上传在opt目录或者home目录 ");
+            throw new HttpClientErrorException(HttpStatus.FORBIDDEN, "文件只能上传在opt目录或者home目录");
         }
         if (!(resources.getDeployPath().startsWith(opt) || resources.getDeployPath().startsWith(home))) {
-            throw new BadRequestException("文件只能部署在opt目录或者home目录 ");
+            throw new HttpClientErrorException(HttpStatus.FORBIDDEN, "文件只能上传在opt目录或者home目录");
         }
         if (!(resources.getBackupPath().startsWith(opt) || resources.getBackupPath().startsWith(home))) {
-            throw new BadRequestException("文件只能备份在opt目录或者home目录 ");
+            throw new HttpClientErrorException(HttpStatus.FORBIDDEN, "文件只能上传在opt目录或者home目录");
         }
     }
 
@@ -108,7 +112,7 @@ public class AppServiceImpl implements AppService {
     public void download(List<AppDto> queryAll, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (AppDto appDto : queryAll) {
-            Map<String,Object> map = new LinkedHashMap<>();
+            Map<String, Object> map = new LinkedHashMap<>();
             map.put("应用名称", appDto.getName());
             map.put("端口", appDto.getPort());
             map.put("上传目录", appDto.getUploadPath());
@@ -121,4 +125,5 @@ public class AppServiceImpl implements AppService {
         }
         FileUtil.downloadExcel(list, response);
     }
+
 }

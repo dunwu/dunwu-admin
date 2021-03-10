@@ -23,11 +23,12 @@ import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
 import io.github.dunwu.data.redis.RedisHelper;
 import io.github.dunwu.domain.vo.EmailVo;
-import io.github.dunwu.exception.BadRequestException;
 import io.github.dunwu.modules.system.service.VerifyService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Collections;
 
@@ -61,7 +62,7 @@ public class VerifyServiceImpl implements VerifyService {
             String code = RandomUtil.randomNumbers(6);
             // 存入缓存
             if (!redisHelper.set(redisKey, code, expiration)) {
-                throw new BadRequestException("服务异常，请联系网站负责人");
+                throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "服务异常，请联系网站负责人");
             }
             content = template.render(Dict.create().set("code", code));
             emailVo = new EmailVo(Collections.singletonList(email), "DUNWU后台管理系统", content);
@@ -77,7 +78,7 @@ public class VerifyServiceImpl implements VerifyService {
     public void validated(String key, String code) {
         Object value = redisHelper.get(key);
         if (value == null || !value.toString().equals(code)) {
-            throw new BadRequestException("无效验证码");
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "无效验证码");
         } else {
             redisHelper.del(key);
         }

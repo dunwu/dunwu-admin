@@ -15,9 +15,8 @@
  */
 package io.github.dunwu.rest;
 
-import io.github.dunwu.modules.monitor.annotation.AppLog;
 import io.github.dunwu.domain.LocalStorage;
-import io.github.dunwu.exception.BadRequestException;
+import io.github.dunwu.modules.monitor.annotation.AppLog;
 import io.github.dunwu.service.LocalStorageService;
 import io.github.dunwu.service.dto.LocalStorageQueryCriteria;
 import io.github.dunwu.util.FileUtil;
@@ -30,15 +29,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 
 /**
-* @author Zheng Jie
-* @date 2019-09-05
-*/
+ * @author Zheng Jie
+ * @date 2019-09-05
+ */
 @RestController
 @RequiredArgsConstructor
 @Api(tags = "工具：本地存储管理")
@@ -50,8 +50,8 @@ public class LocalStorageController {
     @ApiOperation("查询文件")
     @GetMapping
     @PreAuthorize("@exp.check('storage:view')")
-    public ResponseEntity<Object> query(LocalStorageQueryCriteria criteria, Pageable pageable){
-        return new ResponseEntity<>(localStorageService.queryAll(criteria,pageable),HttpStatus.OK);
+    public ResponseEntity<Object> query(LocalStorageQueryCriteria criteria, Pageable pageable) {
+        return new ResponseEntity<>(localStorageService.queryAll(criteria, pageable), HttpStatus.OK);
     }
 
     @ApiOperation("导出数据")
@@ -64,18 +64,18 @@ public class LocalStorageController {
     @ApiOperation("上传文件")
     @PostMapping
     @PreAuthorize("@exp.check('storage:add')")
-    public ResponseEntity<Object> create(@RequestParam String name, @RequestParam("file") MultipartFile file){
+    public ResponseEntity<Object> create(@RequestParam String name, @RequestParam("file") MultipartFile file) {
         localStorageService.create(name, file);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PostMapping("/pictures")
     @ApiOperation("上传图片")
-    public ResponseEntity<Object> upload(@RequestParam MultipartFile file){
+    public ResponseEntity<Object> upload(@RequestParam MultipartFile file) {
         // 判断文件是否为图片
         String suffix = FileUtil.getExtensionName(file.getOriginalFilename());
-        if(!FileUtil.IMAGE.equals(FileUtil.getFileType(suffix))){
-            throw new BadRequestException("只能上传图片");
+        if (!FileUtil.IMAGE.equals(FileUtil.getFileType(suffix))) {
+            throw new HttpClientErrorException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "只能上传图片");
         }
         LocalStorage localStorage = localStorageService.create(null, file);
         return new ResponseEntity<>(localStorage, HttpStatus.OK);
@@ -85,7 +85,7 @@ public class LocalStorageController {
     @ApiOperation("修改文件")
     @PutMapping
     @PreAuthorize("@exp.check('storage:edit')")
-    public ResponseEntity<Object> update(@Validated @RequestBody LocalStorage resources){
+    public ResponseEntity<Object> update(@Validated @RequestBody LocalStorage resources) {
         localStorageService.update(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -97,4 +97,5 @@ public class LocalStorageController {
         localStorageService.deleteAll(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 }

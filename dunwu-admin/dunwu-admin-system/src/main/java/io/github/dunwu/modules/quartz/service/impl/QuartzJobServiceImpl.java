@@ -16,9 +16,9 @@
 package io.github.dunwu.modules.quartz.service.impl;
 
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.StrUtil;
 import io.github.dunwu.data.redis.RedisHelper;
 import io.github.dunwu.data.util.PageUtil;
-import io.github.dunwu.exception.BadRequestException;
 import io.github.dunwu.modules.quartz.domain.QuartzJob;
 import io.github.dunwu.modules.quartz.domain.QuartzLog;
 import io.github.dunwu.modules.quartz.repository.QuartzJobRepository;
@@ -28,22 +28,18 @@ import io.github.dunwu.modules.quartz.service.dto.JobQueryCriteria;
 import io.github.dunwu.modules.quartz.utils.QuartzManage;
 import io.github.dunwu.util.FileUtil;
 import io.github.dunwu.util.QueryHelp;
-import io.github.dunwu.util.StrUtil;
 import io.github.dunwu.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
 import org.quartz.CronExpression;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -96,7 +92,7 @@ public class QuartzJobServiceImpl implements QuartzJobService {
     @Transactional(rollbackFor = Exception.class)
     public void create(QuartzJob resources) {
         if (!CronExpression.isValidExpression(resources.getCronExpression())) {
-            throw new BadRequestException("cron表达式格式错误");
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "cron表达式格式错误");
         }
         resources = quartzJobRepository.save(resources);
         quartzManage.addJob(resources);
@@ -106,12 +102,12 @@ public class QuartzJobServiceImpl implements QuartzJobService {
     @Transactional(rollbackFor = Exception.class)
     public void update(QuartzJob resources) {
         if (!CronExpression.isValidExpression(resources.getCronExpression())) {
-            throw new BadRequestException("cron表达式格式错误");
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "cron表达式格式错误");
         }
         if (StrUtil.isNotBlank(resources.getSubTask())) {
             List<String> tasks = Arrays.asList(resources.getSubTask().split("[,，]"));
             if (tasks.contains(resources.getId().toString())) {
-                throw new BadRequestException("子任务中不能添加当前任务ID");
+                throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "子任务中不能添加当前任务ID");
             }
         }
         resources = quartzJobRepository.save(resources);

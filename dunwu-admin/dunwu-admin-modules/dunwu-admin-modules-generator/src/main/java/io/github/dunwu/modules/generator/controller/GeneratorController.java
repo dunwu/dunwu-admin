@@ -5,7 +5,6 @@ import cn.hutool.core.collection.CollectionUtil;
 import io.github.dunwu.data.core.Result;
 import io.github.dunwu.data.util.PageUtil;
 import io.github.dunwu.data.validator.annotation.EditCheck;
-import io.github.dunwu.exception.BadRequestException;
 import io.github.dunwu.generator.config.GlobalConfig;
 import io.github.dunwu.generator.engine.CodeGenerateContentDto;
 import io.github.dunwu.modules.generator.entity.CodeGlobalConfig;
@@ -21,8 +20,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -54,7 +55,7 @@ public class GeneratorController {
     @GetMapping(value = "generate/{schemaName}/{tableName}")
     public Result generateCode(@PathVariable String schemaName, @PathVariable String tableName) {
         if (!generatorEnabled) {
-            throw new BadRequestException("此环境不允许生成代码，请选择预览或者下载查看！");
+            throw new HttpClientErrorException(HttpStatus.FORBIDDEN, "此环境不允许生成代码，请选择预览或者下载查看！");
         }
 
         CodeTableConfigQuery codeTableConfigQuery = new CodeTableConfigQuery();
@@ -66,10 +67,6 @@ public class GeneratorController {
     @ApiOperation("生成代码")
     @GetMapping(value = "preview/{schemaName}/{tableName}")
     public Result previewCode(@PathVariable String schemaName, @PathVariable String tableName) {
-        if (!generatorEnabled) {
-            throw new BadRequestException("此环境不允许生成代码，请选择预览或者下载查看！");
-        }
-
         CodeTableConfigQuery codeTableConfigQuery = new CodeTableConfigQuery();
         codeTableConfigQuery.setSchemaName(schemaName).setTableName(tableName);
         List<CodeGenerateContentDto> previewList = generatorService.previewCode(codeTableConfigQuery);
@@ -80,10 +77,6 @@ public class GeneratorController {
     @GetMapping(value = "download/{schemaName}/{tableName}")
     public Result downloadCode(@PathVariable String schemaName, @PathVariable String tableName,
         HttpServletRequest request, HttpServletResponse response) {
-        if (!generatorEnabled) {
-            throw new BadRequestException("此环境不允许生成代码，请选择预览或者下载查看！");
-        }
-
         CodeTableConfigQuery codeTableConfigQuery = new CodeTableConfigQuery();
         codeTableConfigQuery.setSchemaName(schemaName).setTableName(tableName);
         generatorService.downloadCode(codeTableConfigQuery, request, response);

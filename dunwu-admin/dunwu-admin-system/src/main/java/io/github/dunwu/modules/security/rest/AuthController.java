@@ -9,7 +9,6 @@ import io.github.dunwu.config.RsaProperties;
 import io.github.dunwu.data.core.Result;
 import io.github.dunwu.data.redis.RedisHelper;
 import io.github.dunwu.data.validator.annotation.EditCheck;
-import io.github.dunwu.exception.BadRequestException;
 import io.github.dunwu.modules.monitor.annotation.AppLog;
 import io.github.dunwu.modules.security.config.DunwuWebSecurityProperties;
 import io.github.dunwu.modules.security.entity.constant.LoginCodeEnum;
@@ -24,17 +23,14 @@ import io.github.dunwu.util.SecurityUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -78,10 +74,10 @@ public class AuthController {
         // 清除验证码
         redisHelper.del(authUser.getUuid());
         if (StrUtil.isBlank(code)) {
-            throw new BadRequestException("验证码不存在或已过期");
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "验证码不存在或已过期");
         }
         if (StrUtil.isBlank(authUser.getCode()) || !authUser.getCode().equalsIgnoreCase(code)) {
-            throw new BadRequestException("验证码错误");
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "验证码错误");
         }
         UsernamePasswordAuthenticationToken authenticationToken =
             new UsernamePasswordAuthenticationToken(authUser.getUsername(), password);
@@ -143,7 +139,7 @@ public class AuthController {
     @PostMapping("edit/center")
     public Result center(@Validated(EditCheck.class) @RequestBody SysUser entity) {
         if (!entity.getId().equals(SecurityUtils.getCurrentUserId())) {
-            throw new BadRequestException("不能修改他人资料");
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "不能修改他人资料");
         }
         authService.updateCenter(entity);
         return Result.ok();

@@ -4,7 +4,6 @@ import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.ImmutableList;
 import io.github.dunwu.annotation.Limit;
 import io.github.dunwu.annotation.LimitType;
-import io.github.dunwu.exception.BadRequestException;
 import io.github.dunwu.util.RequestHolder;
 import io.github.dunwu.web.util.ServletUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -17,7 +16,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.data.redis.core.script.RedisScript;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.lang.reflect.Method;
 import javax.servlet.http.HttpServletRequest;
@@ -67,7 +68,7 @@ public class LimitAspect {
             logger.info("第{}次访问key为 {}，描述为 [{}] 的接口", count, keys, limit.name());
             return joinPoint.proceed();
         } else {
-            throw new BadRequestException("访问次数受限制");
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "访问次数受限制");
         }
     }
 

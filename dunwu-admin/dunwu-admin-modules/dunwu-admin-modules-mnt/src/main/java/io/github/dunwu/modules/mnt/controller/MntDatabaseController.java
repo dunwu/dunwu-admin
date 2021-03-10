@@ -3,7 +3,6 @@ package io.github.dunwu.modules.mnt.controller;
 import io.github.dunwu.data.core.Result;
 import io.github.dunwu.data.validator.annotation.AddCheck;
 import io.github.dunwu.data.validator.annotation.EditCheck;
-import io.github.dunwu.exception.BadRequestException;
 import io.github.dunwu.modules.mnt.entity.MntDatabase;
 import io.github.dunwu.modules.mnt.entity.dto.MntDatabaseDto;
 import io.github.dunwu.modules.mnt.entity.query.MntDatabaseQuery;
@@ -15,9 +14,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -147,7 +148,7 @@ public class MntDatabaseController {
                 database.getPassword(), executeFile);
             return Result.ok(result);
         } else {
-            throw new BadRequestException("Database not exist");
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Database not exist");
         }
     }
 

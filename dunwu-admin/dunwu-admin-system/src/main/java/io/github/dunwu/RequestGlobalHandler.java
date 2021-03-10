@@ -3,27 +3,23 @@ package io.github.dunwu;
 import cn.hutool.core.util.StrUtil;
 import com.google.common.net.HttpHeaders;
 import io.github.dunwu.data.core.DataException;
-import io.github.dunwu.data.core.GlobalException;
 import io.github.dunwu.data.core.Result;
 import io.github.dunwu.data.core.constant.ResultStatus;
-import io.github.dunwu.exception.BadRequestException;
+import io.github.dunwu.util.ThrowableUtil;
 import io.github.dunwu.web.constant.WebConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.ui.Model;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
@@ -75,9 +71,9 @@ public class RequestGlobalHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({ BadRequestException.class })
-    public Result handleBadRequestException(final BadRequestException e) {
-        log.error("BadRequestException", e);
+    @ExceptionHandler({ HttpClientErrorException.class })
+    public Result handleBadRequestException(final HttpClientErrorException e) {
+        log.error("HttpClientErrorException", e);
         return Result.fail(ResultStatus.HTTP_BAD_REQUEST.getCode(), e.getLocalizedMessage());
     }
 
@@ -140,23 +136,24 @@ public class RequestGlobalHandler {
     }
 
     /**
-     * 处理<code>未处理异常</code>
-     *
-     * @param e MethodArgumentNotValidException
-     * @return {@link Result}
+     * 处理所有不可知的异常
      */
     @ResponseBody
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(Exception.class)
-    public Result handlerException(Exception e) {
+    @ExceptionHandler(Throwable.class)
+    public Result handleException(Throwable e) {
+        log.error(ThrowableUtil.getStackTrace(e));
+        return Result.fail(ResultStatus.HTTP_SERVER_ERROR.getCode(), e.getMessage());
+    }
 
-        log.error("捕获未知异常", e);
-
-        if (e instanceof GlobalException) {
-            return Result.fail(ResultStatus.SYSTEM_ERROR);
-        } else {
-            return Result.fail(ResultStatus.SYSTEM_ERROR.getCode(), e.getMessage());
-        }
+    /**
+     * BadCredentialsException
+     */
+    @ExceptionHandler(BadCredentialsException.class)
+    public Result badCredentialsException(BadCredentialsException e) {
+        String message = "坏的凭证".equals(e.getMessage()) ? "用户名或密码不正确" : e.getMessage();
+        log.error(message);
+        return Result.fail(ResultStatus.HTTP_UNAUTHORIZED.getCode(), message);
     }
 
     private WebConstant.ResponseType getResponseMode(HttpServletRequest request) {

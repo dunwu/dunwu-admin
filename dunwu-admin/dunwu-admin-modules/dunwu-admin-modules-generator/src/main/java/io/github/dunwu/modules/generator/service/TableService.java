@@ -1,9 +1,5 @@
 package io.github.dunwu.modules.generator.service;
 
-import io.github.dunwu.modules.generator.entity.dto.CodeColumnConfigDto;
-
-import java.util.List;
-
 /**
  * @author peng.zhang
  * @date 2021/2/26
@@ -11,14 +7,6 @@ import java.util.List;
 public interface TableService {
 
     String getCurrentSchema();
-
-    /**
-     * 获取所有table
-     *
-     * @param schemaName schema 名
-     * @return /
-     */
-    Object getTables(String schemaName);
 
     /**
      * 查询数据库元数据
@@ -29,7 +17,5 @@ public interface TableService {
      * @return /
      */
     Object getTables(String schemaName, String tableName, int[] startEnd);
-
-    List<CodeColumnConfigDto> getColumns(String tableName);
 
 }

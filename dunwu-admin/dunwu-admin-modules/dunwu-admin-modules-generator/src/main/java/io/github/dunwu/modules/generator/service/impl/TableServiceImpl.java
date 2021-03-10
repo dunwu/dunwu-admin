@@ -3,10 +3,6 @@ package io.github.dunwu.modules.generator.service.impl;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import io.github.dunwu.data.util.PageUtil;
-import io.github.dunwu.generator.CodeGeneratorUtil;
-import io.github.dunwu.generator.config.builder.ConfigBuilder;
-import io.github.dunwu.generator.config.po.TableInfo;
-import io.github.dunwu.modules.generator.entity.dto.CodeColumnConfigDto;
 import io.github.dunwu.modules.generator.entity.dto.TableInfoDto;
 import io.github.dunwu.modules.generator.service.TableService;
 import lombok.RequiredArgsConstructor;
@@ -40,26 +36,6 @@ public class TableServiceImpl implements TableService {
     }
 
     @Override
-    public Object getTables(String schemaName) {
-
-        if (cn.hutool.core.util.StrUtil.isBlank(schemaName)) {
-            log.error("schemaName 为空");
-            return null;
-        }
-
-        // 使用预编译防止sql注入
-        String sql = new StringBuilder("select table_name, create_time, engine, table_collation, table_comment")
-            .append(" from information_schema.tables")
-            .append(" where table_schema = ?")
-            .append(" order by create_time desc")
-            .toString();
-
-        Query query = em.createNativeQuery(sql);
-        query.setParameter(1, schemaName);
-        return query.getResultList();
-    }
-
-    @Override
     public Object getTables(String schemaName, String tableName, int[] startEnd) {
         // 使用预编译防止sql注入
         String sql = new StringBuilder("select table_name, create_time, engine, table_collation, table_comment")
@@ -87,43 +63,4 @@ public class TableServiceImpl implements TableService {
         return PageUtil.toMap(tableInfoDtos, totalElements);
     }
 
-    @Override
-    public List<CodeColumnConfigDto> getColumns(String tableName) {
-
-        ConfigBuilder builder = CodeGeneratorUtil.initConfigBuilder();
-        builder.getStrategyConfig().setInclude(tableName);
-        List<TableInfo> tableInfos = builder.queryTableInfoList();
-
-        return null;
-    }
-
-    // public ConfigBuilder initConfigBuilder() {
-    //     String url =
-    //         "jdbc:mysql://localhost:3306/eladmin?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8";
-    //     DataSourceConfig dataSourceConfig = new DataSourceConfig(url, "com.mysql.cj.jdbc.Driver", "root", "root");
-    //     PackageConfig packageConfig = new PackageConfig("io.github.dunwu.modules", "generator");
-    //     GlobalConfig globalConfig = new GlobalConfig();
-    //     globalConfig.setAuthor("dunwu").setOutputDir("E:\\Temp\\codes");
-    //     StrategyConfig strategyConfig = new StrategyConfig();
-    //     strategyConfig.setInclude("code_column_config");
-    //     TemplateConfig templateConfig = new TemplateConfig();
-    //
-    //     ConfigBuilder builder = new ConfigBuilder(dataSourceConfig, globalConfig, packageConfig, strategyConfig,
-    //         templateConfig);
-    //
-    //     Collection<TableInfo> tableInfoList = builder.queryTableInfoList();
-    //     for (TableInfo table : tableInfoList) {
-    //         for (TableField field : table.getFields()) {
-    //             if (field.getName().equals("rating")) {
-    //                 field.setQueryType("Between");
-    //                 field.setFormType("Date");
-    //             } else {
-    //                 field.setQueryType("Equals");
-    //                 field.setFormType("Input");
-    //             }
-    //         }
-    //     }
-    //
-    //     builder.setTableInfoList(tableInfoList);
-    // }
 }

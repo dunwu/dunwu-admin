@@ -35,7 +35,7 @@ public class PageUtil extends cn.hutool.core.util.PageUtil {
     /**
      * Page 数据处理，预防redis反序列化报错
      */
-    public static Map<String, Object> toMap(Page page) {
+    public static Map<String, Object> toMap(Page<?> page) {
         Map<String, Object> map = new LinkedHashMap<>(2);
         map.put("content", page.getContent());
         map.put("totalElements", page.getTotalElements());

@@ -16,24 +16,25 @@
 package io.github.dunwu.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import io.github.dunwu.config.FileProperties;
+import io.github.dunwu.data.util.PageUtil;
 import io.github.dunwu.domain.LocalStorage;
-import io.github.dunwu.exception.BadRequestException;
 import io.github.dunwu.repository.LocalStorageRepository;
 import io.github.dunwu.service.LocalStorageService;
 import io.github.dunwu.service.dto.LocalStorageDto;
 import io.github.dunwu.service.dto.LocalStorageQueryCriteria;
 import io.github.dunwu.service.mapstruct.LocalStorageMapper;
 import io.github.dunwu.util.FileUtil;
-import io.github.dunwu.data.util.PageUtil;
 import io.github.dunwu.util.QueryHelp;
-import io.github.dunwu.util.StrUtil;
 import io.github.dunwu.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -85,7 +86,7 @@ public class LocalStorageServiceImpl implements LocalStorageService {
         String type = FileUtil.getFileType(suffix);
         File file = FileUtil.upload(multipartFile, properties.getPath().getPath() + type + File.separator);
         if (ObjectUtil.isNull(file)) {
-            throw new BadRequestException("上传失败");
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "上传失败");
         }
         try {
             name = StrUtil.isBlank(name) ? FileUtil.getFileNameNoEx(multipartFile.getOriginalFilename()) : name;

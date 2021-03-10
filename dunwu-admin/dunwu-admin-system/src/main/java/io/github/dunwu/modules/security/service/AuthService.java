@@ -2,23 +2,16 @@ package io.github.dunwu.modules.security.service;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
-import com.wf.captcha.ArithmeticCaptcha;
-import com.wf.captcha.ChineseCaptcha;
-import com.wf.captcha.ChineseGifCaptcha;
-import com.wf.captcha.GifCaptcha;
-import com.wf.captcha.SpecCaptcha;
+import com.wf.captcha.*;
 import com.wf.captcha.base.Captcha;
 import io.github.dunwu.config.RsaProperties;
+import io.github.dunwu.data.core.DataException;
 import io.github.dunwu.data.core.Result;
 import io.github.dunwu.data.redis.RedisHelper;
 import io.github.dunwu.data.util.PageUtil;
-import io.github.dunwu.exception.BadConfigurationException;
-import io.github.dunwu.exception.BadRequestException;
-import io.github.dunwu.exception.EntityExistException;
-import io.github.dunwu.exception.EntityNotFoundException;
 import io.github.dunwu.modules.security.config.DunwuWebSecurityProperties;
-import io.github.dunwu.modules.security.entity.dto.LoginCodeDto;
 import io.github.dunwu.modules.security.entity.dto.JwtUserDto;
+import io.github.dunwu.modules.security.entity.dto.LoginCodeDto;
 import io.github.dunwu.modules.security.entity.dto.OnlineUserDto;
 import io.github.dunwu.modules.system.entity.SysUser;
 import io.github.dunwu.modules.system.entity.dto.SysUserDto;
@@ -28,31 +21,25 @@ import io.github.dunwu.modules.system.service.SysDeptService;
 import io.github.dunwu.modules.system.service.SysRoleService;
 import io.github.dunwu.modules.system.service.SysUserService;
 import io.github.dunwu.modules.system.service.VerifyService;
-import io.github.dunwu.util.CacheKey;
-import io.github.dunwu.util.EncryptUtils;
-import io.github.dunwu.util.FileUtil;
-import io.github.dunwu.util.RsaUtils;
-import io.github.dunwu.util.SecurityUtils;
+import io.github.dunwu.tool.exception.BadConfigurationException;
+import io.github.dunwu.util.*;
 import io.github.dunwu.util.enums.CodeEnum;
 import io.github.dunwu.web.util.ServletUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -310,17 +297,12 @@ public class AuthService implements UserDetailsService {
         }
         if (searchDb) {
             SysUserDto user;
-            try {
-                user = userService.pojoByUsername(username);
-            } catch (EntityNotFoundException e) {
-                // SpringSecurity会自动转换UsernameNotFoundException为BadCredentialsException
-                throw new UsernameNotFoundException("", e);
-            }
+            user = userService.pojoByUsername(username);
             if (user == null) {
                 throw new UsernameNotFoundException("");
             } else {
                 if (!user.getEnabled()) {
-                    throw new BadRequestException("账号未激活！");
+                    throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "账号未激活！");
                 }
 
                 Set<Long> deptIds = deptService.getChildrenDeptIds(user.getDeptId());
@@ -338,7 +320,7 @@ public class AuthService implements UserDetailsService {
         query.setPhone(entity.getPhone());
         SysUserDto user1 = userService.pojoByQuery(query);
         if (user1 != null && !user.getId().equals(user1.getId())) {
-            throw new EntityExistException(SysUser.class, "phone", entity.getPhone());
+            throw new DataException(StrUtil.format("未找到 phone = {} 的用户", entity.getPhone()));
         }
         SysUser sysUser = BeanUtil.toBean(user, SysUser.class);
         sysUser.setNickname(entity.getNickname());
@@ -355,10 +337,10 @@ public class AuthService implements UserDetailsService {
         String newPass = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, passVo.getNewPass());
         SysUserDto sysUserDto = userService.pojoByUsername(SecurityUtils.getCurrentUsername());
         if (!passwordEncoder.matches(oldPass, sysUserDto.getPassword())) {
-            throw new BadRequestException("修改失败，旧密码错误");
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "修改失败，旧密码错误");
         }
         if (passwordEncoder.matches(newPass, sysUserDto.getPassword())) {
-            throw new BadRequestException("新密码不能与旧密码相同");
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "新密码不能与旧密码相同");
         }
         SysUser user = new SysUser();
         user.setId(sysUserDto.getId());
@@ -371,7 +353,7 @@ public class AuthService implements UserDetailsService {
         String password = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, entity.getPassword());
         SysUserDto userDto = userService.pojoByUsername(SecurityUtils.getCurrentUsername());
         if (!passwordEncoder.matches(password, userDto.getPassword())) {
-            throw new BadRequestException("密码错误");
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "密码错误");
         }
         verifyService.validated(CodeEnum.EMAIL_RESET_EMAIL_CODE.getKey() + entity.getEmail(), code);
         SysUser user = new SysUser();

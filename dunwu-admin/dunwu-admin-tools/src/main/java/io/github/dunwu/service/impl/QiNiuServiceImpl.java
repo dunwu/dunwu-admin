@@ -27,7 +27,6 @@ import com.qiniu.util.Auth;
 import io.github.dunwu.data.util.PageUtil;
 import io.github.dunwu.domain.QiniuConfig;
 import io.github.dunwu.domain.QiniuContent;
-import io.github.dunwu.exception.BadRequestException;
 import io.github.dunwu.repository.QiNiuConfigRepository;
 import io.github.dunwu.repository.QiniuContentRepository;
 import io.github.dunwu.service.QiNiuService;
@@ -42,16 +41,14 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -84,7 +81,7 @@ public class QiNiuServiceImpl implements QiNiuService {
         String http = "http://", https = "https://";
         if (!(qiniuConfig.getHost().toLowerCase().startsWith(http) || qiniuConfig.getHost().toLowerCase().startsWith(
             https))) {
-            throw new BadRequestException("外链域名必须以http://或者https://开头");
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "外链域名必须以http://或者https://开头");
         }
         return qiNiuConfigRepository.save(qiniuConfig);
     }
@@ -107,7 +104,7 @@ public class QiNiuServiceImpl implements QiNiuService {
     public QiniuContent upload(MultipartFile file, QiniuConfig qiniuConfig) {
         FileUtil.checkSize(maxSize, file.getSize());
         if (qiniuConfig.getId() == null) {
-            throw new BadRequestException("请先添加相应配置，再操作");
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "请先添加相应配置，再操作");
         }
         // 构造一个带指定Zone对象的配置类
         Configuration cfg = new Configuration(QiNiuUtil.getRegion(qiniuConfig.getZone()));
@@ -137,7 +134,7 @@ public class QiNiuServiceImpl implements QiNiuService {
             }
             return content;
         } catch (Exception e) {
-            throw new BadRequestException(e.getMessage());
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 
@@ -182,7 +179,7 @@ public class QiNiuServiceImpl implements QiNiuService {
     @Transactional(rollbackFor = Exception.class)
     public void synchronize(QiniuConfig config) {
         if (config.getId() == null) {
-            throw new BadRequestException("请先添加相应配置，再操作");
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "请先添加相应配置，再操作");
         }
         //构造一个带指定Zone对象的配置类
         Configuration cfg = new Configuration(QiNiuUtil.getRegion(config.getZone()));
