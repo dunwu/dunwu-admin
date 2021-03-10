@@ -261,10 +261,10 @@ public class GeneratorServiceImpl implements GeneratorService {
         String tmpTablePath = tmpSchemaPath + File.separator + query.getTableName();
         globalConfigDto.setOutputDir(tmpTablePath)
                        .setBackendPath(tmpTablePath + "/backend")
-                       .setFrontendPath(tmpTablePath + "/backend");
+                       .setFrontendPath(tmpTablePath + "/frontend");
         tableConfigDto.setOutputDir(tmpTablePath)
                       .setBackendPath(tmpTablePath + "/backend")
-                      .setFrontendPath(tmpTablePath + "/backend");
+                      .setFrontendPath(tmpTablePath + "/frontend");
 
         log.info("临时代码生成路径：{}", tmpTablePath);
 

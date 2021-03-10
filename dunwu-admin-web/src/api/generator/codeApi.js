@@ -72,7 +72,8 @@ export function generateCode(params) {
 export function downloadCode(params) {
   return request({
     url: 'api/code/download/' + params.schemaName + '/' + params.tableName,
-    method: 'get'
+    method: 'get',
+    responseType: 'blob'
   })
 }
 

@@ -403,20 +403,29 @@ public class ServletUtil {
      */
     public static void downloadFile(HttpServletRequest request, HttpServletResponse response,
         File file, boolean deleteOnExit) {
+        // 设置响应头
         response.setCharacterEncoding(request.getCharacterEncoding());
         response.setContentType("multipart/form-data");
+        response.setHeader("Content-Disposition", "attachment;fileName=" + file.getName());
+
         FileInputStream inputStream = null;
         OutputStream outputStream = null;
         try {
             inputStream = new FileInputStream(file);
             outputStream = new BufferedOutputStream(response.getOutputStream());
-            response.setHeader("Content-Disposition", "attachment;fileName=" + file.getName());
             IoUtil.copy(inputStream, outputStream);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            IoUtil.close(outputStream);
             IoUtil.close(inputStream);
+            if (outputStream != null) {
+                try {
+                    outputStream.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            IoUtil.close(outputStream);
             if (deleteOnExit) {
                 FileUtil.del(file);
             }
