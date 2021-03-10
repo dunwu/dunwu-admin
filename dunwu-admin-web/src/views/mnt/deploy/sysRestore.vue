@@ -24,7 +24,7 @@
       <el-button v-permission="['admin','deploy:add']" :loading="submitLoading" type="primary" @click="doSubmit">确认</el-button>
     </div>
     <!--分页组件-->
-    <el-pagination
+    <el-Pagination
       :total="total"
       :current-page="page + 1"
       style="margin-top: 8px"

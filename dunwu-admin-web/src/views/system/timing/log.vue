@@ -44,7 +44,7 @@
       <pre v-highlightjs="errorInfo"><code class="java" /></pre>
     </el-dialog>
     <!--分页组件-->
-    <el-pagination
+    <el-Pagination
       :total="total"
       :current-page="page + 1"
       :page-size="6"

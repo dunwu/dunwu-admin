@@ -14,9 +14,9 @@
           @keyup.enter.native="crud.toQuery"
         />
         <date-range-picker v-model="query.createTimeRange" class="date-item" />
-        <queryOperation />
+        <TableQueryOperation />
       </div>
-      <crudOperation :permission="permission" />
+      <TableOperation :permission="permission" />
     </div>
     <!--表单渲染-->
     <el-dialog
@@ -168,7 +168,7 @@
         fixed="right"
       >
         <template slot-scope="scope">
-          <udOperation
+          <TableColumnOperation
             :data="scope.row"
             :permission="permission"
             msg="确定删除吗,如果存在下级节点则一并删除，此操作不能撤销！"
@@ -186,9 +186,9 @@ import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import { LOAD_CHILDREN_OPTIONS } from '@riophae/vue-treeselect'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
-import queryOperation from '@crud/Query.operation'
-import crudOperation from '@crud/CRUD.operation'
-import udOperation from '@crud/UD.operation'
+import TableQueryOperation from '@crud/TableQueryOperation'
+import TableOperation from '@crud/TableOperation'
+import TableColumnOperation from '@crud/TableColumnOperation'
 import DateRangePicker from '@/components/DateRangePicker'
 
 // crud交由presenter持有
@@ -210,7 +210,7 @@ const defaultForm = {
 }
 export default {
   name: 'Menu',
-  components: { Treeselect, IconSelect, crudOperation, queryOperation, udOperation, DateRangePicker },
+  components: { Treeselect, IconSelect, TableOperation, TableQueryOperation, TableColumnOperation, DateRangePicker },
   cruds() {
     return CRUD({
       title: '菜单',

@@ -830,7 +830,7 @@ function header() {
 /**
  * 分页
  */
-function pagination() {
+function Pagination() {
   return {
     data() {
       return {
@@ -840,10 +840,10 @@ function pagination() {
     },
     beforeCreate() {
       this.crud = lookupCrud(this)
-      this.crud.registerVM('pagination', this, 2)
+      this.crud.registerVM('Pagination', this, 2)
     },
     destroyed() {
-      this.crud.unregisterVM('pagination', this)
+      this.crud.unregisterVM('Pagination', this)
     }
   }
 }
@@ -966,4 +966,4 @@ CRUD.NOTIFICATION_TYPE = {
 
 export default CRUD
 
-export { presenter, header, form, pagination, crud }
+export { presenter, header, form, Pagination, crud }

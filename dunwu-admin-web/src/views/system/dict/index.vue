@@ -42,9 +42,9 @@
                 class="filter-item"
                 @keyup.enter.native="crud.toQuery"
               />
-              <queryOperation />
+              <TableQueryOperation />
             </div>
-            <crudOperation :permission="permission" />
+            <TableOperation :permission="permission" />
           </div>
           <!--表格渲染-->
           <el-table
@@ -68,12 +68,12 @@
               fixed="right"
             >
               <template slot-scope="scope">
-                <udOperation :data="scope.row" :permission="permission" />
+                <TableColumnOperation :data="scope.row" :permission="permission" />
               </template>
             </el-table-column>
           </el-table>
           <!--分页组件-->
-          <pagination />
+          <Pagination />
         </el-card>
       </el-col>
       <!-- 字典详情列表 -->
@@ -104,16 +104,16 @@
 import dictOption from './dictOption'
 import crudDict from '@/api/system/dict'
 import CRUD, { presenter, header, form } from '@crud/crud'
-import crudOperation from '@crud/CRUD.operation'
-import pagination from '@crud/Pagination'
-import queryOperation from '@crud/Query.operation'
-import udOperation from '@crud/UD.operation'
+import TableOperation from '@crud/TableOperation'
+import Pagination from '@crud/Pagination'
+import TableQueryOperation from '@crud/TableQueryOperation'
+import TableColumnOperation from '@crud/TableColumnOperation'
 
 const defaultForm = { id: null, name: null, note: null, enabled: true, dictOptions: [] }
 
 export default {
   name: 'Dict',
-  components: { crudOperation, pagination, queryOperation, udOperation, dictOption },
+  components: { TableOperation, Pagination, TableQueryOperation, TableColumnOperation, dictOption },
   cruds() {
     return [CRUD({ title: '字典', url: 'api/sys/dict', crudMethod: { ...crudDict }})]
   },

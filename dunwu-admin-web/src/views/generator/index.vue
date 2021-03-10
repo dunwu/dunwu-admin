@@ -84,7 +84,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination
+    <el-Pagination
       :page-size.sync="page.size"
       :total="page.total"
       :current-page.sync="page.page"

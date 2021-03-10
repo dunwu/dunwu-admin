@@ -33,7 +33,7 @@
       </template>
 
       <el-col :span="6">
-        <queryOperation />
+        <TableQueryOperation />
         <el-button v-if="crud.showExtendSearch" type="text" @click="crud.toggleExtendSearch">
           折叠
           <i class="el-icon-arrow-up el-icon--right" />
@@ -49,10 +49,10 @@
 
 <script>
 import { header } from '@crud/crud'
-import queryOperation from '@crud/Query.operation'
+import TableQueryOperation from '@crud/TableQueryOperation'
 import DateRangePicker from '@/components/DateRangePicker'
 export default {
-  components: { queryOperation, DateRangePicker },
+  components: { TableQueryOperation, DateRangePicker },
   mixins: [header()],
   props: {
     dict: {

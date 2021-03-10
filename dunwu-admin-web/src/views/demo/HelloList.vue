@@ -40,7 +40,7 @@
             </el-col>
           </template>
           <el-col :span="6">
-            <queryOperation :crud="crud" />
+            <TableQueryOperation :crud="crud" />
             <el-button v-if="crud.showExtendSearch" type="text" @click="crud.toggleExtendSearch">
               折叠
               <i class="el-icon-arrow-up el-icon--right" />
@@ -52,7 +52,7 @@
           </el-col>
         </el-row>
       </div>
-      <crudOperation />
+      <TableOperation />
     </div>
 
     <!--表格渲染-->
@@ -70,13 +70,13 @@
       <el-table-column prop="createTime" label="创建时间" />
       <el-table-column label="操作" width="150px" align="center">
         <template slot-scope="scope">
-          <udOperation :data="scope.row" />
+          <TableColumnOperation :data="scope.row" />
         </template>
       </el-table-column>
     </el-table>
 
     <!--分页组件-->
-    <pagination />
+    <Pagination />
 
     <!--表单组件-->
     <HelloForm />
@@ -87,15 +87,15 @@
 import HelloApi from './HelloApi'
 import HelloForm from './HelloForm'
 import CRUD, { crud, header, presenter } from '@crud/crud'
-import queryOperation from '@crud/Query.operation'
-import crudOperation from '@crud/CRUD.operation'
-import udOperation from '@crud/UD.operation'
-import pagination from '@crud/Pagination'
+import TableOperation from '@crud/TableOperation'
+import TableColumnOperation from '@crud/TableColumnOperation'
+import TableQueryOperation from '@crud/TableQueryOperation'
+import Pagination from '@crud/Pagination'
 import DateRangePicker from '@/components/DateRangePicker'
 
 export default {
   name: 'HelloList',
-  components: { pagination, crudOperation, queryOperation, udOperation, DateRangePicker, HelloForm },
+  components: { Pagination, TableOperation, TableQueryOperation, TableColumnOperation, DateRangePicker, HelloForm },
   mixins: [presenter(), header(), crud()],
   cruds() {
     return CRUD({
@@ -106,9 +106,7 @@ export default {
     })
   },
   data() {
-    return {
-      
-    }
+    return {}
   },
   methods: {
     // 钩子：在获取表格数据之前执行，false 则代表不获取数据

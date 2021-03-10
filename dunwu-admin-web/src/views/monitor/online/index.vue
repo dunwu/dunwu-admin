@@ -11,9 +11,9 @@
           class="filter-item"
           @keyup.enter.native="crud.toQuery"
         />
-        <queryOperation />
+        <TableQueryOperation />
       </div>
-      <crudOperation>
+      <TableOperation>
         <el-button
           slot="right"
           class="filter-item"
@@ -26,7 +26,7 @@
         >
           强退
         </el-button>
-      </crudOperation>
+      </TableOperation>
     </div>
     <!--表格渲染-->
     <el-table
@@ -65,20 +65,20 @@
       </el-table-column>
     </el-table>
     <!--分页组件-->
-    <pagination />
+    <Pagination />
   </div>
 </template>
 
 <script>
 import onlineApi from '@/api/monitor/onlineApi'
 import CRUD, { presenter, header, crud } from '@crud/crud'
-import queryOperation from '@crud/Query.operation'
-import crudOperation from '@crud/CRUD.operation'
-import pagination from '@crud/Pagination'
+import TableQueryOperation from '@crud/TableQueryOperation'
+import TableOperation from '@crud/TableOperation'
+import Pagination from '@crud/Pagination'
 
 export default {
   name: 'OnlineUser',
-  components: { pagination, crudOperation, queryOperation },
+  components: { Pagination, TableOperation, TableQueryOperation },
   cruds() {
     return CRUD({ title: '在线用户', crudMethod: { ...onlineApi }})
   },

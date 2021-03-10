@@ -16,9 +16,9 @@
           @keyup.enter.native="toQuery"
         />
         <date-range-picker v-model="query.createTime" class="date-item" />
-        <queryOperation />
+        <TableQueryOperation />
       </div>
-      <crudOperation :permission="permission">
+      <TableOperation :permission="permission">
         <template slot="left">
           <!-- 上传 -->
           <el-button class="filter-item" size="mini" type="primary" icon="el-icon-upload" @click="dialog = true">
@@ -31,7 +31,7 @@
             配置
           </el-button>
         </template>
-      </crudOperation>
+      </TableOperation>
       <!-- 文件上传 -->
       <el-dialog :visible.sync="dialog" :close-on-click-modal="false" append-to-body width="500px" @close="doSubmit">
         <el-upload
@@ -85,7 +85,7 @@
         <el-table-column prop="updateTime" label="创建日期" />
       </el-table>
       <!--分页组件-->
-      <pagination />
+      <Pagination />
     </div>
   </div>
 </template>
@@ -96,13 +96,13 @@ import { mapGetters } from 'vuex'
 import { getToken } from '@/utils/auth'
 import eForm from './form'
 import CRUD, { presenter, header, crud } from '@crud/crud'
-import queryOperation from '@crud/Query.operation'
-import crudOperation from '@crud/CRUD.operation'
-import pagination from '@crud/Pagination'
+import TableQueryOperation from '@crud/TableQueryOperation'
+import TableOperation from '@crud/TableOperation'
+import Pagination from '@crud/Pagination'
 import DateRangePicker from '@/components/DateRangePicker'
 
 export default {
-  components: { eForm, pagination, crudOperation, queryOperation, DateRangePicker },
+  components: { eForm, Pagination, TableOperation, TableQueryOperation, DateRangePicker },
   cruds() {
     return CRUD({ title: '七牛云文件', url: 'api/qiNiuContent', crudMethod: { ...crudQiNiu }})
   },

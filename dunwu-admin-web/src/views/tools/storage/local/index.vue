@@ -6,9 +6,9 @@
         <!-- 搜索 -->
         <el-input v-model="query.blurry" clearable size="small" placeholder="输入内容模糊搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
         <date-range-picker v-model="query.createTime" class="date-item" />
-        <queryOperation />
+        <TableQueryOperation />
       </div>
-      <crudOperation :permission="permission">
+      <TableOperation :permission="permission">
         <!-- 添加 -->
         <el-button
           slot="left"
@@ -20,7 +20,7 @@
           @click="crud.toAdd"
         >上传
         </el-button>
-      </crudOperation>
+      </TableOperation>
     </div>
     <!--表单组件-->
     <el-dialog append-to-body :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.add ? '文件上传' : '编辑文件'" width="500px">
@@ -97,7 +97,7 @@
       <el-table-column prop="createTime" label="创建日期" />
     </el-table>
     <!--分页组件-->
-    <pagination />
+    <Pagination />
   </div>
 </template>
 
@@ -106,14 +106,14 @@ import { mapGetters } from 'vuex'
 import { getToken } from '@/utils/auth'
 import crudFile from '@/api/tools/localStorage'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
-import queryOperation from '@crud/Query.operation'
-import crudOperation from '@crud/CRUD.operation'
-import pagination from '@crud/Pagination'
+import TableQueryOperation from '@crud/TableQueryOperation'
+import TableOperation from '@crud/TableOperation'
+import Pagination from '@crud/Pagination'
 import DateRangePicker from '@/components/DateRangePicker'
 
 const defaultForm = { id: null, name: '' }
 export default {
-  components: { pagination, crudOperation, queryOperation, DateRangePicker },
+  components: { Pagination, TableOperation, TableQueryOperation, DateRangePicker },
   cruds() {
     return CRUD({ title: '文件', url: 'api/localStorage', crudMethod: { ...crudFile }})
   },

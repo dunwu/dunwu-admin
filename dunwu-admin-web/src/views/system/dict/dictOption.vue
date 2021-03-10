@@ -17,7 +17,7 @@
             class="filter-item"
             @keyup.enter.native="toQuery"
           />
-          <queryOperation />
+          <TableQueryOperation />
         </div>
       </div>
       <!--表单组件-->
@@ -61,12 +61,12 @@
           fixed="right"
         >
           <template slot-scope="scope">
-            <udOperation :data="scope.row" :permission="permission" />
+            <TableColumnOperation :data="scope.row" :permission="permission" />
           </template>
         </el-table-column>
       </el-table>
       <!--分页组件-->
-      <pagination />
+      <Pagination />
     </div>
   </div>
 </template>
@@ -74,14 +74,14 @@
 <script>
 import crudDictOption from '@/api/system/dictOption'
 import CRUD, { presenter, header, form } from '@crud/crud'
-import pagination from '@crud/Pagination'
-import queryOperation from '@crud/Query.operation'
-import udOperation from '@crud/UD.operation'
+import Pagination from '@crud/Pagination'
+import TableQueryOperation from '@crud/TableQueryOperation'
+import TableColumnOperation from '@crud/TableColumnOperation'
 
 const defaultForm = { id: null, code: null, name: null }
 
 export default {
-  components: { pagination, queryOperation, udOperation },
+  components: { Pagination, TableQueryOperation, TableColumnOperation },
   cruds() {
     return [
       CRUD({

@@ -3,7 +3,7 @@
   -->
 
 <template>
-  <el-pagination
+  <el-Pagination
     :page-size.sync="page.size"
     :total="page.total"
     :current-page.sync="page.page"
@@ -15,8 +15,8 @@
 </template>
 
 <script>
-import { pagination } from '@crud/crud'
+import { Pagination } from '@crud/crud'
 export default {
-  mixins: [pagination()]
+  mixins: [Pagination()]
 }
 </script>

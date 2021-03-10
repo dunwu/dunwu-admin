@@ -50,7 +50,7 @@
             </el-col>
           </template>
           <el-col :span="6">
-            <queryOperation :crud="crud" />
+            <TableQueryOperation :crud="crud" />
             <el-button v-if="crud.showExtendSearch" type="text" @click="crud.toggleExtendSearch">
               折叠
               <i class="el-icon-arrow-up el-icon--right" />
@@ -62,7 +62,7 @@
           </el-col>
         </el-row>
       </div>
-      <crudOperation :permission="permission">
+      <TableOperation :permission="permission">
         <el-button
           slot="right"
           v-permission="['admin', 'database:add']"
@@ -75,7 +75,7 @@
         >
           执行脚本
         </el-button>
-      </crudOperation>
+      </TableOperation>
     </div>
     <!--表单组件-->
     <eForm ref="execute" :database-info="currentRow" />
@@ -134,13 +134,13 @@
         align="center"
       >
         <template slot-scope="scope">
-          <udOperation :data="scope.row" :permission="permission" />
+          <TableColumnOperation :data="scope.row" :permission="permission" />
         </template>
       </el-table-column>
     </el-table>
 
     <!--分页组件-->
-    <pagination />
+    <Pagination />
   </div>
 </template>
 
@@ -148,16 +148,16 @@
 import databaseApi from '@/api/mnt/databaseApi'
 import eForm from './execute'
 import CRUD, { crud, form, header, presenter } from '@crud/crud'
-import queryOperation from '@crud/Query.operation'
-import crudOperation from '@crud/CRUD.operation'
-import udOperation from '@crud/UD.operation'
-import pagination from '@crud/Pagination'
+import TableQueryOperation from '@crud/TableQueryOperation'
+import TableOperation from '@crud/TableOperation'
+import TableColumnOperation from '@crud/TableColumnOperation'
+import Pagination from '@crud/Pagination'
 import DateRangePicker from '@/components/DateRangePicker'
 
 const defaultForm = { id: null, name: null, jdbcUrl: 'jdbc:mysql://', username: null, password: null }
 export default {
   name: 'DataBase',
-  components: { eForm, pagination, crudOperation, queryOperation, udOperation, DateRangePicker },
+  components: { eForm, Pagination, TableOperation, TableQueryOperation, TableColumnOperation, DateRangePicker },
   cruds() {
     return CRUD({ title: '数据库', url: 'api/mnt/database', crudMethod: { ...databaseApi }})
   },

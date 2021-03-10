@@ -3,7 +3,7 @@
     <!--工具栏-->
     <div class="head-container">
       <eHeader :dict="dict" :permission="permission" />
-      <crudOperation :permission="permission" />
+      <TableOperation :permission="permission" />
     </div>
     <!--表格渲染-->
     <el-table
@@ -40,12 +40,12 @@
         fixed="right"
       >
         <template slot-scope="scope">
-          <udOperation :data="scope.row" :permission="permission" />
+          <TableColumnOperation :data="scope.row" :permission="permission" />
         </template>
       </el-table-column>
     </el-table>
     <!--分页组件-->
-    <pagination />
+    <Pagination />
     <!--表单渲染-->
     <eForm :dict="dict" />
   </div>
@@ -56,12 +56,12 @@ import jobApi from '@/api/system/job'
 import eHeader from './module/header'
 import eForm from './module/form'
 import CRUD, { presenter } from '@crud/crud'
-import crudOperation from '@crud/CRUD.operation'
-import pagination from '@crud/Pagination'
-import udOperation from '@crud/UD.operation'
+import TableOperation from '@crud/TableOperation'
+import Pagination from '@crud/Pagination'
+import TableColumnOperation from '@crud/TableColumnOperation'
 export default {
   name: 'Job',
-  components: { eHeader, eForm, crudOperation, pagination, udOperation },
+  components: { eHeader, eForm, TableOperation, Pagination, TableColumnOperation },
   cruds() {
     return CRUD({
       title: '岗位',

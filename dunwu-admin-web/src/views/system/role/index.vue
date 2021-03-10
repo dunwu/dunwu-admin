@@ -14,9 +14,9 @@
           @keyup.enter.native="crud.toQuery"
         />
         <date-range-picker v-model="query.createTime" class="date-item" />
-        <queryOperation />
+        <TableQueryOperation />
       </div>
-      <crudOperation :permission="permission" />
+      <TableOperation :permission="permission" />
     </div>
     <!-- 表单渲染 -->
     <el-dialog
@@ -88,12 +88,12 @@
               fixed="right"
             >
               <template slot-scope="scope">
-                <udOperation v-if="scope.row.level >= level" :data="scope.row" :permission="permission" />
+                <TableColumnOperation v-if="scope.row.level >= level" :data="scope.row" :permission="permission" />
               </template>
             </el-table-column>
           </el-table>
           <!--分页组件-->
-          <pagination />
+          <Pagination />
         </el-card>
       </el-col>
       <!-- 菜单授权 -->
@@ -140,10 +140,10 @@ import roleApi from '@/api/system/role'
 import deptApi from '@/api/system/dept'
 import menuApi from '@/api/system/menu'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
-import queryOperation from '@crud/Query.operation'
-import crudOperation from '@crud/CRUD.operation'
-import udOperation from '@crud/UD.operation'
-import pagination from '@crud/Pagination'
+import TableQueryOperation from '@crud/TableQueryOperation'
+import TableOperation from '@crud/TableOperation'
+import TableColumnOperation from '@crud/TableColumnOperation'
+import Pagination from '@crud/Pagination'
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import { LOAD_CHILDREN_OPTIONS } from '@riophae/vue-treeselect'
@@ -152,7 +152,7 @@ import DateRangePicker from '@/components/DateRangePicker'
 const defaultForm = { id: null, name: null, depts: [], note: null, dataScope: '全部', level: 3 }
 export default {
   name: 'Role',
-  components: { Treeselect, pagination, crudOperation, queryOperation, udOperation, DateRangePicker },
+  components: { Treeselect, Pagination, TableOperation, TableQueryOperation, TableColumnOperation, DateRangePicker },
   cruds() {
     return CRUD({
       title: '角色',

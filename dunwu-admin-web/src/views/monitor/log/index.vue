@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="head-container">
       <Search />
-      <crudOperation>
+      <TableOperation>
         <el-button
           slot="left"
           class="filter-item"
@@ -14,7 +14,7 @@
         >
           清空
         </el-button>
-      </crudOperation>
+      </TableOperation>
     </div>
     <!--表格渲染-->
     <el-table ref="table" v-loading="crud.loading" :data="crud.data" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
@@ -51,7 +51,7 @@
       <el-table-column prop="createTime" label="创建日期" width="180px" />
     </el-table>
     <!--分页组件-->
-    <pagination />
+    <Pagination />
   </div>
 </template>
 
@@ -59,12 +59,12 @@
 import Search from './search'
 import { delAllInfo } from './api'
 import CRUD, { presenter } from '@crud/crud'
-import crudOperation from '@crud/CRUD.operation'
-import pagination from '@crud/Pagination'
+import TableOperation from '@crud/TableOperation'
+import Pagination from '@crud/Pagination'
 
 export default {
   name: 'Log',
-  components: { Search, crudOperation, pagination },
+  components: { Search, TableOperation, Pagination },
   cruds() {
     return CRUD({ title: '日志', url: 'api/monitor/log' })
   },

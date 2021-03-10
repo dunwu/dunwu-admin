@@ -50,9 +50,9 @@
             >
               <el-option v-for="item in enabledTypeOptions" :key="item.code" :label="item.name" :value="item.code" />
             </el-select>
-            <queryOperation />
+            <TableQueryOperation />
           </div>
-          <crudOperation show="" :permission="permission" />
+          <TableOperation show="" :permission="permission" />
         </div>
         <!--表单渲染-->
         <el-dialog
@@ -166,12 +166,12 @@
             fixed="right"
           >
             <template slot-scope="scope">
-              <udOperation :data="scope.row" :permission="permission" :disabled-dle="scope.row.id === user.id" />
+              <TableColumnOperation :data="scope.row" :permission="permission" :disabled-dle="scope.row.id === user.id" />
             </template>
           </el-table-column>
         </el-table>
         <!--分页组件-->
-        <pagination />
+        <Pagination />
       </el-col>
     </el-row>
   </div>
@@ -184,10 +184,10 @@ import jobApi from '@/api/system/job'
 import roleApi from '@/api/system/role'
 import { isvalidPhone } from '@/utils/validate'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
-import queryOperation from '@crud/Query.operation'
-import crudOperation from '@crud/CRUD.operation'
-import udOperation from '@crud/UD.operation'
-import pagination from '@crud/Pagination'
+import TableQueryOperation from '@crud/TableQueryOperation'
+import TableOperation from '@crud/TableOperation'
+import TableColumnOperation from '@crud/TableColumnOperation'
+import Pagination from '@crud/Pagination'
 import DateRangePicker from '@/components/DateRangePicker'
 import Treeselect from '@riophae/vue-treeselect'
 import { mapGetters } from 'vuex'
@@ -210,7 +210,7 @@ const defaultForm = {
 }
 export default {
   name: 'User',
-  components: { Treeselect, crudOperation, queryOperation, udOperation, pagination, DateRangePicker },
+  components: { Treeselect, TableOperation, TableQueryOperation, TableColumnOperation, Pagination, DateRangePicker },
   cruds() {
     return CRUD({ title: '用户', url: 'api/sys/user', crudMethod: { ...userApi }})
   },
