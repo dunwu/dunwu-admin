@@ -1,6 +1,5 @@
 package io.github.dunwu.modules.demo.entity.query;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.github.dunwu.data.core.annotation.QueryField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -8,15 +7,18 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
-import java.io.Serializable;
+import com.baomidou.mybatisplus.annotation.IdType;
 import java.time.LocalDateTime;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * 测试 Query 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-03-09
+ * @since 2021-03-10
  */
 @Data
 @Accessors(chain = true)
@@ -46,5 +48,4 @@ public class HelloQuery implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.ARRAY, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @QueryField(value = "createTime", type = QueryField.QueryType.BETWEEN)
     private List<LocalDateTime> createTimeRange;
-
 }

@@ -1,7 +1,5 @@
 package ${package.Controller};
 
-import cn.hutool.json.JSONArray;
-import cn.hutool.json.JSONUtil;
 import io.github.dunwu.data.core.Result;
 import io.github.dunwu.data.validator.annotation.AddCheck;
 import io.github.dunwu.data.validator.annotation.EditCheck;
@@ -23,7 +21,6 @@ import org.springframework.stereotype.Controller;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -167,12 +164,10 @@ public class ${table.controllerName} {
     <#else>
     /** 根据 id 列表查询 {@link ${table.dtoName}} 列表，并导出 excel 表单 */
     </#if>
-    @GetMapping("export/list")
-    public void exportList(String ids, HttpServletResponse response)
+    @PostMapping("export/list")
+    public void exportList(@RequestBody Collection<Serializable> ids, HttpServletResponse response)
         throws IOException {
-        JSONArray objects = JSONUtil.parseArray(ids);
-        List<Serializable> idList = objects.toList(Serializable.class);
-        service.exportList(idList, response);
+        service.exportList(ids, response);
     }
 
     <#if enableSwagger>

@@ -9,7 +9,7 @@
               v-model="query.id"
               clearable
               placeholder="请输入ID"
-              style="width: 90%"
+              style="width: 90%;"
               class="filter-item"
               @keyup.enter.native="crud.toQuery"
             />
@@ -19,7 +19,7 @@
               v-model="query.name"
               clearable
               placeholder="请输入名字"
-              style="width: 90%"
+              style="width: 90%;"
               class="filter-item"
               @keyup.enter.native="crud.toQuery"
             />
@@ -29,7 +29,7 @@
               v-model="query.age"
               clearable
               placeholder="请输入年龄"
-              style="width: 90%"
+              style="width: 90%;"
               class="filter-item"
               @keyup.enter.native="crud.toQuery"
             />
@@ -94,7 +94,7 @@ import pagination from '@crud/Pagination'
 import DateRangePicker from '@/components/DateRangePicker'
 
 export default {
-  name: 'Hello',
+  name: 'HelloList',
   components: { pagination, crudOperation, queryOperation, udOperation, DateRangePicker, HelloForm },
   mixins: [presenter(), header(), crud()],
   cruds() {
@@ -106,7 +106,9 @@ export default {
     })
   },
   data() {
-    return {}
+    return {
+      
+    }
   },
   methods: {
     // 钩子：在获取表格数据之前执行，false 则代表不获取数据

@@ -87,55 +87,6 @@
 </#if>
     </div>
 
-<#if table.enableForm>
-    <!--表单组件-->
-    <el-dialog
-      :close-on-click-modal="false"
-      :before-close="crud.cancelCU"
-      :visible.sync="crud.status.cu > 0"
-      :title="crud.status.title"
-      width="500px"
-    >
-      <el-form ref="form" :model="form"<#if table.enableValidate> :rules="rules"</#if> size="small" label-width="80px">
-  <#list table.formFields as field>
-    <#if field.enableForm>
-        <el-form-item label="<#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if>"<#if field.notNull> prop="${field.propertyName}"</#if>>
-      <#if field.formType = 'Input'>
-          <el-input v-model="form.${field.propertyName}" style="width: 370px;" />
-      <#elseif field.formType = 'Textarea'>
-          <el-input v-model="form.${field.propertyName}" :rows="3" type="textarea" style="width: 370px;" />
-      <#elseif field.formType = 'Radio'>
-        <#if (field.dictName)?? && (field.dictName)!="">
-          <el-radio v-model="form.${field.propertyName}" v-for="item in dict.${field.dictName}" :key="item.id" :label="item.value">{{ item.label }}</el-radio>
-        <#else>
-                未设置字典，请手动设置 Radio
-        </#if>
-      <#elseif field.formType = 'Select'>
-        <#if (field.dictName)?? && (field.dictName)!="">
-          <el-select v-model="form.${field.propertyName}" filterable placeholder="请选择">
-            <el-option
-              v-for="item in dict.${field.dictName}"
-              :key="item.id"
-              :label="item.label"
-              :value="item.value" />
-          </el-select>
-        <#else>
-            未设置字典，请手动设置 Select
-        </#if>
-      <#else>
-          <el-date-picker v-model="form.${field.propertyName}" type="datetime" style="width: 370px;" />
-      </#if>
-        </el-form-item>
-    </#if>
-  </#list>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="text" @click="crud.cancelCU">取消</el-button>
-        <el-button :loading="crud.status.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
-      </div>
-    </el-dialog>
-</#if>
-
     <!--表格渲染-->
 <#if table.enableList>
     <el-table
@@ -177,23 +128,28 @@
 
     <!--分页组件-->
     <pagination />
+
+    <#if table.enableForm>
+    <!--表单组件-->
+    <${table.formName} />
+    </#if>
   </div>
 </template>
 
 <script>
 import ${table.apiName} from './${table.apiName}'
-import CRUD, { crud, form, header, presenter } from '@crud/crud'
+import ${table.formName} from './${table.formName}'
+import CRUD, { crud, header, presenter } from '@crud/crud'
 import queryOperation from '@crud/Query.operation'
 import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import DateRangePicker from '@/components/DateRangePicker'
 
-const defaultForm = {<#if table.formFields??><#list table.formFields as field> ${field.propertyName}: null,</#list></#if> }
 export default {
-  name: '${table.entityPath}',
-  components: { pagination, crudOperation, queryOperation, udOperation, DateRangePicker },
-  mixins: [presenter(), header(), form(defaultForm), crud()],
+  name: '${table.listName}',
+  components: { pagination, crudOperation, queryOperation, udOperation, DateRangePicker, ${table.formName} },
+  mixins: [presenter(), header(), crud()],
   cruds() {
     return CRUD({
       title: '${table.comment!}',
@@ -208,19 +164,7 @@ export default {
         add: ['admin', '<#if package.ModuleName??>${package.ModuleName}</#if>:${table.entityPath}:add'],
         edit: ['admin', '<#if package.ModuleName??>${package.ModuleName}</#if>:${table.entityPath}:edit'],
         del: ['admin', '<#if package.ModuleName??>${package.ModuleName}</#if>:${table.entityPath}:del']
-      }, </#if><#if table.enableValidate>rules: {
-<#list table.fields as field>
-  <#if field.enableValidate>
-        ${field.propertyName}: [
-    <#if field.validateType??>
-          { required: true, trigger: 'blur', type: '${field.validateType}' }
-    <#else>
-          { required: true, message: '<#if field.comment != ''>${field.comment}</#if>不能为空', trigger: 'blur' }
-    </#if>
-        ],
-  </#if>
-</#list>
-      }</#if>
+      }, </#if>
     }
   },
   methods: {

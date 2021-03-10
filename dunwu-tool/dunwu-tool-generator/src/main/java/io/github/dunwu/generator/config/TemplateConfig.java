@@ -30,6 +30,10 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class TemplateConfig {
 
+    // =========================================================
+    // 后端源码模板文件
+    // =========================================================
+
     @Getter(AccessLevel.NONE)
     private String entity = ConstVal.TEMPLATE_ENTITY_JAVA;
     private String dto = ConstVal.TEMPLATE_DTO_JAVA;
@@ -42,8 +46,14 @@ public class TemplateConfig {
     private String serviceImpl = ConstVal.TEMPLATE_SERVICE_IMPL;
     private String controller = ConstVal.TEMPLATE_CONTROLLER;
     private String xml = ConstVal.TEMPLATE_XML;
+
+    // =========================================================
+    // 前端源码模板文件
+    // =========================================================
+
     private String api = ConstVal.TEMPLATE_API;
     private String list = ConstVal.TEMPLATE_LIST;
+    private String form = ConstVal.TEMPLATE_FORM;
 
     public String getEntity(boolean enableKotlin) {
         return enableKotlin ? entityKt : entity;

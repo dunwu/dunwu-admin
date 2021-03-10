@@ -118,6 +118,9 @@ public abstract class AbstractTemplateEngine {
             CodeGenerateContentDto list = new CodeGenerateContentDto(ConstVal.LIST,
                 getMergeContent(objectMap, templateFilePath(template.getList())));
             codeGenerateContentDtos.add(list);
+            CodeGenerateContentDto form = new CodeGenerateContentDto(ConstVal.FORM,
+                getMergeContent(objectMap, templateFilePath(template.getForm())));
+            codeGenerateContentDtos.add(form);
         }
 
         return codeGenerateContentDtos;
@@ -183,6 +186,16 @@ public abstract class AbstractTemplateEngine {
                 writer(objectMap, templateFilePath(template.getList()), listFile);
             }
         }
+        // MpForm.vue
+        if (null != tableInfo.getFormName() && null != pathInfoMap.get(ConstVal.FORM_PATH)) {
+            String formFile = String.format((pathInfoMap.get(ConstVal.FORM_PATH)
+                + File.separator
+                + tableInfo.getFormName()
+                + ConstVal.VUE_SUFFIX), tableInfo.getEntityName());
+            if (isCreate(FileType.FORM, formFile)) {
+                writer(objectMap, templateFilePath(template.getForm()), formFile);
+            }
+        }
     }
 
     private void outputBackendFiles(TableInfo tableInfo, Map<String, Object> objectMap,
@@ -193,7 +206,8 @@ public abstract class AbstractTemplateEngine {
             String entityFile = String.format(
                 (pathInfoMap.get(ConstVal.ENTITY_PATH) + File.separator + "%s" + suffixJavaOrKt()), entityName);
             if (isCreate(FileType.ENTITY, entityFile)) {
-                writer(objectMap, templateFilePath(template.getEntity(getConfigBuilder().getGlobalConfig().isEnableKotlin())),
+                writer(objectMap,
+                    templateFilePath(template.getEntity(getConfigBuilder().getGlobalConfig().isEnableKotlin())),
                     entityFile);
             }
         }

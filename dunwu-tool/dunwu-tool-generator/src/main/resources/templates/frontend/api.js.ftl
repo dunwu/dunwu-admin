@@ -85,11 +85,9 @@ export function getById(id) {
 export function exportList(ids) {
   return request({
     url: 'api<#if package.ModuleName??>/${package.ModuleName}</#if>/${table.entityPath}/export/list',
-    method: 'get',
+    method: 'post',
     responseType: 'blob',
-    params: {
-      ids: JSON.stringify(ids)
-    }
+    data: ids
   })
 }
 

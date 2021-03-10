@@ -1,10 +1,10 @@
 package io.github.dunwu.modules.demo.service;
 
 import io.github.dunwu.data.core.annotation.QueryField;
-import io.github.dunwu.data.mybatis.IService;
 import io.github.dunwu.modules.demo.entity.Hello;
 import io.github.dunwu.modules.demo.entity.dto.HelloDto;
 import io.github.dunwu.modules.demo.entity.query.HelloQuery;
+import io.github.dunwu.data.mybatis.IService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  * 测试 Service 接口
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-03-09
+ * @since 2021-03-10
  */
 public interface HelloService extends IService {
 

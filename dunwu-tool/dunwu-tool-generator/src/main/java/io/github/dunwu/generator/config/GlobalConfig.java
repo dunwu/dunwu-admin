@@ -85,6 +85,7 @@ public class GlobalConfig {
     private String controllerName;
     private String apiName;
     private String listName;
+    private String formName;
 
     public GlobalConfig() {}
 

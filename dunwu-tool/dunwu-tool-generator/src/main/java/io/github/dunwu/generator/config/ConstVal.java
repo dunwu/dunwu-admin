@@ -29,6 +29,10 @@ public interface ConstVal {
 
     String MODULE_NAME = "ModuleName";
 
+    // =========================================================
+    // 源码文件默认后缀
+    // =========================================================
+
     String XML = "Xml";
     String ENTITY = "Entity";
     String DTO = "Dto";
@@ -41,6 +45,11 @@ public interface ConstVal {
     String CONTROLLER = "Controller";
     String API = "Api";
     String LIST = "List";
+    String FORM = "Form";
+
+    // =========================================================
+    // 源码文件路径 key
+    // =========================================================
 
     String XML_PATH = "xml_path";
     String ENTITY_PATH = "entity_path";
@@ -54,16 +63,11 @@ public interface ConstVal {
     String CONTROLLER_PATH = "controller_path";
     String API_PATH = "api_path";
     String LIST_PATH = "list_path";
+    String FORM_PATH = "form_path";
 
-    String JAVA_TMPDIR = "java.io.tmpdir";
-    String UTF8 = StandardCharsets.UTF_8.name();
-    String UNDERLINE = "_";
-
-    String JAVA_SUFFIX = StringPool.DOT_JAVA;
-    String KT_SUFFIX = ".kt";
-    String XML_SUFFIX = ".xml";
-    String JS_SUFFIX = ".js";
-    String VUE_SUFFIX = ".vue";
+    // =========================================================
+    // 模板文件默认路径
+    // =========================================================
 
     String TEMPLATE_XML = "/templates/backend/mapper.xml";
     String TEMPLATE_ENTITY_JAVA = "/templates/backend/entity.java";
@@ -78,6 +82,25 @@ public interface ConstVal {
     String TEMPLATE_CONTROLLER = "/templates/backend/controller.java";
     String TEMPLATE_API = "/templates/frontend/api.js";
     String TEMPLATE_LIST = "/templates/frontend/list.vue";
+    String TEMPLATE_FORM = "/templates/frontend/form.vue";
+
+    // =========================================================
+    // 模板文件类型
+    // =========================================================
+
+    String JAVA_SUFFIX = StringPool.DOT_JAVA;
+    String KT_SUFFIX = ".kt";
+    String XML_SUFFIX = ".xml";
+    String JS_SUFFIX = ".js";
+    String VUE_SUFFIX = ".vue";
+
+    // =========================================================
+    // 其他
+    // =========================================================
+
+    String JAVA_TMPDIR = "java.io.tmpdir";
+    String UTF8 = StandardCharsets.UTF_8.name();
+    String UNDERLINE = "_";
 
     String VM_LOAD_PATH_KEY = "file.resource.loader.class";
     String VM_LOAD_PATH_VALUE = "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader";
@@ -91,4 +114,5 @@ public interface ConstVal {
     String JAVA_PATH = "/src/main/java";
     String RESOURCES_PATH = "/src/main/resources";
     String VIEWS_PATH = "/src/views";
+
 }

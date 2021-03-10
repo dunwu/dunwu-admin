@@ -241,9 +241,11 @@ public class ConfigBuilder {
      */
     public TableInfo processTable(TableInfo tableInfo) {
 
+        // 校验必要配置项
         checkConfig();
-
+        // 根据配置项，动态填充字段部分相关属性
         convertTableFields(tableInfo, globalConfig, strategyConfig, dataSourceConfig);
+        // 将字段根据是否出现在 列表、表单、查询、排序、校验 进行分组
         groupTableFields(tableInfo);
 
         String entityName;
@@ -305,6 +307,11 @@ public class ConfigBuilder {
             tableInfo.setListName(String.format(globalConfig.getListName(), entityName));
         } else {
             tableInfo.setListName(entityName + ConstVal.LIST);
+        }
+        if (StringUtils.isNotBlank(globalConfig.getFormName())) {
+            tableInfo.setFormName(String.format(globalConfig.getFormName(), entityName));
+        } else {
+            tableInfo.setFormName(entityName + ConstVal.FORM);
         }
         // 检测导入包
         checkImportPackages(tableInfo, globalConfig, strategyConfig);
@@ -480,6 +487,7 @@ public class ConfigBuilder {
                 ConstVal.VIEWS_PATH.replaceAll("//", StringPool.BACK_SLASH + File.separator);
             addPathInfo(pathInfoMap, templateConfig.getApi(), viewsDir, ConstVal.API_PATH, ConstVal.MODULE_NAME);
             addPathInfo(pathInfoMap, templateConfig.getList(), viewsDir, ConstVal.LIST_PATH, ConstVal.MODULE_NAME);
+            addPathInfo(pathInfoMap, templateConfig.getForm(), viewsDir, ConstVal.FORM_PATH, ConstVal.MODULE_NAME);
         }
     }
 

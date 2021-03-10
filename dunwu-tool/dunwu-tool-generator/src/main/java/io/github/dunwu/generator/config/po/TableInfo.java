@@ -89,6 +89,7 @@ public class TableInfo {
     /******************* 以下为生成的前端文件名（结束） *******************/
     private String apiName;
     private String listName;
+    private String formName;
 
     /******************* 以下为生成的前端文件名（结束） *******************/
 

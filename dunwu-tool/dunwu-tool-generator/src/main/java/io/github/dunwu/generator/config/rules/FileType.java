@@ -34,5 +34,6 @@ public enum FileType {
     CONTROLLER,
     API,
     LIST,
+    FORM,
     OTHER
 }

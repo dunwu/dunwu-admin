@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
  * 测试 Dao 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-03-09
+ * @since 2021-03-10
  */
 @Dao
 public class HelloDaoImpl extends BaseExtDaoImpl<HelloMapper, Hello> implements HelloDao {
