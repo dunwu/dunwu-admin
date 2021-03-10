@@ -109,7 +109,7 @@ public class SysRoleController {
 
     @PreAuthorize("@exp.check('role:view')")
     @ApiOperation("根据 ID 集合批量导出 SysRoleDto 列表数据")
-    @GetMapping("export/list")
+    @PostMapping("export/list")
     public void exportByIds(@RequestBody Collection<Serializable> ids, HttpServletResponse response)
         throws IOException {
         service.exportByIds(ids, response);

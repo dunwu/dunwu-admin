@@ -87,9 +87,7 @@ export function exportList(ids) {
     url: 'api/mnt/database/export/list',
     method: 'get',
     responseType: 'blob',
-    params: {
-      ids: JSON.stringify(ids)
-    }
+    data: ids
   })
 }
 

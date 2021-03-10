@@ -107,7 +107,7 @@ public class SysDeptController {
 
     @PreAuthorize("@exp.check('dept:view')")
     @ApiOperation("根据 ID 集合批量导出 SysDeptDto 列表数据")
-    @GetMapping("export/list")
+    @PostMapping("export/list")
     public void exportList(@RequestBody Collection<Serializable> ids, HttpServletResponse response) throws IOException {
         service.exportList(ids, response);
     }

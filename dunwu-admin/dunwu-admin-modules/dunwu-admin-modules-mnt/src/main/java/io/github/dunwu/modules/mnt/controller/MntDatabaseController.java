@@ -109,7 +109,7 @@ public class MntDatabaseController {
         return Result.ok(service.pojoById(id));
     }
 
-    @GetMapping("export/list")
+    @PostMapping("export/list")
     @ApiOperation("根据 ID 集合批量导出 MntDatabaseDto 列表数据")
     public void exportList(@RequestBody Collection<Serializable> ids, HttpServletResponse response)
         throws IOException {

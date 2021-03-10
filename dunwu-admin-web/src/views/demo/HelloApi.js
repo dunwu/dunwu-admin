@@ -85,11 +85,9 @@ export function getById(id) {
 export function exportList(ids) {
   return request({
     url: 'api/demo/hello/export/list',
-    method: 'get',
+    method: 'post',
     responseType: 'blob',
-    params: {
-      ids: JSON.stringify(ids)
-    }
+    data: ids
   })
 }
 

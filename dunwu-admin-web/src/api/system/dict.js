@@ -73,11 +73,9 @@ export function page(params) {
 export function exportList(ids) {
   return request({
     url: 'api/sys/dict/export/list',
-    method: 'get',
+    method: 'post',
     responseType: 'blob',
-    params: {
-      ids: JSON.stringify(ids)
-    }
+    data: ids
   })
 }
 

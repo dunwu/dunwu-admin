@@ -55,31 +55,6 @@
       <crudOperation />
     </div>
 
-    <!--表单组件-->
-    <el-dialog
-      :close-on-click-modal="false"
-      :before-close="crud.cancelCU"
-      :visible.sync="crud.status.cu > 0"
-      :title="crud.status.title"
-      width="500px"
-    >
-      <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
-        <el-form-item label="名字" prop="name">
-          <el-input v-model="form.name" style="width: 370px" />
-        </el-form-item>
-        <el-form-item label="年龄" prop="age">
-          <el-input v-model="form.age" style="width: 370px" />
-        </el-form-item>
-        <el-form-item label="创建时间">
-          <el-input v-model="form.createTime" style="width: 370px" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="text" @click="crud.cancelCU">取消</el-button>
-        <el-button :loading="crud.status.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
-      </div>
-    </el-dialog>
-
     <!--表格渲染-->
     <el-table
       ref="table"
@@ -102,23 +77,26 @@
 
     <!--分页组件-->
     <pagination />
+
+    <!--表单组件-->
+    <HelloForm />
   </div>
 </template>
 
 <script>
 import HelloApi from './HelloApi'
-import CRUD, { crud, form, header, presenter } from '@crud/crud'
+import HelloForm from './HelloForm'
+import CRUD, { crud, header, presenter } from '@crud/crud'
 import queryOperation from '@crud/Query.operation'
 import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import DateRangePicker from '@/components/DateRangePicker'
 
-const defaultForm = { name: null, age: null, createTime: null }
 export default {
-  name: 'hello',
-  components: { pagination, crudOperation, queryOperation, udOperation, DateRangePicker },
-  mixins: [presenter(), header(), form(defaultForm), crud()],
+  name: 'Hello',
+  components: { pagination, crudOperation, queryOperation, udOperation, DateRangePicker, HelloForm },
+  mixins: [presenter(), header(), crud()],
   cruds() {
     return CRUD({
       title: '测试',
@@ -128,13 +106,7 @@ export default {
     })
   },
   data() {
-    return {
-      rules: {
-        name: [{ required: true, trigger: 'blur', type: 'string' }],
-        age: [{ required: true, trigger: 'blur', type: 'number' }],
-        createTime: [{ required: true, trigger: 'blur', type: 'date' }]
-      }
-    }
+    return {}
   },
   methods: {
     // 钩子：在获取表格数据之前执行，false 则代表不获取数据

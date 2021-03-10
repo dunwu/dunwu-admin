@@ -1,7 +1,5 @@
 package io.github.dunwu.modules.demo.controller;
 
-import cn.hutool.json.JSONArray;
-import cn.hutool.json.JSONUtil;
 import io.github.dunwu.data.core.Result;
 import io.github.dunwu.data.validator.annotation.AddCheck;
 import io.github.dunwu.data.validator.annotation.EditCheck;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -102,12 +99,10 @@ public class HelloController {
     }
 
     @ApiOperation("根据 id 列表查询 HelloDto 列表，并导出 excel 表单")
-    @GetMapping("export/list")
-    public void exportList(String ids, HttpServletResponse response)
+    @PostMapping("export/list")
+    public void exportList(@RequestBody Collection<Serializable> ids, HttpServletResponse response)
         throws IOException {
-        JSONArray objects = JSONUtil.parseArray(ids);
-        List<Serializable> idList = objects.toList(Serializable.class);
-        service.exportList(idList, response);
+        service.exportList(ids, response);
     }
 
     @ApiOperation("根据 HelloQuery 和 Pageable 分页查询 HelloDto 列表，并导出 excel 表单")

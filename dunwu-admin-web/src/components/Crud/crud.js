@@ -132,16 +132,21 @@ function CRUD(options) {
     toggleExtendSearch() {
       crud.showExtendSearch = !crud.showExtendSearch
     },
-    // 搜索
+    /**
+     * 查询并刷新表数据
+     */
     toQuery() {
       crud.page.page = 1
       crud.refresh()
     },
+    /**
+     * 切换排序类型，并刷新表数据
+     * @param val
+     */
     changeTableSort(val) {
       // 转换 Element UI 的排序类型
-      const orderType = val.order === 'ascending' ? 'asc' : 'desc'
-      crud.sort = []
-      crud.sort.push(val.prop + ',' + orderType)
+      const order = val.order === 'ascending' ? 'ASC' : 'DESC'
+      crud.sort = val.prop + ',' + order
       crud.refresh()
     },
     // 刷新
