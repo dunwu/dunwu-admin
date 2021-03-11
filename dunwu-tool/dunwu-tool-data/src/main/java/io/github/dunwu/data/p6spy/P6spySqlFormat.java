@@ -1,7 +1,7 @@
 package io.github.dunwu.data.p6spy;
 
-import com.p6spy.engine.spy.appender.MessageFormattingStrategy;
 import cn.hutool.core.util.StrUtil;
+import com.p6spy.engine.spy.appender.MessageFormattingStrategy;
 
 /**
  * 自定义 <a href="https://github.com/p6spy/p6spy">p6spy</a> sql 输出格式

@@ -17,8 +17,8 @@ package io.github.dunwu.generator.config.converts;
 
 import io.github.dunwu.generator.config.GlobalConfig;
 import io.github.dunwu.generator.config.ITypeConvert;
-import io.github.dunwu.generator.config.rules.JavaColumnType;
 import io.github.dunwu.generator.config.rules.IColumnType;
+import io.github.dunwu.generator.config.rules.JavaColumnType;
 
 /**
  * SQLServer 字段类型转换

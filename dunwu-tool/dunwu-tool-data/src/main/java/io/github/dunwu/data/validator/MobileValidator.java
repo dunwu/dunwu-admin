@@ -1,7 +1,7 @@
 package io.github.dunwu.data.validator;
 
-import io.github.dunwu.data.validator.annotation.IsMobile;
 import cn.hutool.core.util.StrUtil;
+import io.github.dunwu.data.validator.annotation.IsMobile;
 import io.github.dunwu.tool.util.ValidatorUtil;
 
 import javax.validation.ConstraintValidator;

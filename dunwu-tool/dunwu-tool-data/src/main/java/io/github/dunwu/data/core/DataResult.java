@@ -8,7 +8,6 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * 含有响应数据的应答消息实体

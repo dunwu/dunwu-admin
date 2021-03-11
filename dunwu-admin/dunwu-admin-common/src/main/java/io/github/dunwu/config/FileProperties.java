@@ -15,7 +15,6 @@
  */
 package io.github.dunwu.config;
 
-import io.github.dunwu.util.ElAdminConstant;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -40,21 +39,23 @@ public class FileProperties {
 
     private ElPath windows;
 
-    public ElPath getPath(){
+    public ElPath getPath() {
         String os = System.getProperty("os.name");
-        if(os.toLowerCase().startsWith(ElAdminConstant.WIN)) {
+        if (os.toLowerCase().startsWith("win")) {
             return windows;
-        } else if(os.toLowerCase().startsWith(ElAdminConstant.MAC)){
+        } else if (os.toLowerCase().startsWith("mac")) {
             return mac;
         }
         return linux;
     }
 
     @Data
-    public static class ElPath{
+    public static class ElPath {
 
         private String path;
 
         private String avatar;
+
     }
+
 }

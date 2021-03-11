@@ -1,4 +1,4 @@
-import { parseTime, downloadFile } from '@/utils/index'
+import { downloadFile, parseTime } from '@/utils/index'
 import Vue from 'vue'
 
 /**

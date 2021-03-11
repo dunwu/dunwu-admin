@@ -29,7 +29,7 @@ public class MyCodeGenerator {
 
     public static void generateByConfig() {
         String url =
-            "jdbc:mysql://localhost:3306/eladmin?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8";
+            "jdbc:mysql://localhost:3306/dunwu?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8";
         DataSourceConfig dataSourceConfig = new DataSourceConfig(url, "com.mysql.cj.jdbc.Driver", "root", "root");
         PackageConfig packageConfig = new PackageConfig("io.github.dunwu.modules", "generator");
         GlobalConfig globalConfig = new GlobalConfig();

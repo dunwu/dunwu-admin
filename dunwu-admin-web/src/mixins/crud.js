@@ -1,5 +1,5 @@
 import { initData } from '@/api/data'
-import { parseTime, downloadFile } from '@/utils/index'
+import { downloadFile, parseTime } from '@/utils/index'
 
 export default {
   data() {

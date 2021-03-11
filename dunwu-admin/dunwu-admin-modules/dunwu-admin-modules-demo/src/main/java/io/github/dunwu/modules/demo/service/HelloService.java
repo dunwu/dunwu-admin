@@ -1,10 +1,10 @@
 package io.github.dunwu.modules.demo.service;
 
 import io.github.dunwu.data.core.annotation.QueryField;
+import io.github.dunwu.data.mybatis.IService;
 import io.github.dunwu.modules.demo.entity.Hello;
 import io.github.dunwu.modules.demo.entity.dto.HelloDto;
 import io.github.dunwu.modules.demo.entity.query.HelloQuery;
-import io.github.dunwu.data.mybatis.IService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

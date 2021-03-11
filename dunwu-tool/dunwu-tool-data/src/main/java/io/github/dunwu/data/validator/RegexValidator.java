@@ -1,8 +1,8 @@
 package io.github.dunwu.data.validator;
 
+import cn.hutool.core.util.StrUtil;
 import io.github.dunwu.data.validator.annotation.RegexValid;
 import io.github.dunwu.tool.util.RegexUtil;
-import cn.hutool.core.util.StrUtil;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
