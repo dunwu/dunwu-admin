@@ -35,28 +35,8 @@ public class CodeTableConfigQuery implements Serializable {
     private String schemaName;
 
     @ApiModelProperty(value = "Table名称")
-    @QueryField
+    @QueryField(type = QueryField.QueryType.LIKE)
     private String tableName;
-
-    @ApiModelProperty(value = "Table注释")
-    @QueryField
-    private String comment;
-
-    @ApiModelProperty(value = "开启权限校验")
-    @QueryField
-    private Boolean enablePermission;
-
-    @ApiModelProperty(value = "开启文件覆盖模式")
-    @QueryField
-    private Boolean enableOverride;
-
-    @ApiModelProperty(value = "开启Swagger2")
-    @QueryField
-    private Boolean enableSwagger;
-
-    @ApiModelProperty(value = "作者")
-    @QueryField
-    private String author;
 
     @ApiModelProperty(value = "输出路径")
     @QueryField
@@ -74,45 +54,9 @@ public class CodeTableConfigQuery implements Serializable {
     @QueryField
     private String packagePath;
 
-    @ApiModelProperty(value = "主键类型")
-    @QueryField
-    private String idType;
-
-    @ApiModelProperty(value = "时间类型")
-    @QueryField
-    private String dateType;
-
-    @ApiModelProperty(value = "时间格式")
-    @QueryField
-    private String datePattern;
-
-    @ApiModelProperty(value = "允许表单")
-    @QueryField
-    private Boolean enableForm;
-
-    @ApiModelProperty(value = "允许列表")
-    @QueryField
-    private Boolean enableList;
-
-    @ApiModelProperty(value = "允许查询")
-    @QueryField
-    private Boolean enableQuery;
-
-    @ApiModelProperty(value = "允许排序")
-    @QueryField
-    private Boolean enableSort;
-
-    @ApiModelProperty(value = "允许校验")
-    @QueryField
-    private Boolean enableValidate;
-
     @ApiModelProperty(value = "模块名称")
     @QueryField
     private String moduleName;
-
-    @ApiModelProperty(value = "表前缀")
-    @QueryField
-    private String tablePrefix;
 
     @ApiModelProperty(value = "REST接口根路径")
     @QueryField
@@ -122,18 +66,9 @@ public class CodeTableConfigQuery implements Serializable {
     @QueryField
     private String createBy;
 
-    @ApiModelProperty(value = "更新者")
-    @QueryField
-    private String updateBy;
-
     @ApiModelProperty(value = "创建时间")
     @QueryField(type = QueryField.QueryType.BETWEEN)
     @JsonFormat(shape = JsonFormat.Shape.ARRAY, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private List<LocalDateTime> createTime;
-
-    @ApiModelProperty(value = "更新时间")
-    @QueryField(type = QueryField.QueryType.BETWEEN)
-    @JsonFormat(shape = JsonFormat.Shape.ARRAY, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private List<LocalDateTime> updateTime;
 
 }

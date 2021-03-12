@@ -27,7 +27,9 @@ import io.github.dunwu.modules.mnt.service.MntDatabaseService;
 import io.github.dunwu.util.SecurityUtils;
 import io.github.dunwu.web.util.ServletUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.io.File;
 import java.io.Serializable;
@@ -206,12 +208,12 @@ public class GeneratorServiceImpl implements GeneratorService {
         String username = SecurityUtils.getCurrentUsername();
         CodeGlobalConfigDto globalConfigDto = queryGlobalConfigByCurrentUser();
         if (globalConfigDto == null) {
-            throw new DataException("未配置全局配置");
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "未配置全局配置");
         }
 
         CodeTableConfigDto tableConfigDto = queryTableConfigByCurrentUser(query);
         if (tableConfigDto == null) {
-            throw new DataException("未配置表级别配置");
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "未配置表级别配置");
         }
 
         CodeColumnConfigQuery codeColumnConfigQuery = new CodeColumnConfigQuery();
@@ -220,7 +222,7 @@ public class GeneratorServiceImpl implements GeneratorService {
                              .setCreateBy(username);
         List<CodeColumnConfigDto> columns = columnConfigService.pojoListByQuery(codeColumnConfigQuery);
         if (CollectionUtil.isEmpty(columns)) {
-            throw new DataException("未配置列级别配置");
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "未配置列级别配置");
         }
 
         tableConfigDto.setColumns(columns);
@@ -366,6 +368,9 @@ public class GeneratorServiceImpl implements GeneratorService {
         }
 
         List<TableInfo> tableInfos = configBuilder.queryTableInfoList();
+        if (CollectionUtil.isEmpty(tableInfos)) {
+            return null;
+        }
         TableInfo tableInfo = tableInfos.get(0);
         tableConfigDto.setComment(tableInfo.getComment());
         return tableConfigDto;

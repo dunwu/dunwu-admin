@@ -55,6 +55,7 @@ public class RequestGlobalHandler {
      * @param e ConstraintViolationException
      * @return {@link Result}
      */
+    @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({ ConstraintViolationException.class })
     public Result handleConstraintViolationException(final ConstraintViolationException e) {
@@ -70,6 +71,7 @@ public class RequestGlobalHandler {
         return Result.fail(ResultStatus.HTTP_BAD_REQUEST.getCode(), sb.toString());
     }
 
+    @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({ HttpClientErrorException.class })
     public Result handleBadRequestException(final HttpClientErrorException e) {
@@ -77,6 +79,7 @@ public class RequestGlobalHandler {
         return Result.fail(ResultStatus.HTTP_BAD_REQUEST.getCode(), e.getLocalizedMessage());
     }
 
+    @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({ DataException.class })
     public Result handleDataException(final DataException e) {
@@ -90,6 +93,7 @@ public class RequestGlobalHandler {
      * @param e MethodArgumentNotValidException
      * @return {@link Result}
      */
+    @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({ MethodArgumentNotValidException.class })
     private Result handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
@@ -114,10 +118,11 @@ public class RequestGlobalHandler {
      * @param e AuthenticationException
      * @return {@link Result}
      */
+    @ResponseBody
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(AuthenticationException.class)
     public Result handleAuthenticationException(final AuthenticationException e) {
-        log.error("Exception: {}, message: {}", e.getClass().getCanonicalName(), e.getLocalizedMessage());
+        log.error("认证失败，方法: {}, message: {}", e.getClass().getCanonicalName(), e.getLocalizedMessage());
         return Result.fail(ResultStatus.HTTP_UNAUTHORIZED.getCode(), e.getLocalizedMessage());
     }
 
@@ -149,6 +154,8 @@ public class RequestGlobalHandler {
     /**
      * BadCredentialsException
      */
+    @ResponseBody
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(BadCredentialsException.class)
     public Result badCredentialsException(BadCredentialsException e) {
         String message = "坏的凭证".equals(e.getMessage()) ? "用户名或密码不正确" : e.getMessage();

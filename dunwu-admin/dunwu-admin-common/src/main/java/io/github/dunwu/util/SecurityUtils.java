@@ -20,12 +20,12 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import io.github.dunwu.util.enums.DataScopeEnum;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AccountExpiredException;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 
@@ -56,13 +56,13 @@ public class SecurityUtils {
     public static String getCurrentUsername() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
-            throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED, "当前登录状态过期");
+            throw new AccountExpiredException("当前登录状态过期");
         }
         if (authentication.getPrincipal() instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             return userDetails.getUsername();
         }
-        throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED, "找不到当前登录的信息");
+        throw new AuthenticationCredentialsNotFoundException("找不到当前登录的信息") {};
     }
 
     /**

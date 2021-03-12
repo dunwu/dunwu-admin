@@ -43,7 +43,7 @@ router.beforeEach((to, from, next) => {
     document.title = to.meta.title + ' - ' + Config.title
   }
 
-  console.info('白名单', whiteListPaths)
+  // console.info('白名单', whiteListPaths)
 
   if (store.state.settings.enableAuth) {
     doDispatchInAuth(to, from, next)
@@ -59,8 +59,6 @@ router.beforeEach((to, from, next) => {
  * @param next
  */
 const doDispatchInAuth = (to, from, next) => {
-  console.info('认证模式')
-
   NProgress.start()
 
   if (getToken()) {

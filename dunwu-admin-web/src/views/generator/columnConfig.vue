@@ -41,14 +41,37 @@
         :data="data"
         :max-height="tableHeight"
         stripe
-        size="small"
-        style="width: 100%;margin-bottom: 15px"
+        style="width: 100%; margin-bottom: 15px"
       >
-        <el-table-column prop="fieldName" label="字段名称" width="150px" />
-        <el-table-column prop="comment" label="字段注释" width="150px" />
-        <el-table-column prop="type" label="字段数据类型" width="100px" />
-        <el-table-column prop="javaType" label="字段 Java 类型" width="100px" />
-        <el-table-column prop="keyType" label="字段KEY类型" />
+        <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-form label-position="left" inline class="generator-table-expand">
+              <el-form-item label="字段名称：">
+                <span>{{ props.row.fieldName }}</span>
+              </el-form-item>
+              <el-form-item label="字段注释：">
+                <span>{{ props.row.comment }}</span>
+              </el-form-item>
+              <el-form-item label="字段数据类型：">
+                <span>{{ props.row.type }}</span>
+              </el-form-item>
+              <el-form-item label="字段 Java 类型：">
+                <span>{{ props.row.javaType }}</span>
+              </el-form-item>
+            </el-form>
+          </template>
+        </el-table-column>
+        <el-table-column prop="fieldName" label="名称" width="150px" />
+        <el-table-column prop="comment" label="注释" width="150px" />
+        <el-table-column prop="type" label="数据类型" width="100px" />
+        <el-table-column prop="keyType" label="KEY类型">
+          <template slot-scope="scope">
+            <el-tag v-if="scope.row.keyType === 'PRI'" size="medium" type="success">主键</el-tag>
+            <el-tag v-else-if="scope.row.keyType === 'MUL'" size="medium">键</el-tag>
+            <el-tag v-else-if="scope.row.keyType === 'UNI'" size="medium">唯一键</el-tag>
+            <span v-else>{{ scope.row.keyType }}</span>
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="非空" width="70px">
           <template slot-scope="scope">
             <!--所有的键必须不为空-->
@@ -215,7 +238,7 @@
             </el-select>
             <el-select
               v-else
-              v-model="data[scope.$index].sortType"
+              v-model="data[scope.$index].validateType"
               filterable
               class="edit-input"
               clearable
@@ -345,4 +368,17 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.generator-table-expand {
+  font-size: 0;
+}
+.generator-table-expand label {
+  width: 100px;
+}
+.generator-table-expand .el-form-item {
+  color: #6a8bad;
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 100%;
+}
+</style>
