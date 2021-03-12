@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * Dto 类
+ * 数据库管理 Dto 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
  * @since 2021-03-07
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "MntDatabaseDto", description = "")
+@ApiModel(value = "MntDatabaseDto", description = "数据库管理 Dto")
 public class MntDatabaseDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -27,10 +27,16 @@ public class MntDatabaseDto implements Serializable {
     @ApiModelProperty(value = "ID")
     private Long id;
 
-    @ApiModelProperty(value = "名称")
+    @ApiModelProperty(value = "数据库名称")
     private String name;
 
-    @ApiModelProperty(value = "jdbc连接")
+    @ApiModelProperty(value = "Host")
+    private String host;
+
+    @ApiModelProperty(value = "端口号")
+    private Integer port;
+
+    @ApiModelProperty(value = "jdbc地址")
     private String jdbcUrl;
 
     @ApiModelProperty(value = "账号")

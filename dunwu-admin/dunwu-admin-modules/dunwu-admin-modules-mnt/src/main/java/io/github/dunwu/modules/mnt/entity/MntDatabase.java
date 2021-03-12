@@ -11,15 +11,18 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import javax.validation.constraints.NotNull;
 
 /**
+ * 数据库管理实体类
+ *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
  * @since 2021-03-07
  */
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "MntDatabase", description = "")
+@ApiModel(value = "MntDatabase", description = "数据库管理")
 public class MntDatabase implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -28,15 +31,27 @@ public class MntDatabase implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    @ApiModelProperty(value = "名称")
+    @NotNull
+    @ApiModelProperty(value = "数据库名称")
     private String name;
 
-    @ApiModelProperty(value = "jdbc连接")
+    @NotNull
+    @ApiModelProperty(value = "Host")
+    private String host;
+
+    @NotNull
+    @ApiModelProperty(value = "端口号")
+    private Integer port;
+
+    @NotNull
+    @ApiModelProperty(value = "jdbc地址")
     private String jdbcUrl;
 
+    @NotNull
     @ApiModelProperty(value = "账号")
     private String username;
 
+    @NotNull
     @ApiModelProperty(value = "密码")
     private String password;
 

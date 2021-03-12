@@ -145,11 +145,13 @@ CREATE TABLE `mnt_app` (
 DROP TABLE IF EXISTS `mnt_database`;
 CREATE TABLE `mnt_database` (
     `id`          BIGINT(20)   NOT NULL AUTO_INCREMENT COMMENT 'ID',
-    `name`        VARCHAR(255) NOT NULL COMMENT '名称',
-    `jdbc_url`    VARCHAR(255) NOT NULL COMMENT 'jdbc连接',
+    `name`        VARCHAR(255) NOT NULL COMMENT '数据库名称',
+    `host`        VARCHAR(255) NOT NULL COMMENT 'Host',
+    `port`        INT(10)      NOT NULL COMMENT '端口号',
+    `jdbc_url`    VARCHAR(255) NOT NULL COMMENT 'jdbc地址',
     `username`    VARCHAR(255) NOT NULL COMMENT '账号',
     `password`    VARCHAR(255) NOT NULL COMMENT '密码',
-    `schema_name` VARCHAR(255) DEFAULT NULL COMMENT 'Schema 名',
+    `schema_name` VARCHAR(255) DEFAULT NULL COMMENT 'Schema名称',
     `create_by`   VARCHAR(255) DEFAULT NULL COMMENT '创建者',
     `update_by`   VARCHAR(255) DEFAULT NULL COMMENT '更新者',
     `create_time` DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',

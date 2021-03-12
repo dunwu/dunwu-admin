@@ -85,25 +85,47 @@
       :before-close="crud.cancelCU"
       :visible.sync="crud.status.cu > 0"
       :title="crud.status.title"
-      width="600px"
+      width="640px"
     >
-      <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
+      <el-form ref="form" :model="form" :rules="rules" size="small" label-width="100px">
         <el-form-item label="名称" prop="name">
           <el-input v-model="form.name" style="width: 450px;" />
         </el-form-item>
         <el-form-item label="jdbc连接" prop="jdbcUrl">
-          <el-input v-model="form.jdbcUrl" style="width: 400px;" />
-          <el-button :loading="loading" type="success" @click="testDbConnection">测试</el-button>
+          <el-input v-model="form.jdbcUrl" style="width: 90%">
+            <template slot="prepend">
+              jdbc:mysql://
+            </template>
+          </el-input>
         </el-form-item>
-        <el-form-item label="账号" prop="username">
-          <el-input v-model="form.username" style="width: 450px;" />
-        </el-form-item>
-        <el-form-item label="密码" prop="password">
-          <el-input v-model="form.password" type="password" style="width: 450px" />
-        </el-form-item>
+        <el-row>
+          <el-col :span="11">
+            <el-form-item label="Host" prop="host">
+              <el-input v-model="form.host" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="11">
+            <el-form-item label="端口" prop="port">
+              <el-input v-model="form.port" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="11">
+            <el-form-item label="账号" prop="username">
+              <el-input v-model="form.username" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="11">
+            <el-form-item label="密码" prop="password">
+              <el-input v-model="form.password" type="password" />
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-form-item label="schema名" prop="schemaName">
-          <el-input v-model="form.schemaName" style="width: 450px" />
+          <el-input v-model="form.schemaName" style="width: 90%" />
         </el-form-item>
+        <el-button :loading="loading" type="success" @click="testDbConnection">测试</el-button>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="text" @click="crud.cancelCU">取消</el-button>
@@ -123,7 +145,9 @@
     >
       <el-table-column type="selection" width="55" />
       <el-table-column prop="name" width="130px" label="数据库名称" />
-      <el-table-column prop="jdbcUrl" label="连接地址" />
+      <el-table-column prop="host" label="Host" />
+      <el-table-column prop="port" label="端口" />
+      <el-table-column prop="jdbcUrl" label="jdbc地址" />
       <el-table-column prop="username" width="200px" label="用户名" />
       <el-table-column prop="schemaName" width="200px" label="schema名" />
       <el-table-column prop="createTime" width="200px" label="创建日期" />
@@ -154,7 +178,15 @@ import TableColumnOperation from '@crud/TableColumnOperation'
 import Pagination from '@crud/Pagination'
 import DateRangePicker from '@/components/DateRangePicker'
 
-const defaultForm = { id: null, name: null, jdbcUrl: 'jdbc:mysql://', username: null, password: null }
+const defaultForm = {
+  id: null,
+  name: null,
+  host: null,
+  port: 3306,
+  jdbcUrl: null,
+  username: null,
+  password: null
+}
 export default {
   name: 'DataBase',
   components: { eForm, Pagination, TableOperation, TableQueryOperation, TableColumnOperation, DateRangePicker },
@@ -175,9 +207,12 @@ export default {
       },
       rules: {
         name: [{ required: true, message: '请输入数据库名称', trigger: 'blur' }],
+        host: [{ required: true, message: '请输入Host', trigger: 'blur' }],
+        port: [{ required: true, message: '请输入端口', trigger: 'blur' }],
         jdbcUrl: [{ required: true, message: '请输入数据库连接地址', trigger: 'blur' }],
         username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
-        password: [{ required: true, message: '请输入数据库密码', trigger: 'blur' }]
+        password: [{ required: true, message: '请输入数据库密码', trigger: 'blur' }],
+        schemaName: [{ required: true, message: '请输入Schema名称', trigger: 'blur' }]
       }
     }
   },

@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * Query 类
+ * 数据库管理 Query 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
  * @since 2021-03-07
@@ -20,7 +20,7 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "MntDatabaseQuery", description = "")
+@ApiModel(value = "MntDatabaseQuery", description = "数据库管理 Query 类")
 public class MntDatabaseQuery implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -33,12 +33,20 @@ public class MntDatabaseQuery implements Serializable {
     @QueryField
     private String name;
 
-    @ApiModelProperty(value = "jdbc连接")
+    @ApiModelProperty(value = "Host")
+    @QueryField(type = QueryField.QueryType.LIKE)
+    private String host;
+
+    @ApiModelProperty(value = "端口号")
+    @QueryField
+    private Integer port;
+
+    @ApiModelProperty(value = "jdbc地址")
     @QueryField
     private String jdbcUrl;
 
     @ApiModelProperty(value = "Schema 名")
-    @QueryField(type = QueryField.QueryType.LIKE_RIGHT)
+    @QueryField(type = QueryField.QueryType.LIKE)
     private String schemaName;
 
     @ApiModelProperty(value = "Schema 名")
