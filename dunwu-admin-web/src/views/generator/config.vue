@@ -1,13 +1,13 @@
 <template>
   <div class="app-container">
     <el-tabs v-model="activeName" type="card">
-      <el-tab-pane label="全局级别配置" name="globalConfig" lazy="true">
+      <el-tab-pane label="全局级别配置" name="globalConfig" lazy>
         <globalConfig />
       </el-tab-pane>
-      <el-tab-pane label="表级别配置" name="tableConfig" lazy="true">
+      <el-tab-pane label="表级别配置" name="tableConfig" lazy>
         <tableConfig />
       </el-tab-pane>
-      <el-tab-pane label="字段级别配置" name="columnConfig" lazy="true">
+      <el-tab-pane label="字段级别配置" name="columnConfig" lazy>
         <columnConfig />
       </el-tab-pane>
     </el-tabs>

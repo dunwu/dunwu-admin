@@ -92,11 +92,7 @@
           <el-input v-model="form.name" style="width: 450px;" />
         </el-form-item>
         <el-form-item label="jdbc连接" prop="jdbcUrl">
-          <el-input v-model="form.jdbcUrl" style="width: 90%">
-            <template slot="prepend">
-              jdbc:mysql://
-            </template>
-          </el-input>
+          <el-input v-model="form.jdbcUrl" style="width: 90%" />
         </el-form-item>
         <el-row>
           <el-col :span="11">
@@ -122,10 +118,14 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="schema名" prop="schemaName">
-          <el-input v-model="form.schemaName" style="width: 90%" />
-        </el-form-item>
-        <el-button :loading="loading" type="success" @click="testDbConnection">测试</el-button>
+        <el-row>
+          <el-col :span="11">
+            <el-form-item label="schema名" prop="schemaName">
+              <el-input v-model="form.schemaName" />
+            </el-form-item>
+          </el-col>
+          <el-button :loading="loading" type="primary" plain style="margin-left: 50px" @click="testDbConnection">测试链接</el-button>
+        </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="text" @click="crud.cancelCU">取消</el-button>
@@ -183,7 +183,7 @@ const defaultForm = {
   name: null,
   host: null,
   port: 3306,
-  jdbcUrl: null,
+  jdbcUrl: 'jdbc:mysql://',
   username: null,
   password: null
 }
