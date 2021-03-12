@@ -120,7 +120,7 @@ public class DunwuSwaggerConfiguration implements BeanFactoryAware {
             if (swaggerProperties.getBasePath().isEmpty()) {
                 swaggerProperties.getBasePath().add("/**");
             }
-            List<Predicate<String>> basePath = new ArrayList();
+            List<Predicate<String>> basePath = new ArrayList<>();
             for (String path : swaggerProperties.getBasePath()) {
                 basePath.add(PathSelectors.ant(path));
             }
@@ -252,7 +252,7 @@ public class DunwuSwaggerConfiguration implements BeanFactoryAware {
     }
 
     @Override
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+    public void setBeanFactory(@SuppressWarnings("NullableProblems") BeanFactory beanFactory) throws BeansException {
         this.beanFactory = beanFactory;
     }
 
@@ -278,9 +278,9 @@ public class DunwuSwaggerConfiguration implements BeanFactoryAware {
     /**
      * 局部参数按照name覆盖局部参数
      *
-     * @param globalOperationParameters
-     * @param docketOperationParameters
-     * @return
+     * @param globalOperationParameters /
+     * @param docketOperationParameters /
+     * @return /
      */
     private List<Parameter> assemblyGlobalOperationParameters(
         List<DunwuSwaggerProperties.GlobalOperationParameter> globalOperationParameters,
@@ -345,7 +345,7 @@ public class DunwuSwaggerConfiguration implements BeanFactoryAware {
      * 获取返回消息体列表
      *
      * @param globalResponseMessageBodyList 全局Code消息返回集合
-     * @return
+     * @return /
      */
     private List<ResponseMessage> getResponseMessageList
     (List<DunwuSwaggerProperties.GlobalResponseMessageBody> globalResponseMessageBodyList) {

@@ -2,9 +2,10 @@ package io.github.dunwu.modules.security.service;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.asymmetric.KeyType;
+import cn.hutool.crypto.asymmetric.RSA;
 import com.wf.captcha.*;
 import com.wf.captcha.base.Captcha;
-import io.github.dunwu.config.RsaProperties;
 import io.github.dunwu.data.core.DataException;
 import io.github.dunwu.data.core.Result;
 import io.github.dunwu.data.redis.RedisHelper;
@@ -23,10 +24,10 @@ import io.github.dunwu.modules.system.service.SysUserService;
 import io.github.dunwu.tool.exception.BadConfigurationException;
 import io.github.dunwu.util.EncryptUtils;
 import io.github.dunwu.util.FileUtil;
-import io.github.dunwu.util.RsaUtils;
 import io.github.dunwu.util.SecurityUtils;
 import io.github.dunwu.util.enums.CodeEnum;
 import io.github.dunwu.web.util.ServletUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -51,11 +52,13 @@ import javax.servlet.http.HttpServletResponse;
  * @date 2019年10月26日21:56:27
  */
 @Slf4j
+@RequiredArgsConstructor
 @Service("userDetailsService")
 public class AuthService implements UserDetailsService {
 
     static final Map<String, JwtUserDto> userDtoCache = new ConcurrentHashMap<>();
 
+    private final RSA rsa;
     private final RedisHelper redisHelper;
     private final SysUserService userService;
     private final SysDeptService deptService;
@@ -63,19 +66,6 @@ public class AuthService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final VerifyService verifyService;
     private final DunwuWebSecurityProperties securityProperties;
-
-    public AuthService(RedisHelper redisHelper, SysUserService userService,
-        SysDeptService deptService, SysRoleService roleService,
-        PasswordEncoder passwordEncoder, VerifyService verifyService,
-        DunwuWebSecurityProperties securityProperties) {
-        this.redisHelper = redisHelper;
-        this.userService = userService;
-        this.deptService = deptService;
-        this.roleService = roleService;
-        this.passwordEncoder = passwordEncoder;
-        this.verifyService = verifyService;
-        this.securityProperties = securityProperties;
-    }
 
     /**
      * 保存在线用户信息
@@ -334,9 +324,9 @@ public class AuthService implements UserDetailsService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void updatePass(UserPassVo passVo) throws Exception {
-        String oldPass = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, passVo.getOldPass());
-        String newPass = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, passVo.getNewPass());
+    public void updatePass(UserPassVo passVo) {
+        String oldPass = rsa.decryptStr(passVo.getOldPass(), KeyType.PrivateKey);
+        String newPass = rsa.decryptStr(passVo.getNewPass(), KeyType.PrivateKey);
         SysUserDto sysUserDto = userService.pojoByUsername(SecurityUtils.getCurrentUsername());
         if (!passwordEncoder.matches(oldPass, sysUserDto.getPassword())) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "修改失败，旧密码错误");
@@ -351,8 +341,8 @@ public class AuthService implements UserDetailsService {
         flushCache(sysUserDto.getUsername());
     }
 
-    public Result updateEmail(String code, SysUser entity) throws Exception {
-        String password = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, entity.getPassword());
+    public Result updateEmail(String code, SysUser entity) {
+        String password = rsa.decryptStr(entity.getPassword(), KeyType.PrivateKey);
         SysUserDto userDto = userService.pojoByUsername(SecurityUtils.getCurrentUsername());
         if (!passwordEncoder.matches(password, userDto.getPassword())) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "密码错误");

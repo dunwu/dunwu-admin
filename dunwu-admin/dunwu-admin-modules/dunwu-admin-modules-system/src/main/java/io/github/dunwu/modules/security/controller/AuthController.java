@@ -2,10 +2,11 @@ package io.github.dunwu.modules.security.controller;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.asymmetric.KeyType;
+import cn.hutool.crypto.asymmetric.RSA;
 import com.wf.captcha.base.Captcha;
 import io.github.dunwu.annotation.rest.AnonymousGetMapping;
 import io.github.dunwu.annotation.rest.AnonymousPostMapping;
-import io.github.dunwu.config.RsaProperties;
 import io.github.dunwu.data.core.Result;
 import io.github.dunwu.data.redis.RedisHelper;
 import io.github.dunwu.data.validator.annotation.EditCheck;
@@ -18,10 +19,10 @@ import io.github.dunwu.modules.security.security.TokenProvider;
 import io.github.dunwu.modules.security.service.AuthService;
 import io.github.dunwu.modules.system.entity.SysUser;
 import io.github.dunwu.modules.system.entity.vo.UserPassVo;
-import io.github.dunwu.util.RsaUtils;
 import io.github.dunwu.util.SecurityUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -42,33 +43,24 @@ import javax.servlet.http.HttpServletRequest;
  * @date 2018-11-23 授权、根据token获取用户详细信息
  */
 @Slf4j
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("auth")
 @Api(tags = "系统：系统授权接口")
 public class AuthController {
 
+    private final RSA rsa;
     private final DunwuWebSecurityProperties properties;
     private final RedisHelper redisHelper;
     private final AuthService authService;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-    public AuthController(DunwuWebSecurityProperties properties, RedisHelper redisHelper,
-        AuthService authService, TokenProvider tokenProvider,
-        AuthenticationManagerBuilder authenticationManagerBuilder) {
-        this.properties = properties;
-        this.redisHelper = redisHelper;
-        this.authService = authService;
-        this.tokenProvider = tokenProvider;
-        this.authenticationManagerBuilder = authenticationManagerBuilder;
-    }
-
     @ApiOperation("登录授权")
     @AnonymousPostMapping(value = "/login")
-    public Result login(@Validated @RequestBody AuthUserDto authUser, HttpServletRequest request)
-        throws Exception {
+    public Result login(@Validated @RequestBody AuthUserDto authUser, HttpServletRequest request) {
         // 密码解密
-        String password = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, authUser.getPassword());
+        String password = rsa.decryptStr(authUser.getPassword(), KeyType.PrivateKey);
         // 查询验证码
         String code = (String) redisHelper.get(authUser.getUuid());
         // 清除验证码
