@@ -39,7 +39,7 @@ import java.util.*;
 @EnableWebSecurity
 @RequiredArgsConstructor
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
-public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
+public class DunwuWebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final TokenProvider tokenProvider;
     private final JwtAuthenticationEntryPoint authenticationErrorHandler;
@@ -145,8 +145,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                         .anyRequest()
                         .authenticated()
                         .and()
-                        .addFilterBefore(authenticationFilter(),
-                            UsernamePasswordAuthenticationFilter.class);
+                        .addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         } else {
             if (securityProperties.isCorsEnabled()) {
                 // 禁用 CSRF

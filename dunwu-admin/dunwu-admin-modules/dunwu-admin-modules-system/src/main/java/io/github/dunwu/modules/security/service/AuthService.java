@@ -21,7 +21,10 @@ import io.github.dunwu.modules.system.service.SysDeptService;
 import io.github.dunwu.modules.system.service.SysRoleService;
 import io.github.dunwu.modules.system.service.SysUserService;
 import io.github.dunwu.tool.exception.BadConfigurationException;
-import io.github.dunwu.util.*;
+import io.github.dunwu.util.EncryptUtils;
+import io.github.dunwu.util.FileUtil;
+import io.github.dunwu.util.RsaUtils;
+import io.github.dunwu.util.SecurityUtils;
 import io.github.dunwu.util.enums.CodeEnum;
 import io.github.dunwu.web.util.ServletUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -368,7 +371,7 @@ public class AuthService implements UserDetailsService {
      * @param id /
      */
     public void delCaches(Long id, String username) {
-        redisHelper.del(CacheKey.USER_ID + id);
+        redisHelper.del("user::id:" + id);
         flushCache(username);
     }
 

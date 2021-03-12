@@ -31,6 +31,8 @@ public class DunwuWebSecurityProperties {
     private Long codeExpireTime = 10L;
     /** RSA 私钥 */
     private String rsaPrivateKey;
+    /** RSA 公钥 */
+    private String rsaPublicKey;
     /** 跨域的路径 */
     private String corsPath = "/**";
     /** 是否开启 XSS 开关 */

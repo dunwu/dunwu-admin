@@ -15,6 +15,7 @@
  */
 package io.github.dunwu.modules.security.config;
 
+import cn.hutool.crypto.asymmetric.RSA;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,6 +42,11 @@ public class ConfigBeanConfiguration {
     @ConfigurationProperties(prefix = "dunwu.web.security")
     public DunwuWebSecurityProperties securityProperties() {
         return new DunwuWebSecurityProperties();
+    }
+
+    @Bean
+    public RSA rsa(DunwuWebSecurityProperties securityProperties) {
+        return new RSA(securityProperties.getRsaPrivateKey(), securityProperties.getRsaPublicKey());
     }
 
 }
