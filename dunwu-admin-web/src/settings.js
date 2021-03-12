@@ -20,19 +20,23 @@ module.exports = {
    */
   timeout: 1200000,
   /**
+   * @description 是否开启认证
+   */
+  enableAuth: true,
+  /**
    * @description 是否显示logo
    */
   sidebarLogo: true,
   /**
-   * 是否显示设置的底部信息
+   * @description 是否显示设置的底部信息
    */
   showFooter: true,
   /**
-   * 是否显示导航栏
+   * @description 是否显示导航栏
    */
   showNavbar: true,
   /**
-   * 是否显示侧边栏
+   * @description 是否显示侧边栏
    */
   showSidebar: true,
   /**
@@ -48,7 +52,7 @@ module.exports = {
    */
   uniqueOpened: true,
   /**
-   * 底部文字，支持html语法
+   * @description 底部文字，支持html语法
    */
   footerTxt: '© 2019 dunwu <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License 2.0</a>'
 }

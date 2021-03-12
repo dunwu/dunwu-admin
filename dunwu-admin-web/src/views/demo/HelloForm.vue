@@ -11,7 +11,7 @@
         <el-input v-model="form.name" style="width: 90%" />
       </el-form-item>
       <el-form-item label="年龄" prop="age">
-        <el-input v-model="form.age" style="width: 90%" />
+        <el-input-number v-model="form.age" :min="1" :max="100" style="width: 90%" />
       </el-form-item>
       <el-form-item label="创建时间">
         <el-input v-model="form.createTime" style="width: 90%" />

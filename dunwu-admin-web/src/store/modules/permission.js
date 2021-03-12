@@ -1,20 +1,20 @@
-import { constantRouterMap } from '@/router/routers'
+import constantRouter from '@/router/constantRouter'
 import Layout from '@/layout/index'
 import ParentView from '@/components/ParentView'
 
 const permission = {
   state: {
-    routers: constantRouterMap,
+    routers: constantRouter,
     addRouters: [],
     sidebarRouters: []
   },
   mutations: {
     SET_ROUTERS: (state, routers) => {
       state.addRouters = routers
-      state.routers = constantRouterMap.concat(routers)
+      state.routers = constantRouter.concat(routers)
     },
     SET_SIDEBAR_ROUTERS: (state, routers) => {
-      state.sidebarRouters = constantRouterMap.concat(routers)
+      state.sidebarRouters = constantRouter.concat(routers)
     }
   },
   actions: {
