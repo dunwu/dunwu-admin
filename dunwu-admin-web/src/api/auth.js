@@ -87,7 +87,7 @@ export function editEmail(data) {
  */
 export function resetEmail(data) {
   return request({
-    url: 'api/code/resetEmail?email=' + data,
+    url: 'api/auth/code/resetEmail?email=' + data,
     method: 'post'
   })
 }

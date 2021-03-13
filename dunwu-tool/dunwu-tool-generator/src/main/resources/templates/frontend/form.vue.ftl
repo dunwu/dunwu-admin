@@ -9,7 +9,7 @@
     <el-form ref="form" :model="form"<#if table.enableValidate> :rules="rules"</#if> size="small" label-width="100px">
 <#list table.formFields as field>
   <#if field.enableForm>
-      <el-form-item label="<#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if>"<#if field.notNull> prop="${field.propertyName}"</#if>>
+      <el-form-item label="<#if field.labelName??>${field.comment}<#else>${field.propertyName}</#if>"<#if field.notNull> prop="${field.propertyName}"</#if>>
     <#if field.formType = 'Input'>
         <el-input v-model="form.${field.propertyName}" style="width: 90%" />
     <#elseif field.formType = 'Textarea'>
@@ -62,7 +62,7 @@ export default {
     <#if field.validateType??>
           { required: true, trigger: 'blur', type: '${field.validateType}' }
     <#else>
-          { required: true, message: '<#if field.comment != ''>${field.comment}</#if>不能为空', trigger: 'blur' }
+          { required: true, message: '<#if field.labelName??>${field.comment}</#if>不能为空', trigger: 'blur' }
     </#if>
         ],
   </#if>

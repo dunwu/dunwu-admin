@@ -24,7 +24,7 @@ export default {
   components: { globalConfig, tableConfig, columnConfig },
   data() {
     return {
-      activeName: 'globalConfig'
+      activeName: 'columnConfig'
     }
   },
   created() {},

@@ -161,48 +161,49 @@ public class ConfigBuilder {
                  ResultSet results = preparedStatement.executeQuery()) {
                 while (results.next()) {
                     String tableName = results.getString(dataSourceConfig.getDbQuery().tableName());
-                    if (StringUtils.isNotBlank(tableName)) {
-                        tableInfo = new TableInfo();
-                        tableInfo.setTableName(tableName);
-
-                        if (dataSourceConfig.isCommentSupported()) {
-                            String tableComment = results.getString(dataSourceConfig.getDbQuery().tableComment());
-                            if (strategyConfig.isSkipView() && "VIEW".equals(tableComment)) {
-                                // 跳过视图
-                                continue;
-                            }
-                            tableInfo.setComment(tableComment);
-                        }
-
-                        if (isInclude) {
-                            for (String includeTable : strategyConfig.getInclude()) {
-                                // 忽略大小写等于 或 正则 true
-                                if (tableNameMatches(includeTable, tableName)) {
-                                    includeTableList.add(tableInfo);
-                                } else {
-                                    //过滤正则表名
-                                    if (!REGX.matcher(includeTable).find()) {
-                                        notExistTables.add(includeTable);
-                                    }
-                                }
-                            }
-                        } else if (isExclude) {
-                            for (String excludeTable : strategyConfig.getExclude()) {
-                                // 忽略大小写等于 或 正则 true
-                                if (tableNameMatches(excludeTable, tableName)) {
-                                    excludeTableList.add(tableInfo);
-                                } else {
-                                    //过滤正则表名
-                                    if (!REGX.matcher(excludeTable).find()) {
-                                        notExistTables.add(excludeTable);
-                                    }
-                                }
-                            }
-                        }
-                        tableList.add(tableInfo);
-                    } else {
+                    if (StringUtils.isBlank(tableName)) {
                         System.err.println("当前数据库为空！！！");
+                        continue;
                     }
+
+                    tableInfo = new TableInfo();
+                    tableInfo.setSchemaName(dataSourceConfig.getSchemaName()).setTableName(tableName);
+
+                    if (dataSourceConfig.isCommentSupported()) {
+                        String tableComment = results.getString(dataSourceConfig.getDbQuery().tableComment());
+                        if (strategyConfig.isSkipView() && "VIEW".equals(tableComment)) {
+                            // 跳过视图
+                            continue;
+                        }
+                        tableInfo.setComment(tableComment);
+                    }
+
+                    if (isInclude) {
+                        for (String includeTable : strategyConfig.getInclude()) {
+                            // 忽略大小写等于 或 正则 true
+                            if (tableNameMatches(includeTable, tableName)) {
+                                includeTableList.add(tableInfo);
+                            } else {
+                                //过滤正则表名
+                                if (!REGX.matcher(includeTable).find()) {
+                                    notExistTables.add(includeTable);
+                                }
+                            }
+                        }
+                    } else if (isExclude) {
+                        for (String excludeTable : strategyConfig.getExclude()) {
+                            // 忽略大小写等于 或 正则 true
+                            if (tableNameMatches(excludeTable, tableName)) {
+                                excludeTableList.add(tableInfo);
+                            } else {
+                                //过滤正则表名
+                                if (!REGX.matcher(excludeTable).find()) {
+                                    notExistTables.add(excludeTable);
+                                }
+                            }
+                        }
+                    }
+                    tableList.add(tableInfo);
                 }
             }
 
@@ -764,9 +765,9 @@ public class ConfigBuilder {
                     field.setNotNull("NO".equalsIgnoreCase(nullAble));
 
                     // 避免多重主键设置，目前只取第一个找到ID，并放到list中的索引为0的位置
-                    boolean isId;
+                    boolean isPk;
                     if (DbType.H2 == dbType) {
-                        isId = h2PkColumns.contains(columnName);
+                        isPk = h2PkColumns.contains(columnName);
                     } else {
                         String key = results.getString(dbQuery.fieldKey());
                         field.setKeyType(key);
@@ -775,14 +776,14 @@ public class ConfigBuilder {
                         }
 
                         if (DbType.DB2 == dbType || DbType.SQLITE == dbType) {
-                            isId = StringUtils.isNotBlank(key) && "1".equals(key);
+                            isPk = StringUtils.isNotBlank(key) && "1".equals(key);
                         } else {
-                            isId = StringUtils.isNotBlank(key) && "PRI".equals(key.toUpperCase());
+                            isPk = StringUtils.isNotBlank(key) && "PRI".equals(key.toUpperCase());
                         }
                     }
 
                     // 处理ID
-                    if (isId) {
+                    if (isPk) {
                         field.setKeyFlag(true);
                         field.setEnableForm(false);
                         field.setEnableSort(true);

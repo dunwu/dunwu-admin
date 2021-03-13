@@ -12,7 +12,7 @@
             <el-input
               v-model="query.${field.propertyName}"
               clearable
-              placeholder="请输入<#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if>"
+              placeholder="请输入<#if field.labelName??>${field.labelName}<#else>${field.propertyName}</#if>"
               style="width: 90%;"
               class="filter-item"
               @keyup.enter.native="crud.toQuery"
@@ -39,7 +39,7 @@
               <el-input
                 v-model="query.${field.propertyName}"
                 clearable
-                placeholder="请输入<#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if>"
+                placeholder="请输入<#if field.labelName??>${field.labelName}<#else>${field.propertyName}</#if>"
                 style="width: 90%;"
                 class="filter-item"
                 @keyup.enter.native="crud.toQuery"
@@ -55,7 +55,7 @@
               <el-input
                 v-model="query.${field.propertyName}"
                 clearable
-                placeholder="请输入<#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if>"
+                placeholder="请输入<#if field.labelName??>${field.labelName}<#else>${field.propertyName}</#if>"
                 style="width: 90%;"
                 class="filter-item"
                 @keyup.enter.native="crud.toQuery"
@@ -100,13 +100,13 @@
   <#list table.fields as field>
     <#if field.enableList>
       <#if (field.dictName)?? && (field.dictName)!="">
-      <el-table-column prop="${field.propertyName}" label="<#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if>"<#if field.enableSort> :sortable="'custom'"</#if>>
+      <el-table-column prop="${field.propertyName}" label="<#if field.labelName??>${field.labelName}<#else>${field.propertyName}</#if>"<#if field.enableSort> :sortable="'custom'"</#if>>
         <template slot-scope="scope">
           {{ dict.label.${field.dictName}[scope.row.${field.propertyName}] }}
         </template>
       </el-table-column>
       <#else>
-      <el-table-column prop="${field.propertyName}" label="<#if field.comment != ''>${field.comment}<#else>${field.propertyName}</#if>"<#if field.enableSort> :sortable="'custom'"</#if> />
+      <el-table-column prop="${field.propertyName}" label="<#if field.labelName??>${field.labelName}<#else>${field.propertyName}</#if>"<#if field.enableSort> :sortable="'custom'"</#if> />
       </#if>
     </#if>
   </#list>

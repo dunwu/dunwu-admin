@@ -1,7 +1,10 @@
 <template>
   <el-card class="box-card" shadow="never">
     <div slot="header" class="clearfix">
-      <span class="role-span">{{ tableName }} 字段级别配置</span>
+      <span class="role-span">
+        <el-tag type="info">{{ tableName }}</el-tag>
+        字段级别配置
+      </span>
       <el-button
         :loading="genLoading"
         icon="el-icon-s-promotion"
@@ -61,8 +64,16 @@
             </el-form>
           </template>
         </el-table-column>
-        <el-table-column prop="fieldName" label="名称" width="150px" />
-        <el-table-column prop="comment" label="注释" width="150px" />
+        <el-table-column prop="propertyName" label="属性名" width="150px">
+          <template slot-scope="scope">
+            <el-input v-model="data[scope.$index].propertyName" size="mini" class="edit-input" />
+          </template>
+        </el-table-column>
+        <el-table-column prop="labelName" label="Label名" width="150px">
+          <template slot-scope="scope">
+            <el-input v-model="data[scope.$index].labelName" size="mini" class="edit-input" />
+          </template>
+        </el-table-column>
         <el-table-column prop="type" label="数据类型" width="100px" />
         <el-table-column prop="keyType" label="KEY类型">
           <template slot-scope="scope">
@@ -248,11 +259,6 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="字段展示名称" width="150px">
-          <template slot-scope="scope">
-            <el-input v-model="data[scope.$index].propertyName" size="mini" class="edit-input" />
-          </template>
-        </el-table-column>
         <el-table-column label="日期格式" width="150px">
           <template slot-scope="scope">
             <el-input
@@ -276,8 +282,10 @@ export default {
   components: {},
   data() {
     return {
+      dbId: null,
       schemaName: '',
       tableName: '',
+      createBy: '',
       tableHeight: 550,
       data: [],
       dicts: [],
@@ -289,9 +297,19 @@ export default {
   },
   created() {
     this.tableHeight = document.documentElement.clientHeight - 385
+
+    // 根据 router、store 获取页面必要属性
     this.dbId = this.$route.params.dbId
     this.tableName = this.$route.params.tableName
     this.schemaName = this.$route.params.schemaName
+    if (this.$store.state.user) {
+      if (this.$store.state.user.user) {
+        this.createBy = this.$store.state.user.user.name
+      }
+    } else {
+      this.createBy = 'admin'
+    }
+
     this.$nextTick(() => {
       this.queryColumnConfig()
     })
@@ -300,7 +318,12 @@ export default {
     queryColumnConfig() {
       this.loading = true
       codeApi
-        .queryColumnConfig({ dbId: this.dbId, schemaName: this.schemaName, tableName: this.tableName })
+        .queryColumnConfig({
+          dbId: this.dbId,
+          schemaName: this.schemaName,
+          tableName: this.tableName,
+          createBy: this.createBy
+        })
         .then(data => {
           this.loading = false
           this.data = data

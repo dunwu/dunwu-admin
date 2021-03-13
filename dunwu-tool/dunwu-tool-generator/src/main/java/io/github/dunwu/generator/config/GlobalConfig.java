@@ -66,15 +66,16 @@ public class GlobalConfig {
     private String packagePath;
 
     /** 指定生成的主键的ID类型 */
-    private IdType idType;
+    private IdType idType = IdType.NONE;
     /** 时间类型对应策略 */
     private DateType dateType = DateType.TIME_PACK;
     /** 日期格式化 */
     private String datePattern = DatePattern.NORM_DATETIME_PATTERN;
 
-    /**
-     * 各层文件名称方式，例如： %sAction 生成 UserAction %s 为占位符
-     */
+    // =========================================================
+    // 各层文件名称方式，例如： %sAction 生成 UserAction %s 为占位符
+    // =========================================================
+
     private String xmlName;
     private String entityName;
     private String mapperName;

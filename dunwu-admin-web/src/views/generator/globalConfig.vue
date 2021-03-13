@@ -57,10 +57,21 @@
         <span style="color: #C0C0C0;margin-left: 10px;">项目包的名称，生成的代码放到哪个包里面</span>
       </el-form-item>
       <el-form-item label="主键类型" prop="idType">
-        <el-input v-model="form.idType" style="width: 40%" />
+        <el-select v-model="form.idType" class="edit-input" style="width: 40%" placeholder="请选择">
+          <el-option label="无" value="NONE" />
+          <el-option label="自增主键" value="AUTO" />
+          <el-option label="用户输入" value="INPUT" />
+          <el-option label="自动输入" value="ASSIGN_ID" />
+          <el-option label="自动输入UUID" value="ASSIGN_UUID" />
+        </el-select>
       </el-form-item>
       <el-form-item label="时间类型" prop="dateType">
-        <el-input v-model="form.dateType" style="width: 40%" />
+        <el-select v-model="form.dateType" class="edit-input" style="width: 40%" placeholder="请选择">
+          <el-option label="无" value="null" />
+          <el-option label="java.util.date 类型" value="ONLY_DATE" />
+          <el-option label="java.sql 类型" value="SQL_PACK" />
+          <el-option label="java.time 类型" value="TIME_PACK" />
+        </el-select>
       </el-form-item>
       <el-form-item label="时间格式化" prop="datePattern">
         <el-input v-model="form.datePattern" style="width: 40%" />
@@ -78,6 +89,10 @@ export default {
     return {
       loading: false,
       configLoading: false,
+      dbId: null,
+      schemaName: '',
+      tableName: '',
+      createBy: '',
       tableHeight: 550,
       form: {
         id: null,
@@ -98,8 +113,19 @@ export default {
   },
   created() {
     this.tableHeight = document.documentElement.clientHeight - 385
+
+    // 根据 router、store 获取页面必要属性
+    this.dbId = this.$route.params.dbId
     this.tableName = this.$route.params.tableName
     this.schemaName = this.$route.params.schemaName
+    if (this.$store.state.user) {
+      if (this.$store.state.user.user) {
+        this.createBy = this.$store.state.user.user.name
+      }
+    } else {
+      this.createBy = 'admin'
+    }
+
     this.$nextTick(() => {
       this.queryGlobalConfig()
     })
@@ -107,8 +133,9 @@ export default {
   methods: {
     queryGlobalConfig() {
       this.loading = true
+
       codeApi
-        .queryGlobalConfig()
+        .queryGlobalConfig({ createBy: this.createBy })
         .then(data => {
           this.loading = false
           this.form = data

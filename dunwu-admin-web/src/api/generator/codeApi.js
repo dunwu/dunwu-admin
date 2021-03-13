@@ -16,10 +16,11 @@ export function syncTables(data) {
   })
 }
 
-export function queryGlobalConfig() {
+export function queryGlobalConfig(params) {
   return request({
     url: 'api/code/global/query',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 

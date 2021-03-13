@@ -15,6 +15,8 @@ public class TableSyncDto {
 
     private String schemaName;
 
+    private String createBy;
+
     /** 表名称 */
     private List<String> tables;
 

@@ -41,10 +41,6 @@ public class CodeColumnConfigQuery implements Serializable {
     @QueryField
     private String fieldName;
 
-    @ApiModelProperty(value = "字段展示名称（实体字段）")
-    @QueryField
-    private String propertyName;
-
     @ApiModelProperty(value = "字段注释")
     @QueryField
     private String comment;
@@ -53,7 +49,7 @@ public class CodeColumnConfigQuery implements Serializable {
     @QueryField
     private String type;
 
-    @ApiModelProperty(value = "字段 Java 类型")
+    @ApiModelProperty(value = "字段Java类型")
     @QueryField
     private String javaType;
 
@@ -65,15 +61,23 @@ public class CodeColumnConfigQuery implements Serializable {
     @QueryField
     private Boolean notNull;
 
-    @ApiModelProperty(value = "出现在表单")
+    @ApiModelProperty(value = "字段别名")
+    @QueryField
+    private String propertyName;
+
+    @ApiModelProperty(value = "字段Label")
+    @QueryField
+    private String labelName;
+
+    @ApiModelProperty(value = "允许表单")
     @QueryField
     private Boolean enableForm;
 
-    @ApiModelProperty(value = "出现在列表")
+    @ApiModelProperty(value = "允许列表")
     @QueryField
     private Boolean enableList;
 
-    @ApiModelProperty(value = "出现在查询")
+    @ApiModelProperty(value = "允许查询")
     @QueryField
     private Boolean enableQuery;
 

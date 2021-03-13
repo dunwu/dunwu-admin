@@ -1,7 +1,10 @@
 <template>
   <el-card shadow="never">
     <div slot="header" class="clearfix">
-      <span class="role-span">{{ tableName }} 表级别配置</span>
+      <span class="role-span">
+        <el-tag type="info">{{ tableName }}</el-tag>
+        表级别配置
+      </span>
       <el-button
         :loading="configLoading"
         icon="el-icon-check"
@@ -57,27 +60,38 @@
         <span style="color: #C0C0C0;margin-left: 10px;">项目包的名称，生成的代码放到哪个包里面</span>
       </el-form-item>
       <el-form-item label="主键类型" prop="idType">
-        <el-input v-model="form.idType" style="width: 40%" />
+        <el-select v-model="form.idType" class="edit-input" style="width: 40%" placeholder="请选择">
+          <el-option label="无" value="NONE" />
+          <el-option label="自增主键" value="AUTO" />
+          <el-option label="用户输入" value="INPUT" />
+          <el-option label="自动输入" value="ASSIGN_ID" />
+          <el-option label="自动输入UUID" value="ASSIGN_UUID" />
+        </el-select>
       </el-form-item>
       <el-form-item label="时间类型" prop="dateType">
-        <el-input v-model="form.dateType" style="width: 40%" />
+        <el-select v-model="form.dateType" class="edit-input" style="width: 40%" placeholder="请选择">
+          <el-option label="无" value="null" />
+          <el-option label="java.util.date 类型" value="ONLY_DATE" />
+          <el-option label="java.sql 类型" value="SQL_PACK" />
+          <el-option label="java.time 类型" value="TIME_PACK" />
+        </el-select>
       </el-form-item>
       <el-form-item label="时间格式化" prop="datePattern">
         <el-input v-model="form.datePattern" style="width: 40%" />
       </el-form-item>
-      <el-form-item label="开启列表" prop="enableList">
+      <el-form-item label="允许列表" prop="enableList">
         <el-radio-group v-model="form.enableList" size="mini" style="width: 40%">
           <el-radio-button label="true">是</el-radio-button>
           <el-radio-button label="false">否</el-radio-button>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="开启表单" prop="enableForm">
+      <el-form-item label="允许表单" prop="enableForm">
         <el-radio-group v-model="form.enableForm" size="mini" style="width: 40%">
           <el-radio-button label="true">是</el-radio-button>
           <el-radio-button label="false">否</el-radio-button>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="开启查询" prop="enableQuery">
+      <el-form-item label="允许查询" prop="enableQuery">
         <el-radio-group v-model="form.enableQuery" size="mini" style="width: 40%">
           <el-radio-button label="true">是</el-radio-button>
           <el-radio-button label="false">否</el-radio-button>
@@ -122,6 +136,7 @@ export default {
       dbId: null,
       schemaName: '',
       tableName: '',
+      createBy: '',
       tableHeight: 550,
       database: null,
       form: {
@@ -160,9 +175,19 @@ export default {
   },
   created() {
     this.tableHeight = document.documentElement.clientHeight - 385
+
+    // 根据 router、store 获取页面必要属性
     this.dbId = this.$route.params.dbId
     this.tableName = this.$route.params.tableName
     this.schemaName = this.$route.params.schemaName
+    if (this.$store.state.user) {
+      if (this.$store.state.user.user) {
+        this.createBy = this.$store.state.user.user.name
+      }
+    } else {
+      this.createBy = 'admin'
+    }
+
     this.$nextTick(() => {
       this.findDatabase()
       this.queryTableConfig()
@@ -184,7 +209,12 @@ export default {
     queryTableConfig() {
       this.loading = true
       codeApi
-        .queryTableConfig({ dbId: this.dbId, schemaName: this.schemaName, tableName: this.tableName })
+        .queryTableConfig({
+          dbId: this.dbId,
+          schemaName: this.schemaName,
+          tableName: this.tableName,
+          createBy: this.createBy
+        })
         .then(data => {
           this.loading = false
           this.form = data

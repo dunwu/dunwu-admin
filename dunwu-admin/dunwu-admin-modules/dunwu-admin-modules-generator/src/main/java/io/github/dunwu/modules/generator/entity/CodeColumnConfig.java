@@ -42,16 +42,13 @@ public class CodeColumnConfig implements Serializable {
     @ApiModelProperty(value = "字段名称")
     private String fieldName;
 
-    @ApiModelProperty(value = "字段展示名称（实体字段）")
-    private String propertyName;
-
     @ApiModelProperty(value = "字段注释")
     private String comment;
 
     @ApiModelProperty(value = "字段数据类型")
     private String type;
 
-    @ApiModelProperty(value = "字段 Java 类型")
+    @ApiModelProperty(value = "字段Java类型")
     private String javaType;
 
     @ApiModelProperty(value = "键类型")
@@ -60,13 +57,19 @@ public class CodeColumnConfig implements Serializable {
     @ApiModelProperty(value = "不允许为空")
     private Boolean notNull;
 
-    @ApiModelProperty(value = "出现在表单")
+    @ApiModelProperty(value = "字段别名")
+    private String propertyName;
+
+    @ApiModelProperty(value = "字段Label")
+    private String labelName;
+
+    @ApiModelProperty(value = "允许表单")
     private Boolean enableForm;
 
-    @ApiModelProperty(value = "出现在列表")
+    @ApiModelProperty(value = "允许列表")
     private Boolean enableList;
 
-    @ApiModelProperty(value = "出现在查询")
+    @ApiModelProperty(value = "允许查询")
     private Boolean enableQuery;
 
     @ApiModelProperty(value = "允许排序")

@@ -7,6 +7,7 @@ import io.github.dunwu.modules.generator.entity.CodeGlobalConfig;
 import io.github.dunwu.modules.generator.entity.CodeTableConfig;
 import io.github.dunwu.modules.generator.entity.dto.*;
 import io.github.dunwu.modules.generator.entity.query.CodeColumnConfigQuery;
+import io.github.dunwu.modules.generator.entity.query.CodeGlobalConfigQuery;
 import io.github.dunwu.modules.generator.entity.query.CodeTableConfigQuery;
 
 import java.util.List;
@@ -29,9 +30,10 @@ public interface GeneratorService {
     /**
      * 查询当前用户的 CodeGlobalConfigDto 配置
      *
+     * @param query 查询实体
      * @return /
      */
-    CodeGlobalConfigDto queryGlobalConfigByCurrentUser();
+    CodeGlobalConfigDto queryGlobalConfig(CodeGlobalConfigQuery query);
 
     /**
      * 保存当前用户的 CodeGlobalConfigDto 配置
@@ -39,7 +41,7 @@ public interface GeneratorService {
      * @param entity 实体
      * @return /
      */
-    boolean saveGlobalConfigByCurrentUser(CodeGlobalConfig entity);
+    boolean saveGlobalConfig(CodeGlobalConfig entity);
 
     /**
      * 查询当前用户的 {@link CodeTableConfigDto} 配置
@@ -47,7 +49,7 @@ public interface GeneratorService {
      * @param query 查询实体
      * @return /
      */
-    CodeTableConfigDto queryTableConfigByCurrentUser(CodeTableConfigQuery query);
+    CodeTableConfigDto queryTableConfig(CodeTableConfigQuery query);
 
     /**
      * 保存当前用户的 {@link CodeTableConfig} 配置
@@ -55,15 +57,19 @@ public interface GeneratorService {
      * @param entity 实体
      * @return /
      */
-    boolean saveTableConfigByCurrentUser(CodeTableConfig entity);
+    boolean saveTableConfig(CodeTableConfig entity);
 
     /**
      * 查询当前用户的 {@link CodeColumnConfigDto} 配置
+     * <ul>
+     *     <li>如果已经存在指定的数据表的列属性配置，则直接返回</li>
+     *     <li>如果不存在指定的数据表的列属性配置，则查询指定表的实际属性，并组装默认的配置后返回结果</li>
+     * </ul>
      *
      * @param query 查询实体
      * @return /
      */
-    List<CodeColumnConfigDto> queryColumnConfigByCurrentUser(CodeColumnConfigQuery query);
+    List<CodeColumnConfigDto> queryColumnConfigs(CodeColumnConfigQuery query);
 
     /**
      * 保存当前用户的 {@link CodeColumnConfig} 配置

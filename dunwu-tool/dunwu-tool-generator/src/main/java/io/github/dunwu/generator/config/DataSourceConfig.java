@@ -37,37 +37,21 @@ import java.util.Optional;
 @Accessors(chain = true)
 public class DataSourceConfig {
 
-    /**
-     * 数据库信息查询
-     */
+    /** 数据库信息查询 */
     private IDbQuery dbQuery;
-    /**
-     * 数据库类型
-     */
+    /** 数据库类型 */
     private DbType dbType;
-    /**
-     * PostgreSQL schemaName
-     */
+    /** schemaName */
     private String schemaName;
-    /**
-     * 类型转换
-     */
+    /** 类型转换 */
     private ITypeConvert typeConvert;
-    /**
-     * 驱动连接的URL
-     */
+    /** 驱动连接的URL */
     private String url;
-    /**
-     * 驱动名称
-     */
+    /** 驱动名称 */
     private String driverName;
-    /**
-     * 数据库连接用户名
-     */
+    /** 数据库连接用户名 */
     private String username;
-    /**
-     * 数据库连接密码
-     */
+    /** 数据库连接密码 */
     private String password;
     /** 是否支持注释（部分数据库不支持） */
     private boolean commentSupported;
