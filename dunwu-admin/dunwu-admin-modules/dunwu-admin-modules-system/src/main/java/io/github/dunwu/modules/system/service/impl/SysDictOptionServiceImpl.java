@@ -31,7 +31,7 @@ public class SysDictOptionServiceImpl extends ServiceImpl implements SysDictOpti
 
     @Override
     public boolean save(SysDictOptionDto entity) {
-        return dao.save(dtoToDo(entity));
+        return dao.insert(dtoToDo(entity));
     }
 
     @Override
@@ -41,12 +41,12 @@ public class SysDictOptionServiceImpl extends ServiceImpl implements SysDictOpti
 
     @Override
     public boolean removeById(Serializable id) {
-        return dao.removeById(id);
+        return dao.deleteById(id);
     }
 
     @Override
     public boolean removeByIds(Collection<Serializable> ids) {
-        return dao.removeByIds(ids);
+        return dao.deleteBatchByIds(ids);
     }
 
     @Override

@@ -28,7 +28,7 @@ public interface CodeGlobalConfigService extends IService {
      * @param entity {@link CodeGlobalConfig} 数据实体
      * @return true / false
      */
-    boolean save(CodeGlobalConfig entity);
+    boolean insert(CodeGlobalConfig entity);
 
     /**
      * 批量添加 {@link CodeGlobalConfig} 记录
@@ -36,7 +36,7 @@ public interface CodeGlobalConfigService extends IService {
      * @param list {@link CodeGlobalConfig} 数据实体列表
      * @return true / false
      */
-    boolean saveBatch(Collection<CodeGlobalConfig> list);
+    boolean insertBatch(Collection<CodeGlobalConfig> list);
 
     /**
      * 根据 ID 更新一条 {@link CodeGlobalConfig} 记录
@@ -60,7 +60,7 @@ public interface CodeGlobalConfigService extends IService {
      * @param id {@link CodeGlobalConfig} 主键
      * @return true / false
      */
-    boolean removeById(Serializable id);
+    boolean deleteById(Serializable id);
 
     /**
      * 根据 ID 列表批量删除 {@link CodeGlobalConfig} 记录
@@ -68,7 +68,7 @@ public interface CodeGlobalConfigService extends IService {
      * @param ids {@link CodeGlobalConfig} 主键列表
      * @return true / false
      */
-    boolean removeByIds(Collection<Serializable> ids);
+    boolean deleteBatchByIds(Collection<Serializable> ids);
 
     /**
      * 根据 query 和 pageable 分页查询 {@link CodeGlobalConfigDto}

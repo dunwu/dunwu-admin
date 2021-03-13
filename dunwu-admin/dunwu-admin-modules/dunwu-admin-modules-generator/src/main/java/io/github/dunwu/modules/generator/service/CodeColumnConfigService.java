@@ -28,7 +28,7 @@ public interface CodeColumnConfigService extends IService {
      * @param entity {@link CodeColumnConfig} 数据实体
      * @return true / false
      */
-    boolean save(CodeColumnConfig entity);
+    boolean insert(CodeColumnConfig entity);
 
     /**
      * 批量添加 {@link CodeColumnConfig} 记录
@@ -36,7 +36,7 @@ public interface CodeColumnConfigService extends IService {
      * @param list {@link CodeColumnConfig} 数据实体列表
      * @return true / false
      */
-    boolean saveBatch(Collection<CodeColumnConfig> list);
+    boolean insertBatch(Collection<CodeColumnConfig> list);
 
     /**
      * 根据 ID 更新一条 {@link CodeColumnConfig} 记录
@@ -52,7 +52,7 @@ public interface CodeColumnConfigService extends IService {
      * @param id {@link CodeColumnConfig} 主键
      * @return true / false
      */
-    boolean removeById(Serializable id);
+    boolean deleteById(Serializable id);
 
     /**
      * 根据 ID 列表批量删除 {@link CodeColumnConfig} 记录
@@ -60,7 +60,7 @@ public interface CodeColumnConfigService extends IService {
      * @param ids {@link CodeColumnConfig} 主键列表
      * @return true / false
      */
-    boolean removeByIds(Collection<Serializable> ids);
+    boolean deleteBatchByIds(Collection<Serializable> ids);
 
     /**
      * 根据 query 和 pageable 分页查询 {@link CodeColumnConfigDto}

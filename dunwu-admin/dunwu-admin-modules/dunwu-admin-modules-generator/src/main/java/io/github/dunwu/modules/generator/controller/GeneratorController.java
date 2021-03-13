@@ -95,7 +95,7 @@ public class GeneratorController {
     @ApiOperation("查询当前用户的 CodeGlobalConfigDto 配置")
     @GetMapping("global/query")
     public Result queryGlobalConfigByCurrentUser(CodeGlobalConfigQuery query) {
-        return Result.ok(generatorService.queryGlobalConfig(query));
+        return Result.ok(generatorService.queryOrCreateGlobalConfig(query));
     }
 
     @ApiOperation("保存当前用户的 CodeGlobalConfigDto 配置")

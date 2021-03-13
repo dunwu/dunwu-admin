@@ -57,7 +57,7 @@ public interface IDao<E> {
      *
      * @param entity 实体对象
      */
-    default boolean save(E entity) {
+    default boolean insert(E entity) {
         return SqlHelper.retBool(getBaseMapper().insert(entity));
     }
 
@@ -67,8 +67,8 @@ public interface IDao<E> {
      * @param entityList 实体对象集合
      */
     @Transactional(rollbackFor = Exception.class)
-    default boolean saveBatch(Collection<E> entityList) {
-        return saveBatch(entityList, DEFAULT_BATCH_SIZE);
+    default boolean insertBatch(Collection<E> entityList) {
+        return insertBatch(entityList, DEFAULT_BATCH_SIZE);
     }
 
     /**
@@ -77,7 +77,7 @@ public interface IDao<E> {
      * @param entityList 实体对象集合
      * @param batchSize  插入批次数量
      */
-    boolean saveBatch(Collection<E> entityList, int batchSize);
+    boolean insertBatch(Collection<E> entityList, int batchSize);
 
     /**
      * 批量修改插入
@@ -85,8 +85,8 @@ public interface IDao<E> {
      * @param entityList 实体对象集合
      */
     @Transactional(rollbackFor = Exception.class)
-    default boolean saveOrUpdateBatch(Collection<E> entityList) {
-        return saveOrUpdateBatch(entityList, DEFAULT_BATCH_SIZE);
+    default boolean saveBatch(Collection<E> entityList) {
+        return saveBatch(entityList, DEFAULT_BATCH_SIZE);
     }
 
     /**
@@ -95,14 +95,14 @@ public interface IDao<E> {
      * @param entityList 实体对象集合
      * @param batchSize  每次的数量
      */
-    boolean saveOrUpdateBatch(Collection<E> entityList, int batchSize);
+    boolean saveBatch(Collection<E> entityList, int batchSize);
 
     /**
      * 根据 ID 删除
      *
      * @param id 主键ID
      */
-    default boolean removeById(Serializable id) {
+    default boolean deleteById(Serializable id) {
         return SqlHelper.retBool(getBaseMapper().deleteById(id));
     }
 
@@ -111,7 +111,7 @@ public interface IDao<E> {
      *
      * @param columnMap 表字段 map 对象
      */
-    default boolean removeByMap(Map<String, Object> columnMap) {
+    default boolean deleteByMap(Map<String, Object> columnMap) {
         Assert.notEmpty(columnMap, "error: columnMap must not be empty");
         return SqlHelper.retBool(getBaseMapper().deleteByMap(columnMap));
     }
@@ -121,7 +121,7 @@ public interface IDao<E> {
      *
      * @param queryWrapper 实体包装类 {@link com.baomidou.mybatisplus.core.conditions.query.QueryWrapper}
      */
-    default boolean remove(Wrapper<E> queryWrapper) {
+    default boolean delete(Wrapper<E> queryWrapper) {
         return SqlHelper.retBool(getBaseMapper().delete(queryWrapper));
     }
 
@@ -130,7 +130,7 @@ public interface IDao<E> {
      *
      * @param idList 主键ID列表
      */
-    default boolean removeByIds(Collection<? extends Serializable> idList) {
+    default boolean deleteBatchByIds(Collection<? extends Serializable> idList) {
         if (CollectionUtils.isEmpty(idList)) {
             return false;
         }
@@ -188,7 +188,7 @@ public interface IDao<E> {
      *
      * @param entity 实体对象
      */
-    boolean saveOrUpdate(E entity);
+    boolean save(E entity);
 
     /**
      * 根据 ID 查询
@@ -501,13 +501,13 @@ public interface IDao<E> {
 
     /**
      * <p>
-     * 根据updateWrapper尝试更新，否继续执行saveOrUpdate(T)方法 此次修改主要是减少了此项业务代码的代码量（存在性验证之后的saveOrUpdate操作）
+     * 根据updateWrapper尝试更新，否继续执行save(T)方法 此次修改主要是减少了此项业务代码的代码量（存在性验证之后的save操作）
      * </p>
      *
      * @param entity 实体对象
      */
-    default boolean saveOrUpdate(E entity, Wrapper<E> updateWrapper) {
-        return update(entity, updateWrapper) || saveOrUpdate(entity);
+    default boolean save(E entity, Wrapper<E> updateWrapper) {
+        return update(entity, updateWrapper) || insert(entity);
     }
 
 }

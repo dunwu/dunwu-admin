@@ -33,13 +33,13 @@ public class CodeTableConfigServiceImpl extends ServiceImpl implements CodeTable
     }
 
     @Override
-    public boolean save(CodeTableConfig entity) {
-        return dao.save(entity);
+    public boolean insert(CodeTableConfig entity) {
+        return dao.insert(entity);
     }
 
     @Override
-    public boolean saveBatch(Collection<CodeTableConfig> list) {
-        return dao.saveBatch(list);
+    public boolean insertBatch(Collection<CodeTableConfig> list) {
+        return dao.insertBatch(list);
     }
 
     @Override
@@ -53,13 +53,23 @@ public class CodeTableConfigServiceImpl extends ServiceImpl implements CodeTable
     }
 
     @Override
-    public boolean removeById(Serializable id) {
-        return dao.removeById(id);
+    public boolean save(CodeTableConfig entity) {
+        return dao.save(entity);
     }
 
     @Override
-    public boolean removeByIds(Collection<Serializable> ids) {
-        return dao.removeByIds(ids);
+    public boolean saveBatch(Collection<CodeTableConfig> list) {
+        return dao.saveBatch(list);
+    }
+
+    @Override
+    public boolean deleteById(Serializable id) {
+        return dao.deleteById(id);
+    }
+
+    @Override
+    public boolean deleteBatchByIds(Collection<Serializable> ids) {
+        return dao.deleteBatchByIds(ids);
     }
 
     @Override

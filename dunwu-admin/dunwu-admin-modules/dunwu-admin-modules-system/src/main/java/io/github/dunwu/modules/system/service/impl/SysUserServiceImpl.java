@@ -54,7 +54,7 @@ public class SysUserServiceImpl extends ServiceImpl implements SysUserService {
 
     @Override
     public boolean save(SysUser entity) {
-        return userDao.save(entity);
+        return userDao.insert(entity);
     }
 
     @Override
@@ -71,8 +71,8 @@ public class SysUserServiceImpl extends ServiceImpl implements SysUserService {
         }
 
         SysUserRole sysUserRole = new SysUserRole().setUserId(user.getId());
-        if (userRoleDao.remove(Wrappers.query(sysUserRole))) {
-            return userDao.removeById(user.getId());
+        if (userRoleDao.delete(Wrappers.query(sysUserRole))) {
+            return userDao.deleteById(user.getId());
         }
         log.error("试图删除用户 id = {} 及其关联数据失败", id);
         return false;
@@ -131,12 +131,12 @@ public class SysUserServiceImpl extends ServiceImpl implements SysUserService {
     public Long saveUserRelatedRecords(SysUserDto dto) {
         SysUser user = dtoToDo(dto);
         user.setPassword(passwordEncoder.encode(INIT_PASSWORD));
-        if (userDao.save(user)) {
+        if (userDao.insert(user)) {
             List<SysUserRole> newRecords = new ArrayList<>();
             dto.getRoles().forEach(i -> {
                 newRecords.add(new SysUserRole(user.getId(), i.getId()));
             });
-            userRoleDao.saveBatch(newRecords);
+            userRoleDao.insertBatch(newRecords);
             return user.getId();
         }
         return null;
@@ -155,8 +155,8 @@ public class SysUserServiceImpl extends ServiceImpl implements SysUserService {
             dto.getRoles().forEach(i -> {
                 newRecords.add(new SysUserRole(dto.getId(), i.getId()));
             });
-            userRoleDao.removeByIds(oldIds);
-            userRoleDao.saveBatch(newRecords);
+            userRoleDao.deleteBatchByIds(oldIds);
+            userRoleDao.insertBatch(newRecords);
             return true;
         }
         return false;

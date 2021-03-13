@@ -31,7 +31,7 @@ public interface ${table.serviceName} extends ${superServiceClass} {
      * @param entity {@link ${entity}} 数据实体
      * @return true / false
      */
-    boolean save(${entity} entity);
+    boolean insert(${entity} entity);
 
     /**
      * 批量添加 {@link ${entity}} 记录
@@ -39,7 +39,7 @@ public interface ${table.serviceName} extends ${superServiceClass} {
      * @param list {@link ${entity}} 数据实体列表
      * @return true / false
      */
-    boolean saveBatch(Collection<${entity}> list);
+    boolean insertBatch(Collection<${entity}> list);
 
     /**
      * 根据 ID 更新一条 {@link ${entity}} 记录
@@ -57,13 +57,30 @@ public interface ${table.serviceName} extends ${superServiceClass} {
      */
     boolean updateBatchById(Collection<${entity}> list);
 
+
+    /**
+     * 添加或更新一条 {@link ${entity}} 记录
+     *
+     * @param entity {@link ${entity}} 数据实体
+     * @return true / false
+     */
+    boolean save(${entity} entity);
+
+    /**
+     * 批量添加或更新 {@link ${entity}} 记录
+     *
+     * @param list {@link ${entity}} 数据实体列表
+     * @return true / false
+     */
+    boolean saveBatch(Collection<${entity}> list);
+
     /**
      * 根据 ID 删除一条 {@link ${entity}} 记录
      *
      * @param id {@link ${entity}} 主键
      * @return true / false
      */
-    boolean removeById(Serializable id);
+    boolean deleteById(Serializable id);
 
     /**
      * 根据 ID 列表批量删除 {@link ${entity}} 记录
@@ -71,7 +88,7 @@ public interface ${table.serviceName} extends ${superServiceClass} {
      * @param ids {@link ${entity}} 主键列表
      * @return true / false
      */
-    boolean removeByIds(Collection<? extends Serializable> ids);
+    boolean deleteBatchByIds(Collection<? extends Serializable> ids);
 
     /**
      * 根据 {@link ${table.queryName}} 查询 {@link ${table.dtoName}} 列表

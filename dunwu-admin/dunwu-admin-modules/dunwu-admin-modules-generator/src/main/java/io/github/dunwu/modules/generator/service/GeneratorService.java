@@ -33,7 +33,7 @@ public interface GeneratorService {
      * @param query 查询实体
      * @return /
      */
-    CodeGlobalConfigDto queryGlobalConfig(CodeGlobalConfigQuery query);
+    CodeGlobalConfigDto queryOrCreateGlobalConfig(CodeGlobalConfigQuery query);
 
     /**
      * 保存当前用户的 CodeGlobalConfigDto 配置

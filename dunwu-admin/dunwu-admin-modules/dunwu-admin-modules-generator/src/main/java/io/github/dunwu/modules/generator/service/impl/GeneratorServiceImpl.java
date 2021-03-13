@@ -105,12 +105,12 @@ public class GeneratorServiceImpl implements GeneratorService {
         }
 
         Set<Serializable> ids = oldColumns.stream().map(CodeColumnConfig::getId).collect(Collectors.toSet());
-        columnConfigService.removeByIds(ids);
-        columnConfigService.saveBatch(mergeColumns);
+        columnConfigService.deleteBatchByIds(ids);
+        columnConfigService.insertBatch(mergeColumns);
     }
 
     @Override
-    public CodeGlobalConfigDto queryGlobalConfig(CodeGlobalConfigQuery query) {
+    public CodeGlobalConfigDto queryOrCreateGlobalConfig(CodeGlobalConfigQuery query) {
         CodeGlobalConfigDto dto = globalConfigService.pojoByQuery(query);
         if (dto != null) {
             return dto;
@@ -123,7 +123,7 @@ public class GeneratorServiceImpl implements GeneratorService {
     @Override
     public boolean saveGlobalConfig(CodeGlobalConfig entity) {
         if (entity.getId() == null) {
-            return globalConfigService.save(entity);
+            return globalConfigService.insert(entity);
         } else {
             return globalConfigService.updateById(entity);
         }
@@ -136,11 +136,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 
     @Override
     public boolean saveTableConfig(CodeTableConfig entity) {
-        if (entity.getId() == null) {
-            return tableConfigService.save(entity);
-        } else {
-            return tableConfigService.updateById(entity);
-        }
+        return tableConfigService.save(entity);
     }
 
     @Override
@@ -165,7 +161,7 @@ public class GeneratorServiceImpl implements GeneratorService {
         // 如果不存在指定的数据表的列属性配置，则查询指定表的属性，并组装默认的配置后返回结果
         TableInfo tableInfo = transToTableInfo(codeTableConfigDto);
         if (tableInfo == null || CollectionUtil.isEmpty(tableInfo.getFields())) {
-            throw new GlobalException(StrUtil.format("查询 schema = {}, table = {} 的表数据信息失败",
+            throw new GlobalException(StrUtil.format("查询 schema = {}, table = {} 的列数据信息失败",
                 query.getSchemaName(), query.getTableName()));
         }
 
@@ -195,17 +191,17 @@ public class GeneratorServiceImpl implements GeneratorService {
                                               .collect(Collectors.toSet());
 
             if (CollectionUtil.isNotEmpty(ids)) {
-                columnConfigService.removeByIds(ids);
+                columnConfigService.deleteBatchByIds(ids);
             }
         }
-        return columnConfigService.saveBatch(list);
+        return columnConfigService.insertBatch(list);
     }
 
     @Override
     public ConfigBuilder generateCode(CodeTableConfigQuery query) {
         CodeGlobalConfigQuery globalQuery = new CodeGlobalConfigQuery();
         globalQuery.setCreateBy(query.getCreateBy());
-        CodeGlobalConfigDto globalConfigDto = queryGlobalConfig(globalQuery);
+        CodeGlobalConfigDto globalConfigDto = queryOrCreateGlobalConfig(globalQuery);
         if (globalConfigDto == null) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "未配置全局配置");
         }
@@ -236,7 +232,7 @@ public class GeneratorServiceImpl implements GeneratorService {
         HttpServletResponse response) {
         CodeGlobalConfigQuery globalQuery = new CodeGlobalConfigQuery();
         globalQuery.setCreateBy(query.getCreateBy());
-        CodeGlobalConfigDto globalConfigDto = queryGlobalConfig(globalQuery);
+        CodeGlobalConfigDto globalConfigDto = queryOrCreateGlobalConfig(globalQuery);
         if (globalConfigDto == null) {
             throw new DataException("未配置全局配置");
         }
@@ -282,7 +278,7 @@ public class GeneratorServiceImpl implements GeneratorService {
     public List<CodeGenerateContentDto> previewCode(CodeTableConfigQuery query) {
         CodeGlobalConfigQuery globalQuery = new CodeGlobalConfigQuery();
         globalQuery.setCreateBy(query.getCreateBy());
-        CodeGlobalConfigDto globalConfigDto = queryGlobalConfig(globalQuery);
+        CodeGlobalConfigDto globalConfigDto = queryOrCreateGlobalConfig(globalQuery);
         if (globalConfigDto == null) {
             throw new DataException("未配置全局配置");
         }
@@ -362,7 +358,7 @@ public class GeneratorServiceImpl implements GeneratorService {
         // 查询全局配置
         CodeGlobalConfigQuery globalQuery = new CodeGlobalConfigQuery();
         globalQuery.setCreateBy(query.getCreateBy());
-        CodeGlobalConfigDto globalConfigDto = queryGlobalConfig(globalQuery);
+        CodeGlobalConfigDto globalConfigDto = queryOrCreateGlobalConfig(globalQuery);
         if (globalConfigDto == null) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "请先配置全局配置");
         }
@@ -411,7 +407,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 
         CodeGlobalConfigQuery globalQuery = new CodeGlobalConfigQuery();
         globalQuery.setCreateBy(createBy);
-        CodeGlobalConfigDto globalConfig = queryGlobalConfig(globalQuery);
+        CodeGlobalConfigDto globalConfig = queryOrCreateGlobalConfig(globalQuery);
         ConfigBuilder configBuilder;
         if (tableConfigDto != null) {
             configBuilder = createConfigBuilder(tableConfigDto);

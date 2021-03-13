@@ -40,7 +40,7 @@ public class SysDictServiceImpl extends ServiceImpl implements SysDictService {
 
     @Override
     public boolean save(SysDictDto entity) {
-        return sysDictDao.save(dtoToDo(entity));
+        return sysDictDao.insert(dtoToDo(entity));
     }
 
     @Override
@@ -55,7 +55,7 @@ public class SysDictServiceImpl extends ServiceImpl implements SysDictService {
         if (sysDict == null) { return true; }
 
         // 删除字典记录
-        sysDictDao.removeById(id);
+        sysDictDao.deleteById(id);
 
         // 查找并删除字典记录关联的字典项记录
         SysDictOption sysDictOption = new SysDictOption();
@@ -65,12 +65,12 @@ public class SysDictServiceImpl extends ServiceImpl implements SysDictService {
             return true;
         }
         Set<Long> sysDictOptionIds = list.stream().map(SysDictOption::getId).collect(Collectors.toSet());
-        return sysDictOptionDao.removeByIds(sysDictOptionIds);
+        return sysDictOptionDao.deleteBatchByIds(sysDictOptionIds);
     }
 
     @Override
     public boolean removeByIds(Collection<Serializable> ids) {
-        return sysDictDao.removeByIds(ids);
+        return sysDictDao.deleteBatchByIds(ids);
     }
 
     @Override

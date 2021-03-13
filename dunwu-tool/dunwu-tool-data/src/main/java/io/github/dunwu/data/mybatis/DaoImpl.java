@@ -122,7 +122,7 @@ public class DaoImpl<M extends BaseMapper<T>, T> implements IDao<T> {
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean saveBatch(Collection<T> entityList, int batchSize) {
+    public boolean insertBatch(Collection<T> entityList, int batchSize) {
         String sqlStatement = sqlStatement(SqlMethod.INSERT_ONE);
         return executeBatch(entityList, batchSize, (sqlSession, entity) -> sqlSession.insert(sqlStatement, entity));
     }
@@ -135,7 +135,7 @@ public class DaoImpl<M extends BaseMapper<T>, T> implements IDao<T> {
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean saveOrUpdate(T entity) {
+    public boolean save(T entity) {
         if (null != entity) {
             Class<?> cls = entity.getClass();
             TableInfo tableInfo = TableInfoHelper.getTableInfo(cls);
@@ -143,7 +143,7 @@ public class DaoImpl<M extends BaseMapper<T>, T> implements IDao<T> {
             String keyProperty = tableInfo.getKeyProperty();
             Assert.notEmpty(keyProperty, "error: can not execute. because can not find column for id from entity!");
             Object idVal = ReflectionKit.getMethodValue(cls, entity, tableInfo.getKeyProperty());
-            return StringUtils.checkValNull(idVal) || Objects.isNull(getById((Serializable) idVal)) ? save(entity)
+            return StringUtils.checkValNull(idVal) || Objects.isNull(getById((Serializable) idVal)) ? insert(entity)
                 : updateById(entity);
         }
         return false;
@@ -151,7 +151,7 @@ public class DaoImpl<M extends BaseMapper<T>, T> implements IDao<T> {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean saveOrUpdateBatch(Collection<T> entityList, int batchSize) {
+    public boolean saveBatch(Collection<T> entityList, int batchSize) {
         TableInfo tableInfo = TableInfoHelper.getTableInfo(entityClass);
         Assert.notNull(tableInfo, "error: can not execute. because can not find cache of TableInfo for entity!");
         String keyProperty = tableInfo.getKeyProperty();

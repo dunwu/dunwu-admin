@@ -44,12 +44,12 @@ public class SysLogServiceImpl extends ServiceImpl implements SysLogService {
 
     @Override
     public boolean save(SysLog entity) {
-        return dao.save(entity);
+        return dao.insert(entity);
     }
 
     @Override
     public boolean saveBatch(Collection<SysLog> list) {
-        return dao.saveBatch(list);
+        return dao.insertBatch(list);
     }
 
     @Override
@@ -64,12 +64,12 @@ public class SysLogServiceImpl extends ServiceImpl implements SysLogService {
 
     @Override
     public boolean removeById(Serializable id) {
-        return dao.removeById(id);
+        return dao.deleteById(id);
     }
 
     @Override
     public boolean removeByIds(Collection<? extends Serializable> ids) {
-        return dao.removeByIds(ids);
+        return dao.deleteBatchByIds(ids);
     }
 
     @Override
@@ -151,7 +151,7 @@ public class SysLogServiceImpl extends ServiceImpl implements SysLogService {
         log.setUsername(username);
         log.setParams(getParameter(method, joinPoint.getArgs()));
         log.setRequestBrowser(browser);
-        dao.save(log);
+        dao.insert(log);
     }
 
     /**

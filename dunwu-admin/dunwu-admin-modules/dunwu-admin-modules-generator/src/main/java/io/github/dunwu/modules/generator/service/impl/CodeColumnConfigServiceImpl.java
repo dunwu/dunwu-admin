@@ -37,13 +37,13 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
     private final CodeColumnConfigDao dao;
 
     @Override
-    public boolean save(CodeColumnConfig entity) {
-        return dao.save(entity);
+    public boolean insert(CodeColumnConfig entity) {
+        return dao.insert(entity);
     }
 
     @Override
-    public boolean saveBatch(Collection<CodeColumnConfig> list) {
-        return dao.saveBatch(list);
+    public boolean insertBatch(Collection<CodeColumnConfig> list) {
+        return dao.insertBatch(list);
     }
 
     @Override
@@ -52,13 +52,13 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
     }
 
     @Override
-    public boolean removeById(Serializable id) {
-        return dao.removeById(id);
+    public boolean deleteById(Serializable id) {
+        return dao.deleteById(id);
     }
 
     @Override
-    public boolean removeByIds(Collection<Serializable> ids) {
-        return dao.removeByIds(ids);
+    public boolean deleteBatchByIds(Collection<Serializable> ids) {
+        return dao.deleteBatchByIds(ids);
     }
 
     @Override

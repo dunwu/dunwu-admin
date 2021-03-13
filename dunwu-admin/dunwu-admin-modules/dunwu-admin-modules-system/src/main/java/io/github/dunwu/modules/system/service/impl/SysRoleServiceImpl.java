@@ -63,7 +63,7 @@ public class SysRoleServiceImpl extends ServiceImpl implements SysRoleService {
         if (entity.getEnabled() == null) {
             entity.setEnabled(true);
         }
-        return roleDao.save(entity);
+        return roleDao.insert(entity);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class SysRoleServiceImpl extends ServiceImpl implements SysRoleService {
         SysRole sysRole = roleDao.getById(id);
         if (sysRole == null) { return true; }
         checkRoleLevel(sysRole.getLevel());
-        return roleDao.removeById(id);
+        return roleDao.deleteById(id);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class SysRoleServiceImpl extends ServiceImpl implements SysRoleService {
             return true;
         }
 
-        return roleDao.removeByIds(ids);
+        return roleDao.deleteBatchByIds(ids);
     }
 
     @Override
@@ -188,10 +188,10 @@ public class SysRoleServiceImpl extends ServiceImpl implements SysRoleService {
             return true;
         }
 
-        roleMenuDao.removeByIds(oldIds);
+        roleMenuDao.deleteBatchByIds(oldIds);
         Set<SysRoleMenu> roleMenuSet = newIds.stream().map(menuId -> new SysRoleMenu(roleId, menuId))
                                              .collect(Collectors.toSet());
-        return roleMenuDao.saveBatch(roleMenuSet);
+        return roleMenuDao.insertBatch(roleMenuSet);
     }
 
     @Override
@@ -208,10 +208,10 @@ public class SysRoleServiceImpl extends ServiceImpl implements SysRoleService {
             return true;
         }
 
-        jobRoleDao.removeByIds(oldRoleIds);
+        jobRoleDao.deleteBatchByIds(oldRoleIds);
         Set<SysJobRole> jobRoleSet = roleIds.stream().map(roleId -> new SysJobRole(jobId, roleId))
                                             .collect(Collectors.toSet());
-        return jobRoleDao.saveBatch(jobRoleSet);
+        return jobRoleDao.insertBatch(jobRoleSet);
     }
 
     private SysRoleDto doToDto(SysRole obj) {

@@ -37,7 +37,7 @@ public class SysJobServiceImpl extends ServiceImpl implements SysJobService {
 
     @Override
     public boolean save(SysJobDto entity) {
-        return jobDao.save(dtoToDo(entity));
+        return jobDao.insert(dtoToDo(entity));
     }
 
     @Override
@@ -47,12 +47,12 @@ public class SysJobServiceImpl extends ServiceImpl implements SysJobService {
 
     @Override
     public boolean removeById(Serializable id) {
-        return jobDao.removeById(id);
+        return jobDao.deleteById(id);
     }
 
     @Override
     public boolean removeByIds(Collection<Serializable> ids) {
-        return jobDao.removeByIds(ids);
+        return jobDao.deleteBatchByIds(ids);
     }
 
     @Override

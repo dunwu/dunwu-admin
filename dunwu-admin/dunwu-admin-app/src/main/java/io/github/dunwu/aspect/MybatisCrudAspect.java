@@ -25,13 +25,13 @@ public class MybatisCrudAspect {
 
     // ==================================================================== 插入和更新处理切点
 
-    @Pointcut("execution(* io.github.dunwu.data.mybatis.IDao.save*(..))")
-    public void savePointcut() { }
+    @Pointcut("execution(* io.github.dunwu.data.mybatis.IDao.insert(..))")
+    public void insertPointcut() { }
 
     @Pointcut("execution(* io.github.dunwu.data.mybatis.IDao.update*(..))")
     public void updatePointcut() { }
 
-    @Before("savePointcut() || updatePointcut()")
+    @Before("insertPointcut() || updatePointcut()")
     public void prepareBeforeSaveAndUpdate(JoinPoint joinPoint) throws IllegalAccessException {
         // 获取方法信息
         String className = joinPoint.getTarget().getClass().getName();

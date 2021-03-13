@@ -43,7 +43,7 @@ public class SysMenuServiceImpl extends ServiceImpl implements SysMenuService {
 
     @Override
     public boolean save(SysMenu entity) {
-        return menuDao.save(entity);
+        return menuDao.insert(entity);
     }
 
     @Override
@@ -53,12 +53,12 @@ public class SysMenuServiceImpl extends ServiceImpl implements SysMenuService {
 
     @Override
     public boolean removeById(Serializable id) {
-        return menuDao.removeById(id);
+        return menuDao.deleteById(id);
     }
 
     @Override
     public boolean removeByIds(Collection<Serializable> ids) {
-        return menuDao.removeByIds(ids);
+        return menuDao.deleteBatchByIds(ids);
     }
 
     @Override

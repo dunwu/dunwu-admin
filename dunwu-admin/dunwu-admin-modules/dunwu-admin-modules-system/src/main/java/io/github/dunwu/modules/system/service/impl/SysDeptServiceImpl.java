@@ -46,7 +46,7 @@ public class SysDeptServiceImpl extends ServiceImpl implements SysDeptService {
 
     @Override
     public boolean save(SysDeptDto entity) {
-        return deptDao.save(dtoToDo(entity));
+        return deptDao.insert(dtoToDo(entity));
     }
 
     @Override
@@ -66,7 +66,7 @@ public class SysDeptServiceImpl extends ServiceImpl implements SysDeptService {
         if (CollUtil.isNotEmpty(sysDeptDtos)) {
             ids.addAll(sysDeptDtos.stream().map(SysDeptDto::getId).collect(Collectors.toSet()));
         }
-        return deptDao.removeByIds(ids);
+        return deptDao.deleteBatchByIds(ids);
     }
 
     @Override

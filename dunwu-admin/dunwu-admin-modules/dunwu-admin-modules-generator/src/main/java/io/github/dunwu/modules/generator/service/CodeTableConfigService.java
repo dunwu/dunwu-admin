@@ -28,7 +28,7 @@ public interface CodeTableConfigService extends IService {
      * @param entity {@link CodeTableConfig} 数据实体
      * @return true / false
      */
-    boolean save(CodeTableConfig entity);
+    boolean insert(CodeTableConfig entity);
 
     /**
      * 批量添加 {@link CodeTableConfig} 记录
@@ -36,7 +36,7 @@ public interface CodeTableConfigService extends IService {
      * @param list {@link CodeTableConfig} 数据实体列表
      * @return true / false
      */
-    boolean saveBatch(Collection<CodeTableConfig> list);
+    boolean insertBatch(Collection<CodeTableConfig> list);
 
     /**
      * 根据 ID 更新一条 {@link CodeTableConfig} 记录
@@ -55,12 +55,28 @@ public interface CodeTableConfigService extends IService {
     boolean updateBatchById(Collection<CodeTableConfig> list);
 
     /**
+     * 添加或更新一条 {@link CodeTableConfig} 记录
+     *
+     * @param entity {@link CodeTableConfig} 数据实体
+     * @return true / false
+     */
+    boolean save(CodeTableConfig entity);
+
+    /**
+     * 批量添加或更新 {@link CodeTableConfig} 记录
+     *
+     * @param list {@link CodeTableConfig} 数据实体列表
+     * @return true / false
+     */
+    boolean saveBatch(Collection<CodeTableConfig> list);
+
+    /**
      * 根据 ID 删除一条 {@link CodeTableConfig} 记录
      *
      * @param id {@link CodeTableConfig} 主键
      * @return true / false
      */
-    boolean removeById(Serializable id);
+    boolean deleteById(Serializable id);
 
     /**
      * 根据 ID 列表批量删除 {@link CodeTableConfig} 记录
@@ -68,7 +84,7 @@ public interface CodeTableConfigService extends IService {
      * @param ids {@link CodeTableConfig} 主键列表
      * @return true / false
      */
-    boolean removeByIds(Collection<Serializable> ids);
+    boolean deleteBatchByIds(Collection<Serializable> ids);
 
     /**
      * 根据 query 和 pageable 分页查询 {@link CodeTableConfigDto}
