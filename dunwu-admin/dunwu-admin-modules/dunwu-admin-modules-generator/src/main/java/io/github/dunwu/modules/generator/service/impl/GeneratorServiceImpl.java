@@ -200,7 +200,7 @@ public class GeneratorServiceImpl implements GeneratorService {
     public ConfigBuilder generateCode(CodeTableConfigQuery query) {
 
         // 查询并检查表级配置
-        CodeTableConfigDto tableConfigDto = queryAndCheckTableConfig(query.getSchemaName(), query.getTableName(),
+        CodeTableConfigDto tableConfigDto = queryAndCheckColumnConfig(query.getSchemaName(), query.getTableName(),
             query.getCreateBy());
 
         // 创建构造器

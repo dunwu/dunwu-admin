@@ -159,6 +159,7 @@
             >
               <el-option label="文本框" value="Input" />
               <el-option label="文本域" value="Textarea" />
+              <el-option label="数字域" value="InputNumber" />
               <el-option label="单选框" value="Radio" />
               <el-option label="下拉框" value="Select" />
               <el-option label="日期框" value="Date" />
@@ -364,7 +365,6 @@ export default {
         .then(data => {
           this.loading = false
           this.data = data
-          console.log('同步后 data', data)
         })
         .catch(err => {
           this.loading = false

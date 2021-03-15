@@ -11,10 +11,13 @@
         <el-input v-model="form.name" style="width: 90%" />
       </el-form-item>
       <el-form-item label="年龄" prop="age">
-        <el-input-number v-model="form.age" :min="1" :max="100" style="width: 90%" />
+        <el-input-number v-model="form.age" style="width: 90%" />
+      </el-form-item>
+      <el-form-item label="头像" prop="avatar">
+        <el-input v-model="form.avatar" style="width: 90%" />
       </el-form-item>
       <el-form-item label="创建时间">
-        <el-input v-model="form.createTime" style="width: 90%" />
+        <el-date-picker v-model="form.createTime" type="datetime" style="width: 90%" />
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -27,7 +30,7 @@
 <script>
 import { form } from '@crud/crud'
 
-const defaultForm = { name: null, age: null, createTime: null }
+const defaultForm = { name: null, age: null, avatar: null, createTime: null }
 export default {
   name: 'HelloForm',
   mixins: [form(defaultForm)],
@@ -36,7 +39,7 @@ export default {
       rules: {
         name: [{ required: true, trigger: 'blur', type: 'string' }],
         age: [{ required: true, trigger: 'blur', type: 'number' }],
-        createTime: [{ required: true, trigger: 'blur', type: 'date' }]
+        avatar: [{ required: true, trigger: 'blur', type: 'string' }]
       }
     }
   }

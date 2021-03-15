@@ -12,6 +12,8 @@
       <el-form-item label="<#if field.labelName??>${field.comment}<#else>${field.propertyName}</#if>"<#if field.notNull> prop="${field.propertyName}"</#if>>
     <#if field.formType = 'Input'>
         <el-input v-model="form.${field.propertyName}" style="width: 90%" />
+    <#elseif field.formType = 'InputNumber'>
+        <el-input-number v-model="form.${field.propertyName}" style="width: 90%" />
     <#elseif field.formType = 'Textarea'>
         <el-input v-model="form.${field.propertyName}" :rows="3" type="textarea" style="width: 90%" />
     <#elseif field.formType = 'Radio'>

@@ -8,7 +8,7 @@
             clearable
             filterable
             remote
-            placeholder="请输入Schema"
+            placeholder="请选择Schema"
             style="width: 90%"
             :remote-method="querySchemas"
             :loading="schemaLoading"

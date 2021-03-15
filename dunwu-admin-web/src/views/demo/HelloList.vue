@@ -36,6 +36,18 @@
           </el-col>
           <template v-if="crud.showExtendSearch">
             <el-col :span="6">
+              <el-input
+                v-model="query.avatar"
+                clearable
+                placeholder="请输入头像"
+                style="width: 90%;"
+                class="filter-item"
+                @keyup.enter.native="crud.toQuery"
+              />
+            </el-col>
+          </template>
+          <template v-if="crud.showExtendSearch">
+            <el-col :span="6">
               <date-range-picker v-model="query.createTimeRange" class="date-item" style="width: 90%" />
             </el-col>
           </template>
@@ -52,7 +64,7 @@
           </el-col>
         </el-row>
       </div>
-      <TableOperation />
+      <TableOperation :permission="permission" />
     </div>
 
     <!--表格渲染-->
@@ -66,11 +78,21 @@
       <el-table-column type="selection" width="55" />
       <el-table-column prop="id" label="ID" :sortable="'custom'" />
       <el-table-column prop="name" label="名字" :sortable="'custom'" />
-      <el-table-column prop="age" label="年龄" />
-      <el-table-column prop="createTime" label="创建时间" />
-      <el-table-column label="操作" width="150px" align="center">
+      <el-table-column prop="age" label="年龄" :sortable="'custom'" />
+      <el-table-column prop="avatar" label="头像">
         <template slot-scope="scope">
-          <TableColumnOperation :data="scope.row" />
+          <el-image style="width: 50px; height: 50px" :src="scope.row.avatar" fit="fill"></el-image>
+        </template>
+      </el-table-column>
+      <el-table-column prop="createTime" label="创建时间" />
+      <el-table-column
+        v-if="checkPer(['admin', 'demo:hello:edit', 'demo:hello:del'])"
+        label="操作"
+        width="150px"
+        align="center"
+      >
+        <template slot-scope="scope">
+          <TableColumnOperation :data="scope.row" :permission="permission" />
         </template>
       </el-table-column>
     </el-table>
@@ -106,7 +128,13 @@ export default {
     })
   },
   data() {
-    return {}
+    return {
+      permission: {
+        add: ['admin', 'demo:hello:add'],
+        edit: ['admin', 'demo:hello:edit'],
+        del: ['admin', 'demo:hello:del']
+      }
+    }
   },
   methods: {
     // 钩子：在获取表格数据之前执行，false 则代表不获取数据
