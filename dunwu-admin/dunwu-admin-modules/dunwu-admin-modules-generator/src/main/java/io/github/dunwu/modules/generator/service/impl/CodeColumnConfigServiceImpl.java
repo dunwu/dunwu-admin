@@ -5,6 +5,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import io.github.dunwu.data.mybatis.ServiceImpl;
 import io.github.dunwu.modules.generator.dao.CodeColumnConfigDao;
 import io.github.dunwu.modules.generator.entity.CodeColumnConfig;
+import io.github.dunwu.modules.generator.entity.CodeColumnConfig;
 import io.github.dunwu.modules.generator.entity.dto.CodeColumnConfigDto;
 import io.github.dunwu.modules.generator.entity.query.CodeColumnConfigQuery;
 import io.github.dunwu.modules.generator.service.CodeColumnConfigService;
@@ -52,6 +53,21 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
     }
 
     @Override
+    public boolean updateBatchById(Collection<CodeColumnConfig> list) {
+        return dao.updateBatchById(list);
+    }
+
+    @Override
+    public boolean save(CodeColumnConfig entity) {
+        return dao.save(entity);
+    }
+
+    @Override
+    public boolean saveBatch(Collection<CodeColumnConfig> list) {
+        return dao.saveBatch(list);
+    }
+
+    @Override
     public boolean deleteById(Serializable id) {
         return dao.deleteById(id);
     }
@@ -84,12 +100,12 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
     }
 
     @Override
-    public CodeColumnConfigDto pojoByQuery(Object query) {
+    public CodeColumnConfigDto pojoByQuery(CodeColumnConfigQuery query) {
         return dao.pojoByQuery(query, this::doToDto);
     }
 
     @Override
-    public Integer countByQuery(Object query) {
+    public Integer countByQuery(CodeColumnConfigQuery query) {
         return dao.countByQuery(query);
     }
 
@@ -100,7 +116,7 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
     }
 
     @Override
-    public void exportPage(Object query, Pageable pageable, HttpServletResponse response) throws IOException {
+    public void exportPage(CodeColumnConfigQuery query, Pageable pageable, HttpServletResponse response) throws IOException {
         Page<CodeColumnConfigDto> page = dao.pojoPageByQuery(query, pageable, this::doToDto);
         dao.exportDtoList(page.getContent(), response);
     }

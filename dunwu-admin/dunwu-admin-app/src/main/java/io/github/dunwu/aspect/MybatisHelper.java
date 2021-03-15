@@ -115,9 +115,13 @@ public class MybatisHelper {
         for (Field f : fields) {
             f.setAccessible(true);
 
-            if (f.getName().equals("createBy") && methodName.startsWith("insert")) {
-                f.set(obj, SecurityUtils.getCurrentUsername());
-            } else if (f.getName().equals("updateBy") && methodName.startsWith("update")) {
+            if (f.getName().equals("createBy") && f.get(obj) == null) {
+                if (methodName.startsWith("insert") || methodName.startsWith("save")) {
+                    f.set(obj, SecurityUtils.getCurrentUsername());
+                }
+            }
+
+            if (f.getName().equals("updateBy")) {
                 f.set(obj, SecurityUtils.getCurrentUsername());
             }
 

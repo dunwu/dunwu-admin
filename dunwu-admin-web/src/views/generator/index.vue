@@ -138,23 +138,6 @@ export default {
         this.$notify({ title: '下载成功', type: 'success' })
       })
     },
-    toSync() {
-      const tables = []
-      this.crud.selections.forEach(val => {
-        tables.push(val.tableName)
-      })
-      this.syncLoading = true
-      codeApi
-        .syncTables({ schemaName: this.schemaName, tables })
-        .then(() => {
-          this.crud.refresh()
-          this.syncLoading = false
-          this.$notify({ title: '同步成功', type: 'success' })
-        })
-        .then(() => {
-          this.syncLoading = false
-        })
-    },
     querySchemas(val) {
       this.schemaLoading = true
       if (val) {

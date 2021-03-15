@@ -1,6 +1,5 @@
 package io.github.dunwu.modules.generator.controller;
 
-import cn.hutool.core.collection.CollectionUtil;
 import io.github.dunwu.data.core.Result;
 import io.github.dunwu.data.util.PageUtil;
 import io.github.dunwu.data.validator.annotation.EditCheck;
@@ -8,7 +7,6 @@ import io.github.dunwu.generator.engine.CodeGenerateContentDto;
 import io.github.dunwu.modules.generator.entity.CodeGlobalConfig;
 import io.github.dunwu.modules.generator.entity.CodeTableConfig;
 import io.github.dunwu.modules.generator.entity.dto.TableColumnInfoDto;
-import io.github.dunwu.modules.generator.entity.dto.TableSyncDto;
 import io.github.dunwu.modules.generator.entity.query.CodeColumnConfigQuery;
 import io.github.dunwu.modules.generator.entity.query.CodeGlobalConfigQuery;
 import io.github.dunwu.modules.generator.entity.query.CodeTableConfigQuery;
@@ -62,7 +60,7 @@ public class GeneratorController {
         return Result.ok();
     }
 
-    @ApiOperation("生成代码")
+    @ApiOperation("预览代码")
     @GetMapping(value = "preview/{schemaName}/{tableName}")
     public Result previewCode(@PathVariable String schemaName, @PathVariable String tableName) {
         CodeTableConfigQuery codeTableConfigQuery = new CodeTableConfigQuery();
@@ -71,69 +69,59 @@ public class GeneratorController {
         return Result.ok(previewList);
     }
 
-    @ApiOperation("生成代码")
+    @ApiOperation("下载代码")
     @GetMapping(value = "download/{schemaName}/{tableName}")
-    public Result downloadCode(@PathVariable String schemaName, @PathVariable String tableName,
+    public void downloadCode(@PathVariable String schemaName, @PathVariable String tableName,
         HttpServletRequest request, HttpServletResponse response) {
         CodeTableConfigQuery codeTableConfigQuery = new CodeTableConfigQuery();
         codeTableConfigQuery.setSchemaName(schemaName).setTableName(tableName);
         generatorService.downloadCode(codeTableConfigQuery, request, response);
-        return Result.ok();
-    }
-
-    @ApiOperation("生成代码")
-    @PostMapping(value = "table/sync")
-    public Result syncTable(@RequestBody TableSyncDto tableSyncDto) {
-        if (tableSyncDto == null || CollectionUtil.isEmpty(tableSyncDto.getTables())) {
-            throw new IllegalArgumentException("参数错误");
-        }
-
-        generatorService.syncTables(tableSyncDto);
-        return Result.ok();
     }
 
     @ApiOperation("查询当前用户的 CodeGlobalConfigDto 配置")
     @GetMapping("global/query")
-    public Result queryGlobalConfigByCurrentUser(CodeGlobalConfigQuery query) {
+    public Result queryGlobalConfig(CodeGlobalConfigQuery query) {
         return Result.ok(generatorService.queryOrCreateGlobalConfig(query));
     }
 
     @ApiOperation("保存当前用户的 CodeGlobalConfigDto 配置")
     @PostMapping("global/save")
-    public Result saveGlobalConfigByCurrentUser(@Validated(EditCheck.class) @RequestBody CodeGlobalConfig entity) {
-        generatorService.saveGlobalConfig(entity);
-        return Result.ok();
+    public Result saveGlobalConfig(@Validated(EditCheck.class) @RequestBody CodeGlobalConfig entity) {
+        return Result.ok(generatorService.saveGlobalConfig(entity));
     }
 
     @ApiOperation("查询当前用户的 CodeGlobalConfigDto 配置")
     @GetMapping("table/query")
-    public Result queryTableConfigByCurrentUser(CodeTableConfigQuery query) {
+    public Result queryTableConfig(CodeTableConfigQuery query) {
         return Result.ok(generatorService.queryOrCreateCodeTableConfig(query));
     }
 
     @ApiOperation("保存当前用户的 CodeGlobalConfigDto 配置")
     @PostMapping("table/save")
-    public Result saveTableConfigByCurrentUser(@Validated(EditCheck.class) @RequestBody CodeTableConfig entity) {
-        generatorService.saveTableConfig(entity);
-        return Result.ok();
+    public Result saveTableConfig(@Validated(EditCheck.class) @RequestBody CodeTableConfig entity) {
+        return Result.ok(generatorService.saveTableConfig(entity));
     }
 
     @ApiOperation("根据 query 条件，查询匹配条件的 CodeColumnConfigDto 列表")
     @GetMapping("column/query")
-    public Result queryColumnConfigByCurrentUser(CodeColumnConfigQuery query) {
-        return Result.ok(generatorService.queryColumnConfigs(query));
+    public Result queryColumnConfig(CodeColumnConfigQuery query) {
+        return Result.ok(generatorService.queryColumnConfigList(query));
     }
 
     @ApiOperation("批量更新 CodeColumnConfig 记录")
     @PostMapping("column/saveBatch")
-    public Result saveColumnsConfigByCurrentUser(
-        @Validated(EditCheck.class) @RequestBody TableColumnInfoDto entity) {
-        generatorService.saveColumnsConfigByCurrentUser(entity);
-        return Result.ok();
+    public Result saveColumnConfigList(@Validated(EditCheck.class) @RequestBody TableColumnInfoDto entity) {
+        return Result.ok(generatorService.saveColumnConfigList(entity));
+    }
+
+    @ApiOperation("同步表")
+    @GetMapping("table/sync")
+    public Result querySyncTableInfo(CodeTableConfigQuery query) {
+        return Result.ok(generatorService.querySyncTableInfo(query));
     }
 
     @ApiOperation("查询数据库数据")
-    @GetMapping(value = "table/all/page")
+    @GetMapping("table/all/page")
     public Result queryAllTables(@RequestParam String schemaName,
         @RequestParam(defaultValue = "") String tableName,
         @RequestParam(defaultValue = "0") Integer page,

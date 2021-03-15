@@ -55,6 +55,22 @@ public interface CodeGlobalConfigService extends IService {
     boolean updateBatchById(Collection<CodeGlobalConfig> list);
 
     /**
+     * 添加或更新一条 {@link CodeGlobalConfig} 记录
+     *
+     * @param entity {@link CodeGlobalConfig} 数据实体
+     * @return true / false
+     */
+    boolean save(CodeGlobalConfig entity);
+
+    /**
+     * 批量添加或更新 {@link CodeGlobalConfig} 记录
+     *
+     * @param list {@link CodeGlobalConfig} 数据实体列表
+     * @return true / false
+     */
+    boolean saveBatch(Collection<CodeGlobalConfig> list);
+
+    /**
      * 根据 ID 删除一条 {@link CodeGlobalConfig} 记录
      *
      * @param id {@link CodeGlobalConfig} 主键

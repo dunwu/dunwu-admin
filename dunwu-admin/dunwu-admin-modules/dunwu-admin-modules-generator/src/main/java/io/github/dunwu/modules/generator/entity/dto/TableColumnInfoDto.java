@@ -22,6 +22,9 @@ public class TableColumnInfoDto {
     /** 表名称 */
     @NotNull
     private String tableName;
+    /** 创建者 */
+    @NotNull
+    private String createBy;
     /** 表字段列表 */
     @NotEmpty
     private Collection<CodeColumnConfig> columns;

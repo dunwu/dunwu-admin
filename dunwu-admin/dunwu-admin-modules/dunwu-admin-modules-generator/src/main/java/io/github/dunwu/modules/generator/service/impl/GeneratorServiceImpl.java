@@ -6,7 +6,6 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.ZipUtil;
 import io.github.dunwu.data.core.DataException;
-import io.github.dunwu.data.core.GlobalException;
 import io.github.dunwu.generator.CodeGenerator;
 import io.github.dunwu.generator.config.*;
 import io.github.dunwu.generator.config.builder.ConfigBuilder;
@@ -14,25 +13,29 @@ import io.github.dunwu.generator.config.po.TableField;
 import io.github.dunwu.generator.config.po.TableInfo;
 import io.github.dunwu.generator.config.rules.JavaColumnType;
 import io.github.dunwu.generator.engine.CodeGenerateContentDto;
-import io.github.dunwu.modules.generator.entity.CodeColumnConfig;
 import io.github.dunwu.modules.generator.entity.CodeGlobalConfig;
 import io.github.dunwu.modules.generator.entity.CodeTableConfig;
-import io.github.dunwu.modules.generator.entity.dto.*;
+import io.github.dunwu.modules.generator.entity.dto.CodeColumnConfigDto;
+import io.github.dunwu.modules.generator.entity.dto.CodeGlobalConfigDto;
+import io.github.dunwu.modules.generator.entity.dto.CodeTableConfigDto;
+import io.github.dunwu.modules.generator.entity.dto.TableColumnInfoDto;
 import io.github.dunwu.modules.generator.entity.query.CodeColumnConfigQuery;
 import io.github.dunwu.modules.generator.entity.query.CodeGlobalConfigQuery;
 import io.github.dunwu.modules.generator.entity.query.CodeTableConfigQuery;
-import io.github.dunwu.modules.generator.service.*;
+import io.github.dunwu.modules.generator.service.CodeColumnConfigService;
+import io.github.dunwu.modules.generator.service.CodeGlobalConfigService;
+import io.github.dunwu.modules.generator.service.CodeTableConfigService;
+import io.github.dunwu.modules.generator.service.GeneratorService;
 import io.github.dunwu.modules.mnt.entity.dto.MntDatabaseDto;
 import io.github.dunwu.modules.mnt.service.MntDatabaseService;
-import io.github.dunwu.util.SecurityUtils;
 import io.github.dunwu.web.util.ServletUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -47,67 +50,13 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class GeneratorServiceImpl implements GeneratorService {
 
     private final CodeGlobalConfigService globalConfigService;
     private final CodeTableConfigService tableConfigService;
     private final CodeColumnConfigService columnConfigService;
     private final MntDatabaseService databaseService;
-    private final TableService tableService;
-
-    public GeneratorServiceImpl(CodeGlobalConfigService globalConfigService,
-        CodeTableConfigService tableConfigService,
-        CodeColumnConfigService columnConfigService,
-        MntDatabaseService databaseService, TableService tableService) {
-        this.globalConfigService = globalConfigService;
-        this.tableConfigService = tableConfigService;
-        this.columnConfigService = columnConfigService;
-        this.databaseService = databaseService;
-        this.tableService = tableService;
-    }
-
-    @Override
-    public void syncTables(TableSyncDto tableSyncDto) {
-        for (String tableName : tableSyncDto.getTables()) {
-            syncOneTable(tableSyncDto.getDbId(), tableSyncDto.getSchemaName(), tableName, tableSyncDto.getCreateBy());
-        }
-    }
-
-    private void syncOneTable(Long dbId, String schemaName, String tableName, String createBy) {
-
-        CodeColumnConfigQuery columnQuery = new CodeColumnConfigQuery();
-        columnQuery.setSchemaName(schemaName)
-                   .setTableName(tableName)
-                   .setCreateBy(createBy);
-        List<CodeColumnConfigDto> codeColumnConfigDtos = columnConfigService.pojoListByQuery(columnQuery);
-        if (CollectionUtil.isEmpty(codeColumnConfigDtos)) {
-            return;
-        }
-        List<CodeColumnConfig> oldColumns = codeColumnConfigDtos.stream()
-                                                                .map(columnConfigService::dtoToDo)
-                                                                .collect(Collectors.toList());
-        Map<String, CodeColumnConfig> columnMap = oldColumns.stream()
-                                                            .collect(Collectors.toMap(CodeColumnConfig::getFieldName,
-                                                                Function.identity()));
-
-        TableInfo tableInfo = queryTableInfo(dbId, schemaName, tableName, columnQuery.getCreateBy());
-        if (tableInfo == null) {
-            throw new GlobalException(StrUtil.format("未找到 {} 表信息", tableName));
-        }
-        List<CodeColumnConfig> newColumns = tableInfo.getFields().stream()
-                                                     .map(i -> transToCodeColumnConfig(i, schemaName, tableName))
-                                                     .collect(Collectors.toList());
-
-        List<CodeColumnConfig> mergeColumns = new ArrayList<>();
-        for (CodeColumnConfig n : newColumns) {
-            CodeColumnConfig entity = columnMap.getOrDefault(n.getFieldName(), n);
-            mergeColumns.add(entity);
-        }
-
-        Set<Serializable> ids = oldColumns.stream().map(CodeColumnConfig::getId).collect(Collectors.toSet());
-        columnConfigService.deleteBatchByIds(ids);
-        columnConfigService.insertBatch(mergeColumns);
-    }
 
     @Override
     public CodeGlobalConfigDto queryOrCreateGlobalConfig(CodeGlobalConfigQuery query) {
@@ -122,11 +71,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 
     @Override
     public boolean saveGlobalConfig(CodeGlobalConfig entity) {
-        if (entity.getId() == null) {
-            return globalConfigService.insert(entity);
-        } else {
-            return globalConfigService.updateById(entity);
-        }
+        return globalConfigService.save(entity);
     }
 
     @Override
@@ -136,35 +81,32 @@ public class GeneratorServiceImpl implements GeneratorService {
 
     @Override
     public boolean saveTableConfig(CodeTableConfig entity) {
+        queryAndCheckGlobalConfig(entity.getCreateBy());
         return tableConfigService.save(entity);
     }
 
     @Override
-    public List<CodeColumnConfigDto> queryColumnConfigs(CodeColumnConfigQuery query) {
+    public List<CodeColumnConfigDto> queryColumnConfigList(CodeColumnConfigQuery query) {
+
+        // 查询并检查表级配置
+        CodeTableConfigDto tableConfigDto = queryAndCheckTableConfig(query.getSchemaName(), query.getTableName(),
+            query.getCreateBy());
 
         // 如果已经存在指定的数据表的列属性配置，则直接返回
-        List<CodeColumnConfigDto> columnConfigRecords = columnConfigService.pojoListByQuery(query);
-        if (CollectionUtil.isNotEmpty(columnConfigRecords)) {
-            return columnConfigRecords;
+        List<CodeColumnConfigDto> columns = columnConfigService.pojoListByQuery(query);
+        if (CollectionUtil.isNotEmpty(columns)) {
+            return columns;
         }
 
-        CodeTableConfigQuery tableQuery = new CodeTableConfigQuery();
-        tableQuery.setSchemaName(query.getSchemaName())
-                  .setTableName(query.getTableName())
-                  .setCreateBy(query.getCreateBy());
-        CodeTableConfigDto codeTableConfigDto = queryTableConfig(tableQuery);
-        if (codeTableConfigDto == null) {
-            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST,
-                StrUtil.format("请先配置 schema = {}, table = {} 的表配置", query.getSchemaName(), query.getTableName()));
+        ConfigBuilder configBuilder = createConfigBuilder(tableConfigDto);
+        List<TableInfo> tableInfos = configBuilder.queryTableInfoList();
+        if (CollectionUtil.isEmpty(tableInfos)) {
+            return null;
         }
-
-        // 如果不存在指定的数据表的列属性配置，则查询指定表的属性，并组装默认的配置后返回结果
-        TableInfo tableInfo = transToTableInfo(codeTableConfigDto);
-        if (tableInfo == null || CollectionUtil.isEmpty(tableInfo.getFields())) {
-            throw new GlobalException(StrUtil.format("查询 schema = {}, table = {} 的列数据信息失败",
-                query.getSchemaName(), query.getTableName()));
-        }
-
+        TableInfo tableInfo = tableInfos.get(0);
+        // 将 TableInfo 的属性填充到 CodeTableConfigDto
+        CopyOptions copyOptions = CopyOptions.create();
+        BeanUtil.copyProperties(tableInfo, tableConfigDto, copyOptions);
         return tableInfo.getFields().stream()
                         .filter(Objects::nonNull)
                         .map(i -> transToCodeColumnConfigDto(i, query.getSchemaName(), query.getTableName()))
@@ -172,135 +114,162 @@ public class GeneratorServiceImpl implements GeneratorService {
     }
 
     @Override
-    public boolean saveColumnsConfigByCurrentUser(TableColumnInfoDto entity) {
-        Collection<CodeColumnConfig> list = entity.getColumns();
-        if (CollectionUtil.isEmpty(list)) {
-            return true;
+    public boolean saveColumnConfigList(TableColumnInfoDto entity) {
+        if (entity == null || CollectionUtil.isEmpty(entity.getColumns())) {
+            throw new IllegalArgumentException("列信息为空");
         }
 
-        String username = SecurityUtils.getCurrentUsername();
-        CodeColumnConfigQuery query = new CodeColumnConfigQuery();
-        query.setSchemaName(entity.getSchemaName())
-             .setTableName(entity.getTableName())
-             .setCreateBy(username);
+        // 查询并检查表级配置
+        CodeTableConfigDto tableConfigDto = queryAndCheckTableConfig(entity.getSchemaName(), entity.getTableName(),
+            entity.getCreateBy());
 
-        List<CodeColumnConfigDto> oldRecords = columnConfigService.pojoListByQuery(query);
-        if (CollectionUtil.isNotEmpty(oldRecords)) {
-            Set<Serializable> ids = oldRecords.stream()
-                                              .map(CodeColumnConfigDto::getId)
-                                              .collect(Collectors.toSet());
+        // 创建构造器
+        ConfigBuilder builder = createConfigBuilder(tableConfigDto);
 
-            if (CollectionUtil.isNotEmpty(ids)) {
-                columnConfigService.deleteBatchByIds(ids);
-            }
+        // 根据表级配置创建构造器
+        checkTableChanged(tableConfigDto, builder);
+
+        return columnConfigService.saveBatch(entity.getColumns());
+    }
+
+    @Override
+    public List<CodeColumnConfigDto> querySyncTableInfo(CodeTableConfigQuery query) {
+
+        // 查询表配置信息
+        CodeTableConfigDto tableConfigDto = queryTableConfig(query);
+        if (tableConfigDto == null) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST,
+                StrUtil.format("请先配置 schema = {}, table = {} 的表配置", query.getSchemaName(), query.getTableName()));
         }
-        return columnConfigService.insertBatch(list);
+
+        // 查询实际表字段
+        ConfigBuilder configBuilder = createConfigBuilder(tableConfigDto);
+        List<TableInfo> tableInfos = configBuilder.queryTableInfoList();
+        if (CollectionUtil.isEmpty(tableInfos)) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST,
+                StrUtil.format("查不到指定表 schema = {}, table = {}", query.getSchemaName(), query.getTableName()));
+        }
+        TableInfo tableInfo = tableInfos.get(0);
+
+        // 将 TableInfo 的属性填充到 CodeTableConfigDto
+        CopyOptions copyOptions = CopyOptions.create();
+        BeanUtil.copyProperties(tableInfo, tableConfigDto, copyOptions);
+
+        List<TableField> fields = tableInfo.getFields();
+        if (CollectionUtil.isEmpty(fields)) {
+            throw new DataException(StrUtil.format("找不到 schema = {}, table = {} 表信息",
+                query.getSchemaName(), query.getTableName()));
+        }
+
+        Map<String, CodeColumnConfigDto> map;
+        CodeColumnConfigQuery columnQuery = new CodeColumnConfigQuery();
+        columnQuery.setSchemaName(query.getSchemaName())
+                   .setTableName(query.getTableName())
+                   .setCreateBy(query.getCreateBy());
+        List<CodeColumnConfigDto> oldColumns = columnConfigService.pojoListByQuery(columnQuery);
+        if (CollectionUtil.isNotEmpty(oldColumns)) {
+            map = oldColumns
+                .stream().collect(Collectors.toMap(CodeColumnConfigDto::getFieldName, Function.identity()));
+        } else {
+            map = new HashMap<>(fields.size());
+        }
+
+        List<CodeColumnConfigDto> newColumns = new ArrayList<>();
+        for (TableField field : fields) {
+            CodeColumnConfigDto columnConfigDto = syncCodeColumnConfigDto(map.get(field.getFieldName()), field);
+            newColumns.add(columnConfigDto);
+        }
+        return newColumns;
     }
 
     @Override
     public ConfigBuilder generateCode(CodeTableConfigQuery query) {
-        CodeGlobalConfigQuery globalQuery = new CodeGlobalConfigQuery();
-        globalQuery.setCreateBy(query.getCreateBy());
-        CodeGlobalConfigDto globalConfigDto = queryOrCreateGlobalConfig(globalQuery);
-        if (globalConfigDto == null) {
-            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "未配置全局配置");
-        }
 
-        CodeTableConfigDto tableConfigDto = queryTableConfig(query);
-        if (tableConfigDto == null) {
-            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "未配置表级别配置");
-        }
+        // 查询并检查表级配置
+        CodeTableConfigDto tableConfigDto = queryAndCheckTableConfig(query.getSchemaName(), query.getTableName(),
+            query.getCreateBy());
 
-        CodeColumnConfigQuery codeColumnConfigQuery = new CodeColumnConfigQuery();
-        codeColumnConfigQuery.setTableName(query.getSchemaName())
-                             .setTableName(query.getTableName())
-                             .setCreateBy(query.getCreateBy());
-        List<CodeColumnConfigDto> columns = columnConfigService.pojoListByQuery(codeColumnConfigQuery);
-        if (CollectionUtil.isEmpty(columns)) {
-            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "未配置列级别配置");
-        }
-
-        tableConfigDto.setColumns(columns);
+        // 创建构造器
         ConfigBuilder builder = createConfigBuilder(tableConfigDto);
+
+        // 根据表级配置创建构造器
+        checkTableChanged(tableConfigDto, builder);
+
         CodeGenerator codeGenerator = new CodeGenerator(builder);
         codeGenerator.generate();
         return builder;
     }
 
     @Override
-    public void downloadCode(CodeTableConfigQuery query, HttpServletRequest request,
+    public ConfigBuilder downloadCode(CodeTableConfigQuery query, HttpServletRequest request,
         HttpServletResponse response) {
-        CodeGlobalConfigQuery globalQuery = new CodeGlobalConfigQuery();
-        globalQuery.setCreateBy(query.getCreateBy());
-        CodeGlobalConfigDto globalConfigDto = queryOrCreateGlobalConfig(globalQuery);
-        if (globalConfigDto == null) {
-            throw new DataException("未配置全局配置");
-        }
 
-        CodeTableConfigDto tableConfigDto = queryTableConfig(query);
-        if (tableConfigDto == null) {
-            throw new DataException("未配置表级别配置");
-        }
+        // 查询并检查表级配置
+        CodeTableConfigDto tableConfigDto = queryAndCheckTableConfig(query.getSchemaName(), query.getTableName(),
+            query.getCreateBy());
 
-        CodeColumnConfigQuery codeColumnConfigQuery = new CodeColumnConfigQuery();
-        codeColumnConfigQuery.setTableName(query.getSchemaName())
-                             .setTableName(query.getTableName())
-                             .setCreateBy(query.getCreateBy());
-        List<CodeColumnConfigDto> columns = columnConfigService.pojoListByQuery(codeColumnConfigQuery);
-        if (CollectionUtil.isEmpty(columns)) {
-            throw new DataException("未配置列级别配置");
-        }
-
-        tableConfigDto.setColumns(columns);
+        // 将代码输出路径输出到临时路径
         String tmpSchemaPath = System.getProperty("java.io.tmpdir")
             + "dunwu"
             + File.separator
             + query.getSchemaName();
         String tmpTablePath = tmpSchemaPath + File.separator + query.getTableName();
-        globalConfigDto.setOutputDir(tmpTablePath)
-                       .setBackendPath(tmpTablePath + "/backend")
-                       .setFrontendPath(tmpTablePath + "/frontend");
         tableConfigDto.setOutputDir(tmpTablePath)
                       .setBackendPath(tmpTablePath + "/backend")
                       .setFrontendPath(tmpTablePath + "/frontend");
 
-        log.info("临时代码生成路径：{}", tmpTablePath);
-
+        // 创建构造器
         ConfigBuilder builder = createConfigBuilder(tableConfigDto);
+
+        // 根据表级配置创建构造器
+        checkTableChanged(tableConfigDto, builder);
+
         CodeGenerator codeGenerator = new CodeGenerator(builder);
         codeGenerator.generate();
         String zipFilePath = tmpSchemaPath + File.separator + "codes.zip";
         File zip = ZipUtil.zip(tmpTablePath, zipFilePath);
         ServletUtil.downloadFile(request, response, zip, true);
+        return builder;
     }
 
     @Override
     public List<CodeGenerateContentDto> previewCode(CodeTableConfigQuery query) {
-        CodeGlobalConfigQuery globalQuery = new CodeGlobalConfigQuery();
-        globalQuery.setCreateBy(query.getCreateBy());
-        CodeGlobalConfigDto globalConfigDto = queryOrCreateGlobalConfig(globalQuery);
-        if (globalConfigDto == null) {
-            throw new DataException("未配置全局配置");
-        }
 
-        CodeTableConfigDto tableConfigDto = queryTableConfig(query);
-        if (tableConfigDto == null) {
-            throw new DataException("未配置表级别配置");
-        }
+        // 查询并检查表级配置
+        CodeTableConfigDto tableConfigDto = queryAndCheckTableConfig(query.getSchemaName(), query.getTableName(),
+            query.getCreateBy());
 
-        CodeColumnConfigQuery codeColumnConfigQuery = new CodeColumnConfigQuery();
-        codeColumnConfigQuery.setTableName(query.getSchemaName())
-                             .setTableName(query.getTableName())
-                             .setCreateBy(query.getCreateBy());
-        List<CodeColumnConfigDto> columns = columnConfigService.pojoListByQuery(codeColumnConfigQuery);
-        if (CollectionUtil.isEmpty(columns)) {
-            throw new DataException("未配置列级别配置");
-        }
-
-        tableConfigDto.setColumns(columns);
+        // 创建构造器
         ConfigBuilder builder = createConfigBuilder(tableConfigDto);
+
+        // 根据表级配置创建构造器
+        checkTableChanged(tableConfigDto, builder);
+
         CodeGenerator codeGenerator = new CodeGenerator(builder);
         return codeGenerator.preview();
+    }
+
+    private void checkTableChanged(CodeTableConfigDto tableConfigDto, ConfigBuilder builder) {
+
+        List<TableInfo> tables = builder.queryTableInfoList();
+        if (CollectionUtil.isEmpty(tables)) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST,
+                StrUtil.format("查不到指定表 schema = {}, table = {}",
+                    tableConfigDto.getSchemaName(), tableConfigDto.getTableName()));
+        }
+        TableInfo tableInfo = tables.get(0);
+        if (CollectionUtil.isEmpty(tableInfo.getFields())) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST,
+                StrUtil.format("查不到指定表的列信息 schema = {}, table = {}",
+                    tableConfigDto.getSchemaName(), tableConfigDto.getTableName()));
+        }
+
+        // 检查表字段是否有变化
+        if (isColumnsChanged(tableConfigDto.getColumns(), tableInfo.getFields())) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST,
+                StrUtil.format("schema = {}, table = {} 表已经发生变化，请先同步配置",
+                    tableConfigDto.getSchemaName(), tableConfigDto.getTableName()));
+        }
     }
 
     /**
@@ -349,18 +318,13 @@ public class GeneratorServiceImpl implements GeneratorService {
     @Override
     public CodeTableConfigDto queryOrCreateCodeTableConfig(CodeTableConfigQuery query) {
 
+        // 检查全局级配置
+        CodeGlobalConfigDto globalConfigDto = queryAndCheckGlobalConfig(query.getCreateBy());
+
         // 如果已经存在指定的数据表的表属性配置，则直接返回
-        CodeTableConfigDto tableConfigDto = queryTableConfig(query);
+        CodeTableConfigDto tableConfigDto = tableConfigService.pojoByQuery(query);
         if (tableConfigDto != null) {
             return tableConfigDto;
-        }
-
-        // 查询全局配置
-        CodeGlobalConfigQuery globalQuery = new CodeGlobalConfigQuery();
-        globalQuery.setCreateBy(query.getCreateBy());
-        CodeGlobalConfigDto globalConfigDto = queryOrCreateGlobalConfig(globalQuery);
-        if (globalConfigDto == null) {
-            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "请先配置全局配置");
         }
 
         // 初始化 CodeTableConfigDto
@@ -371,20 +335,23 @@ public class GeneratorServiceImpl implements GeneratorService {
                       .setCreateBy(query.getCreateBy());
 
         // 将全局配置属性填充到 CodeTableConfigDto
-        fillPropertyToCodeTableConfigDto(tableConfigDto, globalConfigDto);
+        CopyOptions globalCopyOptions = CopyOptions.create().setIgnoreProperties("id");
+        BeanUtil.copyProperties(globalConfigDto, tableConfigDto, globalCopyOptions);
 
+        // 查询该表的实际属性，并填充到 CodeTableConfigDto
         ConfigBuilder configBuilder = createConfigBuilder(tableConfigDto);
         List<TableInfo> tableInfos = configBuilder.queryTableInfoList();
         if (CollectionUtil.isEmpty(tableInfos)) {
-            return null;
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST,
+                StrUtil.format("找不到要查询的数据表 schema = {}, table = {}", query.getSchemaName(), query.getTableName()));
         }
         TableInfo tableInfo = tableInfos.get(0);
-        fillPropertyToCodeTableConfigDto(tableConfigDto, tableInfo);
-        return tableConfigDto;
-    }
 
-    public List<CodeColumnConfigDto> queryOrCreateCodeColumnConfig(CodeTableConfigQuery query) {
-        return null;
+        // 将 TableInfo 的属性填充到 CodeTableConfigDto
+        CopyOptions tableCopyOptions = CopyOptions.create();
+        BeanUtil.copyProperties(tableInfo, tableConfigDto, tableCopyOptions);
+
+        return tableConfigDto;
     }
 
     /**
@@ -397,30 +364,32 @@ public class GeneratorServiceImpl implements GeneratorService {
      * @return /
      */
     private TableInfo queryTableInfo(Long dbId, String schemaName, String tableName, String createBy) {
-        if (StrUtil.isBlank(schemaName)) {
-            schemaName = tableService.getCurrentSchema();
-        }
 
+        // 查询表级配置
         CodeTableConfigQuery tableQuery = new CodeTableConfigQuery();
         tableQuery.setSchemaName(schemaName).setTableName(tableName).setCreateBy(createBy);
         CodeTableConfigDto tableConfigDto = queryTableConfig(tableQuery);
 
-        CodeGlobalConfigQuery globalQuery = new CodeGlobalConfigQuery();
-        globalQuery.setCreateBy(createBy);
-        CodeGlobalConfigDto globalConfig = queryOrCreateGlobalConfig(globalQuery);
-        ConfigBuilder configBuilder;
-        if (tableConfigDto != null) {
-            configBuilder = createConfigBuilder(tableConfigDto);
-        } else {
-            CodeTableConfigDto newTableConfigDto = BeanUtil.toBean(globalConfig, CodeTableConfigDto.class);
-            newTableConfigDto.setDbId(dbId)
-                             .setSchemaName(schemaName)
-                             .setTableName(tableName)
-                             .setCreateBy(createBy);
-            configBuilder = createConfigBuilder(newTableConfigDto);
+        // 查不到表计配置，则根据实际表信息和全局配置填充表信息
+        if (tableConfigDto == null) {
+            // 查询全局级配置
+            CodeGlobalConfigQuery globalQuery = new CodeGlobalConfigQuery();
+            globalQuery.setCreateBy(createBy);
+            CodeGlobalConfigDto globalConfig = queryOrCreateGlobalConfig(globalQuery);
+
+            tableConfigDto = BeanUtil.toBean(globalConfig, CodeTableConfigDto.class);
+            tableConfigDto.setDbId(dbId)
+                          .setSchemaName(schemaName)
+                          .setTableName(tableName)
+                          .setCreateBy(createBy);
         }
 
+        ConfigBuilder configBuilder = createConfigBuilder(tableConfigDto);
         List<TableInfo> tableInfos = configBuilder.queryTableInfoList();
+        if (CollectionUtil.isEmpty(tableInfos)) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST,
+                StrUtil.format("找不到要查询的数据表 schema = {}, table = {}", schemaName, tableName));
+        }
         return tableInfos.get(0);
     }
 
@@ -431,11 +400,15 @@ public class GeneratorServiceImpl implements GeneratorService {
      * @return /
      */
     private TableInfo transToTableInfo(CodeTableConfigDto tableConfigDto) {
-        TableInfo tableInfo = BeanUtil.toBean(tableConfigDto, TableInfo.class);
 
+        if (tableConfigDto == null) {
+            return null;
+        }
+
+        TableInfo tableInfo = BeanUtil.toBean(tableConfigDto, TableInfo.class);
         if (CollectionUtil.isNotEmpty(tableConfigDto.getColumns())) {
             List<TableField> fields = new ArrayList<>();
-            Map<String, TableField> fieldNameMap = new HashMap<>(fields.size());
+            Map<String, TableField> fieldNameMap = new HashMap<>(tableConfigDto.getColumns().size());
             for (CodeColumnConfigDto column : tableConfigDto.getColumns()) {
                 TableField field = transToTableField(column);
                 fields.add(field);
@@ -455,13 +428,31 @@ public class GeneratorServiceImpl implements GeneratorService {
      * @return /
      */
     private TableField transToTableField(CodeColumnConfigDto columnConfigDto) {
+
+        if (columnConfigDto == null) {
+            return null;
+        }
+
         CopyOptions copyOptions = CopyOptions.create().setIgnoreProperties("javaType");
         TableField tableField = BeanUtil.toBean(columnConfigDto, TableField.class, copyOptions);
         tableField.setJavaType(JavaColumnType.getJavaColumnTypeByType(columnConfigDto.getJavaType()));
         return tableField;
     }
 
+    /**
+     * 将 {@link TableField} 转为 {@link CodeColumnConfigDto}
+     *
+     * @param field      TableField 对象
+     * @param schemaName schema 名
+     * @param tableName  table 名
+     * @return /
+     */
     private CodeColumnConfigDto transToCodeColumnConfigDto(TableField field, String schemaName, String tableName) {
+
+        if (field == null) {
+            return null;
+        }
+
         CodeColumnConfigDto column = BeanUtil.toBean(field, CodeColumnConfigDto.class);
         column.setSchemaName(schemaName).setTableName(tableName);
         if (field.getJavaType() != null) {
@@ -470,32 +461,107 @@ public class GeneratorServiceImpl implements GeneratorService {
         return column;
     }
 
-    private CodeColumnConfig transToCodeColumnConfig(TableField field, String schemaName, String tableName) {
-        CodeColumnConfig column = BeanUtil.toBean(field, CodeColumnConfig.class);
-        column.setSchemaName(schemaName).setTableName(tableName);
-        if (field.getJavaType() != null) {
-            column.setJavaType(field.getJavaType().getType());
+    public CodeColumnConfigDto syncCodeColumnConfigDto(CodeColumnConfigDto columnConfigDto, TableField field) {
+
+        if (columnConfigDto == null) {
+            columnConfigDto = new CodeColumnConfigDto();
+            CopyOptions copyOptions = CopyOptions.create().setIgnoreProperties("javaType");
+            BeanUtil.copyProperties(field, columnConfigDto, copyOptions);
+            columnConfigDto.setJavaType(field.getJavaType().getType());
+        } else {
+            columnConfigDto.setComment(field.getComment())
+                           .setType(field.getType())
+                           .setJavaType(field.getJavaType().getType())
+                           .setKeyType(field.getKeyType())
+                           .setNotNull(field.isNotNull());
         }
-        return column;
+        return columnConfigDto;
     }
 
-    private void fillPropertyToCodeTableConfigDto(CodeTableConfigDto tableConfigDto,
-        CodeGlobalConfigDto codeGlobalConfigDto) {
-        if (codeGlobalConfigDto == null) {
-            return;
+    private boolean isColumnsChanged(List<CodeColumnConfigDto> columns, List<TableField> fields) {
+
+        if (CollectionUtil.isEmpty(fields)) {
+            log.error("fields 为空");
+            return false;
         }
 
-        CopyOptions copyOptions = CopyOptions.create().setIgnoreProperties("id");
-        BeanUtil.copyProperties(codeGlobalConfigDto, tableConfigDto, copyOptions);
+        if (CollectionUtil.isEmpty(columns)) {
+            log.error("columns 为空");
+            return false;
+        }
+
+        Map<String, CodeColumnConfigDto> map = columns.stream().collect(
+            Collectors.toMap(CodeColumnConfigDto::getFieldName, Function.identity()));
+        for (TableField field : fields) {
+            // columns 不包含 fields 中的字段，说明表中已添加新字段
+            if (!map.containsKey(field.getFieldName())) {
+                log.error("{} 表新增 {} 字段", field.getTableName(), field.getFieldName());
+                return true;
+            }
+            boolean flag = isColumnChanged(map.get(field.getFieldName()), field);
+            if (!flag) {
+                log.error("{} 表 {} 字段发生变化", field.getTableName(), field.getFieldName());
+                return true;
+            }
+        }
+        return false;
     }
 
-    private void fillPropertyToCodeTableConfigDto(CodeTableConfigDto tableConfigDto, TableInfo tableInfo) {
-        if (tableInfo == null) {
-            return;
+    public boolean isColumnChanged(CodeColumnConfigDto columnConfigDto, TableField field) {
+        if (columnConfigDto == null || field == null) {
+            return false;
         }
 
-        CopyOptions copyOptions = CopyOptions.create();
-        BeanUtil.copyProperties(tableInfo, tableConfigDto, copyOptions);
+        return columnConfigDto.getComment().equals(field.getComment())
+            && columnConfigDto.getType().equals(field.getType())
+            && columnConfigDto.getJavaType().equals(field.getJavaType().getType())
+            && columnConfigDto.getKeyType().equals(field.getKeyType())
+            && columnConfigDto.getNotNull().equals(field.isNotNull());
+    }
+
+    // =============== 配置检查
+
+    private CodeGlobalConfigDto queryAndCheckGlobalConfig(String createBy) {
+        CodeGlobalConfigQuery globalQuery = new CodeGlobalConfigQuery();
+        globalQuery.setCreateBy(createBy);
+        CodeGlobalConfigDto globalConfigDto = globalConfigService.pojoByQuery(globalQuery);
+        if (globalConfigDto == null) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "请先配置全局配置");
+        }
+        return globalConfigDto;
+    }
+
+    private CodeTableConfigDto queryAndCheckTableConfig(String schemaName, String tableName, String createBy) {
+        // 检查全局级配置
+        queryAndCheckGlobalConfig(createBy);
+
+        // 检查表级配置
+        CodeTableConfigQuery query = new CodeTableConfigQuery();
+        query.setSchemaName(schemaName)
+             .setTableName(tableName)
+             .setCreateBy(createBy);
+        CodeTableConfigDto tableConfigDto = queryTableConfig(query);
+        if (tableConfigDto == null) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "未配置表级别配置");
+        }
+        return tableConfigDto;
+    }
+
+    private CodeTableConfigDto queryAndCheckColumnConfig(String schemaName, String tableName, String createBy) {
+        // 检查全局级配置 + 检查表级配置
+        CodeTableConfigDto tableConfigDto = queryAndCheckTableConfig(schemaName, tableName, createBy);
+
+        // 检查列级配置
+        CodeColumnConfigQuery columnQuery = new CodeColumnConfigQuery();
+        columnQuery.setTableName(schemaName)
+                   .setTableName(tableName)
+                   .setCreateBy(createBy);
+        List<CodeColumnConfigDto> columns = columnConfigService.pojoListByQuery(columnQuery);
+        if (CollectionUtil.isEmpty(columns)) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "未配置列级别配置");
+        }
+        tableConfigDto.setColumns(columns);
+        return tableConfigDto;
     }
 
 }

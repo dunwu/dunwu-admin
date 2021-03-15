@@ -143,8 +143,11 @@ public class DaoImpl<M extends BaseMapper<T>, T> implements IDao<T> {
             String keyProperty = tableInfo.getKeyProperty();
             Assert.notEmpty(keyProperty, "error: can not execute. because can not find column for id from entity!");
             Object idVal = ReflectionKit.getMethodValue(cls, entity, tableInfo.getKeyProperty());
-            return StringUtils.checkValNull(idVal) || Objects.isNull(getById((Serializable) idVal)) ? insert(entity)
-                : updateById(entity);
+            if (Objects.isNull(getById((Serializable) idVal))) {
+                return SqlHelper.retBool(getBaseMapper().insert(entity));
+            } else {
+                return SqlHelper.retBool(getBaseMapper().updateById(entity));
+            }
         }
         return false;
     }

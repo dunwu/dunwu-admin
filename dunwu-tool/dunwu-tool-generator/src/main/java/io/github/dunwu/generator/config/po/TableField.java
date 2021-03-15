@@ -97,9 +97,7 @@ public class TableField {
     private boolean convert;
     /** {@link @TableField} 填充属性（可选） */
     private String fill;
-    /**
-     * 自定义查询字段列表
-     */
+    /** 自定义查询字段列表 */
     private Map<String, Object> customMap;
 
     public TableField setConvert(boolean convert) {

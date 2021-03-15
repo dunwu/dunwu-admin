@@ -27,12 +27,12 @@
       </el-button>
       <el-tooltip class="item" effect="dark" content="数据库中表字段变动时使用该功能" placement="top-start">
         <el-button
-          :loading="syncLoading"
+          :loading="loading"
           icon="el-icon-refresh"
           size="mini"
           style="float: right; padding: 6px 9px;"
           type="info"
-          @click="sync"
+          @click="syncTable"
         >
           同步
         </el-button>
@@ -291,7 +291,6 @@ export default {
       dicts: [],
       loading: false,
       configLoading: false,
-      syncLoading: false,
       genLoading: false
     }
   },
@@ -330,7 +329,7 @@ export default {
         })
         .catch(err => {
           this.loading = false
-          this.$notify({ title: err, type: 'error' })
+          console.error('保存失败', err.response.data.message)
         })
     },
     saveColumnConfig() {
@@ -340,28 +339,36 @@ export default {
           dbId: this.dbId,
           schemaName: this.schemaName,
           tableName: this.tableName,
+          createBy: this.createBy,
           columns: this.data
         })
-        .then(res => {
+        .then(() => {
+          this.queryColumnConfig()
           this.configLoading = false
           this.$notify({ title: '保存成功', type: 'success' })
         })
         .catch(err => {
           this.configLoading = false
-          console.log(err.response.data.message)
+          console.error(err.response.data.message)
         })
     },
-    sync() {
-      this.syncLoading = true
+    syncTable() {
+      this.loading = true
       codeApi
-        .syncTables({ schemaName: this.schemaName, tables: [this.tableName] })
-        .then(() => {
-          this.queryColumnConfig()
-          this.$notify({ title: '同步成功', type: 'success' })
-          this.syncLoading = false
+        .syncTable({
+          dbId: this.dbId,
+          schemaName: this.schemaName,
+          tableName: this.tableName,
+          createBy: this.createBy
         })
-        .then(() => {
-          this.syncLoading = false
+        .then(data => {
+          this.loading = false
+          this.data = data
+          console.log('同步后 data', data)
+        })
+        .catch(err => {
+          this.loading = false
+          this.$notify({ title: err, type: 'error' })
         })
     },
     toGenerate() {
@@ -373,18 +380,18 @@ export default {
           // 生成代码
           codeApi
             .generateCode({ schemaName: this.schemaName, tableName: this.tableName })
-            .then(data => {
-              this.$notify({ title: '生成代码成功', type: 'success' })
+            .then(() => {
               this.genLoading = false
+              this.$notify({ title: '生成代码成功', type: 'success' })
             })
             .catch(err => {
-              this.$notify({ title: '生成代码失败', type: 'error', message: err })
               this.genLoading = false
+              console.error('生成代码失败', err)
             })
         })
         .catch(err => {
           this.genLoading = false
-          this.$notify({ title: '保存失败', type: 'error', message: err })
+          console.error('保存失败', err)
         })
     }
   }

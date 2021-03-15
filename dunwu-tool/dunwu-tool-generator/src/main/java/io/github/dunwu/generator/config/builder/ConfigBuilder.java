@@ -750,10 +750,12 @@ public class ConfigBuilder {
                  ResultSet results = preparedStatement.executeQuery()) {
                 while (results.next()) {
                     String columnName = results.getString(dbQuery.fieldName());
-                    TableField field;
+                    TableField field = null;
                     if (MapUtil.isNotEmpty(fieldMap)) {
                         field = fieldMap.get(columnName);
-                    } else {
+                    }
+
+                    if (field == null) {
                         field = new TableField();
                     }
 
@@ -830,8 +832,12 @@ public class ConfigBuilder {
                     List<TableFill> tableFillList = getStrategyConfig().getTableFillList();
                     if (null != tableFillList) {
                         // 忽略大写字段问题
-                        tableFillList.stream().filter(tf -> tf.getFieldName().equalsIgnoreCase(field.getFieldName()))
-                                     .findFirst().ifPresent(tf -> field.setFill(tf.getFieldFill().name()));
+                        for (TableFill tableFill : tableFillList) {
+                            if (tableFill.getFieldName().equalsIgnoreCase(field.getFieldName())) {
+                                field.setFill(tableFill.getFieldFill().name());
+                                break;
+                            }
+                        }
                     }
                     fieldList.add(field);
                 }

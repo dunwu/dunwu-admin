@@ -53,6 +53,16 @@ public class CodeGlobalConfigServiceImpl extends ServiceImpl implements CodeGlob
     }
 
     @Override
+    public boolean save(CodeGlobalConfig entity) {
+        return dao.save(entity);
+    }
+
+    @Override
+    public boolean saveBatch(Collection<CodeGlobalConfig> list) {
+        return dao.saveBatch(list);
+    }
+
+    @Override
     public boolean deleteById(Serializable id) {
         return dao.deleteById(id);
     }

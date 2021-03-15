@@ -8,11 +8,11 @@ export function getAllTableInSchema(params) {
   })
 }
 
-export function syncTables(data) {
+export function syncTable(params) {
   return request({
     url: 'api/code/table/sync',
-    method: 'post',
-    data
+    method: 'get',
+    params
   })
 }
 
@@ -88,7 +88,7 @@ export function previewCode(params) {
 
 export default {
   getAllTableInSchema,
-  syncTables,
+  syncTable,
   generateCode,
   downloadCode,
   previewCode,

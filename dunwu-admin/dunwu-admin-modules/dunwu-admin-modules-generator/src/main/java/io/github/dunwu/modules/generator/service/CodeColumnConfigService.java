@@ -47,6 +47,30 @@ public interface CodeColumnConfigService extends IService {
     boolean updateById(CodeColumnConfig entity);
 
     /**
+     * 根据 ID 批量更新 {@link CodeColumnConfig} 记录
+     *
+     * @param list {@link CodeColumnConfig} 数据实体列表
+     * @return true / false
+     */
+    boolean updateBatchById(Collection<CodeColumnConfig> list);
+
+    /**
+     * 添加或更新一条 {@link CodeColumnConfig} 记录
+     *
+     * @param entity {@link CodeColumnConfig} 数据实体
+     * @return true / false
+     */
+    boolean save(CodeColumnConfig entity);
+
+    /**
+     * 批量添加或更新 {@link CodeColumnConfig} 记录
+     *
+     * @param list {@link CodeColumnConfig} 数据实体列表
+     * @return true / false
+     */
+    boolean saveBatch(Collection<CodeColumnConfig> list);
+
+    /**
      * 根据 ID 删除一条 {@link CodeColumnConfig} 记录
      *
      * @param id {@link CodeColumnConfig} 主键
@@ -93,7 +117,7 @@ public interface CodeColumnConfigService extends IService {
      * @param query 查询条件，根据 query 中的 {@link QueryField} 注解自动组装查询条件
      * @return {@link List<CodeColumnConfigDto>}
      */
-    CodeColumnConfigDto pojoByQuery(Object query);
+    CodeColumnConfigDto pojoByQuery(CodeColumnConfigQuery query);
 
     /**
      * 根据 query 查询满足条件的记录数
@@ -101,7 +125,7 @@ public interface CodeColumnConfigService extends IService {
      * @param query 查询条件，根据 query 中的 {@link QueryField} 注解自动组装查询条件
      * @return {@link Integer}
      */
-    Integer countByQuery(Object query);
+    Integer countByQuery(CodeColumnConfigQuery query);
 
     /**
      * 根据 id 列表查询 {@link CodeColumnConfigDto} 列表，并导出 excel 表单
@@ -120,7 +144,7 @@ public interface CodeColumnConfigService extends IService {
      * @param response {@link HttpServletResponse} 实体
      * @throws IOException /
      */
-    void exportPage(Object query, Pageable pageable, HttpServletResponse response) throws IOException;
+    void exportPage(CodeColumnConfigQuery query, Pageable pageable, HttpServletResponse response) throws IOException;
 
     /**
      * {@link CodeColumnConfig} 转为 {@link CodeColumnConfigDto}

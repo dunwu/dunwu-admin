@@ -173,7 +173,7 @@ export default {
       }
     }
   },
-  created() {
+  mounted() {
     this.tableHeight = document.documentElement.clientHeight - 385
 
     // 根据 router、store 获取页面必要属性
@@ -221,7 +221,7 @@ export default {
         })
         .catch(err => {
           this.loading = false
-          this.$notify({ title: err, type: 'error' })
+          console.error(err.response.data.message)
         })
     },
     saveTableConfig() {
@@ -238,7 +238,7 @@ export default {
             })
             .catch(err => {
               this.configLoading = false
-              this.$notify({ title: '保存失败', type: 'error', message: err })
+              console.error('保存失败', err.response.data.message)
             })
         }
       })

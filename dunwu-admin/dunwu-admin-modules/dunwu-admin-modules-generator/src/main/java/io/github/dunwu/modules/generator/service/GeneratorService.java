@@ -5,7 +5,10 @@ import io.github.dunwu.generator.engine.CodeGenerateContentDto;
 import io.github.dunwu.modules.generator.entity.CodeColumnConfig;
 import io.github.dunwu.modules.generator.entity.CodeGlobalConfig;
 import io.github.dunwu.modules.generator.entity.CodeTableConfig;
-import io.github.dunwu.modules.generator.entity.dto.*;
+import io.github.dunwu.modules.generator.entity.dto.CodeColumnConfigDto;
+import io.github.dunwu.modules.generator.entity.dto.CodeGlobalConfigDto;
+import io.github.dunwu.modules.generator.entity.dto.CodeTableConfigDto;
+import io.github.dunwu.modules.generator.entity.dto.TableColumnInfoDto;
 import io.github.dunwu.modules.generator.entity.query.CodeColumnConfigQuery;
 import io.github.dunwu.modules.generator.entity.query.CodeGlobalConfigQuery;
 import io.github.dunwu.modules.generator.entity.query.CodeTableConfigQuery;
@@ -21,11 +24,6 @@ import javax.servlet.http.HttpServletResponse;
  * @date 2021/3/3
  */
 public interface GeneratorService {
-
-    /**
-     * 同步表信息
-     */
-    void syncTables(TableSyncDto tableSyncDto);
 
     /**
      * 查询当前用户的 CodeGlobalConfigDto 配置
@@ -69,7 +67,7 @@ public interface GeneratorService {
      * @param query 查询实体
      * @return /
      */
-    List<CodeColumnConfigDto> queryColumnConfigs(CodeColumnConfigQuery query);
+    List<CodeColumnConfigDto> queryColumnConfigList(CodeColumnConfigQuery query);
 
     /**
      * 保存当前用户的 {@link CodeColumnConfig} 配置
@@ -77,7 +75,9 @@ public interface GeneratorService {
      * @param entity 实体
      * @return /
      */
-    boolean saveColumnsConfigByCurrentUser(TableColumnInfoDto entity);
+    boolean saveColumnConfigList(TableColumnInfoDto entity);
+
+    List<CodeColumnConfigDto> querySyncTableInfo(CodeTableConfigQuery query);
 
     /**
      * 根据表级别配置、列级别配置生成代码
@@ -90,9 +90,12 @@ public interface GeneratorService {
     /**
      * 根据表级别配置、列级别配置生成代码并下载到前端
      *
-     * @param query 查询实体
+     * @param query    查询实体
+     * @param request  http 请求
+     * @param response http 应答
+     * @return /
      */
-    void downloadCode(CodeTableConfigQuery query, HttpServletRequest request,
+    ConfigBuilder downloadCode(CodeTableConfigQuery query, HttpServletRequest request,
         HttpServletResponse response);
 
     /**
@@ -103,6 +106,12 @@ public interface GeneratorService {
      */
     List<CodeGenerateContentDto> previewCode(CodeTableConfigQuery query);
 
+    /**
+     * 根据条件查询表配置，如果不存在，返回默认配置
+     *
+     * @param query 查询实体
+     * @return /
+     */
     CodeTableConfigDto queryOrCreateCodeTableConfig(CodeTableConfigQuery query);
 
 }

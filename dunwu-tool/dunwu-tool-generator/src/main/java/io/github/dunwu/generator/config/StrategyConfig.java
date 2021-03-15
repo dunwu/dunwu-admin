@@ -39,37 +39,27 @@ import java.util.List;
 @Accessors(chain = true)
 public class StrategyConfig {
 
-    /**
-     * 是否大写命名
-     */
+    /** 是否大写命名 */
     private boolean isCapitalMode = false;
-    /**
-     * 是否跳过视图
-     */
+    /** 是否跳过视图 */
     private boolean skipView = false;
-    /**
-     * 名称转换
-     */
+    /** 名称转换 */
     private INameConvert nameConvert;
-    /**
-     * 数据库表映射到实体的命名策略
-     */
+    /** 数据库表映射到实体的命名策略 */
     private NamingStrategy naming = NamingStrategy.underline_to_camel;
     /**
      * 数据库表字段映射到实体的命名策略
      * <p>未指定按照 naming 执行</p>
      */
     private NamingStrategy columnNaming = NamingStrategy.underline_to_camel;
-    /**
-     * 表前缀
-     */
+    /** 表前缀 */
     @Setter(AccessLevel.NONE)
     private String[] tablePrefix;
-    /**
-     * 字段前缀
-     */
+    /** 字段前缀 */
     @Setter(AccessLevel.NONE)
     private String[] fieldPrefix;
+
+
     /**
      * 自定义继承的Entity类全称，带包名
      */

@@ -29,7 +29,7 @@ export default {
         this.data = data
       })
       .catch(err => {
-        this.$notify({ title: '预览代码失败', type: 'error', message: err })
+        console.error('预览代码失败', err)
         this.$router.go(-1)
       })
   }
