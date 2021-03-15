@@ -68,18 +68,18 @@ public class CodeTableConfigServiceImpl extends ServiceImpl implements CodeTable
     }
 
     @Override
-    public boolean deleteBatchByIds(Collection<Serializable> ids) {
+    public boolean deleteBatchByIds(Collection<? extends Serializable> ids) {
         return dao.deleteBatchByIds(ids);
-    }
-
-    @Override
-    public Page<CodeTableConfigDto> pojoPageByQuery(CodeTableConfigQuery query, Pageable pageable) {
-        return dao.pojoPageByQuery(query, pageable, this::doToDto);
     }
 
     @Override
     public List<CodeTableConfigDto> pojoListByQuery(CodeTableConfigQuery query) {
         return dao.pojoListByQuery(query, this::doToDto);
+    }
+
+    @Override
+    public Page<CodeTableConfigDto> pojoPageByQuery(CodeTableConfigQuery query, Pageable pageable) {
+        return dao.pojoPageByQuery(query, pageable, this::doToDto);
     }
 
     @Override
@@ -98,7 +98,7 @@ public class CodeTableConfigServiceImpl extends ServiceImpl implements CodeTable
     }
 
     @Override
-    public void exportList(Collection<Serializable> ids, HttpServletResponse response) throws IOException {
+    public void exportList(Collection<? extends Serializable> ids, HttpServletResponse response) throws IOException {
         List<CodeTableConfigDto> list = dao.pojoListByIds(ids, this::doToDto);
         dao.exportDtoList(list, response);
     }

@@ -68,18 +68,18 @@ public class CodeGlobalConfigServiceImpl extends ServiceImpl implements CodeGlob
     }
 
     @Override
-    public boolean deleteBatchByIds(Collection<Serializable> ids) {
+    public boolean deleteBatchByIds(Collection<? extends Serializable> ids) {
         return dao.deleteBatchByIds(ids);
-    }
-
-    @Override
-    public Page<CodeGlobalConfigDto> pojoPageByQuery(CodeGlobalConfigQuery query, Pageable pageable) {
-        return dao.pojoPageByQuery(query, pageable, this::doToDto);
     }
 
     @Override
     public List<CodeGlobalConfigDto> pojoListByQuery(CodeGlobalConfigQuery query) {
         return dao.pojoListByQuery(query, this::doToDto);
+    }
+
+    @Override
+    public Page<CodeGlobalConfigDto> pojoPageByQuery(CodeGlobalConfigQuery query, Pageable pageable) {
+        return dao.pojoPageByQuery(query, pageable, this::doToDto);
     }
 
     @Override
@@ -98,7 +98,7 @@ public class CodeGlobalConfigServiceImpl extends ServiceImpl implements CodeGlob
     }
 
     @Override
-    public void exportList(Collection<Serializable> ids, HttpServletResponse response) throws IOException {
+    public void exportList(Collection<? extends Serializable> ids, HttpServletResponse response) throws IOException {
         List<CodeGlobalConfigDto> list = dao.pojoListByIds(ids, this::doToDto);
         dao.exportDtoList(list, response);
     }

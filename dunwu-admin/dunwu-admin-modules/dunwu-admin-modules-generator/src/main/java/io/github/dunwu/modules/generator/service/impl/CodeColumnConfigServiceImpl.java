@@ -5,12 +5,9 @@ import cn.hutool.core.collection.CollectionUtil;
 import io.github.dunwu.data.mybatis.ServiceImpl;
 import io.github.dunwu.modules.generator.dao.CodeColumnConfigDao;
 import io.github.dunwu.modules.generator.entity.CodeColumnConfig;
-import io.github.dunwu.modules.generator.entity.CodeColumnConfig;
 import io.github.dunwu.modules.generator.entity.dto.CodeColumnConfigDto;
 import io.github.dunwu.modules.generator.entity.query.CodeColumnConfigQuery;
 import io.github.dunwu.modules.generator.service.CodeColumnConfigService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -30,12 +27,14 @@ import javax.servlet.http.HttpServletResponse;
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
  * @since 2021-03-02
  */
-@Slf4j
 @Service
-@RequiredArgsConstructor
 public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColumnConfigService {
 
     private final CodeColumnConfigDao dao;
+
+    public CodeColumnConfigServiceImpl(CodeColumnConfigDao dao) {
+        this.dao = dao;
+    }
 
     @Override
     public boolean insert(CodeColumnConfig entity) {
@@ -73,13 +72,8 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
     }
 
     @Override
-    public boolean deleteBatchByIds(Collection<Serializable> ids) {
+    public boolean deleteBatchByIds(Collection<? extends Serializable> ids) {
         return dao.deleteBatchByIds(ids);
-    }
-
-    @Override
-    public Page<CodeColumnConfigDto> pojoPageByQuery(CodeColumnConfigQuery query, Pageable pageable) {
-        return dao.pojoPageByQuery(query, pageable, this::doToDto);
     }
 
     @Override
@@ -92,6 +86,11 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
         return dtos.stream()
                    .sorted(Comparator.comparing(CodeColumnConfigDto::getId))
                    .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<CodeColumnConfigDto> pojoPageByQuery(CodeColumnConfigQuery query, Pageable pageable) {
+        return dao.pojoPageByQuery(query, pageable, this::doToDto);
     }
 
     @Override
@@ -110,13 +109,14 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
     }
 
     @Override
-    public void exportList(Collection<Serializable> ids, HttpServletResponse response) throws IOException {
+    public void exportList(Collection<? extends Serializable> ids, HttpServletResponse response) throws IOException {
         List<CodeColumnConfigDto> list = dao.pojoListByIds(ids, this::doToDto);
         dao.exportDtoList(list, response);
     }
 
     @Override
-    public void exportPage(CodeColumnConfigQuery query, Pageable pageable, HttpServletResponse response) throws IOException {
+    public void exportPage(CodeColumnConfigQuery query, Pageable pageable, HttpServletResponse response)
+        throws IOException {
         Page<CodeColumnConfigDto> page = dao.pojoPageByQuery(query, pageable, this::doToDto);
         dao.exportDtoList(page.getContent(), response);
     }

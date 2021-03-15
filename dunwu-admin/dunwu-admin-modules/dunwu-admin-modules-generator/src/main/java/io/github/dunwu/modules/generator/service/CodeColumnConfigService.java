@@ -84,24 +84,24 @@ public interface CodeColumnConfigService extends IService {
      * @param ids {@link CodeColumnConfig} 主键列表
      * @return true / false
      */
-    boolean deleteBatchByIds(Collection<Serializable> ids);
+    boolean deleteBatchByIds(Collection<? extends Serializable> ids);
 
     /**
-     * 根据 query 和 pageable 分页查询 {@link CodeColumnConfigDto}
+     * 根据 {@link CodeColumnConfigQuery} 查询 {@link CodeColumnConfigDto} 列表
      *
-     * @param query    查询条件，根据 query 中的 {@link QueryField} 注解自动组装查询条件
+     * @param query 查询条件，根据 CodeColumnConfigQuery 中的 {@link QueryField} 注解自动组装查询条件
+     * @return {@link List<CodeColumnConfigDto>}
+     */
+    List<CodeColumnConfigDto> pojoListByQuery(CodeColumnConfigQuery query);
+
+    /**
+     * 根据 {@link CodeColumnConfigQuery} 和 {@link Pageable} 分页查询 {@link CodeColumnConfigDto} 列表
+     *
+     * @param query    查询条件，根据 CodeColumnConfigQuery 中的 {@link QueryField} 注解自动组装查询条件
      * @param pageable 分页查询条件
      * @return {@link Page<CodeColumnConfigDto>}
      */
     Page<CodeColumnConfigDto> pojoPageByQuery(CodeColumnConfigQuery query, Pageable pageable);
-
-    /**
-     * 根据 query 查询 {@link CodeColumnConfigDto} 列表
-     *
-     * @param query 查询条件，根据 query 中的 {@link QueryField} 注解自动组装查询条件
-     * @return {@link List<CodeColumnConfigDto>}
-     */
-    List<CodeColumnConfigDto> pojoListByQuery(CodeColumnConfigQuery query);
 
     /**
      * 根据 id 查询 {@link CodeColumnConfigDto}
@@ -112,17 +112,17 @@ public interface CodeColumnConfigService extends IService {
     CodeColumnConfigDto pojoById(Serializable id);
 
     /**
-     * 根据 query 查询 {@link CodeColumnConfigDto}
+     * 根据 {@link CodeColumnConfigQuery} 查询 {@link CodeColumnConfigDto} 列表
      *
-     * @param query 查询条件，根据 query 中的 {@link QueryField} 注解自动组装查询条件
+     * @param query 查询条件，根据 CodeColumnConfigQuery 中的 {@link QueryField} 注解自动组装查询条件
      * @return {@link List<CodeColumnConfigDto>}
      */
     CodeColumnConfigDto pojoByQuery(CodeColumnConfigQuery query);
 
     /**
-     * 根据 query 查询满足条件的记录数
+     * 根据 {@link CodeColumnConfigQuery} 查询匹配条件的记录数
      *
-     * @param query 查询条件，根据 query 中的 {@link QueryField} 注解自动组装查询条件
+     * @param query 查询条件，根据 CodeColumnConfigQuery 中的 {@link QueryField} 注解自动组装查询条件
      * @return {@link Integer}
      */
     Integer countByQuery(CodeColumnConfigQuery query);
@@ -134,12 +134,12 @@ public interface CodeColumnConfigService extends IService {
      * @param response {@link HttpServletResponse} 实体
      * @throws IOException /
      */
-    void exportList(Collection<Serializable> ids, HttpServletResponse response) throws IOException;
+    void exportList(Collection<? extends Serializable> ids, HttpServletResponse response) throws IOException;
 
     /**
-     * 根据 query 和 pageable 查询 {@link CodeColumnConfigDto} 列表，并导出 excel 表单
+     * 根据 {@link CodeColumnConfigQuery} 和 {@link Pageable} 分页查询 {@link CodeColumnConfigDto} 列表，并导出 excel 表单
      *
-     * @param query    查询条件，根据 query 中的 {@link QueryField} 注解自动组装查询条件
+     * @param query    查询条件，根据 CodeColumnConfigQuery 中的 {@link QueryField} 注解自动组装查询条件
      * @param pageable 分页查询条件
      * @param response {@link HttpServletResponse} 实体
      * @throws IOException /
@@ -147,7 +147,7 @@ public interface CodeColumnConfigService extends IService {
     void exportPage(CodeColumnConfigQuery query, Pageable pageable, HttpServletResponse response) throws IOException;
 
     /**
-     * {@link CodeColumnConfig} 转为 {@link CodeColumnConfigDto}
+     * 将 {@link CodeColumnConfig} 转为 {@link CodeColumnConfigDto}
      *
      * @param model 数据实体
      * @return /
@@ -155,7 +155,7 @@ public interface CodeColumnConfigService extends IService {
     CodeColumnConfigDto doToDto(CodeColumnConfig model);
 
     /**
-     * {@link CodeColumnConfigDto} 转为 {@link CodeColumnConfig}
+     * 将 {@link CodeColumnConfigDto} 转为 {@link CodeColumnConfig}
      *
      * @param dto Dto 实体
      * @return /

@@ -84,24 +84,24 @@ public interface CodeGlobalConfigService extends IService {
      * @param ids {@link CodeGlobalConfig} 主键列表
      * @return true / false
      */
-    boolean deleteBatchByIds(Collection<Serializable> ids);
+    boolean deleteBatchByIds(Collection<? extends Serializable> ids);
 
     /**
-     * 根据 query 和 pageable 分页查询 {@link CodeGlobalConfigDto}
+     * 根据 {@link CodeGlobalConfigQuery} 查询 {@link CodeGlobalConfigDto} 列表
+     *
+     * @param query 查询条件，根据 CodeGlobalConfigQuery 中的 {@link QueryField} 注解自动组装查询条件
+     * @return {@link List<CodeGlobalConfigDto>}
+     */
+    List<CodeGlobalConfigDto> pojoListByQuery(CodeGlobalConfigQuery query);
+
+    /**
+     * 根据 {@link CodeGlobalConfigQuery} 和 {@link Pageable} 分页查询 {@link CodeGlobalConfigDto} 列表
      *
      * @param query    查询条件，根据 CodeGlobalConfigQuery 中的 {@link QueryField} 注解自动组装查询条件
      * @param pageable 分页查询条件
      * @return {@link Page<CodeGlobalConfigDto>}
      */
     Page<CodeGlobalConfigDto> pojoPageByQuery(CodeGlobalConfigQuery query, Pageable pageable);
-
-    /**
-     * 根据 query 查询 {@link CodeGlobalConfigDto} 列表
-     *
-     * @param query 查询条件，根据 CodeGlobalConfigQuery 中的 {@link QueryField} 注解自动组装查询条件
-     * @return {@link List<CodeGlobalConfigDto>}
-     */
-    List<CodeGlobalConfigDto> pojoListByQuery(CodeGlobalConfigQuery query);
 
     /**
      * 根据 id 查询 {@link CodeGlobalConfigDto}
@@ -112,7 +112,7 @@ public interface CodeGlobalConfigService extends IService {
     CodeGlobalConfigDto pojoById(Serializable id);
 
     /**
-     * 根据 query 查询 {@link CodeGlobalConfigDto}
+     * 根据 {@link CodeGlobalConfigQuery} 查询 {@link CodeGlobalConfigDto} 列表
      *
      * @param query 查询条件，根据 CodeGlobalConfigQuery 中的 {@link QueryField} 注解自动组装查询条件
      * @return {@link List<CodeGlobalConfigDto>}
@@ -120,7 +120,7 @@ public interface CodeGlobalConfigService extends IService {
     CodeGlobalConfigDto pojoByQuery(CodeGlobalConfigQuery query);
 
     /**
-     * 根据 query 查询满足条件的记录数
+     * 根据 {@link CodeGlobalConfigQuery} 查询匹配条件的记录数
      *
      * @param query 查询条件，根据 CodeGlobalConfigQuery 中的 {@link QueryField} 注解自动组装查询条件
      * @return {@link Integer}
@@ -134,10 +134,10 @@ public interface CodeGlobalConfigService extends IService {
      * @param response {@link HttpServletResponse} 实体
      * @throws IOException /
      */
-    void exportList(Collection<Serializable> ids, HttpServletResponse response) throws IOException;
+    void exportList(Collection<? extends Serializable> ids, HttpServletResponse response) throws IOException;
 
     /**
-     * 根据 query 和 pageable 查询 {@link CodeGlobalConfigDto} 列表，并导出 excel 表单
+     * 根据 {@link CodeGlobalConfigQuery} 和 {@link Pageable} 分页查询 {@link CodeGlobalConfigDto} 列表，并导出 excel 表单
      *
      * @param query    查询条件，根据 CodeGlobalConfigQuery 中的 {@link QueryField} 注解自动组装查询条件
      * @param pageable 分页查询条件
@@ -147,7 +147,7 @@ public interface CodeGlobalConfigService extends IService {
     void exportPage(CodeGlobalConfigQuery query, Pageable pageable, HttpServletResponse response) throws IOException;
 
     /**
-     * {@link CodeGlobalConfig} 转为 {@link CodeGlobalConfigDto}
+     * 将 {@link CodeGlobalConfig} 转为 {@link CodeGlobalConfigDto}
      *
      * @param model 数据实体
      * @return /
@@ -155,7 +155,7 @@ public interface CodeGlobalConfigService extends IService {
     CodeGlobalConfigDto doToDto(CodeGlobalConfig model);
 
     /**
-     * {@link CodeGlobalConfigDto} 转为 {@link CodeGlobalConfig}
+     * 将 {@link CodeGlobalConfigDto} 转为 {@link CodeGlobalConfig}
      *
      * @param dto Dto 实体
      * @return /

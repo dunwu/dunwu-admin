@@ -26,6 +26,10 @@ public class CodeGlobalConfigQuery implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @ApiModelProperty(value = "ID")
+    @QueryField
+    private Long id;
+
     @ApiModelProperty(value = "开启权限校验")
     @QueryField
     private Boolean enablePermission;

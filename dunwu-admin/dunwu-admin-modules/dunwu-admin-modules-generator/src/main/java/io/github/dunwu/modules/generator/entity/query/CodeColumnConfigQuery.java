@@ -26,8 +26,13 @@ public class CodeColumnConfigQuery implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "数据库ID")
-    private Long dbId;
+    @ApiModelProperty(value = "ID")
+    @QueryField
+    private Long id;
+
+    @ApiModelProperty(value = "所属表的ID")
+    @QueryField
+    private Long tableId;
 
     @ApiModelProperty(value = "Schema名称")
     @QueryField
@@ -121,7 +126,7 @@ public class CodeColumnConfigQuery implements Serializable {
     @QueryField
     private String dictName;
 
-    @ApiModelProperty(value = "@TableField 填充属性")
+    @ApiModelProperty(value = "@TableField填充属性")
     @QueryField
     private String fill;
 

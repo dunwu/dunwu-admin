@@ -27,7 +27,7 @@ public class CodeColumnConfigDto implements Serializable {
     @ApiModelProperty(value = "ID")
     private Long id;
 
-    @ApiModelProperty(value = "Table ID")
+    @ApiModelProperty(value = "所属表的ID")
     private Long tableId;
 
     @ApiModelProperty(value = "Schema名称")
@@ -99,7 +99,7 @@ public class CodeColumnConfigDto implements Serializable {
     @ApiModelProperty(value = "字典名称")
     private String dictName;
 
-    @ApiModelProperty(value = "@TableField 填充属性")
+    @ApiModelProperty(value = "@TableField填充属性")
     private String fill;
 
     @ApiModelProperty(value = "扩展属性")

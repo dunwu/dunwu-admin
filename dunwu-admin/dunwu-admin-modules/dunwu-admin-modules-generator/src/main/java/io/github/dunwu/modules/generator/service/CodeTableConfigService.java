@@ -84,24 +84,24 @@ public interface CodeTableConfigService extends IService {
      * @param ids {@link CodeTableConfig} 主键列表
      * @return true / false
      */
-    boolean deleteBatchByIds(Collection<Serializable> ids);
+    boolean deleteBatchByIds(Collection<? extends Serializable> ids);
 
     /**
-     * 根据 query 和 pageable 分页查询 {@link CodeTableConfigDto}
+     * 根据 {@link CodeTableConfigQuery} 查询 {@link CodeTableConfigDto} 列表
+     *
+     * @param query 查询条件，根据 CodeTableConfigQuery 中的 {@link QueryField} 注解自动组装查询条件
+     * @return {@link List<CodeTableConfigDto>}
+     */
+    List<CodeTableConfigDto> pojoListByQuery(CodeTableConfigQuery query);
+
+    /**
+     * 根据 {@link CodeTableConfigQuery} 和 {@link Pageable} 分页查询 {@link CodeTableConfigDto} 列表
      *
      * @param query    查询条件，根据 CodeTableConfigQuery 中的 {@link QueryField} 注解自动组装查询条件
      * @param pageable 分页查询条件
      * @return {@link Page<CodeTableConfigDto>}
      */
     Page<CodeTableConfigDto> pojoPageByQuery(CodeTableConfigQuery query, Pageable pageable);
-
-    /**
-     * 根据 query 查询 {@link CodeTableConfigDto} 列表
-     *
-     * @param query 查询条件，根据 CodeTableConfigQuery 中的 {@link QueryField} 注解自动组装查询条件
-     * @return {@link List<CodeTableConfigDto>}
-     */
-    List<CodeTableConfigDto> pojoListByQuery(CodeTableConfigQuery query);
 
     /**
      * 根据 id 查询 {@link CodeTableConfigDto}
@@ -112,7 +112,7 @@ public interface CodeTableConfigService extends IService {
     CodeTableConfigDto pojoById(Serializable id);
 
     /**
-     * 根据 query 查询 {@link CodeTableConfigDto}
+     * 根据 {@link CodeTableConfigQuery} 查询 {@link CodeTableConfigDto} 列表
      *
      * @param query 查询条件，根据 CodeTableConfigQuery 中的 {@link QueryField} 注解自动组装查询条件
      * @return {@link List<CodeTableConfigDto>}
@@ -120,7 +120,7 @@ public interface CodeTableConfigService extends IService {
     CodeTableConfigDto pojoByQuery(CodeTableConfigQuery query);
 
     /**
-     * 根据 query 查询满足条件的记录数
+     * 根据 {@link CodeTableConfigQuery} 查询匹配条件的记录数
      *
      * @param query 查询条件，根据 CodeTableConfigQuery 中的 {@link QueryField} 注解自动组装查询条件
      * @return {@link Integer}
@@ -134,10 +134,10 @@ public interface CodeTableConfigService extends IService {
      * @param response {@link HttpServletResponse} 实体
      * @throws IOException /
      */
-    void exportList(Collection<Serializable> ids, HttpServletResponse response) throws IOException;
+    void exportList(Collection<? extends Serializable> ids, HttpServletResponse response) throws IOException;
 
     /**
-     * 根据 query 和 pageable 查询 {@link CodeTableConfigDto} 列表，并导出 excel 表单
+     * 根据 {@link CodeTableConfigQuery} 和 {@link Pageable} 分页查询 {@link CodeTableConfigDto} 列表，并导出 excel 表单
      *
      * @param query    查询条件，根据 CodeTableConfigQuery 中的 {@link QueryField} 注解自动组装查询条件
      * @param pageable 分页查询条件
@@ -147,7 +147,7 @@ public interface CodeTableConfigService extends IService {
     void exportPage(CodeTableConfigQuery query, Pageable pageable, HttpServletResponse response) throws IOException;
 
     /**
-     * {@link CodeTableConfig} 转为 {@link CodeTableConfigDto}
+     * 将 {@link CodeTableConfig} 转为 {@link CodeTableConfigDto}
      *
      * @param model 数据实体
      * @return /
@@ -155,7 +155,7 @@ public interface CodeTableConfigService extends IService {
     CodeTableConfigDto doToDto(CodeTableConfig model);
 
     /**
-     * {@link CodeTableConfigDto} 转为 {@link CodeTableConfig}
+     * 将 {@link CodeTableConfigDto} 转为 {@link CodeTableConfig}
      *
      * @param dto Dto 实体
      * @return /

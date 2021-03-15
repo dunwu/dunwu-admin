@@ -3,6 +3,7 @@ package io.github.dunwu.modules.generator.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.github.dunwu.data.validator.annotation.EditCheck;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -11,6 +12,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import javax.validation.constraints.NotNull;
 
 /**
  * 代码生成-字段级别配置
@@ -27,10 +29,11 @@ public class CodeColumnConfig implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "ID")
+    @NotNull(groups = EditCheck.class)
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    @ApiModelProperty(value = "Table ID")
+    @ApiModelProperty(value = "所属表的ID")
     private Long tableId;
 
     @ApiModelProperty(value = "Schema名称")
@@ -102,7 +105,7 @@ public class CodeColumnConfig implements Serializable {
     @ApiModelProperty(value = "字典名称")
     private String dictName;
 
-    @ApiModelProperty(value = "@TableField 填充属性")
+    @ApiModelProperty(value = "@TableField填充属性")
     private String fill;
 
     @ApiModelProperty(value = "扩展属性")
