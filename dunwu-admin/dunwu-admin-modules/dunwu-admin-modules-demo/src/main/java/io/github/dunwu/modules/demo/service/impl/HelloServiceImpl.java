@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
  * 测试 Service 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-03-10
+ * @since 2021-03-15
  */
 @Service
 public class HelloServiceImpl extends ServiceImpl implements HelloService {
@@ -33,12 +33,12 @@ public class HelloServiceImpl extends ServiceImpl implements HelloService {
     }
 
     @Override
-    public boolean save(Hello entity) {
+    public boolean insert(Hello entity) {
         return dao.insert(entity);
     }
 
     @Override
-    public boolean saveBatch(Collection<Hello> list) {
+    public boolean insertBatch(Collection<Hello> list) {
         return dao.insertBatch(list);
     }
 
@@ -53,12 +53,22 @@ public class HelloServiceImpl extends ServiceImpl implements HelloService {
     }
 
     @Override
-    public boolean removeById(Serializable id) {
+    public boolean save(Hello entity) {
+        return dao.save(entity);
+    }
+
+    @Override
+    public boolean saveBatch(Collection<Hello> list) {
+        return dao.saveBatch(list);
+    }
+
+    @Override
+    public boolean deleteById(Serializable id) {
         return dao.deleteById(id);
     }
 
     @Override
-    public boolean removeByIds(Collection<? extends Serializable> ids) {
+    public boolean deleteBatchByIds(Collection<? extends Serializable> ids) {
         return dao.deleteBatchByIds(ids);
     }
 

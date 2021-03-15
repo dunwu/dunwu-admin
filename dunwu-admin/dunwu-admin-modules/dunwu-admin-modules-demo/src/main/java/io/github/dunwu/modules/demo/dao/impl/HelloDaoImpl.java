@@ -29,6 +29,7 @@ public class HelloDaoImpl extends BaseExtDaoImpl<HelloMapper, Hello> implements 
             map.put("ID", item.getId());
             map.put("名字", item.getName());
             map.put("年龄", item.getAge());
+            map.put("头像", item.getAvatar());
             map.put("创建时间", item.getCreateTime());
             mapList.add(map);
         }

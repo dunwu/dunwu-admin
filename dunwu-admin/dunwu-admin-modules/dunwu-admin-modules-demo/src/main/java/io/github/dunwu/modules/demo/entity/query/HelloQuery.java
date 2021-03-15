@@ -38,6 +38,10 @@ public class HelloQuery implements Serializable {
     @QueryField
     private Integer age;
 
+    @ApiModelProperty(value = "头像")
+    @QueryField
+    private String avatar;
+
     @ApiModelProperty(value = "创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @QueryField

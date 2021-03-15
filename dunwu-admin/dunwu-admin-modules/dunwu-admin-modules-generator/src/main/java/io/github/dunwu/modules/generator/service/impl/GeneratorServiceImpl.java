@@ -33,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.io.File;
@@ -114,6 +115,7 @@ public class GeneratorServiceImpl implements GeneratorService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean saveColumnConfigList(TableColumnInfoDto entity) {
         if (entity == null || CollectionUtil.isEmpty(entity.getColumns())) {
             throw new IllegalArgumentException("列信息为空");
@@ -123,11 +125,23 @@ public class GeneratorServiceImpl implements GeneratorService {
         CodeTableConfigDto tableConfigDto = queryAndCheckTableConfig(entity.getSchemaName(), entity.getTableName(),
             entity.getCreateBy());
 
-        // 创建构造器
-        ConfigBuilder builder = createConfigBuilder(tableConfigDto);
+        // 查询列级别配置
+        CodeColumnConfigQuery columnQuery = new CodeColumnConfigQuery();
+        columnQuery.setSchemaName(entity.getSchemaName())
+                   .setTableName(entity.getTableName())
+                   .setCreateBy(entity.getCreateBy());
+        List<CodeColumnConfigDto> columns = columnConfigService.pojoListByQuery(columnQuery);
+        if (CollectionUtil.isNotEmpty(columns)) {
+            tableConfigDto.setColumns(columns);
+            Set<Long> ids = columns.stream().map(CodeColumnConfigDto::getId).collect(Collectors.toSet());
+            columnConfigService.deleteBatchByIds(ids);
 
-        // 根据表级配置创建构造器
-        checkTableChanged(tableConfigDto, builder);
+            // 创建构造器
+            ConfigBuilder builder = createConfigBuilder(tableConfigDto);
+
+            // 根据表级配置创建构造器
+            checkTableChanged(tableConfigDto, builder);
+        }
 
         return columnConfigService.saveBatch(entity.getColumns());
     }
@@ -553,7 +567,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 
         // 检查列级配置
         CodeColumnConfigQuery columnQuery = new CodeColumnConfigQuery();
-        columnQuery.setTableName(schemaName)
+        columnQuery.setSchemaName(schemaName)
                    .setTableName(tableName)
                    .setCreateBy(createBy);
         List<CodeColumnConfigDto> columns = columnConfigService.pojoListByQuery(columnQuery);

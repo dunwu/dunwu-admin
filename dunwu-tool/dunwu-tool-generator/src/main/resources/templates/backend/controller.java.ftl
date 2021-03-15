@@ -60,8 +60,7 @@ public class ${table.controllerName} {
     </#if>
     @PostMapping("add")
     public Result add(@Validated(AddCheck.class) @RequestBody ${entity} entity) {
-        service.save(entity);
-        return Result.ok();
+        return Result.ok(service.insert(entity));
     }
 
     <#if enableSwagger>
@@ -71,8 +70,7 @@ public class ${table.controllerName} {
     </#if>
     @PostMapping("add/batch")
     public Result addBatch(@Validated(AddCheck.class) @RequestBody Collection<${entity}> list) {
-        service.saveBatch(list);
-        return Result.ok();
+        return Result.ok(service.insertBatch(list));
     }
 
     <#if enableSwagger>
@@ -82,8 +80,7 @@ public class ${table.controllerName} {
     </#if>
     @PostMapping("edit")
     public Result edit(@Validated(EditCheck.class) @RequestBody ${entity} entity) {
-        service.updateById(entity);
-        return Result.ok();
+        return Result.ok(service.updateById(entity));
     }
 
     <#if enableSwagger>
@@ -93,8 +90,7 @@ public class ${table.controllerName} {
     </#if>
     @PostMapping("edit/batch")
     public Result editBatch(@Validated(EditCheck.class) @RequestBody Collection<${entity}> list) {
-        service.updateBatchById(list);
-        return Result.ok();
+        return Result.ok(service.updateBatchById(list));
     }
 
     <#if enableSwagger>
@@ -104,8 +100,7 @@ public class ${table.controllerName} {
     </#if>
     @PostMapping("del/{id}")
     public Result deleteById(@PathVariable Serializable id) {
-        service.removeById(id);
-        return Result.ok();
+        return Result.ok(service.deleteById(id));
     }
 
     <#if enableSwagger>
@@ -114,9 +109,8 @@ public class ${table.controllerName} {
     /** 根据 ID 列表批量删除 {@link ${entity}} 记录 */
     </#if>
     @PostMapping("del/batch")
-    public Result deleteByIds(@RequestBody Collection<Serializable> ids) {
-        service.removeByIds(ids);
-        return Result.ok();
+    public Result deleteBatchByIds(@RequestBody Collection<? extends Serializable> ids) {
+        return Result.ok(service.deleteBatchByIds(ids));
     }
 
     <#if enableSwagger>
@@ -165,7 +159,7 @@ public class ${table.controllerName} {
     /** 根据 id 列表查询 {@link ${table.dtoName}} 列表，并导出 excel 表单 */
     </#if>
     @PostMapping("export/list")
-    public void exportList(@RequestBody Collection<Serializable> ids, HttpServletResponse response)
+    public void exportList(@RequestBody Collection<? extends Serializable> ids, HttpServletResponse response)
         throws IOException {
         service.exportList(ids, response);
     }

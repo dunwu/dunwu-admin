@@ -99,14 +99,22 @@
       <el-table-column type="selection" width="55" />
   <#list table.fields as field>
     <#if field.enableList>
-      <#if (field.dictName)?? && (field.dictName)!="">
-      <el-table-column prop="${field.propertyName}" label="<#if field.labelName??>${field.labelName}<#else>${field.propertyName}</#if>"<#if field.enableSort> :sortable="'custom'"</#if>>
+      <#if (field.listType)?? && field.listType=="Image">
+      <el-table-column prop="${field.propertyName}" label="<#if field.labelName??>${field.labelName}<#else>${field.propertyName}</#if>">
         <template slot-scope="scope">
-          {{ dict.label.${field.dictName}[scope.row.${field.propertyName}] }}
+          <el-image style="width: 50px; height: 50px" :src="scope.row.${field.propertyName}" :fit="fill"></el-image>
         </template>
       </el-table-column>
       <#else>
+        <#if (field.dictName)?? && (field.dictName)!="">
+      <el-table-column prop="${field.propertyName}" label="<#if field.labelName??>${field.labelName}<#else>${field.propertyName}</#if>"<#if field.enableSort> :sortable="'custom'"</#if>>
+                <template slot-scope="scope">
+                    {{ dict.label.${field.dictName}[scope.row.${field.propertyName}] }}
+                </template>
+            </el-table-column>
+        <#else>
       <el-table-column prop="${field.propertyName}" label="<#if field.labelName??>${field.labelName}<#else>${field.propertyName}</#if>"<#if field.enableSort> :sortable="'custom'"</#if> />
+        </#if>
       </#if>
     </#if>
   </#list>

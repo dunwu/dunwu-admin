@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  * 测试 Service 接口
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-03-10
+ * @since 2021-03-15
  */
 public interface HelloService extends IService {
 
@@ -28,7 +28,7 @@ public interface HelloService extends IService {
      * @param entity {@link Hello} 数据实体
      * @return true / false
      */
-    boolean save(Hello entity);
+    boolean insert(Hello entity);
 
     /**
      * 批量添加 {@link Hello} 记录
@@ -36,7 +36,7 @@ public interface HelloService extends IService {
      * @param list {@link Hello} 数据实体列表
      * @return true / false
      */
-    boolean saveBatch(Collection<Hello> list);
+    boolean insertBatch(Collection<Hello> list);
 
     /**
      * 根据 ID 更新一条 {@link Hello} 记录
@@ -55,12 +55,28 @@ public interface HelloService extends IService {
     boolean updateBatchById(Collection<Hello> list);
 
     /**
+     * 添加或更新一条 {@link Hello} 记录
+     *
+     * @param entity {@link Hello} 数据实体
+     * @return true / false
+     */
+    boolean save(Hello entity);
+
+    /**
+     * 批量添加或更新 {@link Hello} 记录
+     *
+     * @param list {@link Hello} 数据实体列表
+     * @return true / false
+     */
+    boolean saveBatch(Collection<Hello> list);
+
+    /**
      * 根据 ID 删除一条 {@link Hello} 记录
      *
      * @param id {@link Hello} 主键
      * @return true / false
      */
-    boolean removeById(Serializable id);
+    boolean deleteById(Serializable id);
 
     /**
      * 根据 ID 列表批量删除 {@link Hello} 记录
@@ -68,7 +84,7 @@ public interface HelloService extends IService {
      * @param ids {@link Hello} 主键列表
      * @return true / false
      */
-    boolean removeByIds(Collection<? extends Serializable> ids);
+    boolean deleteBatchByIds(Collection<? extends Serializable> ids);
 
     /**
      * 根据 {@link HelloQuery} 查询 {@link HelloDto} 列表

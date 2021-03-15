@@ -1117,6 +1117,7 @@ CREATE TABLE `hello` (
     `id`          BIGINT(20)   NOT NULL AUTO_INCREMENT COMMENT 'ID',
     `name`        VARCHAR(255) NOT NULL COMMENT '名字',
     `age`         SMALLINT(3)  NOT NULL COMMENT '年龄',
+    `avatar`        VARCHAR(255) NOT NULL COMMENT '头像',
     `create_time` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     PRIMARY KEY (`id`) USING BTREE,
     UNIQUE KEY `uk_name`(`name`) USING BTREE
