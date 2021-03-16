@@ -112,11 +112,11 @@
       <el-form-item label="模块名称" prop="moduleName">
         <el-input v-model="form.moduleName" style="width: 40%" />
       </el-form-item>
-      <el-form-item label="表前缀" prop="tablePrefix">
-        <el-input v-model="form.tablePrefix" style="width: 40%" />
-      </el-form-item>
       <el-form-item label="REST接口根路径" prop="apiBaseUrl">
         <el-input v-model="form.apiBaseUrl" style="width: 40%" />
+      </el-form-item>
+      <el-form-item label="表前缀" prop="tablePrefix">
+        <el-input v-model="form.tablePrefix" style="width: 40%" />
       </el-form-item>
     </el-form>
   </el-card>
