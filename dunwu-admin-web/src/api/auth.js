@@ -42,7 +42,7 @@ export function getCodeImg() {
  */
 export function editCenter(data) {
   return request({
-    url: 'api/auth/edit/center',
+    url: 'auth/edit/center',
     method: 'post',
     data
   })
@@ -55,7 +55,7 @@ export function editCenter(data) {
  */
 export function editPassword(data) {
   return request({
-    url: 'api/auth/edit/password',
+    url: 'auth/edit/password',
     method: 'post',
     data: {
       oldPass: encrypt(data.oldPass),
@@ -71,7 +71,7 @@ export function editPassword(data) {
  */
 export function editEmail(data) {
   return request({
-    url: 'api/auth/edit/email/' + data.code,
+    url: 'auth/edit/email/' + data.code,
     method: 'post',
     data: {
       password: encrypt(data.pass),
@@ -87,7 +87,7 @@ export function editEmail(data) {
  */
 export function resetEmail(data) {
   return request({
-    url: 'api/auth/code/resetEmail?email=' + data,
+    url: 'auth/code/resetEmail?email=' + data,
     method: 'post'
   })
 }

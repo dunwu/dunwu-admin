@@ -168,7 +168,7 @@ export default {
   cruds() {
     return CRUD({
       title: '部门',
-      url: 'api/sys/dept',
+      url: 'sys/dept',
       tableType: 'tree',
       crudMethod: { ...deptApi }
     })

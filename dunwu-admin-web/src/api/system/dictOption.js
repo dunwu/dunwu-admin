@@ -7,7 +7,7 @@ import request from '@/utils/request'
  */
 export function add(data) {
   return request({
-    url: 'api/sys/dict/option/add',
+    url: 'sys/dict/option/add',
     method: 'post',
     data
   })
@@ -20,7 +20,7 @@ export function add(data) {
  */
 export function delBatch(ids) {
   return request({
-    url: 'api/sys/dict/option/del/batch',
+    url: 'sys/dict/option/del/batch',
     method: 'post',
     data: ids
   })
@@ -33,7 +33,7 @@ export function delBatch(ids) {
  */
 export function edit(data) {
   return request({
-    url: 'api/sys/dict/option/edit',
+    url: 'sys/dict/option/edit',
     method: 'post',
     data
   })
@@ -46,7 +46,7 @@ export function edit(data) {
  */
 export function list(params) {
   return request({
-    url: 'api/sys/dict/option/list',
+    url: 'sys/dict/option/list',
     method: 'get',
     params
   })
@@ -59,7 +59,7 @@ export function list(params) {
  */
 export function page(params) {
   return request({
-    url: 'api/sys/dict/option/page',
+    url: 'sys/dict/option/page',
     method: 'get',
     params
   })
@@ -72,7 +72,7 @@ export function get(dictName) {
     size: 9999
   }
   return request({
-    url: 'api/sys/dict/option',
+    url: 'sys/dict/option',
     method: 'get',
     params
   })

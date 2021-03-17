@@ -191,7 +191,7 @@ export default {
   name: 'DataBase',
   components: { eForm, Pagination, TableOperation, TableQueryOperation, TableColumnOperation, DateRangePicker },
   cruds() {
-    return CRUD({ title: '数据库', url: 'api/mnt/database', crudMethod: { ...databaseApi }})
+    return CRUD({ title: '数据库', url: 'mnt/database', crudMethod: { ...databaseApi }})
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   data() {

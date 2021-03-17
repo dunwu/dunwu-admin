@@ -74,7 +74,7 @@ export default {
   name: 'Server',
   components: { Pagination, TableOperation, TableQueryOperation, TableColumnOperation, DateRangePicker },
   cruds() {
-    return CRUD({ title: '服务器', url: 'api/serverDeploy', crudMethod: { ...crudServer }})
+    return CRUD({ title: '服务器', url: 'serverDeploy', crudMethod: { ...crudServer }})
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   data() {

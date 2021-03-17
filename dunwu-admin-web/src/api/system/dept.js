@@ -7,7 +7,7 @@ import request from '@/utils/request'
  */
 export function add(data) {
   return request({
-    url: 'api/sys/dept/add',
+    url: 'sys/dept/add',
     method: 'post',
     data
   })
@@ -20,7 +20,7 @@ export function add(data) {
  */
 export function delBatch(ids) {
   return request({
-    url: 'api/sys/dept/del/batch',
+    url: 'sys/dept/del/batch',
     method: 'post',
     data: ids
   })
@@ -33,7 +33,7 @@ export function delBatch(ids) {
  */
 export function edit(data) {
   return request({
-    url: 'api/sys/dept/edit',
+    url: 'sys/dept/edit',
     method: 'post',
     data
   })
@@ -46,7 +46,7 @@ export function edit(data) {
  */
 export function list(params) {
   return request({
-    url: 'api/sys/dept/list',
+    url: 'sys/dept/list',
     method: 'get',
     params
   })
@@ -59,7 +59,7 @@ export function list(params) {
  */
 export function page(params) {
   return request({
-    url: 'api/sys/dept/page',
+    url: 'sys/dept/page',
     method: 'get',
     params
   })
@@ -72,7 +72,7 @@ export function page(params) {
  */
 export function exportList(ids) {
   return request({
-    url: 'api/sys/dept/export/list',
+    url: 'sys/dept/export/list',
     method: 'post',
     responseType: 'blob',
     data: ids
@@ -86,7 +86,7 @@ export function exportList(ids) {
  */
 export function exportPage(params) {
   return request({
-    url: 'api/sys/dept/export/page',
+    url: 'sys/dept/export/page',
     method: 'get',
     responseType: 'blob',
     params
@@ -100,7 +100,7 @@ export function exportPage(params) {
  */
 export function treeList(params) {
   return request({
-    url: 'api/sys/dept/treeList',
+    url: 'sys/dept/treeList',
     method: 'get',
     params
   })
@@ -114,7 +114,7 @@ export function treeList(params) {
 export function superiorTreeList(idList) {
   const ids = idList.length || idList.length === 0 ? idList : Array.of(idList)
   return request({
-    url: 'api/sys/dept/superiorTreeList',
+    url: 'sys/dept/superiorTreeList',
     method: 'post',
     data: ids
   })

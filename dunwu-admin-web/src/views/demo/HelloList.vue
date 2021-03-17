@@ -122,7 +122,7 @@ export default {
   cruds() {
     return CRUD({
       title: '测试',
-      url: 'api/demo/hello',
+      url: 'demo/hello',
       sort: 'id,asc',
       crudMethod: { ...HelloApi }
     })

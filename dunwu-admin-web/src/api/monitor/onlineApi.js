@@ -7,7 +7,7 @@ import request from '@/utils/request'
  */
 export function delBatch(ids) {
   return request({
-    url: 'api/auth/online/del/batch',
+    url: 'auth/online/del/batch',
     method: 'post',
     data: ids
   })
@@ -20,7 +20,7 @@ export function delBatch(ids) {
  */
 export function page(params) {
   return request({
-    url: 'api/auth/online/page',
+    url: 'auth/online/page',
     method: 'get',
     params
   })
@@ -33,7 +33,7 @@ export function page(params) {
  */
 export function exportPage(params) {
   return request({
-    url: 'api/auth/online/export/page',
+    url: 'auth/online/export/page',
     method: 'get',
     responseType: 'blob',
     params

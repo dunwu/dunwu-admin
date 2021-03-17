@@ -7,7 +7,7 @@ import request from '@/utils/request'
  */
 export function add(data) {
   return request({
-    url: 'api/sys/menu/add',
+    url: 'sys/menu/add',
     method: 'post',
     data
   })
@@ -20,7 +20,7 @@ export function add(data) {
  */
 export function delBatch(ids) {
   return request({
-    url: 'api/sys/menu/del/batch',
+    url: 'sys/menu/del/batch',
     method: 'post',
     data: ids
   })
@@ -33,7 +33,7 @@ export function delBatch(ids) {
  */
 export function edit(data) {
   return request({
-    url: 'api/sys/menu/edit',
+    url: 'sys/menu/edit',
     method: 'post',
     data
   })
@@ -46,7 +46,7 @@ export function edit(data) {
  */
 export function list(params) {
   return request({
-    url: 'api/sys/menu/list',
+    url: 'sys/menu/list',
     method: 'get',
     params
   })
@@ -59,7 +59,7 @@ export function list(params) {
  */
 export function page(params) {
   return request({
-    url: 'api/sys/menu/page',
+    url: 'sys/menu/page',
     method: 'get',
     params
   })
@@ -72,7 +72,7 @@ export function page(params) {
  */
 export function exportList(ids) {
   return request({
-    url: 'api/sys/menu/export/list',
+    url: 'sys/menu/export/list',
     method: 'post',
     responseType: 'blob',
     data: ids
@@ -86,7 +86,7 @@ export function exportList(ids) {
  */
 export function exportPage(params) {
   return request({
-    url: 'api/sys/menu/export/page',
+    url: 'sys/menu/export/page',
     method: 'get',
     responseType: 'blob',
     params
@@ -99,7 +99,7 @@ export function exportPage(params) {
  */
 export function treeList(params) {
   return request({
-    url: 'api/sys/menu/treeList',
+    url: 'sys/menu/treeList',
     method: 'get',
     params
   })
@@ -112,7 +112,7 @@ export function treeList(params) {
 export function superiorTreeList(idList) {
   const ids = idList.length || idList.length === 0 ? idList : Array.of(idList)
   return request({
-    url: 'api/sys/menu/superiorTreeList',
+    url: 'sys/menu/superiorTreeList',
     method: 'post',
     data: ids
   })
@@ -120,14 +120,14 @@ export function superiorTreeList(idList) {
 
 export function childrenIds(id) {
   return request({
-    url: 'api/sys/menu/childrenIds?id=' + id,
+    url: 'sys/menu/childrenIds?id=' + id,
     method: 'get'
   })
 }
 
 export function buildMenus() {
   return request({
-    url: 'api/sys/menu/mine',
+    url: 'sys/menu/mine',
     method: 'get'
   })
 }

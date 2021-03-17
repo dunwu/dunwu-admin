@@ -7,7 +7,7 @@ import request from '@/utils/request'
  */
 export function add(data) {
   return request({
-    url: 'api/sys/dict/add',
+    url: 'sys/dict/add',
     method: 'post',
     data
   })
@@ -20,7 +20,7 @@ export function add(data) {
  */
 export function delBatch(ids) {
   return request({
-    url: 'api/sys/dict/del/batch',
+    url: 'sys/dict/del/batch',
     method: 'post',
     data: ids
   })
@@ -33,7 +33,7 @@ export function delBatch(ids) {
  */
 export function edit(data) {
   return request({
-    url: 'api/sys/dict/edit',
+    url: 'sys/dict/edit',
     method: 'post',
     data
   })
@@ -46,7 +46,7 @@ export function edit(data) {
  */
 export function list(params) {
   return request({
-    url: 'api/sys/dict/list',
+    url: 'sys/dict/list',
     method: 'get',
     params
   })
@@ -59,7 +59,7 @@ export function list(params) {
  */
 export function page(params) {
   return request({
-    url: 'api/sys/dict/page',
+    url: 'sys/dict/page',
     method: 'get',
     params
   })
@@ -72,7 +72,7 @@ export function page(params) {
  */
 export function exportList(ids) {
   return request({
-    url: 'api/sys/dict/export/list',
+    url: 'sys/dict/export/list',
     method: 'post',
     responseType: 'blob',
     data: ids
@@ -86,7 +86,7 @@ export function exportList(ids) {
  */
 export function exportPage(params) {
   return request({
-    url: 'api/sys/dict/export/page',
+    url: 'sys/dict/export/page',
     method: 'get',
     responseType: 'blob',
     params

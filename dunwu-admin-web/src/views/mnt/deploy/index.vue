@@ -121,7 +121,7 @@ export default {
   name: 'Deploy',
   components: { dForm, fForm, Pagination, TableOperation, TableQueryOperation, TableColumnOperation, DateRangePicker },
   cruds() {
-    return CRUD({ title: '部署', url: 'api/deploy', crudMethod: { ...crudDeploy }})
+    return CRUD({ title: '部署', url: 'deploy', crudMethod: { ...crudDeploy }})
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   data() {

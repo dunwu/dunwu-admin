@@ -115,7 +115,7 @@ export default {
   name: 'Dict',
   components: { TableOperation, Pagination, TableQueryOperation, TableColumnOperation, dictOption },
   cruds() {
-    return [CRUD({ title: '字典', url: 'api/sys/dict', crudMethod: { ...crudDict }})]
+    return [CRUD({ title: '字典', url: 'sys/dict', crudMethod: { ...crudDict }})]
   },
   mixins: [presenter(), header(), form(defaultForm)],
   data() {

@@ -86,7 +86,7 @@ export default {
     return [
       CRUD({
         title: '字典详情',
-        url: 'api/sys/dict/option',
+        url: 'sys/dict/option',
         query: { dictId: null },
         sort: ['id,desc'],
         crudMethod: { ...crudDictOption },

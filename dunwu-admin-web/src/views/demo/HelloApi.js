@@ -7,7 +7,7 @@ import request from '@/utils/request'
  */
 export function add(data) {
   return request({
-    url: 'api/demo/hello/add',
+    url: 'demo/hello/add',
     method: 'post',
     data
   })
@@ -20,7 +20,7 @@ export function add(data) {
  */
 export function delBatch(ids) {
   return request({
-    url: 'api/demo/hello/del/batch',
+    url: 'demo/hello/del/batch',
     method: 'post',
     data: ids
   })
@@ -33,7 +33,7 @@ export function delBatch(ids) {
  */
 export function edit(data) {
   return request({
-    url: 'api/demo/hello/edit',
+    url: 'demo/hello/edit',
     method: 'post',
     data
   })
@@ -46,7 +46,7 @@ export function edit(data) {
  */
 export function list(params) {
   return request({
-    url: 'api/demo/hello/list',
+    url: 'demo/hello/list',
     method: 'get',
     params
   })
@@ -59,7 +59,7 @@ export function list(params) {
  */
 export function page(params) {
   return request({
-    url: 'api/demo/hello/page',
+    url: 'demo/hello/page',
     method: 'get',
     params
   })
@@ -72,7 +72,7 @@ export function page(params) {
  */
 export function getById(id) {
   return request({
-    url: 'api/demo/hello/' + id,
+    url: 'demo/hello/' + id,
     method: 'get'
   })
 }
@@ -84,7 +84,7 @@ export function getById(id) {
  */
 export function exportList(ids) {
   return request({
-    url: 'api/demo/hello/export/list',
+    url: 'demo/hello/export/list',
     method: 'post',
     responseType: 'blob',
     data: ids
@@ -98,7 +98,7 @@ export function exportList(ids) {
  */
 export function exportPage(params) {
   return request({
-    url: 'api/demo/hello/export/page',
+    url: 'demo/hello/export/page',
     method: 'get',
     responseType: 'blob',
     params

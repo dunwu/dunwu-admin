@@ -214,7 +214,7 @@ export default {
   cruds() {
     return CRUD({
       title: '菜单',
-      url: 'api/sys/menu',
+      url: 'sys/menu',
       tableType: 'tree',
       crudMethod: { ...menuApi }
     })

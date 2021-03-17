@@ -7,7 +7,7 @@ import request from '@/utils/request'
  */
 export function add(data) {
   return request({
-    url: 'api/sys/user/add',
+    url: 'sys/user/add',
     method: 'post',
     data
   })
@@ -20,7 +20,7 @@ export function add(data) {
  */
 export function delBatch(ids) {
   return request({
-    url: 'api/sys/user/del/batch',
+    url: 'sys/user/del/batch',
     method: 'post',
     data: ids
   })
@@ -33,7 +33,7 @@ export function delBatch(ids) {
  */
 export function edit(data) {
   return request({
-    url: 'api/sys/user/edit',
+    url: 'sys/user/edit',
     method: 'post',
     data
   })
@@ -46,7 +46,7 @@ export function edit(data) {
  */
 export function list(params) {
   return request({
-    url: 'api/sys/user/list',
+    url: 'sys/user/list',
     method: 'get',
     params
   })
@@ -59,7 +59,7 @@ export function list(params) {
  */
 export function page(params) {
   return request({
-    url: 'api/sys/user/page',
+    url: 'sys/user/page',
     method: 'get',
     params
   })
@@ -72,7 +72,7 @@ export function page(params) {
  */
 export function exportList(ids) {
   return request({
-    url: 'api/sys/user/export/list',
+    url: 'sys/user/export/list',
     method: 'post',
     responseType: 'blob',
     data: ids
@@ -86,7 +86,7 @@ export function exportList(ids) {
  */
 export function exportPage(params) {
   return request({
-    url: 'api/sys/user/export/page',
+    url: 'sys/user/export/page',
     method: 'get',
     responseType: 'blob',
     params
@@ -100,21 +100,21 @@ export function exportPage(params) {
  */
 export function getById(id) {
   return request({
-    url: 'api/sys/user/' + id,
+    url: 'sys/user/' + id,
     method: 'get'
   })
 }
 
 export function getLevel() {
   return request({
-    url: 'api/sys/user/level',
+    url: 'sys/user/level',
     method: 'get'
   })
 }
 
 export function editMenu(data) {
   return request({
-    url: 'api/sys/user/menu',
+    url: 'sys/user/menu',
     method: 'put',
     data
   })

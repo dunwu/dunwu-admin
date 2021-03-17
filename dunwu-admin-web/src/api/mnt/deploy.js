@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function add(data) {
   return request({
-    url: 'api/deploy',
+    url: 'deploy',
     method: 'post',
     data
   })
@@ -10,7 +10,7 @@ export function add(data) {
 
 export function del(ids) {
   return request({
-    url: 'api/deploy',
+    url: 'deploy',
     method: 'delete',
     data: ids
   })
@@ -18,7 +18,7 @@ export function del(ids) {
 
 export function edit(data) {
   return request({
-    url: 'api/deploy',
+    url: 'deploy',
     method: 'put',
     data
   })
@@ -26,14 +26,14 @@ export function edit(data) {
 
 export function getApps() {
   return request({
-    url: 'api/app',
+    url: 'app',
     method: 'get'
   })
 }
 
 export function getServers() {
   return request({
-    url: 'api/serverDeploy',
+    url: 'serverDeploy',
     method: 'get'
   })
 }
@@ -44,7 +44,7 @@ export function getServers() {
  */
 export function startServer(data) {
   return request({
-    url: 'api/deploy/startServer',
+    url: 'deploy/startServer',
     method: 'post',
     data
   })
@@ -56,7 +56,7 @@ export function startServer(data) {
  */
 export function stopServer(data) {
   return request({
-    url: 'api/deploy/stopServer',
+    url: 'deploy/stopServer',
     method: 'post',
     data
   })
@@ -68,7 +68,7 @@ export function stopServer(data) {
  */
 export function serverStatus(data) {
   return request({
-    url: 'api/deploy/serverStatus',
+    url: 'deploy/serverStatus',
     method: 'post',
     data
   })

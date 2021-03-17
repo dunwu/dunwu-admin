@@ -156,7 +156,7 @@ export default {
   cruds() {
     return CRUD({
       title: '角色',
-      url: 'api/sys/role',
+      url: 'sys/role',
       sort: 'level,asc',
       crudMethod: { ...roleApi }
     })

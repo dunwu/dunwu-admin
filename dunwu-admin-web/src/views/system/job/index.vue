@@ -65,7 +65,7 @@ export default {
   cruds() {
     return CRUD({
       title: '岗位',
-      url: 'api/sys/job',
+      url: 'sys/job',
       sort: ['weight,asc', 'id,desc'],
       crudMethod: { ...jobApi }
     })

@@ -212,7 +212,7 @@ export default {
   name: 'User',
   components: { Treeselect, TableOperation, TableQueryOperation, TableColumnOperation, Pagination, DateRangePicker },
   cruds() {
-    return CRUD({ title: '用户', url: 'api/sys/user', crudMethod: { ...userApi }})
+    return CRUD({ title: '用户', url: 'sys/user', crudMethod: { ...userApi }})
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   // 数据字典
