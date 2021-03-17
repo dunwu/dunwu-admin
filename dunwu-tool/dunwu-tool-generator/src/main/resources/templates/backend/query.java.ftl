@@ -34,7 +34,7 @@ import java.util.List;
     </#if>
 </#if>
 <#if table.convert>
-@TableName("${table.name}")
+@TableName("${table.tableName}")
 </#if>
 <#if enableSwagger>
 @ApiModel(value = "${table.queryName}", description = "${table.comment!}")

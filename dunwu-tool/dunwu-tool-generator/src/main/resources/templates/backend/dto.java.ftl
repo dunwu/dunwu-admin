@@ -32,7 +32,7 @@ import ${pkg};
     </#if>
 </#if>
 <#if table.convert>
-@TableName("${table.name}")
+@TableName("${table.tableName}")
 </#if>
 <#if enableSwagger>
 @ApiModel(value = "${table.dtoName}", description = "${table.comment!}")
