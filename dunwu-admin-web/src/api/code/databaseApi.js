@@ -7,7 +7,7 @@ import request from '@/utils/request'
  */
 export function add(data) {
   return request({
-    url: 'mnt/database/add',
+    url: 'code/database/add',
     method: 'post',
     data
   })
@@ -20,7 +20,7 @@ export function add(data) {
  */
 export function delBatch(ids) {
   return request({
-    url: 'mnt/database/del/batch',
+    url: 'code/database/del/batch',
     method: 'post',
     data: ids
   })
@@ -33,7 +33,7 @@ export function delBatch(ids) {
  */
 export function edit(data) {
   return request({
-    url: 'mnt/database/edit',
+    url: 'code/database/edit',
     method: 'post',
     data
   })
@@ -46,7 +46,7 @@ export function edit(data) {
  */
 export function list(params) {
   return request({
-    url: 'mnt/database/list',
+    url: 'code/database/list',
     method: 'get',
     params
   })
@@ -59,7 +59,7 @@ export function list(params) {
  */
 export function page(params) {
   return request({
-    url: 'mnt/database/page',
+    url: 'code/database/page',
     method: 'get',
     params
   })
@@ -72,7 +72,7 @@ export function page(params) {
  */
 export function getById(id) {
   return request({
-    url: 'mnt/database/' + id,
+    url: 'code/database/' + id,
     method: 'get'
   })
 }
@@ -84,7 +84,7 @@ export function getById(id) {
  */
 export function exportList(ids) {
   return request({
-    url: 'mnt/database/export/list',
+    url: 'code/database/export/list',
     method: 'get',
     responseType: 'blob',
     data: ids
@@ -98,7 +98,7 @@ export function exportList(ids) {
  */
 export function exportPage(params) {
   return request({
-    url: 'mnt/database/export/page',
+    url: 'code/database/export/page',
     method: 'get',
     responseType: 'blob',
     params
@@ -107,7 +107,7 @@ export function exportPage(params) {
 
 export function testDbConnection(data) {
   return request({
-    url: 'mnt/database/testConnect',
+    url: 'code/database/testConnect',
     method: 'post',
     data
   })

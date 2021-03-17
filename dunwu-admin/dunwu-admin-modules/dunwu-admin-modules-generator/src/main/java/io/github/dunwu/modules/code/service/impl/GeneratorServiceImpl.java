@@ -15,19 +15,11 @@ import io.github.dunwu.generator.config.rules.JavaColumnType;
 import io.github.dunwu.generator.engine.CodeGenerateContentDto;
 import io.github.dunwu.modules.code.entity.CodeGlobalConfig;
 import io.github.dunwu.modules.code.entity.CodeTableConfig;
-import io.github.dunwu.modules.code.entity.dto.CodeColumnConfigDto;
-import io.github.dunwu.modules.code.entity.dto.CodeGlobalConfigDto;
-import io.github.dunwu.modules.code.entity.dto.CodeTableConfigDto;
-import io.github.dunwu.modules.code.entity.dto.TableColumnInfoDto;
+import io.github.dunwu.modules.code.entity.dto.*;
 import io.github.dunwu.modules.code.entity.query.CodeColumnConfigQuery;
 import io.github.dunwu.modules.code.entity.query.CodeGlobalConfigQuery;
 import io.github.dunwu.modules.code.entity.query.CodeTableConfigQuery;
-import io.github.dunwu.modules.code.service.CodeColumnConfigService;
-import io.github.dunwu.modules.code.service.CodeGlobalConfigService;
-import io.github.dunwu.modules.code.service.CodeTableConfigService;
-import io.github.dunwu.modules.code.service.GeneratorService;
-import io.github.dunwu.modules.mnt.entity.dto.MntDatabaseDto;
-import io.github.dunwu.modules.mnt.service.MntDatabaseService;
+import io.github.dunwu.modules.code.service.*;
 import io.github.dunwu.web.util.ServletUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -57,7 +49,7 @@ public class GeneratorServiceImpl implements GeneratorService {
     private final CodeGlobalConfigService globalConfigService;
     private final CodeTableConfigService tableConfigService;
     private final CodeColumnConfigService columnConfigService;
-    private final MntDatabaseService databaseService;
+    private final CodeDatabaseService databaseService;
 
     @Override
     public CodeGlobalConfigDto queryOrCreateGlobalConfig(CodeGlobalConfigQuery query) {
@@ -298,7 +290,7 @@ public class GeneratorServiceImpl implements GeneratorService {
             throw new DataException("dbId 为空");
         }
 
-        MntDatabaseDto databaseDto = databaseService.pojoById(tableConfigDto.getDbId());
+        CodeDatabaseDto databaseDto = databaseService.pojoById(tableConfigDto.getDbId());
         if (databaseDto == null) {
             throw new DataException(StrUtil.format("未找到数据库 dbId = {}", tableConfigDto.getDbId()));
         }
@@ -316,8 +308,10 @@ public class GeneratorServiceImpl implements GeneratorService {
             tableConfigDto.getModuleName());
 
         StrategyConfig strategyConfig = new StrategyConfig();
-        strategyConfig.setInclude(tableConfigDto.getTableName())
-                      .setTablePrefix(tableConfigDto.getTablePrefix());
+        strategyConfig.setInclude(tableConfigDto.getTableName());
+        if (StrUtil.isNotBlank(tableConfigDto.getTablePrefix())) {
+            strategyConfig.setTablePrefix(tableConfigDto.getTablePrefix());
+        }
 
         TemplateConfig templateConfig = new TemplateConfig();
 

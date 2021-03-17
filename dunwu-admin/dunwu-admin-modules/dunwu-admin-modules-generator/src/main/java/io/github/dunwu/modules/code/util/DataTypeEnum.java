@@ -17,7 +17,7 @@
  *
  */
 
-package io.github.dunwu.modules.mnt.util;
+package io.github.dunwu.modules.code.util;
 import lombok.extern.slf4j.Slf4j;
 
 /**

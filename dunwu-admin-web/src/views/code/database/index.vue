@@ -169,7 +169,7 @@
 </template>
 
 <script>
-import databaseApi from '@/api/mnt/databaseApi'
+import databaseApi from '@/api/code/databaseApi'
 import eForm from './execute'
 import CRUD, { crud, form, header, presenter } from '@crud/crud'
 import TableQueryOperation from '@crud/TableQueryOperation'
