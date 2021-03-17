@@ -161,8 +161,8 @@ export default {
   cruds() {
     return CRUD({
       title: '${table.comment!}',
-      url: 'api<#if package.ModuleName??>/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen}<#else>${table.apiBaseUrl}</#if>',
-      sort: 'id,asc',
+      url: '<#if package.ModuleName??>${package.ModuleName}/</#if><#if controllerMappingHyphenStyle??>${controllerMappingHyphen}<#else>${table.apiBaseUrl}</#if>',
+      <#if table.enableSort>sort: [<#list table.fields as field><#if field.enableSort>'${field.propertyName},${field.sortType}',</#if></#list>],</#if>
       crudMethod: { ...${table.apiName} }
     })
   },
