@@ -7,7 +7,7 @@ import request from '@/utils/request'
  */
 export function add(data) {
   return request({
-    url: '<#if package.ModuleName??>${package.ModuleName}/</#if>${table.entityPath}/add',
+    url: '<#if package.ModuleName??>${package.ModuleName}/</#if>${table.apiBaseUrl}/add',
     method: 'post',
     data
   })
@@ -20,7 +20,7 @@ export function add(data) {
  */
 export function delBatch(ids) {
   return request({
-    url: '<#if package.ModuleName??>${package.ModuleName}/</#if>${table.entityPath}/del/batch',
+    url: '<#if package.ModuleName??>${package.ModuleName}/</#if>${table.apiBaseUrl}/del/batch',
     method: 'post',
     data: ids
   })
@@ -33,7 +33,7 @@ export function delBatch(ids) {
  */
 export function edit(data) {
   return request({
-    url: '<#if package.ModuleName??>${package.ModuleName}/</#if>${table.entityPath}/edit',
+    url: '<#if package.ModuleName??>${package.ModuleName}/</#if>${table.apiBaseUrl}/edit',
     method: 'post',
     data
   })
@@ -46,7 +46,7 @@ export function edit(data) {
  */
 export function list(params) {
   return request({
-    url: '<#if package.ModuleName??>${package.ModuleName}/</#if>${table.entityPath}/list',
+    url: '<#if package.ModuleName??>${package.ModuleName}/</#if>${table.apiBaseUrl}/list',
     method: 'get',
     params
   })
@@ -59,7 +59,7 @@ export function list(params) {
  */
 export function page(params) {
   return request({
-    url: '<#if package.ModuleName??>${package.ModuleName}/</#if>${table.entityPath}/page',
+    url: '<#if package.ModuleName??>${package.ModuleName}/</#if>${table.apiBaseUrl}/page',
     method: 'get',
     params
   })
@@ -72,7 +72,7 @@ export function page(params) {
  */
 export function getById(id) {
   return request({
-    url: '<#if package.ModuleName??>${package.ModuleName}/</#if>${table.entityPath}/' + id,
+    url: '<#if package.ModuleName??>${package.ModuleName}/</#if>${table.apiBaseUrl}/' + id,
     method: 'get'
   })
 }
@@ -84,7 +84,7 @@ export function getById(id) {
  */
 export function exportList(ids) {
   return request({
-    url: '<#if package.ModuleName??>${package.ModuleName}/</#if>${table.entityPath}/export/list',
+    url: '<#if package.ModuleName??>${package.ModuleName}/</#if>${table.apiBaseUrl}/export/list',
     method: 'post',
     responseType: 'blob',
     data: ids
@@ -98,7 +98,7 @@ export function exportList(ids) {
  */
 export function exportPage(params) {
   return request({
-    url: '<#if package.ModuleName??>${package.ModuleName}/</#if>${table.entityPath}/export/page',
+    url: '<#if package.ModuleName??>${package.ModuleName}/</#if>${table.apiBaseUrl}/export/page',
     method: 'get',
     responseType: 'blob',
     params

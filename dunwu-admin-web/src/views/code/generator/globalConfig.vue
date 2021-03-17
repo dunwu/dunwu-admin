@@ -1,17 +1,14 @@
 <template>
   <el-card shadow="never">
     <div slot="header" class="clearfix">
-      <span class="role-span">
-        <el-tag type="info">{{ tableName }}</el-tag>
-        表级别配置
-      </span>
+      <span class="role-span">全局级别配置</span>
       <el-button
         :loading="configLoading"
         icon="el-icon-check"
         size="mini"
         style="float: right; padding: 6px 9px"
         type="primary"
-        @click="saveTableConfig"
+        @click="saveGlobalConfig"
       >
         保存
       </el-button>
@@ -79,71 +76,26 @@
       <el-form-item label="时间格式化" prop="datePattern">
         <el-input v-model="form.datePattern" style="width: 40%" />
       </el-form-item>
-      <el-form-item label="允许列表" prop="enableList">
-        <el-radio-group v-model="form.enableList" size="mini" style="width: 40%">
-          <el-radio-button label="true">是</el-radio-button>
-          <el-radio-button label="false">否</el-radio-button>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="允许表单" prop="enableForm">
-        <el-radio-group v-model="form.enableForm" size="mini" style="width: 40%">
-          <el-radio-button label="true">是</el-radio-button>
-          <el-radio-button label="false">否</el-radio-button>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="允许查询" prop="enableQuery">
-        <el-radio-group v-model="form.enableQuery" size="mini" style="width: 40%">
-          <el-radio-button label="true">是</el-radio-button>
-          <el-radio-button label="false">否</el-radio-button>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="允许排序" prop="enableSort">
-        <el-radio-group v-model="form.enableSort" size="mini" style="width: 40%">
-          <el-radio-button label="true">是</el-radio-button>
-          <el-radio-button label="false">否</el-radio-button>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="允许校验" prop="enableValidate">
-        <el-radio-group v-model="form.enableValidate" size="mini" style="width: 40%">
-          <el-radio-button label="true">是</el-radio-button>
-          <el-radio-button label="false">否</el-radio-button>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="模块名称" prop="moduleName">
-        <el-input v-model="form.moduleName" style="width: 40%" />
-      </el-form-item>
-      <el-form-item label="REST接口根路径" prop="apiBaseUrl">
-        <el-input v-model="form.apiBaseUrl" style="width: 40%" />
-      </el-form-item>
-      <el-form-item label="表前缀" prop="tablePrefix">
-        <el-input v-model="form.tablePrefix" style="width: 40%" />
-      </el-form-item>
     </el-form>
   </el-card>
 </template>
 
 <script>
-import codeApi from '@/api/generator/codeApi'
-import databaseApi from '@/api/mnt/databaseApi'
+import codeApi from '@/api/code/codeApi'
 export default {
-  name: 'TableConfig',
+  name: 'GlobalConfig',
   components: {},
   data() {
     return {
       loading: false,
-      databaseLoading: false,
       configLoading: false,
       dbId: null,
       schemaName: '',
       tableName: '',
       createBy: '',
       tableHeight: 550,
-      database: null,
       form: {
         id: null,
-        dbId: null,
-        schemaName: null,
-        tableName: null,
         enablePermission: false,
         enableOverride: false,
         enableSwagger: false,
@@ -154,26 +106,12 @@ export default {
         packagePath: null,
         idType: null,
         dateType: null,
-        datePattern: null,
-        enableQuery: true,
-        enableList: true,
-        enableForm: true,
-        enableSort: true,
-        enableValidate: true,
-        moduleName: null,
-        tablePrefix: null,
-        apiBaseUrl: null
+        datePattern: null
       },
-      rules: {
-        author: [{ required: true, message: '作者不能为空', trigger: 'blur' }],
-        moduleName: [{ required: true, message: '模块名不能为空', trigger: 'blur' }],
-        packagePath: [{ required: true, message: '包路径不能为空', trigger: 'blur' }],
-        outputDir: [{ required: true, message: '前端路径不能为空', trigger: 'blur' }],
-        apiBaseUrl: [{ required: true, message: '接口名称不能为空', trigger: 'blur' }]
-      }
+      rules: {}
     }
   },
-  mounted() {
+  created() {
     this.tableHeight = document.documentElement.clientHeight - 385
 
     // 根据 router、store 获取页面必要属性
@@ -189,56 +127,38 @@ export default {
     }
 
     this.$nextTick(() => {
-      this.findDatabase()
-      this.queryTableConfig()
+      this.queryGlobalConfig()
     })
   },
   methods: {
-    findDatabase() {
-      this.databaseLoading = false
-      databaseApi
-        .getById(this.dbId)
-        .then(data => {
-          this.database = data
-          this.databaseLoading = true
-        })
-        .catch(err => {
-          this.loading = false
-        })
-    },
-    queryTableConfig() {
+    queryGlobalConfig() {
       this.loading = true
+
       codeApi
-        .queryTableConfig({
-          dbId: this.dbId,
-          schemaName: this.schemaName,
-          tableName: this.tableName,
-          createBy: this.createBy
-        })
+        .queryGlobalConfig({ createBy: this.createBy })
         .then(data => {
           this.loading = false
           this.form = data
         })
         .catch(err => {
           this.loading = false
-          console.error(err.response.data.message)
+          this.$notify({ title: err, type: 'error' })
         })
     },
-    saveTableConfig() {
+    saveGlobalConfig() {
       this.$refs['form'].validate(valid => {
         if (valid) {
           this.configLoading = true
-          this.form.dbId = this.dbId
           codeApi
-            .saveTableConfig(this.form)
+            .saveGlobalConfig(this.form)
             .then(res => {
               this.configLoading = false
               this.$notify({ title: '保存成功', type: 'success' })
-              this.queryTableConfig()
+              this.queryGlobalConfig()
             })
             .catch(err => {
               this.configLoading = false
-              console.error('保存失败', err.response.data.message)
+              this.$notify({ title: '保存失败', type: 'error', message: err })
             })
         }
       })

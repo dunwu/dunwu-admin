@@ -72,6 +72,8 @@ public class TableInfo {
     private boolean enableSort = true;
     /** 开启校验 */
     private boolean enableValidate = true;
+    /** REST接口根路径 */
+    private String apiBaseUrl;
 
     /******************* 以下为生成的后端文件名（开始） *******************/
     private String xmlName;
@@ -98,8 +100,19 @@ public class TableInfo {
         return this;
     }
 
+    /**
+     * REST接口根路径，如果没配置，返回 entityPath 的值
+     * @return
+     */
     public String getEntityPath() {
         return entityName.substring(0, 1).toLowerCase() + entityName.substring(1);
+    }
+
+    public String getApiBaseUrl() {
+        if (apiBaseUrl == null) {
+            return getEntityPath();
+        }
+        return apiBaseUrl;
     }
 
     public TableInfo setEntityName(StrategyConfig strategyConfig, String entityName) {

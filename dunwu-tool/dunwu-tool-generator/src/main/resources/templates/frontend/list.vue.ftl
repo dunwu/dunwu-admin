@@ -119,7 +119,7 @@
     </#if>
   </#list>
   <#if table.enablePermission>
-      <el-table-column v-if="checkPer(['admin','<#if package.ModuleName??>${package.ModuleName}</#if>:${table.entityPath}:edit','<#if package.ModuleName??>${package.ModuleName}</#if>:${table.entityPath}:del'])" label="操作" width="150px" align="center">
+      <el-table-column v-if="checkPer(['admin','<#if package.ModuleName??>${package.ModuleName}</#if>:${table.apiBaseUrl}:edit','<#if package.ModuleName??>${package.ModuleName}</#if>:${table.apiBaseUrl}:del'])" label="操作" width="150px" align="center">
         <template slot-scope="scope">
           <TableColumnOperation :data="scope.row" :permission="permission" />
         </template>
@@ -161,7 +161,7 @@ export default {
   cruds() {
     return CRUD({
       title: '${table.comment!}',
-      url: 'api<#if package.ModuleName??>/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen}<#else>${table.entityPath}</#if>',
+      url: 'api<#if package.ModuleName??>/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen}<#else>${table.apiBaseUrl}</#if>',
       sort: 'id,asc',
       crudMethod: { ...${table.apiName} }
     })
@@ -169,9 +169,9 @@ export default {
   data() {
     return {
       <#if table.enablePermission>permission: {
-        add: ['admin', '<#if package.ModuleName??>${package.ModuleName}</#if>:${table.entityPath}:add'],
-        edit: ['admin', '<#if package.ModuleName??>${package.ModuleName}</#if>:${table.entityPath}:edit'],
-        del: ['admin', '<#if package.ModuleName??>${package.ModuleName}</#if>:${table.entityPath}:del']
+        add: ['admin', '<#if package.ModuleName??>${package.ModuleName}</#if>:${table.apiBaseUrl}:add'],
+        edit: ['admin', '<#if package.ModuleName??>${package.ModuleName}</#if>:${table.apiBaseUrl}:edit'],
+        del: ['admin', '<#if package.ModuleName??>${package.ModuleName}</#if>:${table.apiBaseUrl}:del']
       }, </#if>
     }
   },

@@ -8,7 +8,7 @@
 
 <script>
 import Java from '@/components/JavaEdit/index'
-import codeApi from '@/api/generator/codeApi'
+import codeApi from '@/api/code/codeApi'
 export default {
   name: 'Preview',
   components: { Java },

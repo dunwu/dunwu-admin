@@ -277,7 +277,7 @@
 </template>
 
 <script>
-import codeApi from '@/api/generator/codeApi'
+import codeApi from '@/api/code/codeApi'
 export default {
   name: 'ColumnConfig',
   components: {},

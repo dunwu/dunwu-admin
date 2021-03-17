@@ -63,14 +63,14 @@
         <template slot-scope="scope">
           <el-button size="mini" style="margin-left: -1px; " type="text">
             <router-link
-              :to="'/sys-tools/generator/config/' + dbId + '/' + scope.row.schemaName + '/' + scope.row.tableName"
+              :to="'/sys-tools/code/config/' + dbId + '/' + scope.row.schemaName + '/' + scope.row.tableName"
             >
               配置
             </router-link>
           </el-button>
           <el-button size="mini" style="margin-left: -1px;" type="text">
             <router-link
-              :to="'/sys-tools/generator/preview/' + dbId + '/' + scope.row.schemaName + '/' + scope.row.tableName"
+              :to="'/sys-tools/code/preview/' + dbId + '/' + scope.row.schemaName + '/' + scope.row.tableName"
             >
               预览
             </router-link>
@@ -97,8 +97,8 @@
 </template>
 
 <script>
-import codeApi from '@/api/generator/codeApi'
-import databaseApi from '@/api/mnt/databaseApi'
+import codeApi from '@/api/code/codeApi'
+import databaseApi from '@/api/code/databaseApi'
 import { downloadFile } from '@/utils/index'
 
 export default {
