@@ -36,18 +36,6 @@
           </el-col>
           <template v-if="crud.showExtendSearch">
             <el-col :span="6">
-              <el-input
-                v-model="query.avatar"
-                clearable
-                placeholder="请输入头像"
-                style="width: 90%;"
-                class="filter-item"
-                @keyup.enter.native="crud.toQuery"
-              />
-            </el-col>
-          </template>
-          <template v-if="crud.showExtendSearch">
-            <el-col :span="6">
               <date-range-picker v-model="query.createTimeRange" class="date-item" style="width: 90%" />
             </el-col>
           </template>
@@ -85,12 +73,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="createTime" label="创建时间" />
-      <el-table-column
-        v-if="checkPer(['admin', 'demo:hello:edit', 'demo:hello:del'])"
-        label="操作"
-        width="150px"
-        align="center"
-      >
+      <el-table-column v-if="checkPer(['admin','demo:hello:edit','demo:hello:del'])" label="操作" width="150px" align="center">
         <template slot-scope="scope">
           <TableColumnOperation :data="scope.row" :permission="permission" />
         </template>
@@ -123,7 +106,7 @@ export default {
     return CRUD({
       title: '测试',
       url: 'demo/hello',
-      sort: 'id,asc',
+      sort: ['id,asc','name,asc','age,asc',],
       crudMethod: { ...HelloApi }
     })
   },
@@ -133,7 +116,7 @@ export default {
         add: ['admin', 'demo:hello:add'],
         edit: ['admin', 'demo:hello:edit'],
         del: ['admin', 'demo:hello:del']
-      }
+      }, 
     }
   },
   methods: {

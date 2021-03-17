@@ -16,7 +16,7 @@ import java.util.List;
  * 测试 Query 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-03-10
+ * @since 2021-03-17
  */
 @Data
 @Accessors(chain = true)
@@ -37,10 +37,6 @@ public class HelloQuery implements Serializable {
     @ApiModelProperty(value = "年龄")
     @QueryField
     private Integer age;
-
-    @ApiModelProperty(value = "头像")
-    @QueryField
-    private String avatar;
 
     @ApiModelProperty(value = "创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")

@@ -61,6 +61,9 @@
               <el-form-item label="字段 Java 类型：">
                 <span>{{ props.row.javaType }}</span>
               </el-form-item>
+              <el-form-item label="Not Null：">
+                <span>{{ props.row.notNull }}</span>
+              </el-form-item>
             </el-form>
           </template>
         </el-table-column>
@@ -374,9 +377,16 @@ export default {
     toGenerate() {
       this.genLoading = true
       codeApi
-        .saveColumnConfig({ schemaName: this.schemaName, tableName: this.tableName, columns: this.data })
+        .saveColumnConfig({
+          dbId: this.dbId,
+          schemaName: this.schemaName,
+          tableName: this.tableName,
+          createBy: this.createBy,
+          columns: this.data
+        })
         .then(res => {
           this.$notify({ title: '保存成功', type: 'success' })
+          this.queryColumnConfig()
           // 生成代码
           codeApi
             .generateCode({ schemaName: this.schemaName, tableName: this.tableName })

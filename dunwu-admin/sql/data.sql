@@ -532,7 +532,7 @@ INSERT INTO `sys_menu` VALUES (113, 98, 0, 2, '数据库编辑', NULL, '', 999, 
 INSERT INTO `sys_menu` VALUES (114, 98, 0, 2, '数据库删除', NULL, '', 999, '', '', b'0', b'0', b'0', 'database:del', NULL, NULL, '2019-11-17 11:13:14', NULL);
 INSERT INTO `sys_menu` VALUES (116, 36, 0, 1, '生成预览', 'Preview', 'code/generator/preview', 999, 'java', 'code/preview/:dbId/:schemaName/:tableName', b'0', b'1', b'1', NULL, NULL, NULL, '2019-11-26 14:54:36', NULL);
 INSERT INTO `sys_menu` VALUES (117, NULL, 5, 0, '项目案例', NULL, NULL, 50, 'demo', 'demo', b'0', b'0', b'0', NULL, NULL, NULL, '2021-12-19 13:38:16', NULL);
-INSERT INTO `sys_menu` VALUES (118, 117, 5, 0, 'Hello', 'Hello', 'demo/hello', 50, 'demo', 'demo/HelloList', b'0', b'1', b'0', NULL, NULL, NULL, '2021-12-19 13:38:16', NULL);
+INSERT INTO `sys_menu` VALUES (118, 117, 5, 0, 'Hello', 'Hello', 'demo/HelloList', 50, 'demo', 'demo/hello', b'0', b'1', b'0', NULL, NULL, NULL, '2021-12-19 13:38:16', NULL);
 COMMIT;
 -- @formatter:on
 

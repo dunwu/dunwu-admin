@@ -13,6 +13,7 @@ import io.github.dunwu.generator.config.po.TableField;
 import io.github.dunwu.generator.config.po.TableInfo;
 import io.github.dunwu.generator.config.rules.JavaColumnType;
 import io.github.dunwu.generator.engine.CodeGenerateContentDto;
+import io.github.dunwu.modules.code.entity.CodeColumnConfig;
 import io.github.dunwu.modules.code.entity.CodeGlobalConfig;
 import io.github.dunwu.modules.code.entity.CodeTableConfig;
 import io.github.dunwu.modules.code.entity.dto.*;
@@ -117,23 +118,19 @@ public class GeneratorServiceImpl implements GeneratorService {
         CodeTableConfigDto tableConfigDto = queryAndCheckTableConfig(entity.getSchemaName(), entity.getTableName(),
             entity.getCreateBy());
 
-        // 查询列级别配置
-        CodeColumnConfigQuery columnQuery = new CodeColumnConfigQuery();
-        columnQuery.setSchemaName(entity.getSchemaName())
-                   .setTableName(entity.getTableName())
-                   .setCreateBy(entity.getCreateBy());
-        List<CodeColumnConfigDto> columns = columnConfigService.pojoListByQuery(columnQuery);
-        if (CollectionUtil.isNotEmpty(columns)) {
-            tableConfigDto.setColumns(columns);
-            Set<Long> ids = columns.stream().map(CodeColumnConfigDto::getId).collect(Collectors.toSet());
-            columnConfigService.deleteBatchByIds(ids);
+        Set<Long> ids = entity.getColumns().stream().map(CodeColumnConfig::getId).collect(Collectors.toSet());
+        columnConfigService.deleteBatchByIds(ids);
 
-            // 创建构造器
-            ConfigBuilder builder = createConfigBuilder(tableConfigDto);
+        List<CodeColumnConfigDto> columns = entity.getColumns().stream()
+                                                  .map(columnConfigService::doToDto)
+                                                  .collect(Collectors.toList());
+        tableConfigDto.setColumns(columns);
 
-            // 根据表级配置创建构造器
-            checkTableChanged(tableConfigDto, builder);
-        }
+        // 创建构造器
+        ConfigBuilder builder = createConfigBuilder(tableConfigDto);
+
+        // 根据表级配置创建构造器
+        checkTableChanged(tableConfigDto, builder);
 
         return columnConfigService.saveBatch(entity.getColumns());
     }
@@ -508,7 +505,7 @@ public class GeneratorServiceImpl implements GeneratorService {
                 return true;
             }
             boolean flag = isColumnChanged(map.get(field.getFieldName()), field);
-            if (!flag) {
+            if (flag) {
                 log.error("{} 表 {} 字段发生变化", field.getTableName(), field.getFieldName());
                 return true;
             }
@@ -521,11 +518,12 @@ public class GeneratorServiceImpl implements GeneratorService {
             return false;
         }
 
-        return columnConfigDto.getComment().equals(field.getComment())
+        boolean flag = columnConfigDto.getComment().equals(field.getComment())
             && columnConfigDto.getType().equals(field.getType())
             && columnConfigDto.getJavaType().equals(field.getJavaType().getType())
             && columnConfigDto.getKeyType().equals(field.getKeyType())
             && columnConfigDto.getNotNull().equals(field.isNotNull());
+        return !flag;
     }
 
     // =============== 配置检查

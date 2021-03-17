@@ -18,13 +18,13 @@
         <el-input v-model="form.${field.propertyName}" :rows="3" type="textarea" style="width: 90%" />
     <#elseif field.formType = 'Radio'>
           <#if (field.dictName)?? && (field.dictName)!="">
-            <el-radio v-model="form.${field.propertyName}" v-for="item in dict.${field.dictName}" :key="item.id" :label="item.value">{{ item.label }}</el-radio>
+        <el-radio v-model="form.${field.propertyName}" v-for="item in dict.${field.dictName}" :key="item.id" :label="item.value">{{ item.label }}</el-radio>
           <#else>
             未设置字典，请手动设置 Radio
           </#if>
     <#elseif field.formType = 'Select'>
           <#if (field.dictName)?? && (field.dictName)!="">
-          <el-select v-model="form.${field.propertyName}" filterable placeholder="请选择">
+        <el-select v-model="form.${field.propertyName}" filterable placeholder="请选择">
             <el-option
               v-for="item in dict.${field.dictName}"
               :key="item.id"
@@ -35,7 +35,7 @@
           未设置字典，请手动设置 Select
     </#if>
   <#else>
-      <el-date-picker v-model="form.${field.propertyName}" type="datetime" style="width: 90%" />
+        <el-date-picker v-model="form.${field.propertyName}" type="datetime" style="width: 90%" />
   </#if>
       </el-form-item>
 </#if>

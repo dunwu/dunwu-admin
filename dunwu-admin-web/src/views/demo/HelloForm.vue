@@ -30,16 +30,22 @@
 <script>
 import { form } from '@crud/crud'
 
-const defaultForm = { name: null, age: null, avatar: null, createTime: null }
+const defaultForm = { name: null, age: null, avatar: null, createTime: null, }
 export default {
   name: 'HelloForm',
   mixins: [form(defaultForm)],
   data() {
     return {
       rules: {
-        name: [{ required: true, trigger: 'blur', type: 'string' }],
-        age: [{ required: true, trigger: 'blur', type: 'number' }],
-        avatar: [{ required: true, trigger: 'blur', type: 'string' }]
+        name: [
+          { required: true, trigger: 'blur', type: 'string' }
+        ],
+        age: [
+          { required: true, trigger: 'blur', type: 'number' }
+        ],
+        avatar: [
+          { required: true, trigger: 'blur', type: 'string' }
+        ],
       }
     }
   }

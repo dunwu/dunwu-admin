@@ -49,7 +49,7 @@ public class ${table.dtoName} implements Serializable {
     private static final long serialVersionUID = 1L;
 </#if>
 <#-- ----------  BEGIN 字段循环遍历  ---------->
-<#list table.fields as field>
+<#list table.listFields as field>
     <#if field.keyFlag>
         <#assign keyPropertyName="${field.propertyName}"/>
     </#if>

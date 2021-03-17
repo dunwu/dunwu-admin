@@ -2,7 +2,6 @@ package io.github.dunwu.modules.code.controller;
 
 import io.github.dunwu.data.core.Result;
 import io.github.dunwu.data.util.PageUtil;
-import io.github.dunwu.data.validator.annotation.EditCheck;
 import io.github.dunwu.generator.engine.CodeGenerateContentDto;
 import io.github.dunwu.modules.code.entity.CodeGlobalConfig;
 import io.github.dunwu.modules.code.entity.CodeTableConfig;
@@ -86,7 +85,7 @@ public class GeneratorController {
 
     @ApiOperation("保存当前用户的 CodeGlobalConfigDto 配置")
     @PostMapping("global/save")
-    public Result saveGlobalConfig(@Validated(EditCheck.class) @RequestBody CodeGlobalConfig entity) {
+    public Result saveGlobalConfig(@Validated @RequestBody CodeGlobalConfig entity) {
         return Result.ok(generatorService.saveGlobalConfig(entity));
     }
 
@@ -98,7 +97,7 @@ public class GeneratorController {
 
     @ApiOperation("保存当前用户的 CodeGlobalConfigDto 配置")
     @PostMapping("table/save")
-    public Result saveTableConfig(@Validated(EditCheck.class) @RequestBody CodeTableConfig entity) {
+    public Result saveTableConfig(@Validated @RequestBody CodeTableConfig entity) {
         return Result.ok(generatorService.saveTableConfig(entity));
     }
 
@@ -110,7 +109,7 @@ public class GeneratorController {
 
     @ApiOperation("批量更新 CodeColumnConfig 记录")
     @PostMapping("column/saveBatch")
-    public Result saveColumnConfigList(@Validated(EditCheck.class) @RequestBody TableColumnInfoDto entity) {
+    public Result saveColumnConfigList(@Validated @RequestBody TableColumnInfoDto entity) {
         return Result.ok(generatorService.saveColumnConfigList(entity));
     }
 
