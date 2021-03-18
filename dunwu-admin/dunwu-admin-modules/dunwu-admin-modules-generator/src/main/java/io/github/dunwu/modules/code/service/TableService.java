@@ -16,6 +16,6 @@ public interface TableService {
      * @param startEnd   分页参数
      * @return /
      */
-    Object getTables(String schemaName, String tableName, int[] startEnd);
+    Object getTables(String schemaName, String tableName, Integer page, Integer size);
 
 }

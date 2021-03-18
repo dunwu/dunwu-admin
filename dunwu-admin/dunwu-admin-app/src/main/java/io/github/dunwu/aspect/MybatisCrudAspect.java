@@ -55,21 +55,4 @@ public class MybatisCrudAspect {
         }
     }
 
-    // ==================================================================== 查询响应切点
-
-    // @Pointcut("execution(* io.github.dunwu.data.mybatis.IExtDao.pojo*(..))")
-    // public void pojoQueryPointcut() { }
-    //
-    // @AfterReturning(value = "pojoQueryPointcut()", returning = "results")
-    // public void convertVoQueryPointcut(JoinPoint joinPoint, Object results) throws IllegalAccessException {
-    //     // 获取方法信息
-    //     String className = joinPoint.getTarget().getClass().getName();
-    //     String methodName = joinPoint.getSignature().getName();
-    //
-    //     if (log.isTraceEnabled()) {
-    //         log.trace("[MybatisCrudAspect] 尝试处理方法：{}", className + "#" + methodName);
-    //     }
-    //
-    //     mybatisHelper.convertEntity(results);
-    // }
 }

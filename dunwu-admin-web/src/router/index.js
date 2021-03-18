@@ -70,7 +70,7 @@ const doDispatchInAuth = (to, from, next) => {
       loadMenusInCondition(next, to)
     }
   } else {
-    if (whiteListPaths.indexOf(to.path) !== -1) {
+    if (whiteListPaths.indexOf(to.path) !== -1 || to.path.match('tools/code/*')) {
       // 在免登录白名单，直接进入
       next()
     } else {
@@ -94,7 +94,7 @@ const doDispatchInNoAuth = (to, from, next) => {
   NProgress.start()
 
   // 非认证模式下，不跳转到登录页面
-  if (whiteListPaths.indexOf(to.path) !== -1 || to.path.match('/sys-tools/code/*')) {
+  if (whiteListPaths.indexOf(to.path) !== -1 || to.path.match('tools/code/*')) {
     console.info('允许访问')
     // 在免登录白名单，直接进入
     next()

@@ -12,10 +12,6 @@
 
   <artifactId>dunwu-admin-modules-generator</artifactId>
 
-  <properties>
-    <configuration.version>1.9</configuration.version>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>io.github.dunwu</groupId>

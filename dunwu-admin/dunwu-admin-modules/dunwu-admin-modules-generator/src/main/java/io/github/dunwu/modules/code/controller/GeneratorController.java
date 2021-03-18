@@ -1,7 +1,6 @@
 package io.github.dunwu.modules.code.controller;
 
 import io.github.dunwu.data.core.Result;
-import io.github.dunwu.data.util.PageUtil;
 import io.github.dunwu.generator.engine.CodeGenerateContentDto;
 import io.github.dunwu.modules.code.entity.CodeGlobalConfig;
 import io.github.dunwu.modules.code.entity.CodeTableConfig;
@@ -125,8 +124,7 @@ public class GeneratorController {
         @RequestParam(defaultValue = "") String tableName,
         @RequestParam(defaultValue = "0") Integer page,
         @RequestParam(defaultValue = "10") Integer size) {
-        int[] startEnd = PageUtil.transToStartEnd(page, size);
-        return Result.ok(tableService.getTables(schemaName, tableName, startEnd));
+        return Result.ok(tableService.getTables(schemaName, tableName, page, size));
     }
 
 }

@@ -43,7 +43,7 @@
               重置
             </el-button>
             <el-button type="info">
-              <router-link :to="'/mnt/mnt/database/'">
+              <router-link :to="'/tools/code/database/'">
                 配置数据源
               </router-link>
             </el-button>
@@ -63,14 +63,14 @@
         <template slot-scope="scope">
           <el-button size="mini" style="margin-left: -1px; " type="text">
             <router-link
-              :to="'/sys-tools/code/config/' + dbId + '/' + scope.row.schemaName + '/' + scope.row.tableName"
+              :to="'/tools/code/config/' + dbId + '/' + scope.row.schemaName + '/' + scope.row.tableName"
             >
               配置
             </router-link>
           </el-button>
           <el-button size="mini" style="margin-left: -1px;" type="text">
             <router-link
-              :to="'/sys-tools/code/preview/' + dbId + '/' + scope.row.schemaName + '/' + scope.row.tableName"
+              :to="'/tools/code/preview/' + dbId + '/' + scope.row.schemaName + '/' + scope.row.tableName"
             >
               预览
             </router-link>
