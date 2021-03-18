@@ -66,6 +66,7 @@ public class TableServiceImpl implements TableService {
             String pageSql = "SELECT `table_name`, `create_time`, `engine`, `table_collation`, `table_comment`"
                 + " FROM `information_schema`.`tables`"
                 + " WHERE `table_schema` = ?"
+                + " ORDER BY `create_time` DESC"
                 + " LIMIT ?, ?";
 
             // 分页查询符合要求的记录
