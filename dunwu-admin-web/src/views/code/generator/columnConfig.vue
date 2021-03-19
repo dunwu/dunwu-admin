@@ -403,36 +403,6 @@ export default {
         this.downloadLoading = false
       })
     }
-    // toGenerate() {
-    //   this.genLoading = true
-    //   codeApi
-    //     .saveColumnConfig({
-    //       dbId: this.dbId,
-    //       schemaName: this.schemaName,
-    //       tableName: this.tableName,
-    //       createBy: this.createBy,
-    //       columns: this.data
-    //     })
-    //     .then(res => {
-    //       this.$notify({ title: '保存成功', type: 'success' })
-    //       this.queryColumnConfig()
-    //       // 生成代码
-    //       codeApi
-    //         .generateCode({ schemaName: this.schemaName, tableName: this.tableName })
-    //         .then(() => {
-    //           this.genLoading = false
-    //           this.$notify({ title: '生成代码成功', type: 'success' })
-    //         })
-    //         .catch(err => {
-    //           this.genLoading = false
-    //           console.error('生成代码失败', err)
-    //         })
-    //     })
-    //     .catch(err => {
-    //       this.genLoading = false
-    //       console.error('保存失败', err)
-    //     })
-    // }
   }
 }
 </script>
