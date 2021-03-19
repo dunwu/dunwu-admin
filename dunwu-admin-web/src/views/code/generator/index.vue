@@ -10,7 +10,7 @@
             remote
             placeholder="请选择Schema"
             style="width: 90%"
-            :remote-method="querySchemas"
+            :remote-method="queryDatabase"
             :loading="schemaLoading"
             @change="selectSchema"
           >
@@ -62,16 +62,12 @@
       <el-table-column label="操作" width="160px" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button size="mini" style="margin-left: -1px; " type="text">
-            <router-link
-              :to="'/tools/code/config/' + dbId + '/' + scope.row.schemaName + '/' + scope.row.tableName"
-            >
+            <router-link :to="'/tools/code/config/' + dbId + '/' + scope.row.schemaName + '/' + scope.row.tableName">
               配置
             </router-link>
           </el-button>
           <el-button size="mini" style="margin-left: -1px;" type="text">
-            <router-link
-              :to="'/tools/code/preview/' + dbId + '/' + scope.row.schemaName + '/' + scope.row.tableName"
-            >
+            <router-link :to="'/tools/code/preview/' + dbId + '/' + scope.row.schemaName + '/' + scope.row.tableName">
               预览
             </router-link>
           </el-button>
@@ -122,7 +118,7 @@ export default {
     }
   },
   created() {
-    this.querySchemas()
+    this.queryDatabase()
   },
   methods: {
     toGenerate(row) {
@@ -138,7 +134,7 @@ export default {
         this.$notify({ title: '下载成功', type: 'success' })
       })
     },
-    querySchemas(val) {
+    queryDatabase(val) {
       this.schemaLoading = true
       if (val) {
         databaseApi.list({ schemaName: val }).then(res => {
@@ -165,7 +161,7 @@ export default {
           if (val === i.id) {
             this.dbId = i.id
             this.schemaName = i.schemaName
-            this.queryTables(val)
+            this.queryTables()
           }
         })
       }
@@ -174,9 +170,10 @@ export default {
       this.loading = true
       codeApi
         .getAllTableInSchema({
+          dbId: this.dbId,
           schemaName: this.schemaName,
           tableName: this.tableName,
-          page: this.page.page - 1,
+          page: this.page.page,
           size: this.page.size
         })
         .then(res => {

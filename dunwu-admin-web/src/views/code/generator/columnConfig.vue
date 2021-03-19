@@ -6,20 +6,30 @@
         字段级别配置
       </span>
       <el-button
+        :loading="downloadLoading"
+        icon="el-icon-download"
+        size="mini"
+        style="float: right; padding: 6px 9px;"
+        type="primary"
+        @click="toDownload"
+      >
+        下载
+      </el-button>
+      <el-button
         :loading="genLoading"
         icon="el-icon-s-promotion"
         size="mini"
-        style="float: right; padding: 6px 9px;"
-        type="success"
+        style="float: right; padding: 6px 9px; margin-right: 9px;"
+        type="primary"
         @click="toGenerate"
       >
-        保存&生成
+        生成
       </el-button>
       <el-button
         :loading="configLoading"
         icon="el-icon-check"
         size="mini"
-        style="float: right; padding: 6px 9px;margin-right: 9px"
+        style="float: right; padding: 6px 9px;"
         type="primary"
         @click="saveColumnConfig"
       >
@@ -281,6 +291,7 @@
 
 <script>
 import codeApi from '@/api/code/codeApi'
+import { downloadFile } from '@/utils'
 export default {
   name: 'ColumnConfig',
   components: {},
@@ -295,7 +306,8 @@ export default {
       dicts: [],
       loading: false,
       configLoading: false,
-      genLoading: false
+      genLoading: false,
+      downloadLoading: false
     }
   },
   created() {
@@ -374,36 +386,53 @@ export default {
           this.$notify({ title: err, type: 'error' })
         })
     },
-    toGenerate() {
+    toGenerate(row) {
+      // 生成代码
       this.genLoading = true
-      codeApi
-        .saveColumnConfig({
-          dbId: this.dbId,
-          schemaName: this.schemaName,
-          tableName: this.tableName,
-          createBy: this.createBy,
-          columns: this.data
-        })
-        .then(res => {
-          this.$notify({ title: '保存成功', type: 'success' })
-          this.queryColumnConfig()
-          // 生成代码
-          codeApi
-            .generateCode({ schemaName: this.schemaName, tableName: this.tableName })
-            .then(() => {
-              this.genLoading = false
-              this.$notify({ title: '生成代码成功', type: 'success' })
-            })
-            .catch(err => {
-              this.genLoading = false
-              console.error('生成代码失败', err)
-            })
-        })
-        .catch(err => {
-          this.genLoading = false
-          console.error('保存失败', err)
-        })
+      codeApi.generateCode({ schemaName: this.schemaName, tableName: this.tableName }).then(data => {
+        this.$notify({ title: '生成成功', type: 'success' })
+        this.genLoading = false
+      })
+    },
+    toDownload(row) {
+      // 打包下载
+      this.downloadLoading = true
+      codeApi.downloadCode({ schemaName: this.schemaName, tableName: this.tableName }).then(data => {
+        downloadFile(data, row.tableName, 'zip')
+        this.$notify({ title: '下载成功', type: 'success' })
+        this.downloadLoading = false
+      })
     }
+    // toGenerate() {
+    //   this.genLoading = true
+    //   codeApi
+    //     .saveColumnConfig({
+    //       dbId: this.dbId,
+    //       schemaName: this.schemaName,
+    //       tableName: this.tableName,
+    //       createBy: this.createBy,
+    //       columns: this.data
+    //     })
+    //     .then(res => {
+    //       this.$notify({ title: '保存成功', type: 'success' })
+    //       this.queryColumnConfig()
+    //       // 生成代码
+    //       codeApi
+    //         .generateCode({ schemaName: this.schemaName, tableName: this.tableName })
+    //         .then(() => {
+    //           this.genLoading = false
+    //           this.$notify({ title: '生成代码成功', type: 'success' })
+    //         })
+    //         .catch(err => {
+    //           this.genLoading = false
+    //           console.error('生成代码失败', err)
+    //         })
+    //     })
+    //     .catch(err => {
+    //       this.genLoading = false
+    //       console.error('保存失败', err)
+    //     })
+    // }
   }
 }
 </script>
