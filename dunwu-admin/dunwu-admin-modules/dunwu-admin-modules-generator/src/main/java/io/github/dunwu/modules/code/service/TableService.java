@@ -1,5 +1,7 @@
 package io.github.dunwu.modules.code.service;
 
+import java.util.Map;
+
 /**
  * @author peng.zhang
  * @date 2021/2/26
@@ -11,11 +13,12 @@ public interface TableService {
     /**
      * 查询数据库元数据
      *
-     * @param schemaName schema 名
-     * @param tableName  table 名
-     * @param startEnd   分页参数
+     * @param dbId      数据库ID
+     * @param tableName table 名
+     * @param page      分页页号
+     * @param size      每页记录数
      * @return /
      */
-    Object getTables(String schemaName, String tableName, Integer page, Integer size);
+    Map<String, Object> getTables(Long dbId, String tableName, Integer page, Integer size);
 
 }

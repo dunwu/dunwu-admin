@@ -120,11 +120,11 @@ public class GeneratorController {
 
     @ApiOperation("查询数据库数据")
     @GetMapping("table/all/page")
-    public Result queryAllTables(@RequestParam String schemaName,
+    public Result queryAllTables(@RequestParam Long dbId,
         @RequestParam(defaultValue = "") String tableName,
         @RequestParam(defaultValue = "0") Integer page,
         @RequestParam(defaultValue = "10") Integer size) {
-        return Result.ok(tableService.getTables(schemaName, tableName, page, size));
+        return Result.ok(tableService.getTables(dbId, tableName, page, size));
     }
 
 }

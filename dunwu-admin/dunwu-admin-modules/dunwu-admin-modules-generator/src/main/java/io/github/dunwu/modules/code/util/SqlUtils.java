@@ -45,7 +45,7 @@ public class SqlUtils {
      * @param password /
      * @return DataSource
      */
-    private static DataSource getDataSource(String jdbcUrl, String userName, String password) {
+    public static DataSource getDataSource(String jdbcUrl, String userName, String password) {
         DruidDataSource druidDataSource = new DruidDataSource();
         String className;
         try {
@@ -85,7 +85,7 @@ public class SqlUtils {
         return druidDataSource;
     }
 
-    private static Connection getConnection(String jdbcUrl, String userName, String password) {
+    public static Connection getConnection(String jdbcUrl, String userName, String password) {
         DataSource dataSource = getDataSource(jdbcUrl, userName, password);
         Connection connection = null;
         try {
@@ -104,7 +104,7 @@ public class SqlUtils {
         return connection;
     }
 
-    private static void releaseConnection(Connection connection) {
+    public static void releaseConnection(Connection connection) {
         if (null != connection) {
             try {
                 connection.close();
