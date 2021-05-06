@@ -370,7 +370,7 @@ export function downloadFile(obj, name, suffix) {
   const link = document.createElement('a')
   link.style.display = 'none'
   link.href = url
-  const fileName = parseTime(new Date()) + '-' + name + '.' + suffix
+  const fileName = parseTime(new Date(), '{y}_{m}_{d}_{h}_{i}_{s}') + '-' + name + '.' + suffix
   link.setAttribute('download', fileName)
   document.body.appendChild(link)
   link.click()

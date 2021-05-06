@@ -58,9 +58,7 @@ public class ${table.dtoName} implements Serializable {
         <#if enableSwagger>
     @ApiModelProperty(value = "${field.comment}")
         <#else>
-    /**
-     * ${field.comment}
-     */
+    /** ${field.comment} */
         </#if>
     </#if>
     <#if field.fill??>

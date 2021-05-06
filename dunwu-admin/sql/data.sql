@@ -1118,7 +1118,7 @@ CREATE TABLE `hello` (
     `id`          BIGINT(20)   NOT NULL AUTO_INCREMENT COMMENT 'ID',
     `name`        VARCHAR(255) NOT NULL COMMENT '名字',
     `age`         SMALLINT(3)  NOT NULL COMMENT '年龄',
-    `avatar`        VARCHAR(255) NOT NULL COMMENT '头像',
+    `avatar`      VARCHAR(255) NOT NULL COMMENT '头像',
     `create_time` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     PRIMARY KEY (`id`) USING BTREE,
     UNIQUE KEY `uk_name`(`name`) USING BTREE
@@ -1128,3 +1128,7 @@ CREATE TABLE `hello` (
     DEFAULT CHARSET = `utf8`
     ROW_FORMAT = COMPACT COMMENT ='测试';
 
+INSERT INTO `hello` (`id`, `name`, `age`, `avatar`, `create_time`)
+VALUES ('1', 'fasdfas', '12', 'http://dunwu.test.upcdn.net/common/logo/dunwu-logo.png', '2021-03-01 21:12:57');
+INSERT INTO `hello` (`id`, `name`, `age`, `avatar`, `create_time`)
+VALUES ('2', 'abc', '11', 'http://dunwu.test.upcdn.net/common/logo/dunwu-logo.png', '2021-03-15 21:50:16');

@@ -2,6 +2,18 @@
 
 > dunwu-admin-web 是 dunwu-admin 的前端项目。
 
+## 核心技术点
+
+| 技术点                                         | 版本     | 说明                   |
+| ---------------------------------------------- | -------- | ---------------------- |
+| [Node.js](https://nodejs.org/zh-cn/)           | 12.13.0+ | JavaScript 运行时      |
+| [Vue.js](https://cn.vuejs.org/index.html)      | 2.6.10   | JavaScript 框架        |
+| [Vue Router](https://router.vuejs.org/zh/)     | 3.0.2    | Vue 官方的路由管理器   |
+| [Vuex](https://vuex.vuejs.org/zh/)             | 3.1.0    | Vue 官方的状态管理器   |
+| [Element-UI](https://element.eleme.cn/#/zh-CN) | 2.13.2   | Vue 2.0 的桌面端组件库 |
+| [Axios](https://github.com/axios/axios)        | 0.18.1   | Http Client 工具       |
+
+
 ## 项目结构
 
 ```bash

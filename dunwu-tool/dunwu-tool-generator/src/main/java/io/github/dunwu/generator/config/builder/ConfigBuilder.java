@@ -29,6 +29,7 @@ import io.github.dunwu.generator.config.po.TableField;
 import io.github.dunwu.generator.config.po.TableFill;
 import io.github.dunwu.generator.config.po.TableInfo;
 import io.github.dunwu.generator.config.querys.H2Query;
+import io.github.dunwu.generator.config.rules.FormType;
 import io.github.dunwu.generator.config.rules.NamingStrategy;
 
 import java.io.File;
@@ -820,6 +821,9 @@ public class ConfigBuilder {
                             processName(field.getFieldName(), strategy.getNaming(), strategy));
                     }
                     field.setJavaType(dataSource.getTypeConvert().processTypeConvert(global, field));
+                    field.setFormType(getDefaultFormTypeByJavaType(field.getJavaType().getType()));
+                    field.setValidateType(getDefaultValidateTypeByJavaType(field.getJavaType().getType()));
+
                     if (dataSource.isCommentSupported()) {
                         field.setComment(results.getString(dbQuery.fieldComment()));
                     }
@@ -951,6 +955,42 @@ public class ConfigBuilder {
 
         if (MapUtil.isEmpty(this.packageInfo)) {
             throw new DataException("packageInfo 未配置");
+        }
+    }
+
+    public static String getDefaultFormTypeByJavaType(String javaType) {
+        switch (javaType) {
+            case "LocalDate":
+            case "LocalTime":
+            case "Year":
+            case "YearMonth":
+            case "LocalDateTime":
+            case "Date":
+            case "Time":
+            case "Timestamp":
+                return FormType.DateTimePicker.getCode();
+            case "Boolean":
+                return FormType.Switch.getCode();
+            default:
+                return FormType.Input.getCode();
+        }
+    }
+
+    public static String getDefaultValidateTypeByJavaType(String javaType) {
+        switch (javaType) {
+            case "LocalDate":
+            case "LocalTime":
+            case "Year":
+            case "YearMonth":
+            case "LocalDateTime":
+            case "Date":
+            case "Time":
+            case "Timestamp":
+                return FormType.DateTimePicker.getCode();
+            case "Boolean":
+                return FormType.Switch.getCode();
+            default:
+                return FormType.Input.getCode();
         }
     }
 

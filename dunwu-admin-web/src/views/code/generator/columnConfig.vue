@@ -6,6 +6,16 @@
         字段级别配置
       </span>
       <el-button
+        icon="el-icon-download"
+        size="mini"
+        style="float: right; padding: 6px 9px; margin-left: 9px;"
+        type="primary"
+      >
+        <router-link :to="'/tools/code/preview/' + dbId + '/' + schemaName + '/' + tableName">
+          预览
+        </router-link>
+      </el-button>
+      <el-button
         :loading="downloadLoading"
         icon="el-icon-download"
         size="mini"
@@ -19,7 +29,7 @@
         :loading="genLoading"
         icon="el-icon-s-promotion"
         size="mini"
-        style="float: right; padding: 6px 9px; margin-right: 9px;"
+        style="float: right; padding: 6px 9px;"
         type="primary"
         @click="toGenerate"
       >
@@ -170,12 +180,12 @@
               size="mini"
               placeholder="请选择"
             >
-              <el-option label="文本框" value="Input" />
-              <el-option label="文本域" value="Textarea" />
-              <el-option label="数字域" value="InputNumber" />
+              <el-option label="输入框" value="Input" />
+              <el-option label="文本域输入框" value="Textarea" />
+              <el-option label="计数器" value="InputNumber" />
               <el-option label="单选框" value="Radio" />
-              <el-option label="下拉框" value="Select" />
-              <el-option label="日期框" value="Date" />
+              <el-option label="选择器" value="Select" />
+              <el-option label="日期时间选择器" value="DateTimePicker" />
             </el-select>
             <el-select
               v-else
@@ -398,7 +408,7 @@ export default {
       // 打包下载
       this.downloadLoading = true
       codeApi.downloadCode({ schemaName: this.schemaName, tableName: this.tableName }).then(data => {
-        downloadFile(data, row.tableName, 'zip')
+        downloadFile(data, this.tableName, 'zip')
         this.$notify({ title: '下载成功', type: 'success' })
         this.downloadLoading = false
       })

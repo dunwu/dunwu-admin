@@ -35,6 +35,16 @@ public class ValidatorUtil {
     }
 
     /**
+     * 校验文本中是否包含中文字符
+     *
+     * @param text 被校验的文本
+     * @return boolean
+     */
+    public static boolean hasChineseChar(final String text) {
+        return RegexUtil.contains(text, RegexUtil.ZH_CHAR);
+    }
+
+    /**
      * 校验全是汉字字符
      * <p>
      * 描述：校验字符串中只能有中文字符（不包括中文标点符号）。
@@ -47,7 +57,17 @@ public class ValidatorUtil {
      * @return boolean
      */
     public static boolean isAllChineseChar(final String text) {
-        return RegexUtil.matches(text, RegexUtil.ALL_ZH_CHAR);
+        return RegexUtil.matches(text, RegexUtil.ZH_CHAR);
+    }
+
+    /**
+     * 校验文本中是否包含英文字符
+     *
+     * @param text 被校验的文本
+     * @return boolean
+     */
+    public static boolean hasEnglishChar(final String text) {
+        return RegexUtil.contains(text, RegexUtil.EN_CHAR);
     }
 
     /**
@@ -57,7 +77,7 @@ public class ValidatorUtil {
      * @return boolean
      */
     public static boolean isAllEnglishChar(final String text) {
-        return RegexUtil.matches(text, RegexUtil.ALL_EN_CHAR);
+        return RegexUtil.matches(text, RegexUtil.EN_CHAR);
     }
 
     /**
@@ -77,7 +97,7 @@ public class ValidatorUtil {
      * @return boolean
      */
     public static boolean isAllGeneralChar(final String text) {
-        return RegexUtil.matches(text, RegexUtil.ALL_GENERAL_CHAR);
+        return RegexUtil.matches(text, RegexUtil.GENERAL_CHAR);
     }
 
     /**
@@ -87,7 +107,7 @@ public class ValidatorUtil {
      * @return boolean
      */
     public static boolean isAllLowerEnglishChar(final String text) {
-        return RegexUtil.matches(text, RegexUtil.ALL_EN_LOWER_CHAR);
+        return RegexUtil.matches(text, RegexUtil.EN_LOWER_CHAR);
     }
 
     /**
@@ -97,7 +117,7 @@ public class ValidatorUtil {
      * @return boolean
      */
     public static boolean isAllUpperEnglishChar(final String text) {
-        return RegexUtil.matches(text, RegexUtil.ALL_EN_UPPER_CHAR);
+        return RegexUtil.matches(text, RegexUtil.EN_UPPER_CHAR);
     }
 
     /**

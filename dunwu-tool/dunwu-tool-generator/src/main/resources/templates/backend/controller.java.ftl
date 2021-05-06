@@ -133,12 +133,12 @@ public class ${table.controllerName} {
         return Result.ok(service.pojoPageByQuery(query, pageable));
     }
 
-    @GetMapping("{id}")
     <#if enableSwagger>
     @ApiOperation("根据 id 查询 ${table.dtoName}")
     <#else>
     /** 根据 id 查询 {@link ${table.dtoName}} */
     </#if>
+    @GetMapping("{id}")
     public Result getById(@PathVariable Serializable id) {
         return Result.ok(service.pojoById(id));
     }

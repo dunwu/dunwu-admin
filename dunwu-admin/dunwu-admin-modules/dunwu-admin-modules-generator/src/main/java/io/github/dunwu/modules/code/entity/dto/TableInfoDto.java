@@ -20,7 +20,8 @@ import java.time.LocalDateTime;
 public class TableInfoDto {
 
     /** Schema 名称 */
-    private String schemaName;
+    @JsonProperty("schemaName")
+    private String tableSchema;
 
     /** 表名称 */
     private String tableName;
