@@ -43,7 +43,7 @@
               重置
             </el-button>
             <el-button type="info">
-              <router-link :to="'/tools/code/database/'">
+              <router-link :to="'/sys-tools/code/database/'">
                 配置数据源
               </router-link>
             </el-button>
@@ -59,15 +59,15 @@
       <el-table-column :show-overflow-tooltip="true" prop="engine" label="数据库引擎" />
       <el-table-column :show-overflow-tooltip="true" prop="coding" label="字符编码集" />
       <el-table-column prop="createTime" label="创建日期" />
-      <el-table-column label="操作" width="160px" align="center" fixed="right">
+      <el-table-column label="操作" width="160px" fixed="right">
         <template slot-scope="scope">
           <el-button size="mini" style="margin-left: -1px; " type="text">
-            <router-link :to="'/tools/code/config/' + dbId + '/' + scope.row.schemaName + '/' + scope.row.tableName">
+            <router-link :to="'/sys-tools/code/config/' + dbId + '/' + scope.row.schemaName + '/' + scope.row.tableName">
               配置
             </router-link>
           </el-button>
           <el-button size="mini" style="margin-left: -1px;" type="text">
-            <router-link :to="'/tools/code/preview/' + dbId + '/' + scope.row.schemaName + '/' + scope.row.tableName">
+            <router-link :to="'/sys-tools/code/preview/' + dbId + '/' + scope.row.schemaName + '/' + scope.row.tableName">
               预览
             </router-link>
           </el-button>

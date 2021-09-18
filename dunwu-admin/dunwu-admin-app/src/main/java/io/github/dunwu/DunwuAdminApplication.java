@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 @SpringBootApplication
 @EnableTransactionManagement
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
-@MapperScan("io.github.dunwu.modules.*.dao.mapper")
+@MapperScan("io.github.dunwu.module.*.dao.mapper")
 public class DunwuAdminApplication {
 
     public static void main(String[] args) {

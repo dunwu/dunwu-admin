@@ -185,7 +185,7 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>io.github.dunwu</groupId>
+        <groupId>io.github.dunwu.boot</groupId>
         <artifactId>dunwu-boot</artifactId>
         <version>${dunwu-boot.version}</version>
         <type>pom</type>

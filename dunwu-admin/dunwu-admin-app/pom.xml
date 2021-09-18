@@ -20,36 +20,36 @@
   <dependencies>
     <dependency>
       <groupId>io.github.dunwu</groupId>
-      <artifactId>dunwu-admin-modules-system</artifactId>
+      <artifactId>dunwu-admin-module-system</artifactId>
       <version>${dunwu-admin.version}</version>
     </dependency>
     <dependency>
       <groupId>io.github.dunwu</groupId>
-      <artifactId>dunwu-admin-modules-generator</artifactId>
+      <artifactId>dunwu-admin-module-generator</artifactId>
       <version>${dunwu-admin.version}</version>
     </dependency>
     <dependency>
       <groupId>io.github.dunwu</groupId>
-      <artifactId>dunwu-admin-modules-mnt</artifactId>
+      <artifactId>dunwu-admin-module-mnt</artifactId>
       <version>${dunwu-admin.version}</version>
     </dependency>
     <dependency>
       <groupId>io.github.dunwu</groupId>
-      <artifactId>dunwu-admin-modules-demo</artifactId>
+      <artifactId>dunwu-admin-module-demo</artifactId>
       <version>${dunwu-admin.version}</version>
     </dependency>
     <dependency>
       <groupId>io.github.dunwu</groupId>
-      <artifactId>dunwu-admin-modules-tools</artifactId>
+      <artifactId>dunwu-admin-module-tools</artifactId>
       <version>${dunwu-admin.version}</version>
     </dependency>
 
     <dependency>
-      <groupId>io.github.dunwu</groupId>
+      <groupId>io.github.dunwu.boot</groupId>
       <artifactId>dunwu-starter-web</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.github.dunwu</groupId>
+      <groupId>io.github.dunwu.tool</groupId>
       <artifactId>dunwu-tool-core</artifactId>
     </dependency>
 

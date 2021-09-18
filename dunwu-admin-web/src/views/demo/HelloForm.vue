@@ -8,13 +8,13 @@
   >
     <el-form ref="form" :model="form" :rules="rules" size="small" label-width="100px">
       <el-form-item label="名字" prop="name">
-        <el-input v-model="form.name" style="width: 90%" />
+        <el-input v-model="form.name" style="width: 90%" placeholder="请输入名字" />
       </el-form-item>
       <el-form-item label="年龄" prop="age">
-        <el-input-number v-model="form.age" style="width: 90%" />
+        <el-input v-model="form.age" style="width: 90%" placeholder="请输入年龄" />
       </el-form-item>
       <el-form-item label="头像" prop="avatar">
-        <el-input v-model="form.avatar" style="width: 90%" />
+        <el-input v-model="form.avatar" style="width: 90%" placeholder="请输入头像" />
       </el-form-item>
       <el-form-item label="创建时间">
         <el-date-picker v-model="form.createTime" type="datetime" style="width: 90%" />
@@ -30,22 +30,19 @@
 <script>
 import { form } from '@crud/crud'
 
-const defaultForm = { name: null, age: null, avatar: null, createTime: null, }
+/**
+ * 表单实体默认值
+ */
+const defaultForm = { name: null, age: null, avatar: null, createTime: null }
 export default {
   name: 'HelloForm',
   mixins: [form(defaultForm)],
   data() {
     return {
       rules: {
-        name: [
-          { required: true, trigger: 'blur', type: 'string' }
-        ],
-        age: [
-          { required: true, trigger: 'blur', type: 'number' }
-        ],
-        avatar: [
-          { required: true, trigger: 'blur', type: 'string' }
-        ],
+        name: [{ required: true, trigger: 'blur', type: 'string' }],
+        age: [{ required: true, trigger: 'blur', type: 'number' }],
+        avatar: [{ required: true, trigger: 'blur', type: 'string' }]
       }
     }
   }

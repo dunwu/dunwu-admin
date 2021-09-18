@@ -2,11 +2,11 @@ package io.github.dunwu;
 
 import cn.hutool.core.util.StrUtil;
 import com.google.common.net.HttpHeaders;
-import io.github.dunwu.data.core.DataException;
-import io.github.dunwu.data.core.Result;
-import io.github.dunwu.data.core.constant.ResultStatus;
+import io.github.dunwu.tool.data.core.DataException;
+import io.github.dunwu.tool.data.core.Result;
+import io.github.dunwu.tool.data.core.constant.ResultStatus;
 import io.github.dunwu.util.ThrowableUtil;
-import io.github.dunwu.web.constant.WebConstant;
+import io.github.dunwu.tool.web.constant.WebConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

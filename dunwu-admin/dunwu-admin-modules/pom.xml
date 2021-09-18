@@ -14,44 +14,44 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>dunwu-admin-modules-system</module>
-    <module>dunwu-admin-modules-monitor</module>
-    <module>dunwu-admin-modules-mnt</module>
-    <module>dunwu-admin-modules-generator</module>
-    <module>dunwu-admin-modules-tools</module>
-    <module>dunwu-admin-modules-demo</module>
+    <module>dunwu-admin-module-system</module>
+    <module>dunwu-admin-module-monitor</module>
+    <module>dunwu-admin-module-mnt</module>
+    <module>dunwu-admin-module-generator</module>
+    <module>dunwu-admin-module-tools</module>
+    <module>dunwu-admin-module-demo</module>
   </modules>
 
   <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>io.github.dunwu</groupId>
-        <artifactId>dunwu-admin-modules-system</artifactId>
+        <artifactId>dunwu-admin-module-system</artifactId>
         <version>${dunwu-admin.version}</version>
       </dependency>
       <dependency>
         <groupId>io.github.dunwu</groupId>
-        <artifactId>dunwu-admin-modules-monitor</artifactId>
+        <artifactId>dunwu-admin-module-monitor</artifactId>
         <version>${dunwu-admin.version}</version>
       </dependency>
       <dependency>
         <groupId>io.github.dunwu</groupId>
-        <artifactId>dunwu-admin-modules-mnt</artifactId>
+        <artifactId>dunwu-admin-module-mnt</artifactId>
         <version>${dunwu-admin.version}</version>
       </dependency>
       <dependency>
         <groupId>io.github.dunwu</groupId>
-        <artifactId>dunwu-admin-modules-generator</artifactId>
+        <artifactId>dunwu-admin-module-generator</artifactId>
         <version>${dunwu-admin.version}</version>
       </dependency>
       <dependency>
         <groupId>io.github.dunwu</groupId>
-        <artifactId>dunwu-admin-modules-tools</artifactId>
+        <artifactId>dunwu-admin-module-tools</artifactId>
         <version>${dunwu-admin.version}</version>
       </dependency>
       <dependency>
         <groupId>io.github.dunwu</groupId>
-        <artifactId>dunwu-admin-modules-demo</artifactId>
+        <artifactId>dunwu-admin-module-demo</artifactId>
         <version>${dunwu-admin.version}</version>
       </dependency>
     </dependencies>

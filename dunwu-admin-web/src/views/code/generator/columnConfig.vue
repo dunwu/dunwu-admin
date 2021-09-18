@@ -11,7 +11,7 @@
         style="float: right; padding: 6px 9px; margin-left: 9px;"
         type="primary"
       >
-        <router-link :to="'/tools/code/preview/' + dbId + '/' + schemaName + '/' + tableName">
+        <router-link :to="'/sys-tools/code/preview/' + dbId + '/' + schemaName + '/' + tableName">
           预览
         </router-link>
       </el-button>

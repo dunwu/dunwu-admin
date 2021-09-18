@@ -25,13 +25,13 @@ public class MybatisCrudAspect {
 
     // ==================================================================== 插入和更新处理切点
 
-    @Pointcut("execution(* io.github.dunwu.data.mybatis.IDao.insert(..))")
+    @Pointcut("execution(* io.github.dunwu.tool.data.mybatis.IDao.insert(..))")
     public void insertPointcut() { }
 
-    @Pointcut("execution(* io.github.dunwu.data.mybatis.IDao.update*(..))")
+    @Pointcut("execution(* io.github.dunwu.tool.data.mybatis.IDao.update*(..))")
     public void updatePointcut() { }
 
-    @Pointcut("execution(* io.github.dunwu.data.mybatis.IDao.save*(..))")
+    @Pointcut("execution(* io.github.dunwu.tool.data.mybatis.IDao.save*(..))")
     public void savePointcut() { }
 
     @Before("insertPointcut() || updatePointcut() || savePointcut()")
