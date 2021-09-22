@@ -4,8 +4,8 @@ import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.ImmutableList;
 import io.github.dunwu.annotation.Limit;
 import io.github.dunwu.annotation.LimitType;
+import io.github.dunwu.tool.web.ServletUtil;
 import io.github.dunwu.util.RequestHolder;
-import io.github.dunwu.tool.web.util.ServletUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -30,8 +30,8 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 public class LimitAspect {
 
-    private final RedisTemplate<Object, Object> redisTemplate;
     private static final Logger logger = LoggerFactory.getLogger(LimitAspect.class);
+    private final RedisTemplate<Object, Object> redisTemplate;
 
     public LimitAspect(RedisTemplate<Object, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;

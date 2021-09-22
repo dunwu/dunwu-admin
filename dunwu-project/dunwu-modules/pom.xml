@@ -7,7 +7,7 @@
   <parent>
     <groupId>io.github.dunwu</groupId>
     <artifactId>dunwu-parent</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.4</version>
   </parent>
 
   <artifactId>dunwu-modules</artifactId>
@@ -28,14 +28,14 @@
       <dependency>
         <groupId>io.github.dunwu.tool</groupId>
         <artifactId>dunwu-tool</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.4</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>io.github.dunwu.boot</groupId>
         <artifactId>dunwu-boot</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.4</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>

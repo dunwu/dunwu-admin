@@ -26,7 +26,7 @@ import io.github.dunwu.tool.data.core.Result;
 import io.github.dunwu.tool.data.redis.RedisHelper;
 import io.github.dunwu.tool.data.util.PageUtil;
 import io.github.dunwu.tool.exception.BadConfigurationException;
-import io.github.dunwu.tool.web.util.ServletUtil;
+import io.github.dunwu.tool.web.ServletUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -66,6 +66,32 @@ public class AuthService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final VerifyService verifyService;
     private final DunwuWebSecurityProperties securityProperties;
+
+    @Override
+    public JwtUserDto loadUserByUsername(String username) {
+        boolean searchDb = true;
+        JwtUserDto jwtUserDto = null;
+        if (securityProperties.isCacheEnable() && userDtoCache.containsKey(username)) {
+            jwtUserDto = userDtoCache.get(username);
+            searchDb = false;
+        }
+        if (searchDb) {
+            SysUserDto user;
+            user = userService.pojoByUsername(username);
+            if (user == null) {
+                throw new UsernameNotFoundException("");
+            } else {
+                if (!user.getEnabled()) {
+                    throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "账号未激活！");
+                }
+
+                Set<Long> deptIds = deptService.getChildrenDeptIds(user.getDeptId());
+                jwtUserDto = new JwtUserDto(user, deptIds, roleService.mapToGrantedAuthorities(user));
+                userDtoCache.put(username, jwtUserDto);
+            }
+        }
+        return jwtUserDto;
+    }
 
     /**
      * 保存在线用户信息
@@ -128,16 +154,6 @@ public class AuthService implements UserDetailsService {
         }
         onlineUserDtos.sort((o1, o2) -> o2.getLoginTime().compareTo(o1.getLoginTime()));
         return onlineUserDtos;
-    }
-
-    /**
-     * 踢出用户
-     *
-     * @param key /
-     */
-    public void kickOut(String key) {
-        key = securityProperties.getJwt().getOnlineKey() + key;
-        redisHelper.del(key);
     }
 
     /**
@@ -206,6 +222,16 @@ public class AuthService implements UserDetailsService {
                 }
             }
         }
+    }
+
+    /**
+     * 踢出用户
+     *
+     * @param key /
+     */
+    public void kickOut(String key) {
+        key = securityProperties.getJwt().getOnlineKey() + key;
+        redisHelper.del(key);
     }
 
     /**
@@ -279,32 +305,6 @@ public class AuthService implements UserDetailsService {
         securityProperties.setCacheEnable(enableCache);
     }
 
-    @Override
-    public JwtUserDto loadUserByUsername(String username) {
-        boolean searchDb = true;
-        JwtUserDto jwtUserDto = null;
-        if (securityProperties.isCacheEnable() && userDtoCache.containsKey(username)) {
-            jwtUserDto = userDtoCache.get(username);
-            searchDb = false;
-        }
-        if (searchDb) {
-            SysUserDto user;
-            user = userService.pojoByUsername(username);
-            if (user == null) {
-                throw new UsernameNotFoundException("");
-            } else {
-                if (!user.getEnabled()) {
-                    throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "账号未激活！");
-                }
-
-                Set<Long> deptIds = deptService.getChildrenDeptIds(user.getDeptId());
-                jwtUserDto = new JwtUserDto(user, deptIds, roleService.mapToGrantedAuthorities(user));
-                userDtoCache.put(username, jwtUserDto);
-            }
-        }
-        return jwtUserDto;
-    }
-
     @Transactional(rollbackFor = Exception.class)
     public void updateCenter(SysUser entity) {
         SysUserDto user = userService.pojoById(entity.getId());
@@ -321,6 +321,36 @@ public class AuthService implements UserDetailsService {
         userService.updateById(sysUser);
         // 清理缓存
         delCaches(user.getId(), user.getUsername());
+    }
+
+    /**
+     * 清理缓存
+     *
+     * @param id /
+     */
+    public void delCaches(Long id, String username) {
+        redisHelper.del("user::id:" + id);
+        flushCache(username);
+    }
+
+    /**
+     * 清理 登陆时 用户缓存信息
+     *
+     * @param username /
+     */
+    private void flushCache(String username) {
+        cleanUserCache(username);
+    }
+
+    /**
+     * 清理特定用户缓存信息<br> 用户信息变更时
+     *
+     * @param userName /
+     */
+    public void cleanUserCache(String userName) {
+        if (StrUtil.isNotEmpty(userName)) {
+            userDtoCache.remove(userName);
+        }
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -353,36 +383,6 @@ public class AuthService implements UserDetailsService {
         user.setPassword(passwordEncoder.encode(entity.getPassword()));
         userService.updateById(user);
         return Result.ok();
-    }
-
-    /**
-     * 清理缓存
-     *
-     * @param id /
-     */
-    public void delCaches(Long id, String username) {
-        redisHelper.del("user::id:" + id);
-        flushCache(username);
-    }
-
-    /**
-     * 清理 登陆时 用户缓存信息
-     *
-     * @param username /
-     */
-    private void flushCache(String username) {
-        cleanUserCache(username);
-    }
-
-    /**
-     * 清理特定用户缓存信息<br> 用户信息变更时
-     *
-     * @param userName /
-     */
-    public void cleanUserCache(String userName) {
-        if (StrUtil.isNotEmpty(userName)) {
-            userDtoCache.remove(userName);
-        }
     }
 
     /**

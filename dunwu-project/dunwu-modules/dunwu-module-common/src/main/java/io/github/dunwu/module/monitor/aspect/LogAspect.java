@@ -6,7 +6,7 @@ import io.github.dunwu.common.util.ThrowableUtil;
 import io.github.dunwu.module.monitor.annotation.AppLog;
 import io.github.dunwu.module.monitor.entity.SysLog;
 import io.github.dunwu.module.monitor.service.SysLogService;
-import io.github.dunwu.tool.web.util.ServletUtil;
+import io.github.dunwu.tool.web.ServletUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;

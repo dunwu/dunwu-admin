@@ -2,7 +2,7 @@ package io.github.dunwu.module.security.service;
 
 import cn.hutool.json.JSONObject;
 import io.github.dunwu.module.security.exception.AuthException;
-import io.github.dunwu.tool.web.util.SpringUtil;
+import io.github.dunwu.tool.web.SpringUtil;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 /**
  * 测试 Dto 类
  *
- * @author zp
- * @since 2021-09-17
+ * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
+ * @since 2021-09-22
  */
 @Data
 @Accessors(chain = true)
@@ -39,6 +39,7 @@ public class HelloDto implements Serializable {
     @ApiModelProperty(value = "创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime createTime;
+
 
     public static final String ID = "id";
 

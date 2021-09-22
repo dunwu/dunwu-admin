@@ -17,7 +17,13 @@
         <el-input v-model="form.avatar" style="width: 90%" placeholder="请输入头像" />
       </el-form-item>
       <el-form-item label="创建时间">
-        <el-date-picker v-model="form.createTime" type="datetime" style="width: 90%" />
+        <el-date-picker
+          v-model="form.createTime"
+          type="datetime"
+          style="width: 90%"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          placeholder="请选择创建时间"
+        />
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -39,10 +45,27 @@ export default {
   mixins: [form(defaultForm)],
   data() {
     return {
+      /**
+       * 校验规则
+       * @see https://github.com/yiminghe/async-validator
+       */
       rules: {
-        name: [{ required: true, trigger: 'blur', type: 'string' }],
-        age: [{ required: true, trigger: 'blur', type: 'number' }],
-        avatar: [{ required: true, trigger: 'blur', type: 'string' }]
+        name: [
+          { required: true, trigger: 'blur', message: '名字不能为空' },
+          { type: 'string', trigger: 'blur', message: '名字必须为 string 类型' }
+        ],
+        age: [
+          { required: true, trigger: 'blur', message: '年龄不能为空' },
+          { type: 'string', trigger: 'blur', message: '年龄必须为 string 类型' }
+        ],
+        avatar: [
+          { required: true, trigger: 'blur', message: '头像不能为空' },
+          { type: 'string', trigger: 'blur', message: '头像必须为 string 类型' }
+        ],
+        createTime: [
+          { required: true, trigger: 'blur', message: '创建时间不能为空' },
+          { type: 'string', trigger: 'blur', message: '创建时间必须为 string 类型' }
+        ]
       }
     }
   }

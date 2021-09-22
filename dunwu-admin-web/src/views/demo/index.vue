@@ -36,7 +36,26 @@
           </el-col>
           <template v-if="crud.showExtendSearch">
             <el-col :span="6">
-              <date-range-picker v-model="query.createTimeRange" class="date-item" style="width: 90%" />
+              <el-input
+                v-model="query.avatar"
+                clearable
+                placeholder="请输入头像"
+                style="width: 90%;"
+                class="filter-item"
+                @keyup.enter.native="crud.toQuery"
+              />
+            </el-col>
+          </template>
+          <template v-if="crud.showExtendSearch">
+            <el-col :span="6">
+              <el-input
+                v-model="query.createTime"
+                clearable
+                placeholder="请输入创建时间"
+                style="width: 90%;"
+                class="filter-item"
+                @keyup.enter.native="crud.toQuery"
+              />
             </el-col>
           </template>
           <el-col :span="6">
@@ -52,7 +71,7 @@
           </el-col>
         </el-row>
       </div>
-      <TableOperation :permission="permission" />
+      <TableOperation />
     </div>
 
     <!--表格渲染-->
@@ -67,7 +86,11 @@
       <el-table-column prop="id" label="ID" :sortable="'custom'" />
       <el-table-column prop="name" label="名字" />
       <el-table-column prop="age" label="年龄" />
-      <el-table-column prop="avatar" label="头像" />
+      <el-table-column prop="avatar" label="头像">
+        <template slot-scope="scope">
+          <el-image style="width: 50px; height: 50px" :src="scope.row.avatar" fit="fill" />
+        </template>
+      </el-table-column>
       <el-table-column prop="createTime" label="创建时间" />
       <el-table-column label="操作" width="150px">
         <template slot-scope="scope">
@@ -85,35 +108,28 @@
 </template>
 
 <script>
-import HelloApi from './HelloApi'
-import HelloForm from './HelloForm'
 import CRUD, { crud, header, presenter } from '@crud/crud'
 import TableOperation from '@crud/TableOperation'
 import TableColumnOperation from '@crud/TableColumnOperation'
 import TableQueryOperation from '@crud/TableQueryOperation'
 import Pagination from '@crud/Pagination'
-import DateRangePicker from '@/components/DateRangePicker'
+import HelloApi from './HelloApi'
+import HelloForm from './HelloForm'
 
 export default {
   name: 'HelloList',
-  components: { Pagination, TableOperation, TableQueryOperation, TableColumnOperation, DateRangePicker, HelloForm },
+  components: { Pagination, TableOperation, TableQueryOperation, TableColumnOperation, HelloForm },
   mixins: [presenter(), header(), crud()],
   cruds() {
     return CRUD({
       title: '测试',
       url: 'demo/hello',
-      sort: ['id,asc', 'name,asc', 'age,asc'],
+      sort: ['id,asc'],
       crudMethod: { ...HelloApi }
     })
   },
   data() {
-    return {
-      permission: {
-        add: ['admin', 'demo:hello:add'],
-        edit: ['admin', 'demo:hello:edit'],
-        del: ['admin', 'demo:hello:del']
-      }
-    }
+    return {}
   },
   methods: {
     // 钩子：在获取表格数据之前执行，false 则代表不获取数据

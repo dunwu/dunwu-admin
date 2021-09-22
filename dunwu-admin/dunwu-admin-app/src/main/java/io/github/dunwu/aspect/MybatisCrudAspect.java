@@ -10,7 +10,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
 /**
- * {@link Log} 注解的处理器
+ * Mybatis CRUD AOP 处理器
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
  * @since 2020-04-09

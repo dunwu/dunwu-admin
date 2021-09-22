@@ -2,17 +2,17 @@ package io.github.dunwu.module.system.dao.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import io.github.dunwu.tool.data.core.annotation.Dao;
-import io.github.dunwu.tool.data.mybatis.BaseExtDaoImpl;
 import io.github.dunwu.module.system.dao.SysDeptDao;
 import io.github.dunwu.module.system.dao.mapper.SysDeptMapper;
 import io.github.dunwu.module.system.entity.SysDept;
 import io.github.dunwu.module.system.entity.dto.SysDeptDto;
 import io.github.dunwu.tool.bean.BeanUtil;
+import io.github.dunwu.tool.data.core.annotation.Dao;
+import io.github.dunwu.tool.data.mybatis.BaseExtDaoImpl;
 import io.github.dunwu.tool.util.tree.Node;
 import io.github.dunwu.tool.util.tree.TreeNodeConfig;
 import io.github.dunwu.tool.util.tree.TreeUtil;
-import io.github.dunwu.tool.web.util.ServletUtil;
+import io.github.dunwu.tool.web.ServletUtil;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -50,21 +50,6 @@ public class SysDeptDaoImpl extends BaseExtDaoImpl<SysDeptMapper, SysDept> imple
     }
 
     @Override
-    public List<SysDeptDto> buildTreeList(Collection<SysDeptDto> list) {
-        if (CollectionUtil.isEmpty(list)) {
-            return Collections.emptyList();
-        }
-
-        TreeNodeConfig treeNodeConfig = new TreeNodeConfig();
-        treeNodeConfig.setWeightKey("id");
-        treeNodeConfig.setPidKey("pid");
-        treeNodeConfig.setSort(Node.SORT.ASC);
-        treeNodeConfig.setDeep(10);
-        list = list.stream().filter(Objects::nonNull).collect(Collectors.toList());
-        return TreeUtil.build(list, 0L, treeNodeConfig, SysDeptDto.class);
-    }
-
-    @Override
     public List<SysDeptDto> listByPid(Serializable pid) {
         QueryWrapper<SysDept> wrapper = new QueryWrapper<>();
         wrapper.eq("pid", pid);
@@ -85,6 +70,21 @@ public class SysDeptDaoImpl extends BaseExtDaoImpl<SysDeptMapper, SysDept> imple
             }
         }
         return deptDtos;
+    }
+
+    @Override
+    public List<SysDeptDto> buildTreeList(Collection<SysDeptDto> list) {
+        if (CollectionUtil.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+
+        TreeNodeConfig treeNodeConfig = new TreeNodeConfig();
+        treeNodeConfig.setWeightKey("id");
+        treeNodeConfig.setPidKey("pid");
+        treeNodeConfig.setSort(Node.SORT.ASC);
+        treeNodeConfig.setDeep(10);
+        list = list.stream().filter(Objects::nonNull).collect(Collectors.toList());
+        return TreeUtil.build(list, 0L, treeNodeConfig, SysDeptDto.class);
     }
 
 }

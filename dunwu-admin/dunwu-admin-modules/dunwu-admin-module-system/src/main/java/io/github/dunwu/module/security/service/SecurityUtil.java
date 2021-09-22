@@ -1,8 +1,8 @@
 package io.github.dunwu.module.security.service;
 
+import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONObject;
 import io.github.dunwu.module.security.exception.AuthException;
-import io.github.dunwu.tool.web.util.SpringUtil;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +15,16 @@ import org.springframework.security.core.userdetails.UserDetailsService;
  * @since 2020-04-08
  */
 public class SecurityUtil {
+
+    /**
+     * 获取系统用户ID
+     *
+     * @return 系统用户ID
+     */
+    public static Long getCurrentUserId() {
+        UserDetails userDetails = getCurrentUser();
+        return new JSONObject(new JSONObject(userDetails).get("user")).get("id", Long.class);
+    }
 
     /**
      * 获取当前用户身份信息
@@ -31,16 +41,6 @@ public class SecurityUtil {
     public static String getCurrentUsername() {
         UserDetails userDetails = getDefaultUserDetails();
         return userDetails.getUsername();
-    }
-
-    /**
-     * 获取系统用户ID
-     *
-     * @return 系统用户ID
-     */
-    public static Long getCurrentUserId() {
-        UserDetails userDetails = getCurrentUser();
-        return new JSONObject(new JSONObject(userDetails).get("user")).get("id", Long.class);
     }
 
     private static UserDetails getDefaultUserDetails() {

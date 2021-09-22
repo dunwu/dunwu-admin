@@ -36,7 +36,7 @@ public class DataServiceImpl implements DataService {
      * @return /
      */
     @Override
-    @Cacheable(key = "'user:' + #p0.id")
+    @Cacheable(key = "'user:' + #user.id")
     public List<Long> getDeptIds(SysUserDto user) {
         // 用于存储部门id
         Set<Long> deptIds = new HashSet<>();

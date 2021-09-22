@@ -1,12 +1,12 @@
 package io.github.dunwu.module.demo.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import io.github.dunwu.tool.data.mybatis.ServiceImpl;
 import io.github.dunwu.module.demo.dao.HelloDao;
 import io.github.dunwu.module.demo.entity.Hello;
 import io.github.dunwu.module.demo.entity.dto.HelloDto;
 import io.github.dunwu.module.demo.entity.query.HelloQuery;
 import io.github.dunwu.module.demo.service.HelloService;
+import io.github.dunwu.tool.data.mybatis.ServiceImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,8 +19,8 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * 测试 Service 类
  *
- * @author zp
- * @since 2021-09-17
+ * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
+ * @since 2021-09-22
  */
 @Service
 public class HelloServiceImpl extends ServiceImpl implements HelloService {

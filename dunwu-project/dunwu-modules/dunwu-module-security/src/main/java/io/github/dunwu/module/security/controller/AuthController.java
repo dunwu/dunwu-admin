@@ -147,7 +147,7 @@ public class AuthController {
 
     @ApiOperation("修改用户密码")
     @PostMapping("edit/password")
-    public Result updatePass(@RequestBody UserPassVo entity) throws Exception {
+    public Result updatePass(@RequestBody UserPassVo entity) {
         authService.updatePass(entity);
         return Result.ok();
     }
@@ -156,7 +156,7 @@ public class AuthController {
     @ApiOperation("修改用户邮箱")
     @PostMapping(value = "edit/email/{code}")
     public Result updateEmail(@PathVariable String code,
-        @Validated(EditCheck.class) @RequestBody SysUser entity) throws Exception {
+        @Validated(EditCheck.class) @RequestBody SysUser entity) {
         authService.updateEmail(code, entity);
         return Result.ok();
     }

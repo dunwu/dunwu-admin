@@ -12,5 +12,6 @@
   <modules>
     <module>dunwu-common</module>
     <module>dunwu-modules</module>
+    <module>dunwu-apps</module>
   </modules>
 </project>

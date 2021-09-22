@@ -19,8 +19,8 @@ import javax.validation.constraints.NotNull;
 /**
  * 测试
  *
- * @author zp
- * @since 2021-09-17
+ * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
+ * @since 2021-09-22
  */
 @Data
 @Accessors(chain = true)
@@ -52,6 +52,7 @@ public class Hello implements Serializable {
     @TableField("create_time")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime createTime;
+
 
     public static final String ID = "id";
 

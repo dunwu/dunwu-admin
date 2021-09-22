@@ -1,11 +1,11 @@
 package io.github.dunwu.module.demo.controller;
 
+import io.github.dunwu.module.demo.entity.Hello;
+import io.github.dunwu.module.demo.entity.query.HelloQuery;
+import io.github.dunwu.module.demo.service.HelloService;
 import io.github.dunwu.tool.data.core.Result;
 import io.github.dunwu.tool.data.validator.annotation.AddCheck;
 import io.github.dunwu.tool.data.validator.annotation.EditCheck;
-import io.github.dunwu.module.demo.entity.query.HelloQuery;
-import io.github.dunwu.module.demo.entity.Hello;
-import io.github.dunwu.module.demo.service.HelloService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +20,8 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * 测试 Controller 类
  *
- * @author zp
- * @since 2021-09-17
+ * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
+ * @since 2021-09-22
  */
 @RestController
 @RequestMapping("/demo/hello")

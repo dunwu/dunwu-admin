@@ -1,10 +1,10 @@
 package io.github.dunwu.module.demo.service;
 
-import io.github.dunwu.tool.data.core.annotation.QueryField;
-import io.github.dunwu.tool.data.mybatis.IService;
-import io.github.dunwu.module.demo.entity.query.HelloQuery;
 import io.github.dunwu.module.demo.entity.Hello;
 import io.github.dunwu.module.demo.entity.dto.HelloDto;
+import io.github.dunwu.module.demo.entity.query.HelloQuery;
+import io.github.dunwu.tool.data.core.annotation.QueryField;
+import io.github.dunwu.tool.data.mybatis.IService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * 测试 Service 接口
  *
- * @author zp
- * @since 2021-09-17
+ * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
+ * @since 2021-09-22
  */
 public interface HelloService extends IService {
 
@@ -52,6 +52,7 @@ public interface HelloService extends IService {
      * @return true / false
      */
     boolean updateBatchById(Collection<Hello> list);
+
 
     /**
      * 添加或更新一条 {@link Hello} 记录
