@@ -12,9 +12,6 @@ import io.github.dunwu.common.util.enums.CodeBiEnum;
 import io.github.dunwu.common.util.enums.CodeEnum;
 import io.github.dunwu.module.mail.domain.vo.EmailVo;
 import io.github.dunwu.module.mail.service.EmailService;
-import io.github.dunwu.tool.data.core.Result;
-import io.github.dunwu.tool.data.redis.RedisHelper;
-import io.github.dunwu.tool.data.validator.annotation.EditCheck;
 import io.github.dunwu.module.monitor.annotation.AppLog;
 import io.github.dunwu.module.security.config.DunwuWebSecurityProperties;
 import io.github.dunwu.module.security.entity.constant.LoginCodeEnum;
@@ -25,6 +22,9 @@ import io.github.dunwu.module.security.service.AuthService;
 import io.github.dunwu.module.security.service.VerifyService;
 import io.github.dunwu.module.system.entity.SysUser;
 import io.github.dunwu.module.system.entity.vo.UserPassVo;
+import io.github.dunwu.tool.data.DataResult;
+import io.github.dunwu.tool.data.redis.RedisHelper;
+import io.github.dunwu.tool.data.validator.annotation.EditCheck;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -66,7 +66,7 @@ public class AuthController {
 
     @ApiOperation("登录授权")
     @AnonymousPostMapping(value = "/login")
-    public Result login(@Validated @RequestBody AuthUserDto authUser, HttpServletRequest request) {
+    public DataResult login(@Validated @RequestBody AuthUserDto authUser, HttpServletRequest request) {
         // 密码解密
         String password = rsa.decryptStr(authUser.getPassword(), KeyType.PrivateKey);
         // 查询验证码
@@ -97,18 +97,18 @@ public class AuthController {
             //踢掉之前已经登录的token
             authService.checkLoginOnUser(authUser.getUsername(), token);
         }
-        return Result.ok(authInfo);
+        return DataResult.ok(authInfo);
     }
 
     @ApiOperation("获取用户信息")
     @GetMapping(value = "/info")
-    public Result getUserInfo() {
-        return Result.ok(SecurityUtils.getCurrentUser());
+    public DataResult getUserInfo() {
+        return DataResult.ok(SecurityUtils.getCurrentUser());
     }
 
     @ApiOperation("获取验证码")
     @AnonymousGetMapping(value = "/code")
-    public Result getCode() {
+    public DataResult getCode() {
         // 获取运算的结果
         Captcha captcha = authService.getCaptcha();
         String uuid = properties.getJwt().getCodeKey() + IdUtil.simpleUUID();
@@ -124,62 +124,62 @@ public class AuthController {
             put("img", captcha.toBase64());
             put("uuid", uuid);
         }};
-        return Result.ok(imgResult);
+        return DataResult.ok(imgResult);
     }
 
     @ApiOperation("退出登录")
     @AnonymousPostMapping(value = "/logout")
-    public Result logout(HttpServletRequest request) {
+    public DataResult logout(HttpServletRequest request) {
         authService.logout(tokenProvider.getToken(request));
-        return Result.ok();
+        return DataResult.ok();
     }
 
     @AppLog("修改用户：个人中心")
     @ApiOperation("修改用户：个人中心")
     @PostMapping("edit/center")
-    public Result center(@Validated(EditCheck.class) @RequestBody SysUser entity) {
+    public DataResult center(@Validated(EditCheck.class) @RequestBody SysUser entity) {
         if (!entity.getId().equals(SecurityUtils.getCurrentUserId())) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "不能修改他人资料");
         }
         authService.updateCenter(entity);
-        return Result.ok();
+        return DataResult.ok();
     }
 
     @ApiOperation("修改用户密码")
     @PostMapping("edit/password")
-    public Result updatePass(@RequestBody UserPassVo entity) {
+    public DataResult updatePass(@RequestBody UserPassVo entity) {
         authService.updatePass(entity);
-        return Result.ok();
+        return DataResult.ok();
     }
 
     @AppLog("修改用户邮箱")
     @ApiOperation("修改用户邮箱")
     @PostMapping(value = "edit/email/{code}")
-    public Result updateEmail(@PathVariable String code,
+    public DataResult updateEmail(@PathVariable String code,
         @Validated(EditCheck.class) @RequestBody SysUser entity) {
         authService.updateEmail(code, entity);
-        return Result.ok();
+        return DataResult.ok();
     }
 
     @PostMapping(value = "/code/resetEmail")
     @ApiOperation("重置邮箱，发送验证码")
-    public Result resetEmail(@RequestParam String email) {
+    public DataResult resetEmail(@RequestParam String email) {
         EmailVo emailVo = verificationCodeService.sendEmail(email, CodeEnum.EMAIL_RESET_EMAIL_CODE.getKey());
         emailService.send(emailVo, emailService.find());
-        return Result.ok();
+        return DataResult.ok();
     }
 
     @PostMapping(value = "/code/email/resetPass")
     @ApiOperation("重置密码，发送验证码")
-    public Result resetPass(@RequestParam String email) {
+    public DataResult resetPass(@RequestParam String email) {
         EmailVo emailVo = verificationCodeService.sendEmail(email, CodeEnum.EMAIL_RESET_PWD_CODE.getKey());
         emailService.send(emailVo, emailService.find());
-        return Result.ok();
+        return DataResult.ok();
     }
 
     @GetMapping(value = "/code/validated")
     @ApiOperation("验证码验证")
-    public Result validated(@RequestParam String email, @RequestParam String code,
+    public DataResult validated(@RequestParam String email, @RequestParam String code,
         @RequestParam Integer codeBi) {
         CodeBiEnum biEnum = CodeBiEnum.find(codeBi);
         switch (Objects.requireNonNull(biEnum)) {
@@ -192,6 +192,7 @@ public class AuthController {
             default:
                 break;
         }
-        return Result.ok();
+        return DataResult.ok();
     }
+
 }

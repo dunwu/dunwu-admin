@@ -4,7 +4,7 @@ import io.github.dunwu.module.code.dao.CodeDatabaseDao;
 import io.github.dunwu.module.code.dao.mapper.CodeDatabaseMapper;
 import io.github.dunwu.module.code.entity.CodeDatabase;
 import io.github.dunwu.module.code.entity.dto.CodeDatabaseDto;
-import io.github.dunwu.tool.data.core.annotation.Dao;
+import io.github.dunwu.tool.data.annotation.Dao;
 import io.github.dunwu.tool.data.mybatis.BaseExtDaoImpl;
 import io.github.dunwu.tool.web.ServletUtil;
 

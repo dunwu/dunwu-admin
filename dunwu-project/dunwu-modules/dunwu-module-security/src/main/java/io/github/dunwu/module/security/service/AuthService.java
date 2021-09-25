@@ -14,6 +14,7 @@ import io.github.dunwu.module.security.config.DunwuWebSecurityProperties;
 import io.github.dunwu.module.security.entity.dto.JwtUserDto;
 import io.github.dunwu.module.security.entity.dto.LoginCodeDto;
 import io.github.dunwu.module.security.entity.dto.OnlineUserDto;
+import io.github.dunwu.module.security.exception.AuthException;
 import io.github.dunwu.module.system.entity.SysUser;
 import io.github.dunwu.module.system.entity.dto.SysUserDto;
 import io.github.dunwu.module.system.entity.query.SysUserQuery;
@@ -21,11 +22,10 @@ import io.github.dunwu.module.system.entity.vo.UserPassVo;
 import io.github.dunwu.module.system.service.SysDeptService;
 import io.github.dunwu.module.system.service.SysRoleService;
 import io.github.dunwu.module.system.service.SysUserService;
-import io.github.dunwu.tool.data.core.DataException;
-import io.github.dunwu.tool.data.core.Result;
+import io.github.dunwu.tool.data.DataResult;
+import io.github.dunwu.tool.data.exception.DataException;
 import io.github.dunwu.tool.data.redis.RedisHelper;
 import io.github.dunwu.tool.data.util.PageUtil;
-import io.github.dunwu.tool.exception.BadConfigurationException;
 import io.github.dunwu.tool.web.ServletUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -292,7 +292,7 @@ public class AuthService implements UserDetailsService {
                     captcha.setLen(loginCode.getLength());
                     break;
                 default:
-                    throw new BadConfigurationException("验证码配置信息错误！正确配置查看 LoginCodeEnum ");
+                    throw new AuthException("验证码配置信息错误！正确配置查看 LoginCodeEnum ");
             }
         }
         if (StrUtil.isNotBlank(loginCode.getFontName())) {
@@ -371,7 +371,7 @@ public class AuthService implements UserDetailsService {
         flushCache(sysUserDto.getUsername());
     }
 
-    public Result updateEmail(String code, SysUser entity) {
+    public DataResult updateEmail(String code, SysUser entity) {
         String password = rsa.decryptStr(entity.getPassword(), KeyType.PrivateKey);
         SysUserDto userDto = userService.pojoByUsername(SecurityUtils.getCurrentUsername());
         if (!passwordEncoder.matches(password, userDto.getPassword())) {
@@ -382,7 +382,7 @@ public class AuthService implements UserDetailsService {
         user.setId(entity.getId());
         user.setPassword(passwordEncoder.encode(entity.getPassword()));
         userService.updateById(user);
-        return Result.ok();
+        return DataResult.ok();
     }
 
     /**

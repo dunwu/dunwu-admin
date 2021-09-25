@@ -1,12 +1,12 @@
 package io.github.dunwu.module.system.controller;
 
-import io.github.dunwu.tool.data.core.Result;
-import io.github.dunwu.tool.data.validator.annotation.AddCheck;
-import io.github.dunwu.tool.data.validator.annotation.EditCheck;
 import io.github.dunwu.module.monitor.annotation.AppLog;
 import io.github.dunwu.module.system.entity.dto.SysDeptDto;
 import io.github.dunwu.module.system.entity.query.SysDeptQuery;
 import io.github.dunwu.module.system.service.SysDeptService;
+import io.github.dunwu.tool.data.DataResult;
+import io.github.dunwu.tool.data.validator.annotation.AddCheck;
+import io.github.dunwu.tool.data.validator.annotation.EditCheck;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -38,64 +38,64 @@ public class SysDeptController {
     @PreAuthorize("@exp.check('dept:add')")
     @ApiOperation("添加一条 SysDept 记录")
     @PostMapping("add")
-    public Result add(@Validated(AddCheck.class) @RequestBody SysDeptDto entity) {
+    public DataResult add(@Validated(AddCheck.class) @RequestBody SysDeptDto entity) {
         service.save(entity);
-        return Result.ok();
+        return DataResult.ok();
     }
 
     @AppLog("更新一条 SysDept 记录")
     @PreAuthorize("@exp.check('dept:edit')")
     @ApiOperation("更新一条 SysDept 记录")
     @PostMapping("edit")
-    public Result edit(@Validated(EditCheck.class) @RequestBody SysDeptDto entity) {
+    public DataResult edit(@Validated(EditCheck.class) @RequestBody SysDeptDto entity) {
         service.updateById(entity);
-        return Result.ok();
+        return DataResult.ok();
     }
 
     @AppLog("删除一条 SysDept 记录")
     @PreAuthorize("@exp.check('dept:del')")
     @ApiOperation("删除一条 SysDept 记录")
     @PostMapping("del/{id}")
-    public Result deleteById(@PathVariable Serializable id) {
+    public DataResult deleteById(@PathVariable Serializable id) {
         service.removeById(id);
-        return Result.ok();
+        return DataResult.ok();
     }
 
     @AppLog("根据 ID 集合批量删除 SysDept 记录")
     @PreAuthorize("@exp.check('dept:del')")
     @ApiOperation("根据 ID 集合批量删除 SysDept 记录")
     @PostMapping("del/batch")
-    public Result deleteByIds(@RequestBody Collection<Serializable> ids) {
+    public DataResult deleteByIds(@RequestBody Collection<Serializable> ids) {
         service.removeByIds(ids);
-        return Result.ok();
+        return DataResult.ok();
     }
 
     @PreAuthorize("@exp.check('dept:view')")
     @ApiOperation("根据 query 条件，查询匹配条件的 SysDeptDto 列表")
     @GetMapping("list")
-    public Result list(SysDeptQuery query) {
-        return Result.ok(service.pojoListByQuery(query));
+    public DataResult list(SysDeptQuery query) {
+        return DataResult.ok(service.pojoListByQuery(query));
     }
 
     @PreAuthorize("@exp.check('dept:view')")
     @ApiOperation("根据 query 和 pageable 条件，分页查询 SysDeptDto 记录")
     @GetMapping("page")
-    public Result page(SysDeptQuery query, Pageable pageable) {
-        return Result.ok(service.pojoPageByQuery(query, pageable));
+    public DataResult page(SysDeptQuery query, Pageable pageable) {
+        return DataResult.ok(service.pojoPageByQuery(query, pageable));
     }
 
     @PreAuthorize("@exp.check('dept:view')")
     @ApiOperation("根据 query 条件，查询匹配条件的总记录数")
     @GetMapping("count")
-    public Result count(SysDeptQuery query) {
-        return Result.ok(service.countByQuery(query));
+    public DataResult count(SysDeptQuery query) {
+        return DataResult.ok(service.countByQuery(query));
     }
 
     @PreAuthorize("@exp.check('dept:view')")
     @ApiOperation("根据 ID 查询 SysDeptDto 记录")
     @GetMapping("{id}")
-    public Result getById(@PathVariable Serializable id) {
-        return Result.ok(service.pojoById(id));
+    public DataResult getById(@PathVariable Serializable id) {
+        return DataResult.ok(service.pojoById(id));
     }
 
     @PreAuthorize("@exp.check('dept:view')")
@@ -115,15 +115,15 @@ public class SysDeptController {
     @PreAuthorize("@exp.check('dept:view')")
     @ApiOperation("根据 query 条件，返回 SysDeptDto 树形列表")
     @GetMapping("treeList")
-    public Result treeList(SysDeptQuery query) {
-        return Result.ok(service.treeList(query));
+    public DataResult treeList(SysDeptQuery query) {
+        return DataResult.ok(service.treeList(query));
     }
 
     @PreAuthorize("@exp.check('dept:view')")
     @ApiOperation("根据ID获取同级与上级数据")
     @PostMapping("superiorTreeList")
-    public Result superiorTreeList(@RequestBody Collection<Serializable> ids) {
-        return Result.ok(service.treeListByIds(ids));
+    public DataResult superiorTreeList(@RequestBody Collection<Serializable> ids) {
+        return DataResult.ok(service.treeListByIds(ids));
     }
 
     // @Log("更新一条 SysDept 记录的关联关系")

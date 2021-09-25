@@ -3,7 +3,7 @@ package io.github.dunwu.module.demo.service;
 import io.github.dunwu.module.demo.entity.Hello;
 import io.github.dunwu.module.demo.entity.dto.HelloDto;
 import io.github.dunwu.module.demo.entity.query.HelloQuery;
-import io.github.dunwu.tool.data.core.annotation.QueryField;
+import io.github.dunwu.tool.data.annotation.QueryField;
 import io.github.dunwu.tool.data.mybatis.IService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -52,7 +52,6 @@ public interface HelloService extends IService {
      * @return true / false
      */
     boolean updateBatchById(Collection<Hello> list);
-
 
     /**
      * 添加或更新一条 {@link Hello} 记录

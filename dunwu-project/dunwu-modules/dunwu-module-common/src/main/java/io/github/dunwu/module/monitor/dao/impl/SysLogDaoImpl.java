@@ -4,7 +4,7 @@ import io.github.dunwu.module.monitor.dao.SysLogDao;
 import io.github.dunwu.module.monitor.dao.mapper.SysLogMapper;
 import io.github.dunwu.module.monitor.entity.SysLog;
 import io.github.dunwu.module.monitor.entity.dto.SysLogDto;
-import io.github.dunwu.tool.data.core.annotation.Dao;
+import io.github.dunwu.tool.data.annotation.Dao;
 import io.github.dunwu.tool.data.mybatis.BaseExtDaoImpl;
 import io.github.dunwu.tool.web.ServletUtil;
 

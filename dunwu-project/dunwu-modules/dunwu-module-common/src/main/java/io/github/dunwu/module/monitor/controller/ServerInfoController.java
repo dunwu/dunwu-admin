@@ -1,6 +1,5 @@
 package io.github.dunwu.module.monitor.controller;
 
-import io.github.dunwu.tool.data.core.Result;
 import io.github.dunwu.module.monitor.service.ServerInfoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,8 +24,8 @@ public class ServerInfoController {
     @GetMapping
     @ApiOperation("查询服务监控")
     @PreAuthorize("@exp.check('monitor:view')")
-    public Result query() {
-        return Result.ok(serverService.getServers());
+    public DataResult query() {
+        return DataResult.ok(serverService.getServers());
     }
 
 }

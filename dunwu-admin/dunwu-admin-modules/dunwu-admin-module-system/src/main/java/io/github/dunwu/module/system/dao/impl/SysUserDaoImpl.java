@@ -4,7 +4,7 @@ import io.github.dunwu.module.system.dao.SysUserDao;
 import io.github.dunwu.module.system.dao.mapper.SysUserMapper;
 import io.github.dunwu.module.system.entity.SysUser;
 import io.github.dunwu.module.system.entity.dto.SysUserDto;
-import io.github.dunwu.tool.data.core.annotation.Dao;
+import io.github.dunwu.tool.data.annotation.Dao;
 import io.github.dunwu.tool.data.mybatis.BaseExtDaoImpl;
 import io.github.dunwu.tool.web.ServletUtil;
 

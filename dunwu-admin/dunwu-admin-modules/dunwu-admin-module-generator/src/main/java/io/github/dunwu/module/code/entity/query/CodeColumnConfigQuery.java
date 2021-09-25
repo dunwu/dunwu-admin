@@ -1,7 +1,7 @@
 package io.github.dunwu.module.code.entity.query;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.github.dunwu.tool.data.core.annotation.QueryField;
+import io.github.dunwu.tool.data.annotation.QueryField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

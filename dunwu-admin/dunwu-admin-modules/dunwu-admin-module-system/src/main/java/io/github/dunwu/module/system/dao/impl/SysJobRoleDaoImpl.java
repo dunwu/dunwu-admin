@@ -4,7 +4,7 @@ import io.github.dunwu.module.system.dao.SysJobRoleDao;
 import io.github.dunwu.module.system.dao.mapper.SysJobRoleMapper;
 import io.github.dunwu.module.system.entity.SysJobRole;
 import io.github.dunwu.module.system.entity.dto.SysJobRoleDto;
-import io.github.dunwu.tool.data.core.annotation.Dao;
+import io.github.dunwu.tool.data.annotation.Dao;
 import io.github.dunwu.tool.data.mybatis.BaseExtDaoImpl;
 import io.github.dunwu.tool.web.ServletUtil;
 

@@ -1,6 +1,6 @@
 package io.github.dunwu.module.system.entity.query;
 
-import io.github.dunwu.tool.data.core.annotation.QueryField;
+import io.github.dunwu.tool.data.annotation.QueryField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -30,7 +30,5 @@ public class SysUserRoleQuery implements Serializable {
     @ApiModelProperty(value = "角色ID")
     @QueryField
     private Long roleId;
-
-
 
 }

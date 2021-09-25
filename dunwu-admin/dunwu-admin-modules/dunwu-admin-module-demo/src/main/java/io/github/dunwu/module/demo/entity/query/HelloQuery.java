@@ -1,7 +1,7 @@
 package io.github.dunwu.module.demo.entity.query;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.github.dunwu.tool.data.core.annotation.QueryField;
+import io.github.dunwu.tool.data.annotation.QueryField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -23,37 +23,27 @@ import java.time.LocalDateTime;
 @ApiModel(value = "HelloQuery", description = "测试")
 public class HelloQuery implements Serializable {
 
+    public static final String ID = "id";
+    public static final String NAME = "name";
+    public static final String AGE = "age";
+    public static final String AVATAR = "avatar";
+    public static final String CREATE_TIME = "create_time";
     private static final long serialVersionUID = 1L;
-
     @ApiModelProperty(value = "ID")
     @QueryField
     private Long id;
-
     @ApiModelProperty(value = "名字")
     @QueryField
     private String name;
-
     @ApiModelProperty(value = "年龄")
     @QueryField
     private Integer age;
-
     @ApiModelProperty(value = "头像")
     @QueryField
     private String avatar;
-
     @ApiModelProperty(value = "创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @QueryField
     private LocalDateTime createTime;
-
-    public static final String ID = "id";
-
-    public static final String NAME = "name";
-
-    public static final String AGE = "age";
-
-    public static final String AVATAR = "avatar";
-
-    public static final String CREATE_TIME = "create_time";
 
 }

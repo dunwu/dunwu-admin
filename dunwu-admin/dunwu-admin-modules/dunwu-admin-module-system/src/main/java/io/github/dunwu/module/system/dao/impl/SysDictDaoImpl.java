@@ -4,7 +4,7 @@ import io.github.dunwu.module.system.dao.SysDictDao;
 import io.github.dunwu.module.system.dao.mapper.SysDictMapper;
 import io.github.dunwu.module.system.entity.SysDict;
 import io.github.dunwu.module.system.entity.dto.SysDictDto;
-import io.github.dunwu.tool.data.core.annotation.Dao;
+import io.github.dunwu.tool.data.annotation.Dao;
 import io.github.dunwu.tool.data.mybatis.BaseExtDaoImpl;
 import io.github.dunwu.tool.web.ServletUtil;
 

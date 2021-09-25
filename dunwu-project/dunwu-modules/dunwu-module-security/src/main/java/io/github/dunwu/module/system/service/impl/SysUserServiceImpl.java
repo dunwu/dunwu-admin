@@ -2,8 +2,6 @@ package io.github.dunwu.module.system.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import io.github.dunwu.tool.data.core.DataException;
-import io.github.dunwu.tool.data.mybatis.ServiceImpl;
 import io.github.dunwu.module.system.dao.*;
 import io.github.dunwu.module.system.entity.SysRoleMenu;
 import io.github.dunwu.module.system.entity.SysUser;
@@ -14,6 +12,8 @@ import io.github.dunwu.module.system.entity.dto.SysRoleDto;
 import io.github.dunwu.module.system.entity.dto.SysUserDto;
 import io.github.dunwu.module.system.service.SysUserService;
 import io.github.dunwu.tool.bean.BeanUtil;
+import io.github.dunwu.tool.data.exception.DataException;
+import io.github.dunwu.tool.data.mybatis.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -169,6 +169,30 @@ public class SysUserServiceImpl extends ServiceImpl implements SysUserService {
         return doToDto(user);
     }
 
+    @Override
+    public List<SysUser> findByMenuId(Long menuId) {
+        SysRoleMenu query1 = new SysRoleMenu();
+        List<SysRoleMenu> roleMenus = roleMenuDao.list(query1);
+        if (CollectionUtil.isEmpty(roleMenus)) {
+            return null;
+        }
+        return null;
+    }
+
+    @Override
+    public List<SysUser> findByRoleId(Long roleId) {
+        return null;
+    }
+
+    @Override
+    public int countByRoles(Set<Long> roleIds) {
+        return 0;
+    }
+
+    public SysUser dtoToDo(SysUserDto dto) {
+        return BeanUtil.toBean(dto, SysUser.class);
+    }
+
     public SysUserDto doToDto(SysUser entity) {
         SysUserDto dto = BeanUtil.toBean(entity, SysUserDto.class);
         dto.setName(entity.getUsername());
@@ -209,30 +233,6 @@ public class SysUserServiceImpl extends ServiceImpl implements SysUserService {
         }
 
         return dto;
-    }
-
-    public SysUser dtoToDo(SysUserDto dto) {
-        return BeanUtil.toBean(dto, SysUser.class);
-    }
-
-    @Override
-    public List<SysUser> findByMenuId(Long menuId) {
-        SysRoleMenu query1 = new SysRoleMenu();
-        List<SysRoleMenu> roleMenus = roleMenuDao.list(query1);
-        if (CollectionUtil.isEmpty(roleMenus)) {
-            return null;
-        }
-        return null;
-    }
-
-    @Override
-    public List<SysUser> findByRoleId(Long roleId) {
-        return null;
-    }
-
-    @Override
-    public int countByRoles(Set<Long> roleIds) {
-        return 0;
     }
 
 }

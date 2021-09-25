@@ -1,10 +1,10 @@
 package io.github.dunwu.module.code.service;
 
-import io.github.dunwu.tool.data.core.annotation.QueryField;
-import io.github.dunwu.tool.data.mybatis.IService;
 import io.github.dunwu.module.code.entity.CodeTableConfig;
 import io.github.dunwu.module.code.entity.dto.CodeTableConfigDto;
 import io.github.dunwu.module.code.entity.query.CodeTableConfigQuery;
+import io.github.dunwu.tool.data.annotation.QueryField;
+import io.github.dunwu.tool.data.mybatis.IService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

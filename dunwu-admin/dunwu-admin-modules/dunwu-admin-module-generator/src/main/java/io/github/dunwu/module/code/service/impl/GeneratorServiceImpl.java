@@ -14,7 +14,7 @@ import io.github.dunwu.module.code.entity.query.CodeColumnConfigQuery;
 import io.github.dunwu.module.code.entity.query.CodeGlobalConfigQuery;
 import io.github.dunwu.module.code.entity.query.CodeTableConfigQuery;
 import io.github.dunwu.module.code.service.*;
-import io.github.dunwu.tool.data.core.DataException;
+import io.github.dunwu.tool.data.exception.DataException;
 import io.github.dunwu.tool.generator.CodeGenerator;
 import io.github.dunwu.tool.generator.config.*;
 import io.github.dunwu.tool.generator.config.builder.ConfigBuilder;

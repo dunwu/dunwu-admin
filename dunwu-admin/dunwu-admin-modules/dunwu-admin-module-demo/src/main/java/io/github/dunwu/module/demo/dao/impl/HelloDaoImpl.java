@@ -4,7 +4,7 @@ import io.github.dunwu.module.demo.dao.HelloDao;
 import io.github.dunwu.module.demo.dao.mapper.HelloMapper;
 import io.github.dunwu.module.demo.entity.Hello;
 import io.github.dunwu.module.demo.entity.dto.HelloDto;
-import io.github.dunwu.tool.data.core.annotation.Dao;
+import io.github.dunwu.tool.data.annotation.Dao;
 import io.github.dunwu.tool.data.mybatis.BaseExtDaoImpl;
 import io.github.dunwu.tool.web.ServletUtil;
 

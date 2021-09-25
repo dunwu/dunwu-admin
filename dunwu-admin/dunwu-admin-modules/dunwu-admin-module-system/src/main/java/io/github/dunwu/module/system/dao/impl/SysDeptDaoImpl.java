@@ -7,7 +7,7 @@ import io.github.dunwu.module.system.dao.mapper.SysDeptMapper;
 import io.github.dunwu.module.system.entity.SysDept;
 import io.github.dunwu.module.system.entity.dto.SysDeptDto;
 import io.github.dunwu.tool.bean.BeanUtil;
-import io.github.dunwu.tool.data.core.annotation.Dao;
+import io.github.dunwu.tool.data.annotation.Dao;
 import io.github.dunwu.tool.data.mybatis.BaseExtDaoImpl;
 import io.github.dunwu.tool.util.tree.Node;
 import io.github.dunwu.tool.util.tree.TreeNodeConfig;

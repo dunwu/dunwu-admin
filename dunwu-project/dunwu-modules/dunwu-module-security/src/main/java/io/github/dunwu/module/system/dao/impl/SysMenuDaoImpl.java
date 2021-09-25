@@ -9,7 +9,7 @@ import io.github.dunwu.module.system.dao.mapper.SysMenuMapper;
 import io.github.dunwu.module.system.entity.SysMenu;
 import io.github.dunwu.module.system.entity.dto.SysMenuDto;
 import io.github.dunwu.module.system.entity.vo.MenuVo;
-import io.github.dunwu.tool.data.core.annotation.Dao;
+import io.github.dunwu.tool.data.annotation.Dao;
 import io.github.dunwu.tool.data.mybatis.BaseExtDaoImpl;
 import io.github.dunwu.tool.util.tree.Node;
 import io.github.dunwu.tool.util.tree.TreeNodeConfig;

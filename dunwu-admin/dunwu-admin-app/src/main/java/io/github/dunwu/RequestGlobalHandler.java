@@ -2,11 +2,11 @@ package io.github.dunwu;
 
 import cn.hutool.core.util.StrUtil;
 import com.google.common.net.HttpHeaders;
-import io.github.dunwu.tool.data.core.DataException;
-import io.github.dunwu.tool.data.core.Result;
-import io.github.dunwu.tool.data.core.constant.ResultStatus;
-import io.github.dunwu.util.ThrowableUtil;
+import io.github.dunwu.tool.data.DataResult;
+import io.github.dunwu.tool.data.constant.enums.ResultStatus;
+import io.github.dunwu.tool.data.exception.DataException;
 import io.github.dunwu.tool.web.constant.WebConstant;
+import io.github.dunwu.util.ThrowableUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -53,12 +53,12 @@ public class RequestGlobalHandler {
      * 统一处理请求参数校验异常(普通传参)
      *
      * @param e ConstraintViolationException
-     * @return {@link Result}
+     * @return {@link DataResult}
      */
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({ ConstraintViolationException.class })
-    public Result handleConstraintViolationException(final ConstraintViolationException e) {
+    public DataResult handleConstraintViolationException(final ConstraintViolationException e) {
         log.error("ConstraintViolationException", e);
         StringBuilder sb = new StringBuilder();
         Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
@@ -68,44 +68,37 @@ public class RequestGlobalHandler {
             sb.append(pathArr[1]).append(violation.getMessage()).append(",");
         }
         sb = new StringBuilder(sb.substring(0, sb.length() - 1));
-        return Result.fail(ResultStatus.HTTP_BAD_REQUEST.getCode(), sb.toString());
+        return DataResult.fail(ResultStatus.HTTP_BAD_REQUEST.getCode(), sb.toString());
     }
 
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({ HttpClientErrorException.class })
-    public Result handleBadRequestException(final HttpClientErrorException e) {
+    public DataResult handleBadRequestException(final HttpClientErrorException e) {
         log.error("HttpClientErrorException", e);
-        return Result.fail(ResultStatus.HTTP_BAD_REQUEST.getCode(), e.getLocalizedMessage());
+        return DataResult.fail(ResultStatus.HTTP_BAD_REQUEST.getCode(), e.getLocalizedMessage());
     }
 
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({ DataException.class })
-    public Result handleDataException(final DataException e) {
+    public DataResult handleDataException(final DataException e) {
         log.error("DataException", e);
-        return Result.fail(ResultStatus.DATA_ERROR.getCode(), e.getLocalizedMessage());
+        return DataResult.fail(ResultStatus.DATA_ERROR.getCode(), e.getLocalizedMessage());
     }
 
     /**
-     * 处理参数校验异常
+     * 处理认证异常
      *
-     * @param e MethodArgumentNotValidException
-     * @return {@link Result}
+     * @param e AuthenticationException
+     * @return {@link DataResult}
      */
     @ResponseBody
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({ MethodArgumentNotValidException.class })
-    private Result handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
-        log.error("MethodArgumentNotValidException", e);
-        StringBuilder sb = new StringBuilder();
-        sb.append("参数错误：\n");
-        for (ObjectError error : e.getBindingResult().getAllErrors()) {
-            sb.append(((FieldError) error).getField() + " ");
-            sb.append(error.getDefaultMessage());
-            sb.append("\n");
-        }
-        return Result.fail(ResultStatus.SYSTEM_ERROR_PARAM.getCode(), sb.toString());
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(AuthenticationException.class)
+    public DataResult handleAuthenticationException(final AuthenticationException e) {
+        log.error("认证失败，方法: {}, message: {}", e.getClass().getCanonicalName(), e.getLocalizedMessage());
+        return DataResult.fail(ResultStatus.HTTP_UNAUTHORIZED.getCode(), e.getLocalizedMessage());
     }
 
     // ------------------------------------------------------------------------------
@@ -113,31 +106,17 @@ public class RequestGlobalHandler {
     // ------------------------------------------------------------------------------
 
     /**
-     * 处理认证异常
-     *
-     * @param e AuthenticationException
-     * @return {@link Result}
-     */
-    @ResponseBody
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(AuthenticationException.class)
-    public Result handleAuthenticationException(final AuthenticationException e) {
-        log.error("认证失败，方法: {}, message: {}", e.getClass().getCanonicalName(), e.getLocalizedMessage());
-        return Result.fail(ResultStatus.HTTP_UNAUTHORIZED.getCode(), e.getLocalizedMessage());
-    }
-
-    /**
      * 处理未授权异常（登录状态下，无权限会触发）
      *
      * @param e AccessDeniedException
-     * @return {@link Result}
+     * @return {@link DataResult}
      */
     @ResponseBody
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(AccessDeniedException.class)
-    public Result handleAccessDeniedException(final AccessDeniedException e) {
+    public DataResult handleAccessDeniedException(final AccessDeniedException e) {
         log.error("Exception: {}, message: {}", e.getClass().getCanonicalName(), e.getLocalizedMessage());
-        return Result.fail(ResultStatus.HTTP_UNAUTHORIZED.getCode(), e.getLocalizedMessage());
+        return DataResult.fail(ResultStatus.HTTP_UNAUTHORIZED.getCode(), e.getLocalizedMessage());
     }
 
     /**
@@ -146,9 +125,9 @@ public class RequestGlobalHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Throwable.class)
-    public Result handleException(Throwable e) {
+    public DataResult handleException(Throwable e) {
         log.error(ThrowableUtil.getStackTrace(e));
-        return Result.fail(ResultStatus.HTTP_SERVER_ERROR.getCode(), e.getMessage());
+        return DataResult.fail(ResultStatus.HTTP_SERVER_ERROR.getCode(), e.getMessage());
     }
 
     /**
@@ -157,10 +136,31 @@ public class RequestGlobalHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(BadCredentialsException.class)
-    public Result badCredentialsException(BadCredentialsException e) {
+    public DataResult badCredentialsException(BadCredentialsException e) {
         String message = "坏的凭证".equals(e.getMessage()) ? "用户名或密码不正确" : e.getMessage();
         log.error(message);
-        return Result.fail(ResultStatus.HTTP_UNAUTHORIZED.getCode(), message);
+        return DataResult.fail(ResultStatus.HTTP_UNAUTHORIZED.getCode(), message);
+    }
+
+    /**
+     * 处理参数校验异常
+     *
+     * @param e MethodArgumentNotValidException
+     * @return {@link DataResult}
+     */
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({ MethodArgumentNotValidException.class })
+    private DataResult handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
+        log.error("MethodArgumentNotValidException", e);
+        StringBuilder sb = new StringBuilder();
+        sb.append("参数错误：\n");
+        for (ObjectError error : e.getBindingResult().getAllErrors()) {
+            sb.append(((FieldError) error).getField() + " ");
+            sb.append(error.getDefaultMessage());
+            sb.append("\n");
+        }
+        return DataResult.fail(ResultStatus.SYSTEM_ERROR_PARAM.getCode(), sb.toString());
     }
 
     private WebConstant.ResponseType getResponseMode(HttpServletRequest request) {

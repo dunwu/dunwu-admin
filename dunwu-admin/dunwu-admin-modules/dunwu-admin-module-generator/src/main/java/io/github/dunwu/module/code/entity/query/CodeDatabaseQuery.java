@@ -1,16 +1,15 @@
 package io.github.dunwu.module.code.entity.query;
 
-import io.github.dunwu.tool.data.core.annotation.QueryField;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.github.dunwu.tool.data.annotation.QueryField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
-import java.time.LocalDateTime;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 数据库管理 Query 类
@@ -75,4 +74,5 @@ public class CodeDatabaseQuery implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @QueryField
     private LocalDateTime updateTime;
+
 }
