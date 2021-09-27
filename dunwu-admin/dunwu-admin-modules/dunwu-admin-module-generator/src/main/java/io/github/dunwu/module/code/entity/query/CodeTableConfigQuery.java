@@ -35,7 +35,7 @@ public class CodeTableConfigQuery implements Serializable {
     private String schemaName;
 
     @ApiModelProperty(value = "Table名称")
-    @QueryField(type = QueryField.QueryType.LIKE)
+    @QueryField
     private String tableName;
 
     @ApiModelProperty(value = "输出路径")

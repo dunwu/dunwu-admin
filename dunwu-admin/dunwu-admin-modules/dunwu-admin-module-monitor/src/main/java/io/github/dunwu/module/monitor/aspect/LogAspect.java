@@ -6,7 +6,6 @@ import io.github.dunwu.module.monitor.service.SysLogService;
 import io.github.dunwu.tool.web.ServletUtil;
 import io.github.dunwu.util.RequestHolder;
 import io.github.dunwu.util.SecurityUtils;
-import io.github.dunwu.util.ThrowableUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -71,7 +70,7 @@ public class LogAspect {
     public void logAfterThrowing(JoinPoint joinPoint, Throwable e) {
         SysLog log = new SysLog("ERROR", System.currentTimeMillis() - currentTime.get());
         currentTime.remove();
-        log.setDescription(ThrowableUtil.getStackTrace(e));
+        log.setDescription(e.getMessage());
         HttpServletRequest request = RequestHolder.getHttpServletRequest();
         ServletUtil.RequestIdentityInfo requestIdentityInfo = ServletUtil.getRequestIdentityInfo(request);
         logService.save(SecurityUtils.getCurrentUsername(), requestIdentityInfo.getBrowser(),

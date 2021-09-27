@@ -4,7 +4,9 @@ import io.github.dunwu.module.monitor.annotation.AppLog;
 import io.github.dunwu.module.system.entity.dto.SysDeptDto;
 import io.github.dunwu.module.system.entity.query.SysDeptQuery;
 import io.github.dunwu.module.system.service.SysDeptService;
+import io.github.dunwu.tool.data.DataListResult;
 import io.github.dunwu.tool.data.DataResult;
+import io.github.dunwu.tool.data.PageResult;
 import io.github.dunwu.tool.data.validator.annotation.AddCheck;
 import io.github.dunwu.tool.data.validator.annotation.EditCheck;
 import io.swagger.annotations.Api;
@@ -38,63 +40,59 @@ public class SysDeptController {
     @PreAuthorize("@exp.check('dept:add')")
     @ApiOperation("添加一条 SysDept 记录")
     @PostMapping("add")
-    public DataResult add(@Validated(AddCheck.class) @RequestBody SysDeptDto entity) {
-        service.save(entity);
-        return DataResult.ok();
+    public DataResult<Boolean> add(@Validated(AddCheck.class) @RequestBody SysDeptDto entity) {
+        return DataResult.ok(service.save(entity));
     }
 
     @AppLog("更新一条 SysDept 记录")
     @PreAuthorize("@exp.check('dept:edit')")
     @ApiOperation("更新一条 SysDept 记录")
     @PostMapping("edit")
-    public DataResult edit(@Validated(EditCheck.class) @RequestBody SysDeptDto entity) {
-        service.updateById(entity);
-        return DataResult.ok();
+    public DataResult<Boolean> edit(@Validated(EditCheck.class) @RequestBody SysDeptDto entity) {
+        return DataResult.ok(service.updateById(entity));
     }
 
     @AppLog("删除一条 SysDept 记录")
     @PreAuthorize("@exp.check('dept:del')")
     @ApiOperation("删除一条 SysDept 记录")
     @PostMapping("del/{id}")
-    public DataResult deleteById(@PathVariable Serializable id) {
-        service.removeById(id);
-        return DataResult.ok();
+    public DataResult<Boolean> deleteById(@PathVariable Serializable id) {
+        return DataResult.ok(service.removeById(id));
     }
 
     @AppLog("根据 ID 集合批量删除 SysDept 记录")
     @PreAuthorize("@exp.check('dept:del')")
     @ApiOperation("根据 ID 集合批量删除 SysDept 记录")
     @PostMapping("del/batch")
-    public DataResult deleteByIds(@RequestBody Collection<Serializable> ids) {
-        service.removeByIds(ids);
-        return DataResult.ok();
+    public DataResult<Boolean> deleteByIds(@RequestBody Collection<Serializable> ids) {
+        return DataResult.ok(service.removeByIds(ids));
     }
 
     @PreAuthorize("@exp.check('dept:view')")
     @ApiOperation("根据 query 条件，查询匹配条件的 SysDeptDto 列表")
     @GetMapping("list")
-    public DataResult list(SysDeptQuery query) {
-        return DataResult.ok(service.pojoListByQuery(query));
+    public DataListResult<SysDeptDto> list(SysDeptQuery query) {
+        return DataListResult.ok(service.pojoListByQuery(query));
     }
 
     @PreAuthorize("@exp.check('dept:view')")
     @ApiOperation("根据 query 和 pageable 条件，分页查询 SysDeptDto 记录")
     @GetMapping("page")
-    public DataResult page(SysDeptQuery query, Pageable pageable) {
-        return DataResult.ok(service.pojoPageByQuery(query, pageable));
+    public PageResult<SysDeptDto> page(SysDeptQuery query, Pageable pageable) {
+        return PageResult.ok(service.pojoPageByQuery(query, pageable));
     }
 
     @PreAuthorize("@exp.check('dept:view')")
     @ApiOperation("根据 query 条件，查询匹配条件的总记录数")
     @GetMapping("count")
-    public DataResult count(SysDeptQuery query) {
+    public DataResult<Integer> count(SysDeptQuery query) {
         return DataResult.ok(service.countByQuery(query));
     }
 
     @PreAuthorize("@exp.check('dept:view')")
     @ApiOperation("根据 ID 查询 SysDeptDto 记录")
     @GetMapping("{id}")
-    public DataResult getById(@PathVariable Serializable id) {
+    public DataResult<SysDeptDto> getById(@PathVariable Serializable id) {
         return DataResult.ok(service.pojoById(id));
     }
 

@@ -21,15 +21,14 @@ import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
 import io.github.dunwu.config.thread.ThreadPoolExecutorUtil;
-import io.github.dunwu.tool.data.redis.RedisHelper;
 import io.github.dunwu.domain.vo.EmailVo;
 import io.github.dunwu.module.quartz.domain.QuartzJob;
 import io.github.dunwu.module.quartz.domain.QuartzLog;
 import io.github.dunwu.module.quartz.repository.QuartzLogRepository;
 import io.github.dunwu.module.quartz.service.QuartzJobService;
 import io.github.dunwu.service.EmailService;
+import io.github.dunwu.tool.data.redis.RedisHelper;
 import io.github.dunwu.util.SpringContextHolder;
-import io.github.dunwu.util.ThrowableUtil;
 import org.quartz.JobExecutionContext;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.quartz.QuartzJobBean;
@@ -103,7 +102,7 @@ public class ExecutionJob extends QuartzJobBean {
             log.setTime(times);
             // 任务状态 0：成功 1：失败
             log.setIsSuccess(false);
-            log.setExceptionDetail(ThrowableUtil.getStackTrace(e));
+            log.setExceptionDetail(e.getMessage());
             // 任务如果失败了则暂停
             if (quartzJob.getPauseAfterFailure() != null && quartzJob.getPauseAfterFailure()) {
                 quartzJob.setIsPause(false);
@@ -114,7 +113,7 @@ public class ExecutionJob extends QuartzJobBean {
                 EmailService emailService = SpringContextHolder.getBean(EmailService.class);
                 // 邮箱报警
                 if (StrUtil.isNotBlank(quartzJob.getEmail())) {
-                    EmailVo emailVo = taskAlarm(quartzJob, ThrowableUtil.getStackTrace(e));
+                    EmailVo emailVo = taskAlarm(quartzJob, e.getMessage());
                     emailService.send(emailVo, emailService.find());
                 }
             }

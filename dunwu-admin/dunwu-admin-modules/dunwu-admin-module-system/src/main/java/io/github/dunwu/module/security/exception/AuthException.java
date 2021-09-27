@@ -1,8 +1,8 @@
 package io.github.dunwu.module.security.exception;
 
-import io.github.dunwu.tool.data.constant.Status;
-import io.github.dunwu.tool.data.constant.enums.ResultStatus;
-import io.github.dunwu.tool.data.exception.CodeMessageException;
+import io.github.dunwu.tool.core.constant.Status;
+import io.github.dunwu.tool.core.constant.enums.ResultStatus;
+import io.github.dunwu.tool.core.exception.CodeMsgException;
 
 /**
  * 认证异常
@@ -10,7 +10,7 @@ import io.github.dunwu.tool.data.exception.CodeMessageException;
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
  * @since 2019-04-11
  */
-public class AuthException extends CodeMessageException {
+public class AuthException extends CodeMsgException {
 
     private static final long serialVersionUID = -7027578114976830416L;
 
@@ -19,7 +19,7 @@ public class AuthException extends CodeMessageException {
     }
 
     public AuthException(Status status) {
-        super(status.getCode(), status.getMessage());
+        super(status.getCode(), status.getMsg());
     }
 
     public AuthException(int code, String message) {

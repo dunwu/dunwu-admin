@@ -1,18 +1,15 @@
 package io.github.dunwu;
 
 import cn.hutool.core.util.StrUtil;
-import com.google.common.net.HttpHeaders;
+import io.github.dunwu.tool.core.constant.enums.ResultStatus;
 import io.github.dunwu.tool.data.DataResult;
-import io.github.dunwu.tool.data.constant.enums.ResultStatus;
 import io.github.dunwu.tool.data.exception.DataException;
 import io.github.dunwu.tool.web.constant.WebConstant;
-import io.github.dunwu.util.ThrowableUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.AuthenticationException;
+import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.validation.FieldError;
@@ -22,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Set;
+import javax.security.auth.message.AuthException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -35,7 +33,7 @@ import javax.validation.Path;
  * @since 2019-09-11
  */
 @ControllerAdvice
-public class RequestGlobalHandler {
+public class GlobalExceptionHandler {
 
     public static final String DEFAULT_APP = "dunwu";
 
@@ -58,7 +56,7 @@ public class RequestGlobalHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({ ConstraintViolationException.class })
-    public DataResult handleConstraintViolationException(final ConstraintViolationException e) {
+    public DataResult<?> handleConstraintViolationException(final ConstraintViolationException e) {
         log.error("ConstraintViolationException", e);
         StringBuilder sb = new StringBuilder();
         Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
@@ -74,7 +72,7 @@ public class RequestGlobalHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({ HttpClientErrorException.class })
-    public DataResult handleBadRequestException(final HttpClientErrorException e) {
+    public DataResult<?> handleBadRequestException(final HttpClientErrorException e) {
         log.error("HttpClientErrorException", e);
         return DataResult.fail(ResultStatus.HTTP_BAD_REQUEST.getCode(), e.getLocalizedMessage());
     }
@@ -82,10 +80,14 @@ public class RequestGlobalHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({ DataException.class })
-    public DataResult handleDataException(final DataException e) {
+    public DataResult<?> handleDataException(final DataException e) {
         log.error("DataException", e);
         return DataResult.fail(ResultStatus.DATA_ERROR.getCode(), e.getLocalizedMessage());
     }
+
+    // ------------------------------------------------------------------------------
+    // 认证、授权异常
+    // ------------------------------------------------------------------------------
 
     /**
      * 处理认证异常
@@ -95,27 +97,9 @@ public class RequestGlobalHandler {
      */
     @ResponseBody
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(AuthenticationException.class)
-    public DataResult handleAuthenticationException(final AuthenticationException e) {
+    @ExceptionHandler(AuthException.class)
+    public DataResult<?> handleAuthException(final AuthException e) {
         log.error("认证失败，方法: {}, message: {}", e.getClass().getCanonicalName(), e.getLocalizedMessage());
-        return DataResult.fail(ResultStatus.HTTP_UNAUTHORIZED.getCode(), e.getLocalizedMessage());
-    }
-
-    // ------------------------------------------------------------------------------
-    // 认证、授权异常
-    // ------------------------------------------------------------------------------
-
-    /**
-     * 处理未授权异常（登录状态下，无权限会触发）
-     *
-     * @param e AccessDeniedException
-     * @return {@link DataResult}
-     */
-    @ResponseBody
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(AccessDeniedException.class)
-    public DataResult handleAccessDeniedException(final AccessDeniedException e) {
-        log.error("Exception: {}, message: {}", e.getClass().getCanonicalName(), e.getLocalizedMessage());
         return DataResult.fail(ResultStatus.HTTP_UNAUTHORIZED.getCode(), e.getLocalizedMessage());
     }
 
@@ -125,21 +109,9 @@ public class RequestGlobalHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Throwable.class)
-    public DataResult handleException(Throwable e) {
-        log.error(ThrowableUtil.getStackTrace(e));
+    public DataResult<?> handleException(Throwable e) {
+        log.error("未知异常", e);
         return DataResult.fail(ResultStatus.HTTP_SERVER_ERROR.getCode(), e.getMessage());
-    }
-
-    /**
-     * BadCredentialsException
-     */
-    @ResponseBody
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(BadCredentialsException.class)
-    public DataResult badCredentialsException(BadCredentialsException e) {
-        String message = "坏的凭证".equals(e.getMessage()) ? "用户名或密码不正确" : e.getMessage();
-        log.error(message);
-        return DataResult.fail(ResultStatus.HTTP_UNAUTHORIZED.getCode(), message);
     }
 
     /**
@@ -151,7 +123,7 @@ public class RequestGlobalHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({ MethodArgumentNotValidException.class })
-    private DataResult handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
+    private DataResult<?> handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
         log.error("MethodArgumentNotValidException", e);
         StringBuilder sb = new StringBuilder();
         sb.append("参数错误：\n");
@@ -166,7 +138,6 @@ public class RequestGlobalHandler {
     private WebConstant.ResponseType getResponseMode(HttpServletRequest request) {
         String contentType = request.getHeader(HttpHeaders.CONTENT_TYPE);
         String accept = request.getHeader(HttpHeaders.ACCEPT);
-        String xRequestedWith = request.getHeader(HttpHeaders.X_REQUESTED_WITH);
 
         if (StrUtil.isNotBlank(contentType)
             && contentType.contains(MimeTypeUtils.APPLICATION_JSON_VALUE)) {
@@ -175,11 +146,6 @@ public class RequestGlobalHandler {
 
         if (StrUtil.isNotBlank(accept)
             && accept.contains(MimeTypeUtils.APPLICATION_JSON_VALUE)) {
-            return WebConstant.ResponseType.HTTP_REPONSE;
-        }
-
-        if (StrUtil.isNotBlank(xRequestedWith)
-            && HttpHeaders.X_REQUESTED_WITH.equalsIgnoreCase(xRequestedWith)) {
             return WebConstant.ResponseType.HTTP_REPONSE;
         }
 
