@@ -83,7 +83,7 @@ public class SysRoleController {
     @ApiOperation("根据 query 和 pageable 条件，分页查询 SysRoleDto 记录")
     @GetMapping("page")
     public DataResult page(SysRoleQuery query, Pageable pageable) {
-        return DataResult.ok(service.pojoPageByQuery(query, pageable));
+        return DataResult.ok(service.pojoSpringPageByQuery(query, pageable));
     }
 
     @PreAuthorize("@exp.check('role:view')")

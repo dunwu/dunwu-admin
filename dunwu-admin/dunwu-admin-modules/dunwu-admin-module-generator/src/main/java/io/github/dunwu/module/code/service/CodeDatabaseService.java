@@ -101,7 +101,7 @@ public interface CodeDatabaseService extends IService {
      * @param pageable 分页查询条件
      * @return {@link Page<CodeDatabaseDto>}
      */
-    Page<CodeDatabaseDto> pojoPageByQuery(CodeDatabaseQuery query, Pageable pageable);
+    Page<CodeDatabaseDto> pojoSpringPageByQuery(CodeDatabaseQuery query, Pageable pageable);
 
     /**
      * 根据 id 查询 {@link CodeDatabaseDto}

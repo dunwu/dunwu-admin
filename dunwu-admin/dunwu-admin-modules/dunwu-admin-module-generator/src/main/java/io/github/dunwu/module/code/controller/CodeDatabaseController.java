@@ -87,7 +87,7 @@ public class CodeDatabaseController {
     @ApiOperation("根据 CodeDatabaseQuery 和 Pageable 分页查询 CodeDatabaseDto 列表")
     @GetMapping("page")
     public DataResult page(CodeDatabaseQuery query, Pageable pageable) {
-        return DataResult.ok(service.pojoPageByQuery(query, pageable));
+        return DataResult.ok(service.pojoSpringPageByQuery(query, pageable));
     }
 
     @GetMapping("{id}")

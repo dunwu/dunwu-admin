@@ -81,7 +81,7 @@ public class SysUserController {
     @ApiOperation("根据 query 和 pageable 条件，分页查询 SysUserDto 记录")
     @GetMapping("page")
     public DataResult page(SysUserQuery query, Pageable pageable) {
-        return DataResult.ok(service.pojoPageByQuery(query, pageable));
+        return DataResult.ok(service.pojoSpringPageByQuery(query, pageable));
     }
 
     @PreAuthorize("@exp.check('user:view')")

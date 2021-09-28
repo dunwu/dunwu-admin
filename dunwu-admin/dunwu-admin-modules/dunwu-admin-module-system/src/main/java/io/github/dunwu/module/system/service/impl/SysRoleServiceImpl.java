@@ -91,8 +91,8 @@ public class SysRoleServiceImpl extends ServiceImpl implements SysRoleService {
     }
 
     @Override
-    public Page<SysRoleDto> pojoPageByQuery(Object query, Pageable pageable) {
-        return roleDao.pojoPageByQuery(query, pageable, this::doToDto);
+    public Page<SysRoleDto> pojoSpringPageByQuery(Object query, Pageable pageable) {
+        return roleDao.pojoSpringPageByQuery(query, pageable, this::doToDto);
     }
 
     @Override
@@ -124,7 +124,7 @@ public class SysRoleServiceImpl extends ServiceImpl implements SysRoleService {
 
     @Override
     public void exportPageData(Object query, Pageable pageable, HttpServletResponse response) throws IOException {
-        Page<SysRoleDto> page = roleDao.pojoPageByQuery(query, pageable, SysRoleDto.class);
+        Page<SysRoleDto> page = roleDao.pojoSpringPageByQuery(query, pageable, SysRoleDto.class);
         roleDao.exportDtoList(page.getContent(), response);
     }
 

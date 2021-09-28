@@ -76,7 +76,7 @@ public class HelloController {
     @ApiOperation("根据 HelloQuery 和 Pageable 分页查询 HelloDto 列表")
     @GetMapping("page")
     public DataResult page(HelloQuery query, Pageable pageable) {
-        return DataResult.ok(service.pojoPageByQuery(query, pageable));
+        return DataResult.ok(service.pojoSpringPageByQuery(query, pageable));
     }
 
     @ApiOperation("根据 id 查询 HelloDto")

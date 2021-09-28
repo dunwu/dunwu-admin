@@ -50,8 +50,8 @@ public class SysDictOptionServiceImpl extends ServiceImpl implements SysDictOpti
     }
 
     @Override
-    public Page<SysDictOptionDto> pojoPageByQuery(Object query, Pageable pageable) {
-        return dao.pojoPageByQuery(query, pageable, SysDictOptionDto.class);
+    public Page<SysDictOptionDto> pojoSpringPageByQuery(Object query, Pageable pageable) {
+        return dao.pojoSpringPageByQuery(query, pageable, SysDictOptionDto.class);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class SysDictOptionServiceImpl extends ServiceImpl implements SysDictOpti
 
     @Override
     public void exportPage(Object query, Pageable pageable, HttpServletResponse response) throws IOException {
-        Page<SysDictOptionDto> page = dao.pojoPageByQuery(query, pageable, SysDictOptionDto.class);
+        Page<SysDictOptionDto> page = dao.pojoSpringPageByQuery(query, pageable, SysDictOptionDto.class);
         dao.exportDtoList(page.getContent(), response);
     }
 

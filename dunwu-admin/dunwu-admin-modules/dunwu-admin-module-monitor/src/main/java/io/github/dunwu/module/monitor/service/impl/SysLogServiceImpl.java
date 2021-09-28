@@ -78,8 +78,8 @@ public class SysLogServiceImpl extends ServiceImpl implements SysLogService {
     }
 
     @Override
-    public Page<SysLogDto> pojoPageByQuery(SysLogQuery query, Pageable pageable) {
-        return dao.pojoPageByQuery(query, pageable, this::doToDto);
+    public Page<SysLogDto> pojoSpringPageByQuery(SysLogQuery query, Pageable pageable) {
+        return dao.pojoSpringPageByQuery(query, pageable, this::doToDto);
     }
 
     @Override
@@ -105,7 +105,7 @@ public class SysLogServiceImpl extends ServiceImpl implements SysLogService {
 
     @Override
     public void exportPage(SysLogQuery query, Pageable pageable, HttpServletResponse response) throws IOException {
-        Page<SysLogDto> page = dao.pojoPageByQuery(query, pageable, this::doToDto);
+        Page<SysLogDto> page = dao.pojoSpringPageByQuery(query, pageable, this::doToDto);
         dao.exportDtoList(page.getContent(), response);
     }
 

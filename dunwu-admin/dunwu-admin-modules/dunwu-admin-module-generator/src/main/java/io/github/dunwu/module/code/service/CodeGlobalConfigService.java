@@ -101,7 +101,7 @@ public interface CodeGlobalConfigService extends IService {
      * @param pageable 分页查询条件
      * @return {@link Page<CodeGlobalConfigDto>}
      */
-    Page<CodeGlobalConfigDto> pojoPageByQuery(CodeGlobalConfigQuery query, Pageable pageable);
+    Page<CodeGlobalConfigDto> pojoSpringPageByQuery(CodeGlobalConfigQuery query, Pageable pageable);
 
     /**
      * 根据 id 查询 {@link CodeGlobalConfigDto}

@@ -85,8 +85,8 @@ public class SysDeptServiceImpl extends ServiceImpl implements SysDeptService {
     }
 
     @Override
-    public Page<SysDeptDto> pojoPageByQuery(Object query, Pageable pageable) {
-        return deptDao.pojoPageByQuery(query, pageable, this::doToDto);
+    public Page<SysDeptDto> pojoSpringPageByQuery(Object query, Pageable pageable) {
+        return deptDao.pojoSpringPageByQuery(query, pageable, this::doToDto);
     }
 
     @Override
@@ -121,7 +121,7 @@ public class SysDeptServiceImpl extends ServiceImpl implements SysDeptService {
 
     @Override
     public void exportPage(Object query, Pageable pageable, HttpServletResponse response) throws IOException {
-        Page<SysDeptDto> page = deptDao.pojoPageByQuery(query, pageable, this::doToDto);
+        Page<SysDeptDto> page = deptDao.pojoSpringPageByQuery(query, pageable, this::doToDto);
         deptDao.exportDtoList(page.getContent(), response);
     }
 

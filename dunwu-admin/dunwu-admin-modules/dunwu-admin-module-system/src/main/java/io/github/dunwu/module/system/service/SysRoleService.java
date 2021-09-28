@@ -64,7 +64,7 @@ public interface SysRoleService extends IService {
      * @param pageable 分页查询条件
      * @return {@link Page <SysRoleDto>}
      */
-    Page<SysRoleDto> pojoPageByQuery(Object query, Pageable pageable);
+    Page<SysRoleDto> pojoSpringPageByQuery(Object query, Pageable pageable);
 
     /**
      * 根据 query 查询 {@link SysRoleDto} 列表

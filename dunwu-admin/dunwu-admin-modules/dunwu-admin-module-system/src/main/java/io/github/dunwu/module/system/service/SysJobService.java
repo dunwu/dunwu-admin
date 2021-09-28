@@ -60,7 +60,7 @@ public interface SysJobService extends IService {
      * @param pageable 分页查询条件
      * @return {@link Page <SysJobDto>}
      */
-    Page<SysJobDto> pojoPageByQuery(Object query, Pageable pageable);
+    Page<SysJobDto> pojoSpringPageByQuery(Object query, Pageable pageable);
 
     /**
      * 根据 query 查询 {@link SysJobDto} 列表

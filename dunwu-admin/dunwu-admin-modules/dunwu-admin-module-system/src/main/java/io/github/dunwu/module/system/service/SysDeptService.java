@@ -62,7 +62,7 @@ public interface SysDeptService extends IService {
      * @param pageable 分页查询条件
      * @return {@link Page <SysDeptDto>}
      */
-    Page<SysDeptDto> pojoPageByQuery(Object query, Pageable pageable);
+    Page<SysDeptDto> pojoSpringPageByQuery(Object query, Pageable pageable);
 
     /**
      * 根据 query 查询 {@link SysDeptDto} 列表

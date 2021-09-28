@@ -101,7 +101,7 @@ public interface CodeColumnConfigService extends IService {
      * @param pageable 分页查询条件
      * @return {@link Page<CodeColumnConfigDto>}
      */
-    Page<CodeColumnConfigDto> pojoPageByQuery(CodeColumnConfigQuery query, Pageable pageable);
+    Page<CodeColumnConfigDto> pojoSpringPageByQuery(CodeColumnConfigQuery query, Pageable pageable);
 
     /**
      * 根据 id 查询 {@link CodeColumnConfigDto}

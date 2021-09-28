@@ -62,7 +62,7 @@ public interface SysUserService extends IService {
      * @param pageable 分页查询条件
      * @return {@link Page <SysUserDto>}
      */
-    Page<SysUserDto> pojoPageByQuery(Object query, Pageable pageable);
+    Page<SysUserDto> pojoSpringPageByQuery(Object query, Pageable pageable);
 
     /**
      * 根据 query 查询 {@link SysUserDto} 列表

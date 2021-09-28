@@ -98,7 +98,7 @@ public class SysLogController {
     @ApiOperation("根据 SysLogQuery 和 Pageable 分页查询 SysLogDto 列表")
     @GetMapping("page")
     public DataResult page(SysLogQuery query, Pageable pageable) {
-        return DataResult.ok(service.pojoPageByQuery(query, pageable));
+        return DataResult.ok(service.pojoSpringPageByQuery(query, pageable));
     }
 
     @PreAuthorize("@exp.check()")

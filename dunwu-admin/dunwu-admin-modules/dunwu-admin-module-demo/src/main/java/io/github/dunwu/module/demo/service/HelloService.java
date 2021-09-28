@@ -100,7 +100,7 @@ public interface HelloService extends IService {
      * @param pageable 分页查询条件
      * @return {@link Page<HelloDto>}
      */
-    Page<HelloDto> pojoPageByQuery(HelloQuery query, Pageable pageable);
+    Page<HelloDto> pojoSpringPageByQuery(HelloQuery query, Pageable pageable);
 
     /**
      * 根据 id 查询 {@link HelloDto}

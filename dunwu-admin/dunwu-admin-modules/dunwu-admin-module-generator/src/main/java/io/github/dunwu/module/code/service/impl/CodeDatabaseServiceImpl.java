@@ -81,8 +81,8 @@ public class CodeDatabaseServiceImpl extends ServiceImpl implements CodeDatabase
     }
 
     @Override
-    public Page<CodeDatabaseDto> pojoPageByQuery(CodeDatabaseQuery query, Pageable pageable) {
-        return dao.pojoPageByQuery(query, pageable, this::doToDto);
+    public Page<CodeDatabaseDto> pojoSpringPageByQuery(CodeDatabaseQuery query, Pageable pageable) {
+        return dao.pojoSpringPageByQuery(query, pageable, this::doToDto);
     }
 
     @Override
@@ -109,7 +109,7 @@ public class CodeDatabaseServiceImpl extends ServiceImpl implements CodeDatabase
     @Override
     public void exportPage(CodeDatabaseQuery query, Pageable pageable, HttpServletResponse response)
         throws IOException {
-        Page<CodeDatabaseDto> page = dao.pojoPageByQuery(query, pageable, this::doToDto);
+        Page<CodeDatabaseDto> page = dao.pojoSpringPageByQuery(query, pageable, this::doToDto);
         dao.exportDtoList(page.getContent(), response);
     }
 

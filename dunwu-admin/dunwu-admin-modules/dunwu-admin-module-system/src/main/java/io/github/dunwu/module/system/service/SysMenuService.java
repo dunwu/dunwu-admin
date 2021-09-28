@@ -61,7 +61,7 @@ public interface SysMenuService extends IService {
      * @param pageable 分页查询条件
      * @return {@link Page <SysMenuDto>}
      */
-    Page<SysMenuDto> pojoPageByQuery(Object query, Pageable pageable);
+    Page<SysMenuDto> pojoSpringPageByQuery(Object query, Pageable pageable);
 
     /**
      * 根据 query 查询 {@link SysMenuDto} 列表

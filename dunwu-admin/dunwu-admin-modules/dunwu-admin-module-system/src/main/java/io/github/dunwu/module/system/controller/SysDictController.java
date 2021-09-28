@@ -84,7 +84,7 @@ public class SysDictController {
     @GetMapping("page")
     public DataResult page(SysDictQuery query,
         @PageableDefault(sort = { "name" }, direction = Sort.Direction.ASC) Pageable pageable) {
-        return DataResult.ok(service.pojoPageByQuery(query, pageable));
+        return DataResult.ok(service.pojoSpringPageByQuery(query, pageable));
     }
 
     @PreAuthorize("@exp.check('dict:view')")

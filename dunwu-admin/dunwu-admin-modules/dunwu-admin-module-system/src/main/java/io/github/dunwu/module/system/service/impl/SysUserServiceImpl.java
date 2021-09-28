@@ -90,8 +90,8 @@ public class SysUserServiceImpl extends ServiceImpl implements SysUserService {
     }
 
     @Override
-    public Page<SysUserDto> pojoPageByQuery(Object query, Pageable pageable) {
-        return userDao.pojoPageByQuery(query, pageable, this::doToDto);
+    public Page<SysUserDto> pojoSpringPageByQuery(Object query, Pageable pageable) {
+        return userDao.pojoSpringPageByQuery(query, pageable, this::doToDto);
     }
 
     @Override
@@ -122,7 +122,7 @@ public class SysUserServiceImpl extends ServiceImpl implements SysUserService {
 
     @Override
     public void exportPage(Object query, Pageable pageable, HttpServletResponse response) throws IOException {
-        Page<SysUserDto> page = userDao.pojoPageByQuery(query, pageable, this::doToDto);
+        Page<SysUserDto> page = userDao.pojoSpringPageByQuery(query, pageable, this::doToDto);
         userDao.exportDtoList(page.getContent(), response);
     }
 

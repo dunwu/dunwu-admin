@@ -62,8 +62,8 @@ public class SysMenuServiceImpl extends ServiceImpl implements SysMenuService {
     }
 
     @Override
-    public Page<SysMenuDto> pojoPageByQuery(Object query, Pageable pageable) {
-        return menuDao.pojoPageByQuery(query, pageable, this::doToDto);
+    public Page<SysMenuDto> pojoSpringPageByQuery(Object query, Pageable pageable) {
+        return menuDao.pojoSpringPageByQuery(query, pageable, this::doToDto);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class SysMenuServiceImpl extends ServiceImpl implements SysMenuService {
 
     @Override
     public void exportPage(Object query, Pageable pageable, HttpServletResponse response) throws IOException {
-        Page<SysMenuDto> page = menuDao.pojoPageByQuery(query, pageable, this::doToDto);
+        Page<SysMenuDto> page = menuDao.pojoSpringPageByQuery(query, pageable, this::doToDto);
         menuDao.exportDtoList(page.getContent(), response);
     }
 

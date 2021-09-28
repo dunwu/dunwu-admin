@@ -56,8 +56,8 @@ public class SysJobServiceImpl extends ServiceImpl implements SysJobService {
     }
 
     @Override
-    public Page<SysJobDto> pojoPageByQuery(Object query, Pageable pageable) {
-        return jobDao.pojoPageByQuery(query, pageable, this::doToDto);
+    public Page<SysJobDto> pojoSpringPageByQuery(Object query, Pageable pageable) {
+        return jobDao.pojoSpringPageByQuery(query, pageable, this::doToDto);
     }
 
     @Override
@@ -88,7 +88,7 @@ public class SysJobServiceImpl extends ServiceImpl implements SysJobService {
 
     @Override
     public void exportPage(Object query, Pageable pageable, HttpServletResponse response) throws IOException {
-        Page<SysJobDto> page = jobDao.pojoPageByQuery(query, pageable, this::doToDto);
+        Page<SysJobDto> page = jobDao.pojoSpringPageByQuery(query, pageable, this::doToDto);
         jobDao.exportDtoList(page.getContent(), response);
     }
 

@@ -60,7 +60,7 @@ public interface SysDictOptionService extends IService {
      * @param pageable 分页查询条件
      * @return {@link Page <SysDictOptionDto>}
      */
-    Page<SysDictOptionDto> pojoPageByQuery(Object query, Pageable pageable);
+    Page<SysDictOptionDto> pojoSpringPageByQuery(Object query, Pageable pageable);
 
     /**
      * 根据 query 查询 {@link SysDictOptionDto} 列表

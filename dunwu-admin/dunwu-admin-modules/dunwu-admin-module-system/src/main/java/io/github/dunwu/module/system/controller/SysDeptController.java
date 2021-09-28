@@ -79,7 +79,7 @@ public class SysDeptController {
     @ApiOperation("根据 query 和 pageable 条件，分页查询 SysDeptDto 记录")
     @GetMapping("page")
     public PageResult<SysDeptDto> page(SysDeptQuery query, Pageable pageable) {
-        return PageResult.ok(service.pojoPageByQuery(query, pageable));
+        return PageResult.ok(service.pojoSpringPageByQuery(query, pageable));
     }
 
     @PreAuthorize("@exp.check('dept:view')")

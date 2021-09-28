@@ -77,8 +77,8 @@ public class HelloServiceImpl extends ServiceImpl implements HelloService {
     }
 
     @Override
-    public Page<HelloDto> pojoPageByQuery(HelloQuery query, Pageable pageable) {
-        return dao.pojoPageByQuery(query, pageable, this::doToDto);
+    public Page<HelloDto> pojoSpringPageByQuery(HelloQuery query, Pageable pageable) {
+        return dao.pojoSpringPageByQuery(query, pageable, this::doToDto);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class HelloServiceImpl extends ServiceImpl implements HelloService {
 
     @Override
     public void exportPage(HelloQuery query, Pageable pageable, HttpServletResponse response) {
-        Page<HelloDto> page = dao.pojoPageByQuery(query, pageable, this::doToDto);
+        Page<HelloDto> page = dao.pojoSpringPageByQuery(query, pageable, this::doToDto);
         dao.exportDtoList(page.getContent(), response);
     }
 

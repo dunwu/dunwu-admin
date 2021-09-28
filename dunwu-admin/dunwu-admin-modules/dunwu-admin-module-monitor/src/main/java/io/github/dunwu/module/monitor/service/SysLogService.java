@@ -87,7 +87,7 @@ public interface SysLogService extends IService {
      * @param pageable 分页查询条件
      * @return {@link Page<SysLogDto>}
      */
-    Page<SysLogDto> pojoPageByQuery(SysLogQuery query, Pageable pageable);
+    Page<SysLogDto> pojoSpringPageByQuery(SysLogQuery query, Pageable pageable);
 
     /**
      * 根据 id 查询 {@link SysLogDto}
