@@ -7,17 +7,17 @@ import cn.hutool.crypto.asymmetric.RSA;
 import com.wf.captcha.*;
 import com.wf.captcha.base.Captcha;
 import io.github.dunwu.module.security.config.DunwuWebSecurityProperties;
-import io.github.dunwu.module.security.entity.dto.JwtUserDto;
+import io.github.dunwu.module.security.entity.dto.UserVo;
 import io.github.dunwu.module.security.entity.dto.LoginCodeDto;
 import io.github.dunwu.module.security.entity.dto.OnlineUserDto;
 import io.github.dunwu.module.security.exception.AuthException;
-import io.github.dunwu.module.system.entity.SysUser;
-import io.github.dunwu.module.system.entity.dto.SysUserDto;
-import io.github.dunwu.module.system.entity.query.SysUserQuery;
-import io.github.dunwu.module.system.entity.vo.UserPassVo;
-import io.github.dunwu.module.system.service.SysDeptService;
-import io.github.dunwu.module.system.service.SysRoleService;
-import io.github.dunwu.module.system.service.SysUserService;
+import io.github.dunwu.module.cas.entity.SysUser;
+import io.github.dunwu.module.cas.entity.dto.SysUserDto;
+import io.github.dunwu.module.cas.entity.query.SysUserQuery;
+import io.github.dunwu.module.cas.entity.vo.UserPassVo;
+import io.github.dunwu.module.cas.service.SysDeptService;
+import io.github.dunwu.module.cas.service.SysRoleService;
+import io.github.dunwu.module.cas.service.SysUserService;
 import io.github.dunwu.tool.data.DataResult;
 import io.github.dunwu.tool.data.exception.DataException;
 import io.github.dunwu.tool.data.redis.RedisHelper;
@@ -56,7 +56,7 @@ import javax.servlet.http.HttpServletResponse;
 @Service("userDetailsService")
 public class AuthService implements UserDetailsService {
 
-    static final Map<String, JwtUserDto> userDtoCache = new ConcurrentHashMap<>();
+    static final Map<String, UserVo> userDtoCache = new ConcurrentHashMap<>();
 
     private final RSA rsa;
     private final RedisHelper redisHelper;
@@ -68,11 +68,11 @@ public class AuthService implements UserDetailsService {
     private final DunwuWebSecurityProperties securityProperties;
 
     @Override
-    public JwtUserDto loadUserByUsername(String username) {
+    public UserVo loadUserByUsername(String username) {
         boolean searchDb = true;
-        JwtUserDto jwtUserDto = null;
+        UserVo userVo = null;
         if (securityProperties.isCacheEnable() && userDtoCache.containsKey(username)) {
-            jwtUserDto = userDtoCache.get(username);
+            userVo = userDtoCache.get(username);
             searchDb = false;
         }
         if (searchDb) {
@@ -86,29 +86,29 @@ public class AuthService implements UserDetailsService {
                 }
 
                 Set<Long> deptIds = deptService.getChildrenDeptIds(user.getDeptId());
-                jwtUserDto = new JwtUserDto(user, deptIds, roleService.mapToGrantedAuthorities(user));
-                userDtoCache.put(username, jwtUserDto);
+                userVo = new UserVo(user, deptIds, roleService.mapToGrantedAuthorities(user));
+                userDtoCache.put(username, userVo);
             }
         }
-        return jwtUserDto;
+        return userVo;
     }
 
     /**
      * 保存在线用户信息
      *
-     * @param jwtUserDto /
+     * @param userVo /
      * @param token      /
      * @param request    /
      */
-    public void save(JwtUserDto jwtUserDto, String token, HttpServletRequest request) {
-        String dept = jwtUserDto.getUser().getDept().getName();
+    public void save(UserVo userVo, String token, HttpServletRequest request) {
+        String dept = userVo.getUser().getDept().getName();
         ServletUtil.RequestIdentityInfo requestIdentityInfo = ServletUtil.getRequestIdentityInfo(request);
         String ip = requestIdentityInfo.getIp();
         String browser = requestIdentityInfo.getBrowser();
         String address = requestIdentityInfo.getLocation();
         OnlineUserDto onlineUserDto = null;
         try {
-            onlineUserDto = new OnlineUserDto(jwtUserDto.getUsername(), jwtUserDto.getUser().getNickname(), dept,
+            onlineUserDto = new OnlineUserDto(userVo.getUsername(), userVo.getUser().getNickname(), dept,
                 browser, ip, address, EncryptUtils.desEncrypt(token), new Date());
         } catch (Exception e) {
             log.error(e.getMessage(), e);

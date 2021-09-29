@@ -17,7 +17,7 @@ package io.github.dunwu.rest;
 
 import io.github.dunwu.domain.EmailConfig;
 import io.github.dunwu.domain.vo.EmailVo;
-import io.github.dunwu.module.monitor.annotation.AppLog;
+import io.github.dunwu.tool.web.log.annotation.AppLog;
 import io.github.dunwu.service.EmailService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

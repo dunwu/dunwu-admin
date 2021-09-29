@@ -2,11 +2,11 @@ package io.github.dunwu.module.security.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import io.github.dunwu.module.security.service.DataService;
-import io.github.dunwu.module.system.entity.dto.SysDeptDto;
-import io.github.dunwu.module.system.entity.dto.SysRoleDto;
-import io.github.dunwu.module.system.entity.dto.SysUserDto;
-import io.github.dunwu.module.system.service.SysDeptService;
-import io.github.dunwu.module.system.service.SysRoleService;
+import io.github.dunwu.module.cas.entity.dto.SysDeptDto;
+import io.github.dunwu.module.cas.entity.dto.SysRoleDto;
+import io.github.dunwu.module.cas.entity.dto.SysUserDto;
+import io.github.dunwu.module.cas.service.SysDeptService;
+import io.github.dunwu.module.cas.service.SysRoleService;
 import io.github.dunwu.util.enums.DataScopeEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;

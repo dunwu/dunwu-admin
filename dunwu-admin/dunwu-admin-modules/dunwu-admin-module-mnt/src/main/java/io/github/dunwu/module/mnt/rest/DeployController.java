@@ -19,7 +19,7 @@ import io.github.dunwu.module.mnt.domain.Deploy;
 import io.github.dunwu.module.mnt.domain.DeployHistory;
 import io.github.dunwu.module.mnt.service.DeployService;
 import io.github.dunwu.module.mnt.service.dto.DeployQueryCriteria;
-import io.github.dunwu.module.monitor.annotation.AppLog;
+import io.github.dunwu.tool.web.log.annotation.AppLog;
 import io.github.dunwu.util.FileUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

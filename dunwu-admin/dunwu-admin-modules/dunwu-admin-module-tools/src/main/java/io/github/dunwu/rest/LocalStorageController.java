@@ -16,7 +16,7 @@
 package io.github.dunwu.rest;
 
 import io.github.dunwu.domain.LocalStorage;
-import io.github.dunwu.module.monitor.annotation.AppLog;
+import io.github.dunwu.tool.web.log.annotation.AppLog;
 import io.github.dunwu.service.LocalStorageService;
 import io.github.dunwu.service.dto.LocalStorageQueryCriteria;
 import io.github.dunwu.util.FileUtil;

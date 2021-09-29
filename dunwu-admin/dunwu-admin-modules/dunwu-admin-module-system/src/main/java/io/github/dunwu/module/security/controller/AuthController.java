@@ -8,16 +8,16 @@ import com.wf.captcha.base.Captcha;
 import io.github.dunwu.annotation.rest.AnonymousGetMapping;
 import io.github.dunwu.annotation.rest.AnonymousPostMapping;
 import io.github.dunwu.domain.vo.EmailVo;
-import io.github.dunwu.module.monitor.annotation.AppLog;
+import io.github.dunwu.tool.web.log.annotation.AppLog;
 import io.github.dunwu.module.security.config.DunwuWebSecurityProperties;
 import io.github.dunwu.module.security.entity.constant.LoginCodeEnum;
 import io.github.dunwu.module.security.entity.dto.AuthUserDto;
-import io.github.dunwu.module.security.entity.dto.JwtUserDto;
+import io.github.dunwu.module.security.entity.dto.UserVo;
 import io.github.dunwu.module.security.security.TokenProvider;
 import io.github.dunwu.module.security.service.AuthService;
 import io.github.dunwu.module.security.service.VerifyService;
-import io.github.dunwu.module.system.entity.SysUser;
-import io.github.dunwu.module.system.entity.vo.UserPassVo;
+import io.github.dunwu.module.cas.entity.SysUser;
+import io.github.dunwu.module.cas.entity.vo.UserPassVo;
 import io.github.dunwu.service.EmailService;
 import io.github.dunwu.tool.data.DataResult;
 import io.github.dunwu.tool.data.redis.RedisHelper;
@@ -85,13 +85,13 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         // 生成令牌
         String token = tokenProvider.createToken(authentication);
-        final JwtUserDto jwtUserDto = (JwtUserDto) authentication.getPrincipal();
+        final UserVo userVo = (UserVo) authentication.getPrincipal();
         // 保存在线信息
-        authService.save(jwtUserDto, token, request);
+        authService.save(userVo, token, request);
         // 返回 token 与 用户信息
         Map<String, Object> authInfo = new HashMap<String, Object>(2) {{
             put("token", properties.getJwt().getTokenStartWith() + token);
-            put("user", jwtUserDto);
+            put("user", userVo);
         }};
         if (properties.isSingleLogin()) {
             //踢掉之前已经登录的token

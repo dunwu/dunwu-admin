@@ -2,8 +2,8 @@ package io.github.dunwu.aspect;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import io.github.dunwu.module.system.entity.dto.SysUserDto;
-import io.github.dunwu.module.system.service.SysUserService;
+import io.github.dunwu.module.cas.entity.dto.SysUserDto;
+import io.github.dunwu.module.cas.service.SysUserService;
 import io.github.dunwu.tool.util.ClassUtil;
 import io.github.dunwu.util.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;

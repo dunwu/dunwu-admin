@@ -17,7 +17,7 @@ package io.github.dunwu.module.mnt.rest;
 
 import io.github.dunwu.module.mnt.service.DeployHistoryService;
 import io.github.dunwu.module.mnt.service.dto.DeployHistoryQueryCriteria;
-import io.github.dunwu.module.monitor.annotation.AppLog;
+import io.github.dunwu.tool.web.log.annotation.AppLog;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

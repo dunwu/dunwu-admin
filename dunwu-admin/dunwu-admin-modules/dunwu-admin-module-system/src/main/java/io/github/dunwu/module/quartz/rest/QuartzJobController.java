@@ -15,7 +15,7 @@
  */
 package io.github.dunwu.module.quartz.rest;
 
-import io.github.dunwu.module.monitor.annotation.AppLog;
+import io.github.dunwu.tool.web.log.annotation.AppLog;
 import io.github.dunwu.module.quartz.domain.QuartzJob;
 import io.github.dunwu.module.quartz.service.QuartzJobService;
 import io.github.dunwu.module.quartz.service.dto.JobQueryCriteria;

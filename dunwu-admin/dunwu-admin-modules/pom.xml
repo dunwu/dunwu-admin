@@ -15,7 +15,7 @@
 
   <modules>
     <module>dunwu-admin-module-system</module>
-    <module>dunwu-admin-module-monitor</module>
+    <module>dunwu-admin-module-common</module>
     <module>dunwu-admin-module-mnt</module>
     <module>dunwu-admin-module-generator</module>
     <module>dunwu-admin-module-tools</module>
@@ -31,7 +31,7 @@
       </dependency>
       <dependency>
         <groupId>io.github.dunwu</groupId>
-        <artifactId>dunwu-admin-module-monitor</artifactId>
+        <artifactId>dunwu-admin-module-common</artifactId>
         <version>${dunwu-admin.version}</version>
       </dependency>
       <dependency>

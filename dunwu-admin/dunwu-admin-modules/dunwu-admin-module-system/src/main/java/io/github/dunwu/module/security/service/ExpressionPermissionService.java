@@ -1,5 +1,6 @@
 package io.github.dunwu.module.security.service;
 
+import io.github.dunwu.util.SecurityUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
@@ -20,11 +21,11 @@ public class ExpressionPermissionService {
 
     public boolean check(String... permissions) {
         // 获取当前用户的所有权限
-        List<String> userPerms = SecurityUtil.getCurrentUser()
-            .getAuthorities()
-            .stream()
-            .map(GrantedAuthority::getAuthority)
-            .collect(Collectors.toList());
+        List<String> userPerms = SecurityUtils.getCurrentUser()
+                                              .getAuthorities()
+                                              .stream()
+                                              .map(GrantedAuthority::getAuthority)
+                                              .collect(Collectors.toList());
         // 判断当前用户的所有权限是否包含接口上定义的权限
         return userPerms.contains("admin") || Arrays.stream(permissions).anyMatch(userPerms::contains);
     }
