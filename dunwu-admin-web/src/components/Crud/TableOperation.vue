@@ -9,7 +9,7 @@
       <!--左侧插槽-->
       <slot name="left" />
       <el-button
-        v-if="crud.optShow.add"
+        v-if="crud.optShow.add === undefined || crud.optShow.add === null || crud.optShow.add"
         v-permission="permission.add"
         class="filter-item"
         size="mini"
@@ -20,7 +20,7 @@
         添加
       </el-button>
       <el-button
-        v-if="crud.optShow.edit"
+        v-if="crud.optShow.edit === undefined || crud.optShow.edit === null || crud.optShow.edit"
         v-permission="permission.edit"
         class="filter-item"
         size="mini"
@@ -32,7 +32,7 @@
         编辑
       </el-button>
       <el-button
-        v-if="crud.optShow.export"
+        v-if="crud.optShow.export === undefined || crud.optShow.export === null || crud.optShow.export"
         :loading="crud.downloadLoading"
         :disabled="!crud.data.length"
         class="filter-item"
@@ -44,7 +44,7 @@
         导出
       </el-button>
       <el-button
-        v-if="crud.optShow.del"
+        v-if="crud.optShow.del === undefined || crud.optShow.del === null || crud.optShow.del"
         slot="reference"
         v-permission="permission.del"
         class="filter-item"
@@ -65,7 +65,7 @@
       <!--左侧插槽-->
       <slot name="left" />
       <el-button
-        v-if="crud.optShow.add"
+        v-if="crud.optShow.add === undefined || crud.optShow.add === null || crud.optShow.add"
         class="filter-item"
         size="mini"
         type="primary"
@@ -75,7 +75,7 @@
         添加
       </el-button>
       <el-button
-        v-if="crud.optShow.edit"
+        v-if="crud.optShow.edit === undefined || crud.optShow.edit === null || crud.optShow.edit"
         class="filter-item"
         size="mini"
         type="primary"
@@ -86,7 +86,7 @@
         编辑
       </el-button>
       <el-button
-        v-if="crud.optShow.export"
+        v-if="crud.optShow.export === undefined || crud.optShow.export === null || crud.optShow.export"
         :loading="crud.downloadLoading"
         :disabled="!crud.data.length"
         class="filter-item"
@@ -98,7 +98,7 @@
         导出
       </el-button>
       <el-button
-        v-if="crud.optShow.del"
+        v-if="crud.optShow.del === undefined || crud.optShow.del === null || crud.optShow.del"
         slot="reference"
         class="filter-item"
         type="danger"
@@ -113,7 +113,7 @@
       <!--右侧-->
       <slot name="right" />
     </span>
-    <el-button-group class="crud-opts-right">
+    <el-button-group v-if="crud.optShow.tools === undefined || crud.optShow.tools === null || crud.optShow.tools" class="crud-opts-right">
       <el-button size="mini" plain type="info" icon="el-icon-search" @click="toggleSearch()" />
       <el-button size="mini" icon="el-icon-refresh" @click="crud.refresh()" />
       <el-popover placement="bottom-end" width="150" trigger="click">
@@ -268,7 +268,7 @@ export default {
         selectedCount += column.visible ? 1 : 0
       })
       if (selectedCount === 0) {
-        this.crud.notify(CRUD.NOTIFICATION_TYPE.WARNING, '请至少选择一列')
+        this.crud.message(CRUD.NOTIFICATION_TYPE.WARNING, '请至少选择一列')
         this.$nextTick(function() {
           item.visible = true
         })

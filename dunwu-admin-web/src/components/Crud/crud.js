@@ -51,7 +51,9 @@ function CRUD(options) {
       edit: true,
       del: true,
       export: true,
-      reset: true
+      query: true,
+      reset: true,
+      tools: true
     },
     // 自定义一些扩展属性
     props: {},
@@ -115,16 +117,16 @@ function CRUD(options) {
      * 通用的提示
      */
     submitSuccessNotify() {
-      crud.notify(CRUD.NOTIFICATION_TYPE.SUCCESS, crud.msg.submit)
+      crud.message(CRUD.NOTIFICATION_TYPE.SUCCESS, crud.msg.submit)
     },
     addSuccessNotify() {
-      crud.notify(CRUD.NOTIFICATION_TYPE.SUCCESS, crud.msg.add)
+      crud.message(CRUD.NOTIFICATION_TYPE.SUCCESS, crud.msg.add)
     },
     editSuccessNotify() {
-      crud.notify(CRUD.NOTIFICATION_TYPE.SUCCESS, crud.msg.edit)
+      crud.message(CRUD.NOTIFICATION_TYPE.SUCCESS, crud.msg.edit)
     },
     delSuccessNotify() {
-      crud.notify(CRUD.NOTIFICATION_TYPE.SUCCESS, crud.msg.del)
+      crud.message(CRUD.NOTIFICATION_TYPE.SUCCESS, crud.msg.del)
     },
     /**
      * 展开/折叠 扩展搜索栏
@@ -167,6 +169,23 @@ function CRUD(options) {
                 table.store.states.treeData = {}
                 table.store.states.lazyTreeNodeMap = {}
               }
+              crud.data = data
+              crud.resetDataStatus()
+              // time 毫秒后显示表格
+              setTimeout(() => {
+                crud.loading = false
+                callVmHook(crud, CRUD.HOOK.afterRefresh)
+              }, crud.time)
+              resolve(data)
+            })
+            .catch(err => {
+              crud.loading = false
+              reject(err)
+            })
+        } else if (this.tableType === 'list') {
+          crud.crudMethod
+            .list(crud.getQueryParams())
+            .then(data => {
               crud.data = data
               crud.resetDataStatus()
               // time 毫秒后显示表格
@@ -438,16 +457,16 @@ function CRUD(options) {
           if (crud.params[item] === null || crud.params[item] === '') crud.params[item] = undefined
         })
 
-      if (this.tableType === 'tree') {
+      if (this.tableType === 'page') {
         return {
+          page: crud.page.page,
+          size: crud.page.size,
+          sort: crud.sort,
           ...crud.query,
           ...crud.params
         }
       } else {
         return {
-          page: crud.page.page,
-          size: crud.page.size,
-          sort: crud.sort,
           ...crud.query,
           ...crud.params
         }
@@ -606,6 +625,15 @@ function CRUD(options) {
      */
     notify(type = CRUD.NOTIFICATION_TYPE.INFO, title, message) {
       crud.vms[0].vm.$notify({ type, title, message, duration: 2500 })
+    },
+    /**
+     * 显示全局的通知消息
+     * @param type
+     * @param title
+     * @param message
+     */
+    message(type = CRUD.NOTIFICATION_TYPE.INFO, message) {
+      crud.vms[0].vm.$message({ type, message, duration: 2500 })
     },
     updateProp(name, value) {
       Vue.set(crud.props, name, value)

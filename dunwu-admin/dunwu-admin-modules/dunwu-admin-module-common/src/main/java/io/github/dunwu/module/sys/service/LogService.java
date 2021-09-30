@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
  * @since 2021-09-29
  */
-public interface LogService extends IService, LogStorage {
+public interface LogService extends IService {
 
     /**
      * 添加一条 {@link Log} 记录

@@ -105,12 +105,19 @@ export default {
       return true
     },
     getQueryParame: function() {
-      return {
-        page: this.page,
-        size: this.size,
-        sort: this.sort,
-        ...this.query,
-        ...this.params
+      if (this.tableType === 'page') {
+        return {
+          page: this.page,
+          size: this.size,
+          sort: this.sort,
+          ...this.query,
+          ...this.params
+        }
+      } else {
+        return {
+          ...this.query,
+          ...this.params
+        }
       }
     },
     // 改变页码
@@ -175,6 +182,9 @@ export default {
       } else {
         this.$notify({ title: title, type: type, duration: 2500 })
       }
+    },
+    message(type, message) {
+      this.$message({ type, message, duration: 2500 })
     },
     /**
      * 删除前可以调用 beforeDelMethod 做一些操作

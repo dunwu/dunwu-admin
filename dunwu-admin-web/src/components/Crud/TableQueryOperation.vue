@@ -5,11 +5,18 @@
 <!--搜索与重置-->
 <template>
   <span style="width: 90%">
-    <el-button size="mini" type="primary" icon="el-icon-search" class="filter-item" @click="crud.toQuery">
+    <el-button
+      v-if="crud.optShow.query === undefined || crud.optShow.query === null || crud.optShow.query"
+      size="mini"
+      type="primary"
+      icon="el-icon-search"
+      class="filter-item"
+      @click="crud.toQuery"
+    >
       查询
     </el-button>
     <el-button
-      v-if="crud.optShow.reset"
+      v-if="crud.optShow.reset === undefined || crud.optShow.reset === null || crud.optShow.reset"
       size="mini"
       type="primary"
       icon="el-icon-refresh-left"

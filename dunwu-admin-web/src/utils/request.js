@@ -1,7 +1,7 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
 import qs from 'qs'
-import { Notification } from 'element-ui'
+import { Message, Notification } from 'element-ui'
 import router from '@/router'
 import store from '@/store'
 import Config from '@/settings'
@@ -12,9 +12,10 @@ import Constant from '@/utils/constant'
 const service = axios.create({
   baseURL: process.env.NODE_ENV === 'production' ? process.env.VUE_APP_BASE_API : '/api', // api 的 base_url
   timeout: Config.timeout, // 请求超时时间
+  withCredentials: true,
   // 请求参数序列化
   paramsSerializer(params) {
-    return qs.stringify(params, { indices: false })
+    return qs.stringify(params, { arrayFormat: 'repeat' })
   }
 })
 
@@ -42,19 +43,19 @@ service.interceptors.response.use(
     // console.info('[response info]', response)
     // console.groupEnd()
     if (response.status < 200 || response.status > 300) {
-      Notification.error({ title: response.message, duration: 5000 })
-      return Promise.reject('error')
+      Notification.error({ title: response.data.msg, duration: 5000 })
+      return Promise.reject(response.data.msg)
     } else {
       if (!response.data) {
         Notification.error({ title: '应答消息数据部分为空', duration: 5000 })
-        return Promise.reject('error')
+        return Promise.reject(response.data.msg)
       }
 
       if (response.headers['content-type'].indexOf('application/json') !== -1) {
         // 包装过的消息体，形式为：{"code":0,"data":{},"message":"成功","ok":true}
         if (response.data.code !== Constant.SUCCESS) {
-          Notification.error({ title: response.data.message, duration: 5000 })
-          return Promise.reject('error')
+          Message.error({ message: response.data.msg, duration: 5000 })
+          return Promise.reject(response.data.msg)
         }
 
         if (response.data.data) {
@@ -73,7 +74,7 @@ service.interceptors.response.use(
       const reader = new FileReader()
       reader.readAsText(error.response.data, 'utf-8')
       reader.onload = function(e) {
-        const errorMsg = JSON.parse(reader.result).message
+        const errorMsg = JSON.parse(reader.result).msg
         Notification.error({ title: errorMsg, duration: 5000 })
       }
     } else {
@@ -97,7 +98,7 @@ service.interceptors.response.use(
           router.push({ path: '/401' })
         } else {
           const statusText = error.response.statusText
-          const errorMsg = error.response.data.message
+          const errorMsg = error.response.data.msg
           if (errorMsg) {
             Notification.error({ title: errorMsg, duration: 5000 })
           } else {

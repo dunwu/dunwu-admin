@@ -365,13 +365,19 @@ export function regMobile(mobile) {
 }
 
 // 下载文件
-export function downloadFile(obj, name, suffix) {
+export function downloadFile(obj, name, suffix, withDate = true) {
   const url = window.URL.createObjectURL(new Blob([obj]))
   const link = document.createElement('a')
   link.style.display = 'none'
   link.href = url
-  const fileName = parseTime(new Date(), '{y}_{m}_{d}_{h}_{i}_{s}') + '-' + name + '.' + suffix
-  link.setAttribute('download', fileName)
+  if (withDate) {
+    const fileName = parseTime(new Date()) + '-' + name + '.' + suffix
+    link.setAttribute('download', fileName)
+  } else {
+    const fileName = name + '.' + suffix
+    link.setAttribute('download', fileName)
+  }
+
   document.body.appendChild(link)
   link.click()
   document.body.removeChild(link)

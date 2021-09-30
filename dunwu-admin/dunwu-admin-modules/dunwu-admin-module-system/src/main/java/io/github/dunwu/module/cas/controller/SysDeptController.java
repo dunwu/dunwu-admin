@@ -36,7 +36,7 @@ public class SysDeptController {
 
     private final SysDeptService service;
 
-    @AppLog("添加一条 SysDept 记录")
+    @AppLog(bizType = "部门", operType = "添加", value = "'向 sys_dept 表中添加一条记录' + #entity")
     @PreAuthorize("@exp.check('dept:add')")
     @ApiOperation("添加一条 SysDept 记录")
     @PostMapping("add")

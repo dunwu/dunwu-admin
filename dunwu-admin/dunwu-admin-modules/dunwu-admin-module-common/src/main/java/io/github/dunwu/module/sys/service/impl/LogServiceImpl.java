@@ -9,6 +9,7 @@ import io.github.dunwu.module.sys.service.LogService;
 import io.github.dunwu.tool.data.mybatis.ServiceImpl;
 import io.github.dunwu.tool.web.ServletUtil;
 import io.github.dunwu.tool.web.log.AppLogInfo;
+import io.github.dunwu.tool.web.log.LogStorage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
  * @since 2021-09-29
  */
 @Service
-public class LogServiceImpl extends ServiceImpl implements LogService {
+public class LogServiceImpl extends ServiceImpl implements LogService, LogStorage {
 
     private final LogDao dao;
 
@@ -114,15 +115,6 @@ public class LogServiceImpl extends ServiceImpl implements LogService {
         exportDtoList(page.getContent(), response);
     }
 
-    @Override
-    public boolean store(AppLogInfo logInfo) {
-        if (logInfo == null) {
-            return false;
-        }
-        Log entity = BeanUtil.toBean(logInfo, Log.class);
-        return dao.insert(entity);
-    }
-
     /**
      * 根据传入的 LogDto 列表，导出 excel 表单
      *
@@ -171,6 +163,15 @@ public class LogServiceImpl extends ServiceImpl implements LogService {
         }
 
         return BeanUtil.toBean(dto, Log.class);
+    }
+
+    @Override
+    public boolean store(AppLogInfo logInfo) {
+        if (logInfo == null) {
+            return false;
+        }
+        Log entity = BeanUtil.toBean(logInfo, Log.class);
+        return dao.insert(entity);
     }
 
 }
