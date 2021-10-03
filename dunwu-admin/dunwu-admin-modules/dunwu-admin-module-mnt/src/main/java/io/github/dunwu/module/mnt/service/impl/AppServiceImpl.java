@@ -1,129 +1,162 @@
-/*
- *  Copyright 2019-2020 Zheng Jie
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
 package io.github.dunwu.module.mnt.service.impl;
 
-import io.github.dunwu.tool.data.util.PageUtil;
-import io.github.dunwu.module.mnt.domain.App;
-import io.github.dunwu.module.mnt.repository.AppRepository;
+import cn.hutool.core.bean.BeanUtil;
+import io.github.dunwu.module.mnt.entity.App;
+import io.github.dunwu.module.mnt.entity.dto.AppDto;
+import io.github.dunwu.module.mnt.entity.query.AppQuery;
+import io.github.dunwu.module.mnt.dao.AppDao;
 import io.github.dunwu.module.mnt.service.AppService;
-import io.github.dunwu.module.mnt.service.dto.AppDto;
-import io.github.dunwu.module.mnt.service.dto.AppQueryCriteria;
-import io.github.dunwu.module.mnt.service.mapstruct.AppMapper;
-import io.github.dunwu.util.FileUtil;
-import io.github.dunwu.util.QueryHelp;
-import io.github.dunwu.util.ValidationUtil;
-import lombok.RequiredArgsConstructor;
+import io.github.dunwu.tool.data.mybatis.ServiceImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.HttpClientErrorException;
+import io.github.dunwu.tool.web.ServletUtil;
 
-import java.io.IOException;
+import java.io.Serializable;
 import java.util.*;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * @author zhanghouying
- * @date 2019-08-24
+ * 应用配置 Service 类
+ *
+ * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
+ * @since 2021-10-02
  */
 @Service
-@RequiredArgsConstructor
-public class AppServiceImpl implements AppService {
+public class AppServiceImpl extends ServiceImpl implements AppService {
 
-    private final AppRepository appRepository;
-    private final AppMapper appMapper;
+    private final AppDao dao;
 
-    @Override
-    public Object queryAll(AppQueryCriteria criteria, Pageable pageable) {
-        Page<App> page = appRepository.findAll(
-            (root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder),
-            pageable);
-        return PageUtil.toMap(page.map(appMapper::toDto));
+    public AppServiceImpl(AppDao dao) {
+        this.dao = dao;
     }
 
     @Override
-    public List<AppDto> queryAll(AppQueryCriteria criteria) {
-        return appMapper.toDto(appRepository.findAll(
-            (root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder)));
+    public boolean insert(App entity) {
+        return dao.insert(entity);
     }
 
     @Override
-    public AppDto findById(Long id) {
-        App app = appRepository.findById(id).orElseGet(App::new);
-        ValidationUtil.isNull(app.getId(), "App", "id", id);
-        return appMapper.toDto(app);
+    public boolean insertBatch(Collection<App> list) {
+        return dao.insertBatch(list);
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void create(App resources) {
-        verification(resources);
-        appRepository.save(resources);
+    public boolean updateById(App entity) {
+        return dao.updateById(entity);
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void update(App resources) {
-        verification(resources);
-        App app = appRepository.findById(resources.getId()).orElseGet(App::new);
-        ValidationUtil.isNull(app.getId(), "App", "id", resources.getId());
-        app.copy(resources);
-        appRepository.save(app);
-    }
-
-    private void verification(App resources) {
-        String opt = "/opt";
-        String home = "/home";
-        if (!(resources.getUploadPath().startsWith(opt) || resources.getUploadPath().startsWith(home))) {
-            throw new HttpClientErrorException(HttpStatus.FORBIDDEN, "文件只能上传在opt目录或者home目录");
-        }
-        if (!(resources.getDeployPath().startsWith(opt) || resources.getDeployPath().startsWith(home))) {
-            throw new HttpClientErrorException(HttpStatus.FORBIDDEN, "文件只能上传在opt目录或者home目录");
-        }
-        if (!(resources.getBackupPath().startsWith(opt) || resources.getBackupPath().startsWith(home))) {
-            throw new HttpClientErrorException(HttpStatus.FORBIDDEN, "文件只能上传在opt目录或者home目录");
-        }
+    public boolean updateBatchById(Collection<App> list) {
+        return dao.updateBatchById(list);
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void delete(Set<Long> ids) {
-        for (Long id : ids) {
-            appRepository.deleteById(id);
-        }
+    public boolean save(App entity) {
+        return dao.save(entity);
     }
 
     @Override
-    public void download(List<AppDto> queryAll, HttpServletResponse response) throws IOException {
-        List<Map<String, Object>> list = new ArrayList<>();
-        for (AppDto appDto : queryAll) {
+    public boolean saveBatch(Collection<App> list) {
+        return dao.saveBatch(list);
+    }
+
+    @Override
+    public boolean deleteById(Serializable id) {
+        return dao.deleteById(id);
+    }
+
+    @Override
+    public boolean deleteBatchByIds(Collection<? extends Serializable> ids) {
+        return dao.deleteBatchByIds(ids);
+    }
+
+    @Override
+    public List<AppDto> pojoList() {
+        return dao.pojoList(this::doToDto);
+    }
+
+    @Override
+    public List<AppDto> pojoListByQuery(AppQuery query) {
+        return dao.pojoListByQuery(query, this::doToDto);
+    }
+
+    @Override
+    public Page<AppDto> pojoSpringPageByQuery(AppQuery query, Pageable pageable) {
+        return dao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+    }
+
+    @Override
+    public AppDto pojoById(Serializable id) {
+        return dao.pojoById(id, this::doToDto);
+    }
+
+    @Override
+    public AppDto pojoByQuery(AppQuery query) {
+        return dao.pojoByQuery(query, this::doToDto);
+    }
+
+    @Override
+    public Integer countByQuery(AppQuery query) {
+        return dao.countByQuery(query);
+    }
+
+    @Override
+    public void exportList(Collection<? extends Serializable> ids, HttpServletResponse response) {
+        List<AppDto> list = dao.pojoListByIds(ids, this::doToDto);
+        exportDtoList(list, response);
+    }
+
+    @Override
+    public void exportPage(AppQuery query, Pageable pageable, HttpServletResponse response) {
+        Page<AppDto> page = dao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+        exportDtoList(page.getContent(), response);
+    }
+
+    /**
+     * 根据传入的 AppDto 列表，导出 excel 表单
+     *
+     * @param list     {@link AppDto} 列表
+     * @param response {@link HttpServletResponse} 实体
+     */
+    private void exportDtoList(Collection<AppDto> list, HttpServletResponse response) {
+        List<Map<String, Object>> mapList = new ArrayList<>();
+        for (AppDto item : list) {
             Map<String, Object> map = new LinkedHashMap<>();
-            map.put("应用名称", appDto.getName());
-            map.put("端口", appDto.getPort());
-            map.put("上传目录", appDto.getUploadPath());
-            map.put("部署目录", appDto.getDeployPath());
-            map.put("备份目录", appDto.getBackupPath());
-            map.put("启动脚本", appDto.getStartScript());
-            map.put("部署脚本", appDto.getDeployScript());
-            map.put("创建日期", appDto.getCreateTime());
-            list.add(map);
+            map.put("ID", item.getId());
+            map.put("应用名称", item.getName());
+            map.put("上传路径", item.getUploadPath());
+            map.put("部署路径", item.getDeployPath());
+            map.put("备份路径", item.getBackupPath());
+            map.put("应用端口", item.getPort());
+            map.put("启动脚本", item.getStartScript());
+            map.put("部署脚本", item.getDeployScript());
+            map.put("备注", item.getNote());
+            map.put("创建者", item.getCreateBy());
+            map.put("更新者", item.getUpdateBy());
+            map.put("创建时间", item.getCreateTime());
+            map.put("更新时间", item.getUpdateTime());
+            mapList.add(map);
         }
-        FileUtil.downloadExcel(list, response);
+        ServletUtil.downloadExcel(response, mapList);
+    }
+
+    @Override
+    public AppDto doToDto(App entity) {
+        if (entity == null) {
+            return null;
+        }
+
+        return BeanUtil.toBean(entity, AppDto.class);
+    }
+
+    @Override
+    public App dtoToDo(AppDto dto) {
+        if (dto == null) {
+            return null;
+        }
+
+        return BeanUtil.toBean(dto, App.class);
     }
 
 }

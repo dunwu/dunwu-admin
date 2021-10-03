@@ -1,116 +1,210 @@
-/*
- *  Copyright 2019-2020 Zheng Jie
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
 package io.github.dunwu.module.mnt.service;
 
-import io.github.dunwu.module.mnt.domain.Deploy;
-import io.github.dunwu.module.mnt.domain.DeployHistory;
-import io.github.dunwu.module.mnt.service.dto.DeployDto;
-import io.github.dunwu.module.mnt.service.dto.DeployQueryCriteria;
+import io.github.dunwu.module.mnt.entity.Deploy;
+import io.github.dunwu.module.mnt.entity.dto.DeployDto;
+import io.github.dunwu.module.mnt.entity.dto.DeployHistoryDto;
+import io.github.dunwu.module.mnt.entity.query.DeployQuery;
+import io.github.dunwu.tool.data.annotation.QueryField;
+import io.github.dunwu.tool.data.mybatis.IService;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.io.IOException;
+import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 
 /**
-* @author zhanghouying
-* @date 2019-08-24
-*/
-public interface DeployService {
+ * 部署管理 Service 接口
+ *
+ * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
+ * @since 2021-10-02
+ */
+public interface DeployService extends IService {
 
     /**
-     * 分页查询
-     * @param criteria 条件
-     * @param pageable 分页参数
+     * 添加一条 {@link DeployDto} 记录
+     *
+     * @param dto {@link DeployDto} 数据实体
+     * @return true / false
+     */
+    boolean insert(DeployDto dto);
+
+    /**
+     * 批量添加 {@link Deploy} 记录
+     *
+     * @param list {@link Deploy} 数据实体列表
+     * @return true / false
+     */
+    boolean insertBatch(Collection<Deploy> list);
+
+    /**
+     * 根据 ID 更新一条 {@link DeployDto} 记录
+     *
+     * @param dto {@link DeployDto} 数据实体
+     * @return true / false
+     */
+    boolean updateById(DeployDto dto);
+
+    /**
+     * 根据 ID 批量更新 {@link Deploy} 记录
+     *
+     * @param list {@link Deploy} 数据实体列表
+     * @return true / false
+     */
+    boolean updateBatchById(Collection<Deploy> list);
+
+    /**
+     * 添加或更新一条 {@link Deploy} 记录
+     *
+     * @param entity {@link Deploy} 数据实体
+     * @return true / false
+     */
+    boolean save(Deploy entity);
+
+    /**
+     * 批量添加或更新 {@link Deploy} 记录
+     *
+     * @param list {@link Deploy} 数据实体列表
+     * @return true / false
+     */
+    boolean saveBatch(Collection<Deploy> list);
+
+    /**
+     * 根据 ID 删除一条 {@link Deploy} 记录
+     *
+     * @param id {@link Deploy} 主键
+     * @return true / false
+     */
+    boolean deleteById(Serializable id);
+
+    /**
+     * 根据 ID 列表批量删除 {@link Deploy} 记录
+     *
+     * @param ids {@link Deploy} 主键列表
+     * @return true / false
+     */
+    boolean deleteBatchByIds(Collection<? extends Serializable> ids);
+
+    /**
+     * 查询 {@link DeployDto} 全量数据列表
+     *
+     * @return {@link List<DeployDto>}
+     */
+    List<DeployDto> pojoList();
+
+    /**
+     * 根据 {@link DeployQuery} 查询 {@link DeployDto} 列表
+     *
+     * @param query 查询条件，根据 {@link DeployQuery} 中的 {@link QueryField} 注解自动组装查询条件
+     * @return {@link List<DeployDto>}
+     */
+    List<DeployDto> pojoListByQuery(DeployQuery query);
+
+    /**
+     * 根据 {@link DeployQuery} 和 {@link Pageable} 分页查询 {@link DeployDto} 列表
+     *
+     * @param query    查询条件，根据 {@link DeployQuery} 中的 {@link QueryField} 注解自动组装查询条件
+     * @param pageable 分页查询条件
+     * @return {@link Page<DeployDto>}
+     */
+    Page<DeployDto> pojoSpringPageByQuery(DeployQuery query, Pageable pageable);
+
+    /**
+     * 根据 id 查询 {@link DeployDto}
+     *
+     * @param id {@link Deploy} 主键
+     * @return {@link DeployDto}
+     */
+    DeployDto pojoById(Serializable id);
+
+    /**
+     * 根据 {@link DeployQuery} 查询 {@link DeployDto} 列表
+     *
+     * @param query 查询条件，根据 {@link DeployQuery} 中的 {@link QueryField} 注解自动组装查询条件
+     * @return {@link DeployDto}
+     */
+    DeployDto pojoByQuery(DeployQuery query);
+
+    /**
+     * 根据 {@link DeployQuery} 查询匹配条件的记录数
+     *
+     * @param query 查询条件，根据 {@link DeployQuery} 中的 {@link QueryField} 注解自动组装查询条件
+     * @return {@link Integer}
+     */
+    Integer countByQuery(DeployQuery query);
+
+    /**
+     * 根据 id 列表查询 {@link DeployDto} 列表，并导出 excel 表单
+     *
+     * @param ids      id 列表
+     * @param response {@link HttpServletResponse} 实体
+     */
+    void exportList(Collection<? extends Serializable> ids, HttpServletResponse response);
+
+    /**
+     * 根据 {@link DeployQuery} 和 {@link Pageable} 分页查询 {@link DeployDto} 列表，并导出 excel 表单
+     *
+     * @param query    查询条件，根据 {@link DeployQuery} 中的 {@link QueryField} 注解自动组装查询条件
+     * @param pageable 分页查询条件
+     * @param response {@link HttpServletResponse} 实体
+     */
+    void exportPage(DeployQuery query, Pageable pageable, HttpServletResponse response);
+
+    /**
+     * 将 {@link Deploy} 转为 {@link DeployDto}
+     *
+     * @param entity 数据实体
      * @return /
      */
-    Object queryAll(DeployQueryCriteria criteria, Pageable pageable);
+    DeployDto doToDto(Deploy entity);
 
     /**
-     * 查询全部数据
-     * @param criteria 条件
+     * 将 {@link DeployDto} 转为 {@link Deploy}
+     *
+     * @param dto Dto 实体
      * @return /
      */
-    List<DeployDto> queryAll(DeployQueryCriteria criteria);
+    Deploy dtoToDo(DeployDto dto);
 
     /**
-     * 根据ID查询
-     * @param id /
-     * @return /
+     * 部署文件到服务器
+     *
+     * @param fileSavePath 文件路径
+     * @param appId        应用ID
      */
-    DeployDto findById(Long id);
-
-    /**
-     * 创建
-     * @param resources /
-     */
-    void create(Deploy resources);
-
-
-    /**
-     * 编辑
-     * @param resources /
-     */
-    void update(Deploy resources);
-
-    /**
-     * 删除
-     * @param ids /
-     */
-    void delete(Set<Long> ids);
-
-	/**
-	 * 部署文件到服务器
-	 * @param fileSavePath 文件路径
-	 * @param appId 应用ID
-     */
-	void deploy(String fileSavePath, Long appId);
+    void deployApp(String fileSavePath, Long appId);
 
     /**
      * 查询部署状态
-     * @param resources /
+     *
+     * @param dto /
      * @return /
      */
-    String serverStatus(Deploy resources);
+    String getServerStatus(DeployDto dto);
+
     /**
      * 启动服务
-     * @param resources /
+     *
+     * @param dto /
      * @return /
      */
-    String startServer(Deploy resources);
-    /**
-     * 停止服务
-     * @param resources /
-     * @return /
-     */
-    String stopServer(Deploy resources);
+    String startServer(DeployDto dto);
 
     /**
      * 停止服务
-     * @param resources /
+     *
+     * @param dto /
      * @return /
      */
-    String serverReduction(DeployHistory resources);
+    String stopServer(DeployDto dto);
 
     /**
-     * 导出数据
-     * @param queryAll /
-     * @param response /
-     * @throws IOException /
+     * 停止服务
+     *
+     * @param dto /
+     * @return /
      */
-    void download(List<DeployDto> queryAll, HttpServletResponse response) throws IOException;
+    String rollbackServer(DeployHistoryDto dto);
+
 }

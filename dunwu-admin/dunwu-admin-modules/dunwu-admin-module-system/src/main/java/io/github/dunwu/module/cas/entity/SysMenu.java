@@ -1,6 +1,7 @@
 package io.github.dunwu.module.cas.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.github.dunwu.tool.data.validator.annotation.EditCheck;
@@ -66,6 +67,7 @@ public class SysMenu implements Serializable {
     @ApiModelProperty(value = "是否为外链")
     private Boolean iFrame;
 
+    @TableField("`cache`")
     @ApiModelProperty(value = "是否缓存")
     private Boolean cache;
 

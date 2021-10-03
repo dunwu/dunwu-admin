@@ -5,7 +5,6 @@ import com.google.common.collect.ImmutableList;
 import io.github.dunwu.annotation.Limit;
 import io.github.dunwu.annotation.LimitType;
 import io.github.dunwu.tool.web.ServletUtil;
-import io.github.dunwu.util.RequestHolder;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -43,7 +42,7 @@ public class LimitAspect {
 
     @Around("pointcut()")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
-        HttpServletRequest request = RequestHolder.getHttpServletRequest();
+        HttpServletRequest request = ServletUtil.getHttpServletRequest();
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method signatureMethod = signature.getMethod();
         Limit limit = signatureMethod.getAnnotation(Limit.class);

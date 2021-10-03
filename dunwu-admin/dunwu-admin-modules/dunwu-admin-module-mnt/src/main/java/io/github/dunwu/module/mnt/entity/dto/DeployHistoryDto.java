@@ -1,0 +1,46 @@
+package io.github.dunwu.module.mnt.entity.dto;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
+/**
+ * 部署历史管理 Dto 类
+ *
+ * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
+ * @since 2021-10-02
+ */
+@Data
+@Accessors(chain = true)
+@EqualsAndHashCode(callSuper = false)
+@ApiModel(value = "DeployHistoryDto", description = "部署历史管理")
+public class DeployHistoryDto implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @ApiModelProperty(value = "ID")
+    private Long id;
+
+    @ApiModelProperty(value = "部署编号")
+    private Long deployId;
+
+    @ApiModelProperty(value = "应用名称")
+    private String appName;
+
+    @ApiModelProperty(value = "部署日期")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private LocalDateTime deployDate;
+
+    @ApiModelProperty(value = "部署用户")
+    private String deployUser;
+
+    @ApiModelProperty(value = "服务器IP")
+    private String ip;
+
+}

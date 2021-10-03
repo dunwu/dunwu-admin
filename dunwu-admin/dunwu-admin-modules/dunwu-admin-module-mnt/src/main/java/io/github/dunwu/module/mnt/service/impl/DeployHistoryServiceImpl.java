@@ -1,97 +1,155 @@
-/*
- *  Copyright 2019-2020 Zheng Jie
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
 package io.github.dunwu.module.mnt.service.impl;
 
-import cn.hutool.core.util.IdUtil;
-import io.github.dunwu.tool.data.util.PageUtil;
-import io.github.dunwu.module.mnt.domain.DeployHistory;
-import io.github.dunwu.module.mnt.repository.DeployHistoryRepository;
+import cn.hutool.core.bean.BeanUtil;
+import io.github.dunwu.module.mnt.dao.DeployHistoryDao;
+import io.github.dunwu.module.mnt.entity.DeployHistory;
+import io.github.dunwu.module.mnt.entity.dto.DeployHistoryDto;
+import io.github.dunwu.module.mnt.entity.query.DeployHistoryQuery;
 import io.github.dunwu.module.mnt.service.DeployHistoryService;
-import io.github.dunwu.module.mnt.service.dto.DeployHistoryDto;
-import io.github.dunwu.module.mnt.service.dto.DeployHistoryQueryCriteria;
-import io.github.dunwu.module.mnt.service.mapstruct.DeployHistoryMapper;
-import io.github.dunwu.util.FileUtil;
-import io.github.dunwu.util.QueryHelp;
-import io.github.dunwu.util.ValidationUtil;
-import lombok.RequiredArgsConstructor;
+import io.github.dunwu.tool.data.mybatis.ServiceImpl;
+import io.github.dunwu.tool.web.ServletUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
+import java.io.Serializable;
 import java.util.*;
 import javax.servlet.http.HttpServletResponse;
 
 /**
-* @author zhanghouying
-* @date 2019-08-24
-*/
+ * 部署历史管理 Service 类
+ *
+ * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
+ * @since 2021-10-02
+ */
 @Service
-@RequiredArgsConstructor
-public class DeployHistoryServiceImpl implements DeployHistoryService {
+public class DeployHistoryServiceImpl extends ServiceImpl implements DeployHistoryService {
 
-    private final DeployHistoryRepository deployhistoryRepository;
-    private final DeployHistoryMapper deployhistoryMapper;
+    private final DeployHistoryDao dao;
 
-    @Override
-    public Object queryAll(DeployHistoryQueryCriteria criteria, Pageable pageable){
-        Page<DeployHistory> page = deployhistoryRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
-        return PageUtil.toMap(page.map(deployhistoryMapper::toDto));
+    public DeployHistoryServiceImpl(DeployHistoryDao dao) {
+        this.dao = dao;
     }
 
     @Override
-    public List<DeployHistoryDto> queryAll(DeployHistoryQueryCriteria criteria){
-        return deployhistoryMapper.toDto(deployhistoryRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
+    public boolean insert(DeployHistory entity) {
+        return dao.insert(entity);
     }
 
     @Override
-    public DeployHistoryDto findById(String id) {
-        DeployHistory deployhistory = deployhistoryRepository.findById(id).orElseGet(DeployHistory::new);
-        ValidationUtil.isNull(deployhistory.getId(),"DeployHistory","id",id);
-        return deployhistoryMapper.toDto(deployhistory);
+    public boolean insertBatch(Collection<DeployHistory> list) {
+        return dao.insertBatch(list);
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void create(DeployHistory resources) {
-        resources.setId(IdUtil.simpleUUID());
-        deployhistoryRepository.save(resources);
+    public boolean updateById(DeployHistory entity) {
+        return dao.updateById(entity);
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void delete(Set<String> ids) {
-        for (String id : ids) {
-            deployhistoryRepository.deleteById(id);
+    public boolean updateBatchById(Collection<DeployHistory> list) {
+        return dao.updateBatchById(list);
+    }
+
+    @Override
+    public boolean save(DeployHistory entity) {
+        return dao.save(entity);
+    }
+
+    @Override
+    public boolean saveBatch(Collection<DeployHistory> list) {
+        return dao.saveBatch(list);
+    }
+
+    @Override
+    public boolean deleteById(Serializable id) {
+        return dao.deleteById(id);
+    }
+
+    @Override
+    public boolean deleteBatchByIds(Collection<? extends Serializable> ids) {
+        return dao.deleteBatchByIds(ids);
+    }
+
+    @Override
+    public List<DeployHistoryDto> pojoList() {
+        return dao.pojoList(this::doToDto);
+    }
+
+    @Override
+    public List<DeployHistoryDto> pojoListByQuery(DeployHistoryQuery query) {
+        return dao.pojoListByQuery(query, this::doToDto);
+    }
+
+    @Override
+    public Page<DeployHistoryDto> pojoSpringPageByQuery(DeployHistoryQuery query, Pageable pageable) {
+        return dao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+    }
+
+    @Override
+    public DeployHistoryDto pojoById(Serializable id) {
+        return dao.pojoById(id, this::doToDto);
+    }
+
+    @Override
+    public DeployHistoryDto pojoByQuery(DeployHistoryQuery query) {
+        return dao.pojoByQuery(query, this::doToDto);
+    }
+
+    @Override
+    public Integer countByQuery(DeployHistoryQuery query) {
+        return dao.countByQuery(query);
+    }
+
+    @Override
+    public void exportList(Collection<? extends Serializable> ids, HttpServletResponse response) {
+        List<DeployHistoryDto> list = dao.pojoListByIds(ids, this::doToDto);
+        exportDtoList(list, response);
+    }
+
+    @Override
+    public void exportPage(DeployHistoryQuery query, Pageable pageable, HttpServletResponse response) {
+        Page<DeployHistoryDto> page = dao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+        exportDtoList(page.getContent(), response);
+    }
+
+    /**
+     * 根据传入的 DeployHistoryDto 列表，导出 excel 表单
+     *
+     * @param list     {@link DeployHistoryDto} 列表
+     * @param response {@link HttpServletResponse} 实体
+     */
+    private void exportDtoList(Collection<DeployHistoryDto> list, HttpServletResponse response) {
+        List<Map<String, Object>> mapList = new ArrayList<>();
+        for (DeployHistoryDto item : list) {
+            Map<String, Object> map = new LinkedHashMap<>();
+            map.put("ID", item.getId());
+            map.put("部署编号", item.getDeployId());
+            map.put("应用名称", item.getAppName());
+            map.put("部署日期", item.getDeployDate());
+            map.put("部署用户", item.getDeployUser());
+            map.put("服务器IP", item.getIp());
+            mapList.add(map);
         }
+        ServletUtil.downloadExcel(response, mapList);
     }
 
     @Override
-    public void download(List<DeployHistoryDto> queryAll, HttpServletResponse response) throws IOException {
-        List<Map<String, Object>> list = new ArrayList<>();
-        for (DeployHistoryDto deployHistoryDto : queryAll) {
-            Map<String,Object> map = new LinkedHashMap<>();
-            map.put("部署编号", deployHistoryDto.getDeployId());
-            map.put("应用名称", deployHistoryDto.getAppName());
-            map.put("部署IP", deployHistoryDto.getIp());
-            map.put("部署时间", deployHistoryDto.getDeployDate());
-            map.put("部署人员", deployHistoryDto.getDeployUser());
-            list.add(map);
+    public DeployHistoryDto doToDto(DeployHistory entity) {
+        if (entity == null) {
+            return null;
         }
-        FileUtil.downloadExcel(list, response);
+
+        return BeanUtil.toBean(entity, DeployHistoryDto.class);
     }
+
+    @Override
+    public DeployHistory dtoToDo(DeployHistoryDto dto) {
+        if (dto == null) {
+            return null;
+        }
+
+        return BeanUtil.toBean(dto, DeployHistory.class);
+    }
+
 }

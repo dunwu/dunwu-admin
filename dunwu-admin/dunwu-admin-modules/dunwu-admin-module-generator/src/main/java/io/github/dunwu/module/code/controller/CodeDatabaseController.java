@@ -116,14 +116,14 @@ public class CodeDatabaseController {
         service.exportPage(query, pageable, response);
     }
 
-    @ApiOperation(value = "测试数据库链接")
+    @ApiOperation("测试数据库链接")
     @PostMapping("/testConnect")
     @PreAuthorize("@exp.check('database:view')")
     public DataResult testConnect(@Validated @RequestBody CodeDatabaseDto entity) {
         return DataResult.ok(service.testConnection(entity));
     }
 
-    @ApiOperation(value = "执行SQL脚本")
+    @ApiOperation("执行SQL脚本")
     @PostMapping(value = "/upload")
     @PreAuthorize("@exp.check('database:add')")
     public DataResult upload(@RequestBody MultipartFile file, HttpServletRequest request) throws Exception {
