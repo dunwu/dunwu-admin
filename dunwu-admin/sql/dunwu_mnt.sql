@@ -1,3 +1,20 @@
+-- MySQL dump 10.13  Distrib 8.0.12, for Win64 (x86_64)
+--
+-- Host: localhost    Database: dunwu_admin
+-- ------------------------------------------------------
+-- Server version	8.0.12
+
+/*!40101 SET @`old_character_set_client` = @@`character_set_client` */;
+/*!40101 SET @`old_character_set_results` = @@`character_set_results` */;
+/*!40101 SET @`old_collation_connection` = @@`collation_connection` */;
+SET NAMES utf8;
+/*!40103 SET @`old_time_zone` = @@`time_zone` */;
+/*!40103 SET TIME_ZONE = '+00:00' */;
+/*!40014 SET @`old_unique_checks` = @@`unique_checks`, UNIQUE_CHECKS = 0 */;
+/*!40014 SET @`old_foreign_key_checks` = @@`foreign_key_checks`, FOREIGN_KEY_CHECKS = 0 */;
+/*!40101 SET @`old_sql_mode` = @@`sql_mode`, SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @`old_sql_notes` = @@`sql_notes`, SQL_NOTES = 0 */;
+
 --
 -- Table structure for table `mnt_app`
 --
@@ -23,8 +40,7 @@ CREATE TABLE `mnt_app` (
 )
     ENGINE = InnoDB
     DEFAULT CHARSET = `utf8`
-    ROW_FORMAT = COMPACT
-    COMMENT ='应用配置表';
+    ROW_FORMAT = COMPACT COMMENT ='应用配置表';
 /*!40101 SET character_set_client = @`saved_cs_client` */;
 
 --
@@ -68,8 +84,7 @@ CREATE TABLE `mnt_deploy_history` (
 )
     ENGINE = InnoDB
     DEFAULT CHARSET = `utf8`
-    ROW_FORMAT = COMPACT
-    COMMENT ='部署历史表';
+    ROW_FORMAT = COMPACT COMMENT ='部署历史表';
 /*!40101 SET character_set_client = @`saved_cs_client` */;
 
 --
@@ -88,8 +103,7 @@ CREATE TABLE `mnt_deploy_server_map` (
 )
     ENGINE = InnoDB
     DEFAULT CHARSET = `utf8`
-    ROW_FORMAT = COMPACT
-    COMMENT ='应用和服务关联表';
+    ROW_FORMAT = COMPACT COMMENT ='应用和服务关联表';
 /*!40101 SET character_set_client = @`saved_cs_client` */;
 
 --
@@ -117,6 +131,16 @@ CREATE TABLE `mnt_server` (
 )
     ENGINE = InnoDB
     DEFAULT CHARSET = `utf8`
-    ROW_FORMAT = COMPACT
-    COMMENT ='服务器配置表';
+    ROW_FORMAT = COMPACT COMMENT ='服务器配置表';
 /*!40101 SET character_set_client = @`saved_cs_client` */;
+/*!40103 SET TIME_ZONE = @`old_time_zone` */;
+
+/*!40101 SET SQL_MODE = @`old_sql_mode` */;
+/*!40014 SET FOREIGN_KEY_CHECKS = @`old_foreign_key_checks` */;
+/*!40014 SET UNIQUE_CHECKS = @`old_unique_checks` */;
+/*!40101 SET CHARACTER_SET_CLIENT = @`old_character_set_client` */;
+/*!40101 SET CHARACTER_SET_RESULTS = @`old_character_set_results` */;
+/*!40101 SET COLLATION_CONNECTION = @`old_collation_connection` */;
+/*!40111 SET SQL_NOTES = @`old_sql_notes` */;
+
+-- Dump completed on 2021-10-03 11:21:35

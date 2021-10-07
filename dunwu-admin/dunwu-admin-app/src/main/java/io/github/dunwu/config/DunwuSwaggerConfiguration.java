@@ -137,11 +137,11 @@ public class DunwuSwaggerConfiguration implements BeanFactoryAware {
             // 安全配置
             if (webSecurityProperties != null && webSecurityProperties.isEnabled()) {
                 ParameterBuilder builder = new ParameterBuilder();
-                builder.name(webSecurityProperties.getJwt().getTokenHeader())
+                builder.name(webSecurityProperties.getToken().getTokenHeader())
                        .description("token")
                        .modelRef(new ModelRef("string"))
                        .parameterType("header")
-                       .defaultValue(webSecurityProperties.getJwt().getTokenStartWith())
+                       .defaultValue(webSecurityProperties.getToken().getTokenPrefix())
                        .required(true)
                        .build();
                 params.add(builder.build());

@@ -13,42 +13,46 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * 系统数据字典项 Query 类
+ * 数据字典详情 Query 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2020-05-24
+ * @since 2021-10-03
  */
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "DictOptionQuery", description = "系统数据字典项")
+@ApiModel(value = "DictOptionQuery", description = "数据字典详情")
 public class DictOptionQuery implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "所属字典ID")
+    @ApiModelProperty(value = "ID")
+    @QueryField
+    private Long id;
+
+    @ApiModelProperty(value = "字典id")
     @QueryField
     private Long dictId;
 
-    @ApiModelProperty(value = "字典项编码")
+    @ApiModelProperty(value = "字典选项编码")
     @QueryField
     private String code;
 
-    @ApiModelProperty(value = "字典项名称")
+    @ApiModelProperty(value = "字典选项名称")
     @QueryField
     private String name;
 
-    @ApiModelProperty(value = "排序")
+    @ApiModelProperty(value = "创建者")
     @QueryField
-    private Integer sequence;
+    private String createBy;
 
-    @ApiModelProperty(value = "状态")
+    @ApiModelProperty(value = "更新者")
     @QueryField
-    private Boolean enabled;
+    private String updateBy;
 
     @ApiModelProperty(value = "创建时间")
     @QueryField(type = QueryField.QueryType.BETWEEN)
     @JsonFormat(shape = JsonFormat.Shape.ARRAY, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private List<LocalDateTime> createTime;
+    private List<LocalDateTime> createTimeRange;
 
 }

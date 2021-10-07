@@ -14,20 +14,16 @@
 
   <dependencies>
     <dependency>
-      <groupId>io.github.dunwu.boot</groupId>
-      <artifactId>dunwu-starter-mybatis</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.github.dunwu.boot</groupId>
-      <artifactId>dunwu-starter-web</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.github.dunwu.tool</groupId>
-      <artifactId>dunwu-tool-generator</artifactId>
+      <groupId>io.github.dunwu</groupId>
+      <artifactId>dunwu-admin-module-common</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-jooq</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.github.dunwu.tool</groupId>
+      <artifactId>dunwu-tool-generator</artifactId>
     </dependency>
   </dependencies>
 </project>

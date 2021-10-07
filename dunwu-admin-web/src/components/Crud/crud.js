@@ -39,9 +39,13 @@ function CRUD(options) {
     // CRUD Method
     crudMethod: {
       add: data => {},
-      delBatch: ids => {},
       edit: data => {},
+      del: id => {},
+      delBatch: ids => {},
       list: params => {},
+      treeList: params => {},
+      page: params => {},
+      getById: id => {},
       exportList: ids => {},
       exportPage: params => {}
     },

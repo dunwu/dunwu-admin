@@ -21,12 +21,12 @@ import io.github.dunwu.module.mnt.service.DeployService;
 import io.github.dunwu.module.mnt.service.ServerService;
 import io.github.dunwu.module.mnt.util.ScpClientUtil;
 import io.github.dunwu.module.mnt.util.ShellUtil;
+import io.github.dunwu.module.security.util.SecurityUtil;
 import io.github.dunwu.module.sys.constant.enums.WebSocketMsgType;
 import io.github.dunwu.module.sys.websocket.WebSocketEndpoint;
 import io.github.dunwu.module.sys.websocket.WebSocketMsg;
 import io.github.dunwu.tool.data.mybatis.ServiceImpl;
 import io.github.dunwu.tool.web.ServletUtil;
-import io.github.dunwu.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -207,7 +207,7 @@ public class DeployServiceImpl extends ServiceImpl implements DeployService {
         List<ServerDto> servers = serverService.pojoListByDeployId(entity.getId());
         DeployDto deployDto = BeanUtil.toBean(entity, DeployDto.class);
         deployDto.setApp(appDto)
-            .setServers(servers);
+                 .setServers(servers);
         return deployDto;
     }
 
@@ -219,8 +219,8 @@ public class DeployServiceImpl extends ServiceImpl implements DeployService {
 
         Deploy deploy = new Deploy();
         deploy.setId(dto.getId())
-            .setAppId(dto.getApp().getId())
-            .setNote(dto.getNote());
+              .setAppId(dto.getApp().getId())
+              .setNote(dto.getNote());
         return deploy;
     }
 
@@ -315,7 +315,7 @@ public class DeployServiceImpl extends ServiceImpl implements DeployService {
         //还原信息入库
         DeployHistory deployHistory = new DeployHistory();
         deployHistory.setAppName(appName);
-        deployHistory.setDeployUser(SecurityUtils.getCurrentUsername());
+        deployHistory.setDeployUser(SecurityUtil.getCurrentUsername());
         deployHistory.setIp(ip);
         deployHistory.setDeployId(id);
         deployHistoryService.insert(deployHistory);

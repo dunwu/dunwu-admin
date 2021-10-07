@@ -3,7 +3,6 @@
  * @see 【vue-router 官方文档】动态路由匹配：https://router.vuejs.org/zh/guide/essentials/dynamic-matching.html
  * @see 【vue-router 官方文档】导航守卫：https://router.vuejs.org/zh/guide/advanced/navigation-guards.html
  */
-import _ from 'lodash'
 import Vue from 'vue'
 import Router from 'vue-router'
 import NProgress from 'nprogress' // progress bar
@@ -12,7 +11,7 @@ import store from '@/store'
 import Config from '@/settings'
 import constantRouter from './constantRouter'
 import { getToken } from '@/utils/auth' // getToken from cookie
-import { buildMenus } from '@/api/system/menu'
+import { buildMenus } from '@/api/cas/menu'
 import { filterAsyncRouter } from '@/store/modules/permission'
 
 Vue.use(Router)

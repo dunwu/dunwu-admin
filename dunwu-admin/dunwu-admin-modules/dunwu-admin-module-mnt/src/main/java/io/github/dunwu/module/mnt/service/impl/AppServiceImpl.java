@@ -1,16 +1,17 @@
 package io.github.dunwu.module.mnt.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollectionUtil;
+import io.github.dunwu.module.mnt.dao.AppDao;
 import io.github.dunwu.module.mnt.entity.App;
 import io.github.dunwu.module.mnt.entity.dto.AppDto;
 import io.github.dunwu.module.mnt.entity.query.AppQuery;
-import io.github.dunwu.module.mnt.dao.AppDao;
 import io.github.dunwu.module.mnt.service.AppService;
 import io.github.dunwu.tool.data.mybatis.ServiceImpl;
+import io.github.dunwu.tool.web.ServletUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import io.github.dunwu.tool.web.ServletUtil;
 
 import java.io.Serializable;
 import java.util.*;
@@ -77,6 +78,11 @@ public class AppServiceImpl extends ServiceImpl implements AppService {
     }
 
     @Override
+    public List<AppDto> pojoListByIds(Collection<? extends Serializable> ids) {
+        return dao.pojoListByIds(ids, this::doToDto);
+    }
+
+    @Override
     public List<AppDto> pojoListByQuery(AppQuery query) {
         return dao.pojoListByQuery(query, this::doToDto);
     }
@@ -120,6 +126,9 @@ public class AppServiceImpl extends ServiceImpl implements AppService {
      * @param response {@link HttpServletResponse} 实体
      */
     private void exportDtoList(Collection<AppDto> list, HttpServletResponse response) {
+        if (CollectionUtil.isEmpty(list)) {
+            return;
+        }
         List<Map<String, Object>> mapList = new ArrayList<>();
         for (AppDto item : list) {
             Map<String, Object> map = new LinkedHashMap<>();

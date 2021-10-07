@@ -38,18 +38,16 @@
           <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon" />
         </el-input>
         <div class="login-code">
-          <img :src="codeUrl" @click="getCode">
+          <img :src="captchaUrl" @click="getCaptcha">
         </div>
       </el-form-item>
-      <el-checkbox v-model="loginForm.rememberMe" style="margin:0 0 25px 0;">
-        记住我
-      </el-checkbox>
-      <el-form-item style="width:100%;">
+      <el-checkbox v-model="loginForm.rememberMe" style="margin: 0 0 25px 0">记住我</el-checkbox>
+      <el-form-item style="width: 100%">
         <el-button
           :loading="loading"
           size="medium"
           type="primary"
-          style="width:100%;"
+          style="width: 100%"
           @click.native.prevent="handleLogin"
         >
           <span v-if="!loading">登 录</span>
@@ -70,12 +68,13 @@ import Config from '@/settings'
 import authApi from '@/api/auth'
 import Cookies from 'js-cookie'
 import Background from '@/assets/images/background.jpg'
+
 export default {
   name: 'Login',
   data() {
     return {
-      Background: Background,
-      codeUrl: '',
+      Background,
+      captchaUrl: '',
       cookiePass: '',
       loginForm: {
         username: 'admin',
@@ -103,18 +102,23 @@ export default {
   },
   created() {
     // 获取验证码
-    this.getCode()
+    this.getCaptcha()
     // 获取用户名密码等Cookie
     this.getCookie()
     // token 过期提示
     this.point()
   },
   methods: {
-    getCode() {
-      authApi.getCodeImg().then(res => {
-        this.codeUrl = res.img
-        this.loginForm.uuid = res.uuid
-      })
+    getCaptcha() {
+      authApi
+        .getCaptcha()
+        .then(res => {
+          this.captchaUrl = res.img
+          this.loginForm.uuid = res.uuid
+        })
+        .catch(err => {
+          console.error('获取验证码失败', err)
+        })
     },
     getCookie() {
       const username = Cookies.get('username')
@@ -161,7 +165,7 @@ export default {
             })
             .catch(() => {
               this.loading = false
-              this.getCode()
+              this.getCaptcha()
             })
         } else {
           console.log('error submit!!')

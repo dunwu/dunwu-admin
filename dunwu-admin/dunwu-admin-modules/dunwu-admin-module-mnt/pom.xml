@@ -2,41 +2,36 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>io.github.dunwu</groupId>
-    <artifactId>dunwu-admin-modules</artifactId>
-    <version>1.0.1</version>
-  </parent>
+    <parent>
+        <groupId>io.github.dunwu</groupId>
+        <artifactId>dunwu-admin-modules</artifactId>
+        <version>1.0.1</version>
+    </parent>
 
-  <artifactId>dunwu-admin-module-mnt</artifactId>
+    <artifactId>dunwu-admin-module-mnt</artifactId>
 
-  <properties>
-    <configuration.version>1.9</configuration.version>
-  </properties>
+    <properties>
+        <configuration.version>1.9</configuration.version>
+    </properties>
 
-  <dependencies>
-    <dependency>
-      <groupId>io.github.dunwu</groupId>
-      <artifactId>dunwu-admin-common</artifactId>
-      <version>1.0.1</version>
-    </dependency>
-    <dependency>
-      <groupId>io.github.dunwu</groupId>
-      <artifactId>dunwu-admin-module-common</artifactId>
-      <version>1.0.1</version>
-    </dependency>
-    <!-- linux的管理 -->
-    <dependency>
-      <groupId>ch.ethz.ganymed</groupId>
-      <artifactId>ganymed-ssh2</artifactId>
-      <version>build210</version>
-    </dependency>
-    <dependency>
-      <groupId>com.jcraft</groupId>
-      <artifactId>jsch</artifactId>
-      <version>0.1.55</version>
-    </dependency>
-  </dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>io.github.dunwu</groupId>
+            <artifactId>dunwu-admin-module-security</artifactId>
+        </dependency>
+
+        <!-- linux的管理 -->
+        <dependency>
+            <groupId>ch.ethz.ganymed</groupId>
+            <artifactId>ganymed-ssh2</artifactId>
+            <version>build210</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.55</version>
+        </dependency>
+    </dependencies>
 </project>

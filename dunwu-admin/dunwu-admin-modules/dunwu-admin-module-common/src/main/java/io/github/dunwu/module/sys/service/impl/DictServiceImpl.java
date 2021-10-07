@@ -1,22 +1,22 @@
 package io.github.dunwu.module.sys.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.github.dunwu.module.sys.dao.DictDao;
 import io.github.dunwu.module.sys.dao.DictOptionDao;
 import io.github.dunwu.module.sys.entity.Dict;
 import io.github.dunwu.module.sys.entity.DictOption;
 import io.github.dunwu.module.sys.entity.dto.DictDto;
 import io.github.dunwu.module.sys.entity.dto.DictOptionDto;
+import io.github.dunwu.module.sys.entity.query.DictQuery;
+import io.github.dunwu.module.sys.service.DictOptionService;
 import io.github.dunwu.module.sys.service.DictService;
-import io.github.dunwu.tool.bean.BeanUtil;
 import io.github.dunwu.tool.data.mybatis.ServiceImpl;
 import io.github.dunwu.tool.web.ServletUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.*;
@@ -24,10 +24,10 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 系统数据字典 Service 类
+ * 数据字典 Service 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2020-05-24
+ * @since 2021-10-03
  */
 @Service
 @RequiredArgsConstructor
@@ -35,20 +35,40 @@ public class DictServiceImpl extends ServiceImpl implements DictService {
 
     private final DictDao dictDao;
     private final DictOptionDao dictOptionDao;
+    private final DictOptionService dictOptionService;
 
     @Override
-    public boolean save(DictDto entity) {
-        return dictDao.insert(dtoToDo(entity));
+    public boolean insert(Dict entity) {
+        return dictDao.insert(entity);
     }
 
     @Override
-    public boolean updateById(DictDto entity) {
-        return dictDao.updateById(dtoToDo(entity));
+    public boolean insertBatch(Collection<Dict> list) {
+        return dictDao.insertBatch(list);
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public boolean removeById(Serializable id) {
+    public boolean updateById(Dict entity) {
+        return dictDao.updateById(entity);
+    }
+
+    @Override
+    public boolean updateBatchById(Collection<Dict> list) {
+        return dictDao.updateBatchById(list);
+    }
+
+    @Override
+    public boolean save(Dict entity) {
+        return dictDao.save(entity);
+    }
+
+    @Override
+    public boolean saveBatch(Collection<Dict> list) {
+        return dictDao.saveBatch(list);
+    }
+
+    @Override
+    public boolean deleteById(Serializable id) {
         Dict dict = dictDao.getById(id);
         if (dict == null) { return true; }
 
@@ -67,18 +87,28 @@ public class DictServiceImpl extends ServiceImpl implements DictService {
     }
 
     @Override
-    public boolean removeByIds(Collection<Serializable> ids) {
+    public boolean deleteBatchByIds(Collection<? extends Serializable> ids) {
         return dictDao.deleteBatchByIds(ids);
     }
 
     @Override
-    public Page<DictDto> pojoSpringPageByQuery(Object query, Pageable pageable) {
-        return dictDao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+    public List<DictDto> pojoList() {
+        return dictDao.pojoList(this::doToDto);
     }
 
     @Override
-    public List<DictDto> pojoListByQuery(Object query) {
+    public List<DictDto> pojoListByIds(Collection<? extends Serializable> ids) {
+        return dictDao.pojoListByIds(ids, this::doToDto);
+    }
+
+    @Override
+    public List<DictDto> pojoListByQuery(DictQuery query) {
         return dictDao.pojoListByQuery(query, this::doToDto);
+    }
+
+    @Override
+    public Page<DictDto> pojoSpringPageByQuery(DictQuery query, Pageable pageable) {
+        return dictDao.pojoSpringPageByQuery(query, pageable, this::doToDto);
     }
 
     @Override
@@ -87,81 +117,74 @@ public class DictServiceImpl extends ServiceImpl implements DictService {
     }
 
     @Override
-    public DictDto pojoByQuery(Object query) {
+    public DictDto pojoByQuery(DictQuery query) {
         return dictDao.pojoByQuery(query, this::doToDto);
     }
 
     @Override
-    public Integer countByQuery(Object query) {
+    public Integer countByQuery(DictQuery query) {
         return dictDao.countByQuery(query);
     }
 
     @Override
-    public void exportByIds(Collection<Serializable> ids, HttpServletResponse response) {
-        List<DictDto> list = dictDao.pojoListByIds(ids, DictDto.class);
-        export(list, response);
+    public void exportList(Collection<? extends Serializable> ids, HttpServletResponse response) {
+        List<DictDto> list = dictDao.pojoListByIds(ids, this::doToDto);
+        exportDtoList(list, response);
     }
 
     @Override
-    public void exportPage(Object query, Pageable pageable, HttpServletResponse response) {
-        Page<DictDto> page = dictDao.pojoSpringPageByQuery(query, pageable, DictDto.class);
-        export(page.getContent(), response);
+    public void exportPage(DictQuery query, Pageable pageable, HttpServletResponse response) {
+        Page<DictDto> page = dictDao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+        exportDtoList(page.getContent(), response);
     }
 
     /**
-     * 根据传入的 SysDictDto 列表，导出 excel 表单
+     * 根据传入的 DictDto 列表，导出 excel 表单
      *
      * @param list     {@link DictDto} 列表
      * @param response {@link HttpServletResponse} 实体
      */
-    private void export(Collection<DictDto> list, HttpServletResponse response) {
+    private void exportDtoList(Collection<DictDto> list, HttpServletResponse response) {
         List<Map<String, Object>> mapList = new ArrayList<>();
         for (DictDto item : list) {
             Map<String, Object> map = new LinkedHashMap<>();
             map.put("ID", item.getId());
             map.put("字典编码", item.getCode());
             map.put("字典名称", item.getName());
-            map.put("状态", item.getEnabled());
+            map.put("是否禁用：1 表示禁用；0 表示启用", item.getIsDisabled());
             map.put("备注", item.getNote());
             map.put("创建者", item.getCreateBy());
             map.put("更新者", item.getUpdateBy());
+            map.put("创建时间", item.getCreateTime());
+            map.put("更新时间", item.getUpdateTime());
             mapList.add(map);
         }
         ServletUtil.downloadExcel(response, mapList);
     }
 
-    /**
-     * 将数据实体转为 Dto
-     *
-     * @param entity {@link  Dict} 数据实体
-     * @return {@link DictDto}
-     */
-    private DictDto doToDto(Dict entity) {
+    @Override
+    public DictDto doToDto(Dict entity) {
+        if (entity == null) {
+            return null;
+        }
+
         DictDto dictDto = BeanUtil.toBean(entity, DictDto.class);
-        List<DictOptionDto> options = pojoDictOptionsByDictId(dictDto.getId());
+        List<DictOptionDto> options = dictOptionService.pojoListByDictId(dictDto.getId());
         if (CollectionUtil.isEmpty(options)) {
-            dictDto.setOptions(new ArrayList<>());
+            dictDto.setOptions(Collections.emptyList());
         } else {
             dictDto.setOptions(options);
         }
         return dictDto;
     }
 
-    /**
-     * 将 Dto 转为数据实体
-     *
-     * @param dto Dto
-     * @return {@link Dict}
-     */
-    private Dict dtoToDo(DictDto dto) {
-        return BeanUtil.toBean(dto, Dict.class);
-    }
+    @Override
+    public Dict dtoToDo(DictDto dto) {
+        if (dto == null) {
+            return null;
+        }
 
-    private List<DictOptionDto> pojoDictOptionsByDictId(Long dictId) {
-        DictOption dictOption = new DictOption();
-        dictOption.setDictId(dictId);
-        List<DictOption> list = dictOptionDao.list(Wrappers.query(dictOption));
-        return BeanUtil.toBeanList(list, DictOptionDto.class);
+        return BeanUtil.toBean(dto, Dict.class);
     }
 
 }

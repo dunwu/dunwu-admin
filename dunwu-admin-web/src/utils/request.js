@@ -25,7 +25,7 @@ service.interceptors.request.use(
     console.group('%c%s', 'color:blue', '[Http Request]')
     console.info('[request info]', config)
     if (getToken()) {
-      config.headers['Authorization'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
+      config.headers[Config.TokenKey] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
     }
     config.headers['Content-Type'] = 'application/json;charset=UTF-8'
     return config

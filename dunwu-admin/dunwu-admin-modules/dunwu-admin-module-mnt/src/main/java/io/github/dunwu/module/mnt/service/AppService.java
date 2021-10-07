@@ -1,9 +1,9 @@
 package io.github.dunwu.module.mnt.service;
 
-import io.github.dunwu.tool.data.annotation.QueryField;
 import io.github.dunwu.module.mnt.entity.App;
 import io.github.dunwu.module.mnt.entity.dto.AppDto;
 import io.github.dunwu.module.mnt.entity.query.AppQuery;
+import io.github.dunwu.tool.data.annotation.QueryField;
 import io.github.dunwu.tool.data.mybatis.IService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -91,6 +91,14 @@ public interface AppService extends IService {
      * @return {@link List<AppDto>}
      */
     List<AppDto> pojoList();
+
+    /**
+     * 根据 ID 列表查询 {@link AppDto} 列表
+     *
+     * @param ids {@link App} 主键列表
+     * @return {@link List<AppDto>}
+     */
+    List<AppDto> pojoListByIds(Collection<? extends Serializable> ids);
 
     /**
      * 根据 {@link AppQuery} 查询 {@link AppDto} 列表

@@ -3,7 +3,6 @@ package io.github.dunwu.module.mnt.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import io.github.dunwu.annotation.Query;
 import io.github.dunwu.module.mnt.dao.DeployServerMapDao;
 import io.github.dunwu.module.mnt.dao.ServerDao;
 import io.github.dunwu.module.mnt.entity.DeployServerMap;
@@ -195,8 +194,8 @@ public class ServerServiceImpl extends ServiceImpl implements ServerService {
         }
 
         Set<Long> serverIds = list.stream()
-            .map(DeployServerMap::getServerId)
-            .collect(Collectors.toSet());
+                                  .map(DeployServerMap::getServerId)
+                                  .collect(Collectors.toSet());
 
         return pojoListByIds(serverIds);
     }

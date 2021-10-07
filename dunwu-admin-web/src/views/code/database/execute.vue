@@ -41,7 +41,7 @@ export default {
       loading: false,
       dialog: false,
       headers: {
-        Authorization: getToken()
+        DunwuToken: getToken()
       },
       rules: {}
     }
@@ -49,8 +49,7 @@ export default {
   computed: {
     ...mapGetters(['databaseUploadApi'])
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
     cancel() {
       this.dialog = false
@@ -71,9 +70,9 @@ export default {
       }
     },
     handleError(e, file, fileList) {
-      const msg = JSON.parse(e.message)
+      const msg = JSON.parse(e.msg)
       this.$notify({
-        title: msg.message,
+        title: msg.msg,
         type: 'error',
         duration: 0
       })
@@ -82,5 +81,4 @@ export default {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

@@ -14,7 +14,7 @@ module.exports = {
   /**
    * @description token key
    */
-  TokenKey: 'DUNWU-TOEKN',
+  TokenKey: 'DunwuToken',
   /**
    * @description 请求超时时间，毫秒（默认2分钟）
    */

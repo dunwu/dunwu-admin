@@ -1,7 +1,6 @@
 package io.github.dunwu;
 
-import io.github.dunwu.annotation.rest.AnonymousGetMapping;
-import io.github.dunwu.util.SpringContextHolder;
+import io.github.dunwu.module.security.annotation.AnonymousGetMapping;
 import io.swagger.annotations.Api;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -10,7 +9,6 @@ import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactor
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,17 +25,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(hidden = true)
 @SpringBootApplication
 @EnableTransactionManagement
-@EnableJpaAuditing(auditorAwareRef = "auditorAware")
-@MapperScan("io.github.dunwu.module.*.dao.mapper")
+@MapperScan("io.github.dunwu.module.**.dao.mapper")
 public class DunwuAdminApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(DunwuAdminApplication.class, args);
-    }
-
-    @Bean
-    public SpringContextHolder springContextHolder() {
-        return new SpringContextHolder();
     }
 
     @Bean

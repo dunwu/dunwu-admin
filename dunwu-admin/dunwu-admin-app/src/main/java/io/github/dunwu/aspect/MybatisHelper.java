@@ -2,10 +2,10 @@ package io.github.dunwu.aspect;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import io.github.dunwu.module.cas.entity.dto.SysUserDto;
-import io.github.dunwu.module.cas.service.SysUserService;
+import io.github.dunwu.module.cas.entity.dto.UserDto;
+import io.github.dunwu.module.cas.service.UserService;
+import io.github.dunwu.module.security.util.SecurityUtil;
 import io.github.dunwu.tool.util.ClassUtil;
-import io.github.dunwu.util.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
@@ -23,9 +23,9 @@ import java.util.List;
 @Component
 public class MybatisHelper {
 
-    private final SysUserService userService;
+    private final UserService userService;
 
-    public MybatisHelper(SysUserService userService) {
+    public MybatisHelper(UserService userService) {
         this.userService = userService;
     }
 
@@ -74,7 +74,7 @@ public class MybatisHelper {
                 // 如果应答结果实体中 createBy、updateBy 为 String 类型，则将 ID 转换为用户名
                 if (f.getType() == String.class) {
                     if (value != null) {
-                        SysUserDto sysUser = userService.pojoById((Serializable) value);
+                        UserDto sysUser = userService.pojoById((Serializable) value);
                         if (sysUser == null) {
                             f.set(obj, null);
                         } else {
@@ -117,12 +117,12 @@ public class MybatisHelper {
 
             if (f.getName().equals("createBy") && f.get(obj) == null) {
                 if (methodName.startsWith("insert") || methodName.startsWith("save")) {
-                    f.set(obj, SecurityUtils.getCurrentUsername());
+                    f.set(obj, SecurityUtil.getCurrentUsername());
                 }
             }
 
             if (f.getName().equals("updateBy")) {
-                f.set(obj, SecurityUtils.getCurrentUsername());
+                f.set(obj, SecurityUtil.getCurrentUsername());
             }
 
             f.setAccessible(false);

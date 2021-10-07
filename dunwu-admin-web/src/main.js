@@ -5,6 +5,11 @@ import Cookies from 'js-cookie'
 import 'normalize.css/normalize.css'
 
 import Element from 'element-ui'
+// import 'element-ui/lib/theme-chalk/index.css'
+// global css
+import './assets/styles/index.scss'
+import './assets/styles/element-variables.scss'
+
 //
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
@@ -13,9 +18,7 @@ import dict from './components/Dict'
 // 权限指令
 import checkPer from '@/utils/permission'
 import permission from './components/Permission'
-import './assets/styles/element-variables.scss'
-// global css
-import './assets/styles/index.scss'
+
 // 代码高亮
 import VueHighlightJS from 'vue-highlightjs'
 import 'highlight.js/styles/atom-one-dark.css'

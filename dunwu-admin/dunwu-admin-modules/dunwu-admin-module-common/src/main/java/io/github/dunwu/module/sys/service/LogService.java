@@ -89,7 +89,7 @@ public interface LogService extends IService {
     /**
      * 查询 {@link LogDto} 全量数据列表
      *
-     * @return {@link List < LogDto >}
+     * @return {@link List<LogDto>}
      */
     List<LogDto> pojoList();
 
@@ -97,7 +97,7 @@ public interface LogService extends IService {
      * 根据 {@link LogQuery} 查询 {@link LogDto} 列表
      *
      * @param query 查询条件，根据 {@link LogQuery} 中的 {@link QueryField} 注解自动组装查询条件
-     * @return {@link List < LogDto >}
+     * @return {@link List<LogDto>}
      */
     List<LogDto> pojoListByQuery(LogQuery query);
 
@@ -106,7 +106,7 @@ public interface LogService extends IService {
      *
      * @param query    查询条件，根据 {@link LogQuery} 中的 {@link QueryField} 注解自动组装查询条件
      * @param pageable 分页查询条件
-     * @return {@link Page< LogDto >}
+     * @return {@link Page<LogDto>}
      */
     Page<LogDto> pojoSpringPageByQuery(LogQuery query, Pageable pageable);
 

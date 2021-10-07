@@ -239,7 +239,7 @@ export default {
         ids.push(data[i].id)
       }
       this.crudMethod
-        .delAll(ids)
+        .delBatch(ids)
         .then(() => {
           this.delAllLoading = false
           this.dleChangePage(ids.length)

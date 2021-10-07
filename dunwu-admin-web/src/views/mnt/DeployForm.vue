@@ -42,7 +42,7 @@ export default {
       apps: [],
       servers: [],
       headers: {
-        Authorization: getToken()
+        DunwuToken: getToken()
       },
       deployInfo: {},
       form: {

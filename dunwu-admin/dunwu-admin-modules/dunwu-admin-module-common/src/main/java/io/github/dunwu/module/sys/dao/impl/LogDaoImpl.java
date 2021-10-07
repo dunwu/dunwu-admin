@@ -1,8 +1,8 @@
 package io.github.dunwu.module.sys.dao.impl;
 
 import io.github.dunwu.module.sys.dao.LogDao;
-import io.github.dunwu.module.sys.entity.Log;
 import io.github.dunwu.module.sys.dao.mapper.LogMapper;
+import io.github.dunwu.module.sys.entity.Log;
 import io.github.dunwu.tool.data.annotation.Dao;
 import io.github.dunwu.tool.data.mybatis.BaseExtDaoImpl;
 

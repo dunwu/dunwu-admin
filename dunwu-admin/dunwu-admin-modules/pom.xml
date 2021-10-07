@@ -14,11 +14,11 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>dunwu-admin-module-system</module>
+    <module>dunwu-admin-module-security</module>
     <module>dunwu-admin-module-common</module>
     <module>dunwu-admin-module-mnt</module>
     <module>dunwu-admin-module-generator</module>
-    <module>dunwu-admin-module-tools</module>
+    <module>dunwu-admin-module-tool</module>
     <module>dunwu-admin-module-demo</module>
   </modules>
 
@@ -26,7 +26,7 @@
     <dependencies>
       <dependency>
         <groupId>io.github.dunwu</groupId>
-        <artifactId>dunwu-admin-module-system</artifactId>
+        <artifactId>dunwu-admin-module-security</artifactId>
         <version>${dunwu-admin.version}</version>
       </dependency>
       <dependency>
@@ -46,7 +46,7 @@
       </dependency>
       <dependency>
         <groupId>io.github.dunwu</groupId>
-        <artifactId>dunwu-admin-module-tools</artifactId>
+        <artifactId>dunwu-admin-module-tool</artifactId>
         <version>${dunwu-admin.version}</version>
       </dependency>
       <dependency>

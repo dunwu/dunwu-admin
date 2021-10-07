@@ -1,16 +1,11 @@
 import { encrypt } from '@/utils/rsaEncrypt'
 import request from '@/utils/request'
 
-export function login(username, password, code, uuid) {
+export function login(data) {
   return request({
     url: 'auth/login',
     method: 'post',
-    data: {
-      username,
-      password,
-      code,
-      uuid
-    }
+    data
   })
 }
 
@@ -28,9 +23,9 @@ export function getInfo() {
   })
 }
 
-export function getCodeImg() {
+export function getCaptcha() {
   return request({
-    url: 'auth/code',
+    url: 'auth/getCaptcha',
     method: 'get'
   })
 }
@@ -92,4 +87,4 @@ export function resetEmail(data) {
   })
 }
 
-export default { login, logout, getInfo, getCodeImg, editCenter, editPassword, editEmail, resetEmail }
+export default { login, logout, getInfo, getCaptcha, editCenter, editPassword, editEmail, resetEmail }

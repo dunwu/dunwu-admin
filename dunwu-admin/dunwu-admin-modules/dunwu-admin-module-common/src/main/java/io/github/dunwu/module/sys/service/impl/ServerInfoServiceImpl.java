@@ -3,8 +3,8 @@ package io.github.dunwu.module.sys.service.impl;
 import cn.hutool.core.date.BetweenFormater;
 import cn.hutool.core.date.DateUtil;
 import io.github.dunwu.module.sys.service.ServerInfoService;
+import io.github.dunwu.tool.io.FileUtil;
 import io.github.dunwu.tool.net.IpUtil;
-import io.github.dunwu.util.FileUtil;
 import org.springframework.stereotype.Service;
 import oshi.SystemInfo;
 import oshi.hardware.CentralProcessor;
@@ -80,9 +80,9 @@ public class ServerInfoServiceImpl implements ServerInfoService {
             }
         }
         long used = total - available;
-        diskInfo.put("total", total > 0 ? FileUtil.getSize(total) : "?");
-        diskInfo.put("available", FileUtil.getSize(available));
-        diskInfo.put("used", FileUtil.getSize(used));
+        diskInfo.put("total", total > 0 ? FileUtil.getFormatSize(total) : "?");
+        diskInfo.put("available", FileUtil.getFormatSize(available));
+        diskInfo.put("used", FileUtil.getFormatSize(used));
         diskInfo.put("usageRate", df.format(used / (double) total * 100));
         return diskInfo;
     }

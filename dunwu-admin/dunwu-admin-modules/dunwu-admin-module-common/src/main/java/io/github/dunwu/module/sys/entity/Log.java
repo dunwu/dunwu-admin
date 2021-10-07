@@ -36,67 +36,67 @@ public class Log implements Serializable {
     private Long id;
 
     @ApiModelProperty(value = "日志级别")
-    @TableField("level")
+    @TableField("`level`")
     private String level;
 
     @ApiModelProperty(value = "业务类型")
-    @TableField("biz_type")
+    @TableField("`biz_type`")
     private String bizType;
 
     @ApiModelProperty(value = "日志消息")
-    @TableField("message")
+    @TableField("`message`")
     private String message;
 
     @ApiModelProperty(value = "异常信息，只有日志级别为ERROR时才有值")
-    @TableField("exception_message")
+    @TableField("`exception_message`")
     private String exceptionMessage;
 
     @ApiModelProperty(value = "操作的类名")
-    @TableField("class_name")
+    @TableField("`class_name`")
     private String className;
 
     @ApiModelProperty(value = "操作的方法名")
-    @TableField("method_name")
+    @TableField("`method_name`")
     private String methodName;
 
     @ApiModelProperty(value = "被调用方法的参数")
-    @TableField("params")
+    @TableField("`params`")
     private String params;
 
     @ApiModelProperty(value = "操作类型")
-    @TableField("operate_type")
+    @TableField("`operate_type`")
     private String operateType;
 
     @ApiModelProperty(value = "操作者ID")
-    @TableField("operator_id")
+    @TableField("`operator_id`")
     private Long operatorId;
 
     @ApiModelProperty(value = "操作者用户名")
-    @TableField("operator_name")
+    @TableField("`operator_name`")
     private String operatorName;
 
     @ApiModelProperty(value = "服务端IP地址")
-    @TableField("server_ip")
+    @TableField("`server_ip`")
     private String serverIp;
 
     @ApiModelProperty(value = "客户端IP地址")
-    @TableField("client_ip")
+    @TableField("`client_ip`")
     private String clientIp;
 
     @ApiModelProperty(value = "客户端地理位置")
-    @TableField("client_location")
+    @TableField("`client_location`")
     private String clientLocation;
 
     @ApiModelProperty(value = "客户端设备")
-    @TableField("client_device")
+    @TableField("`client_device`")
     private String clientDevice;
 
     @ApiModelProperty(value = "HTTP请求的耗时")
-    @TableField("request_time")
+    @TableField("`request_time`")
     private Long requestTime;
 
     @ApiModelProperty(value = "日志记录时间")
-    @TableField("create_time")
+    @TableField("`create_time`")
     private LocalDateTime createTime;
 
     public static final String ID = "id";
