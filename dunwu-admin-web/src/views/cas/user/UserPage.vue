@@ -111,7 +111,8 @@
         style="width: 100%"
         @selection-change="crud.selectionChangeHandler"
       >
-        <el-table-column :selectable="checkboxT" type="selection" width="55" />
+        <el-table-column v-if="canWrite" :selectable="checkboxT" type="selection" width="55" />
+        <el-table-column prop="id" label="ID" />
         <el-table-column :show-overflow-tooltip="true" prop="username" label="用户名" />
         <el-table-column :show-overflow-tooltip="true" prop="nickname" label="昵称" />
         <el-table-column prop="gender" label="性别" />
@@ -187,7 +188,7 @@ export default {
   name: 'UserList',
   components: { Treeselect, TableOperation, TableQueryOperation, TableColumnOperation, Pagination },
   cruds() {
-    return CRUD({ title: '用户', url: 'cas/user', crudMethod: { ...userApi }})
+    return CRUD({ title: '用户', url: 'cas/user', sort: ['id,desc'], crudMethod: { ...userApi }})
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   // 数据字典
@@ -240,12 +241,11 @@ export default {
         ],
         phone: [{ required: true, trigger: 'blur', validator: validPhone }]
       },
-      canWrite: false
+      canWrite: this.deptId == null
     }
   },
   watch: {
     deptId(value) {
-      console.info('deptId 变化', value)
       this.deptId = value
       this.canWrite = this.deptId == null
       if (!this.canWrite) {

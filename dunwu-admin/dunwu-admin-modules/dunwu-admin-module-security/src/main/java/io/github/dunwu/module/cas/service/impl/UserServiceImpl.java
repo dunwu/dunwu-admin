@@ -2,10 +2,12 @@ package io.github.dunwu.module.cas.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.github.dunwu.module.cas.dao.*;
 import io.github.dunwu.module.cas.entity.RoleMenuMap;
 import io.github.dunwu.module.cas.entity.User;
+import io.github.dunwu.module.cas.entity.UserDeptMap;
 import io.github.dunwu.module.cas.entity.UserRoleMap;
 import io.github.dunwu.module.cas.entity.dto.DeptDto;
 import io.github.dunwu.module.cas.entity.dto.JobDto;
@@ -290,8 +292,36 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> pojoListByDeptId(Long deptId) {
-        return null;
+    public List<UserDto> pojoListByDeptId(Serializable deptId) {
+        QueryWrapper<UserDeptMap> wrapper = new QueryWrapper<>();
+        wrapper.eq(UserDeptMap.DEPT_ID, deptId);
+        List<UserDeptMap> list = userDeptMapDao.list(wrapper);
+        if (CollectionUtil.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+
+        List<Long> userIds = list.stream().map(UserDeptMap::getUserId)
+                                 .distinct()
+                                 .collect(Collectors.toList());
+        return userDao.pojoListByIds(userIds, this::doToDto);
+    }
+
+    @Override
+    public boolean saveDeptUsersMap(Long deptId, Collection<Long> userIds) {
+        QueryWrapper<UserDeptMap> wrapper = new QueryWrapper<>();
+        wrapper.eq(UserDeptMap.DEPT_ID, deptId);
+        List<UserDeptMap> list = userDeptMapDao.list(wrapper);
+        if (CollectionUtil.isNotEmpty(list)) {
+            List<Long> ids = list.stream().map(UserDeptMap::getId).collect(Collectors.toList());
+            userDeptMapDao.deleteBatchByIds(ids);
+        }
+
+        List<UserDeptMap> newRecords = new ArrayList<>();
+        for (Long userId : userIds) {
+            UserDeptMap record = new UserDeptMap(deptId, userId);
+            newRecords.add(record);
+        }
+        return userDeptMapDao.insertBatch(newRecords);
     }
 
     @Override

@@ -42,6 +42,13 @@ public class UserDeptMap implements Serializable {
     @TableField("`dept_id`")
     private Long deptId;
 
+    public UserDeptMap() { }
+
+    public UserDeptMap(Long userId, Long deptId) {
+        this.userId = userId;
+        this.deptId = deptId;
+    }
+
     public static final String ID = "id";
     public static final String USER_ID = "user_id";
     public static final String DEPT_ID = "dept_id";

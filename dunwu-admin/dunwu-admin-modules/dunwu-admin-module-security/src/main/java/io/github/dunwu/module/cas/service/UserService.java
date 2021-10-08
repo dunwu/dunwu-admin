@@ -196,7 +196,9 @@ public interface UserService extends IService {
      * @param deptId 部门ID
      * @return /
      */
-    List<UserDto> pojoListByDeptId(Long deptId);
+    List<UserDto> pojoListByDeptId(Serializable deptId);
+
+    boolean saveDeptUsersMap(Long deptId, Collection<Long> userIds);
 
     /**
      * 根据角色查询

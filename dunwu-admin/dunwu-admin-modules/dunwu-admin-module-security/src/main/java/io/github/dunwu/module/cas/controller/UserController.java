@@ -57,7 +57,7 @@ public class UserController {
     @AppLog(bizType = "系统用户", operType = "更新", value = "'更新 cas_user 表中 id = ' + #entity.id + ' 的记录，内容为：' + #entity")
     @PostMapping("edit")
     public DataResult<Boolean> edit(@Validated(EditCheck.class) @RequestBody UserDto entity) {
-        return DataResult.ok( service.updateUserRelatedRecords(entity));
+        return DataResult.ok(service.updateUserRelatedRecords(entity));
     }
 
     @ApiOperation("根据 id 批量更新 User 记录")
@@ -117,6 +117,16 @@ public class UserController {
     @GetMapping("export/page")
     public void exportPage(UserQuery query, Pageable pageable, HttpServletResponse response) {
         service.exportPage(query, pageable, response);
+    }
+
+    @GetMapping("listByDeptId")
+    public DataListResult<UserDto> listByDeptId(Serializable deptId) {
+        return DataListResult.ok(service.pojoListByDeptId(deptId));
+    }
+
+    @PostMapping("saveDeptUsers/{deptId}")
+    public DataResult<Boolean> saveDeptUserMap(@PathVariable Long deptId, Collection<Long> userIds) {
+        return DataResult.ok(service.saveDeptUsersMap(deptId, userIds));
     }
 
 }

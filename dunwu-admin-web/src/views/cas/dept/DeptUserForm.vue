@@ -7,7 +7,7 @@
           style="text-align: left; display: inline-block; width: 800px; height: 600px"
           filterable
           :left-default-checked="[0]"
-          :props="{ key: 'id', label: 'name' }"
+          :props="{ key: 'id', label: 'nickname' }"
           :titles="['Source', 'Target']"
           :format="{
             noChecked: '${total}',
@@ -30,7 +30,6 @@
 </template>
 
 <script>
-import DeptApi from '@/api/cas/dept'
 import UserApi from '@/api/cas/user'
 
 export default {
@@ -63,8 +62,8 @@ export default {
 }
 </script>
 
-<style scoped>
-/deep/ .el-transfer-panel {
+<style rel="stylesheet/scss" lang="scss" scoped>
+::v-deep .el-transfer-panel {
   width: 300px;
   height: 500px;
 }
