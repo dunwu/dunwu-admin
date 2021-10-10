@@ -34,6 +34,7 @@ export default {
       loading: true,
       // 删除 Loading 属性
       delLoading: false,
+      // 批量删除 Loading 属性
       delAllLoading: false,
       // 弹窗属性
       dialog: false,

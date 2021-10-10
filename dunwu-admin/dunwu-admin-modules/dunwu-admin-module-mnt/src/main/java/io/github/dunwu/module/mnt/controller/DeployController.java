@@ -123,7 +123,7 @@ public class DeployController {
     @AppLog(bizType = "部署管理", operType = "导出", value = "分页导出 mnt_deploy 表中的记录")
     @GetMapping("export/page")
     public void exportPage(DeployQuery query, Pageable pageable, HttpServletResponse response) {
-        service.exportPage(query, pageable, response);
+        service.exportPage(pageable, query, response);
     }
 
     @AppLog("上传文件部署")

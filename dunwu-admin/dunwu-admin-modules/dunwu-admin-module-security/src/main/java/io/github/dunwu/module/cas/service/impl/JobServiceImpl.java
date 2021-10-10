@@ -1,38 +1,42 @@
 package io.github.dunwu.module.cas.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import io.github.dunwu.module.cas.dao.DeptDao;
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import io.github.dunwu.module.cas.dao.JobDao;
 import io.github.dunwu.module.cas.entity.Job;
-import io.github.dunwu.module.cas.entity.dto.DeptDto;
 import io.github.dunwu.module.cas.entity.dto.JobDto;
 import io.github.dunwu.module.cas.entity.dto.RoleDto;
 import io.github.dunwu.module.cas.entity.query.JobQuery;
+import io.github.dunwu.module.cas.service.DeptJobMapService;
 import io.github.dunwu.module.cas.service.JobService;
 import io.github.dunwu.module.cas.service.RoleService;
+import io.github.dunwu.tool.data.Pagination;
+import io.github.dunwu.tool.data.exception.DataException;
 import io.github.dunwu.tool.data.mybatis.ServiceImpl;
 import io.github.dunwu.tool.web.ServletUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.*;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 岗位 Service 类
+ * 职务表 Service 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-09-28
+ * @since 2021-10-10
  */
 @Service
 @RequiredArgsConstructor
 public class JobServiceImpl extends ServiceImpl implements JobService {
 
     private final JobDao jobDao;
-    private final DeptDao deptDao;
+    private final DeptJobMapService deptJobMapService;
     private final RoleService roleService;
 
     @Override
@@ -66,13 +70,28 @@ public class JobServiceImpl extends ServiceImpl implements JobService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean deleteById(Serializable id) {
+        // 删除部门职务关联记录
+        boolean isOk = deptJobMapService.deleteByJobId(id);
+        if (!isOk) {
+            String msg = StrUtil.format("删除 deptId = {} 的部门职务关联记录失败", id);
+            throw new DataException(msg);
+        }
+
         return jobDao.deleteById(id);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean deleteBatchByIds(Collection<? extends Serializable> ids) {
-        return jobDao.deleteBatchByIds(ids);
+        if (CollectionUtil.isEmpty(ids)) {
+            return false;
+        }
+        for (Serializable id : ids) {
+            deleteById(id);
+        }
+        return true;
     }
 
     @Override
@@ -81,13 +100,32 @@ public class JobServiceImpl extends ServiceImpl implements JobService {
     }
 
     @Override
+    public List<JobDto> pojoListByIds(Collection<? extends Serializable> ids) {
+        return jobDao.pojoListByIds(ids, this::doToDto);
+    }
+
+    @Override
     public List<JobDto> pojoListByQuery(JobQuery query) {
+        if (query.getDeptId() != null) {
+            Set<? extends Serializable> jobIds = deptJobMapService.getJobIdsByDeptId(query.getDeptId());
+            if (CollectionUtil.isNotEmpty(jobIds)) {
+                query.setIds(jobIds);
+            }
+        }
         return jobDao.pojoListByQuery(query, this::doToDto);
     }
 
     @Override
-    public Page<JobDto> pojoSpringPageByQuery(JobQuery query, Pageable pageable) {
-        return jobDao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+    public Page<JobDto> pojoSpringPageByQuery(Pageable pageable, JobQuery query) {
+        if (query.getDeptId() != null) {
+            Set<? extends Serializable> jobIds = deptJobMapService.getJobIdsByDeptId(query.getDeptId());
+            if (CollectionUtil.isNotEmpty(jobIds)) {
+                query.setIds(jobIds);
+            } else {
+                return new Pagination<>(Collections.emptyList(), pageable, 0L);
+            }
+        }
+        return jobDao.pojoSpringPageByQuery(pageable, query, this::doToDto);
     }
 
     @Override
@@ -97,6 +135,12 @@ public class JobServiceImpl extends ServiceImpl implements JobService {
 
     @Override
     public JobDto pojoByQuery(JobQuery query) {
+        if (query.getDeptId() != null) {
+            Set<? extends Serializable> jobIds = deptJobMapService.getJobIdsByDeptId(query.getDeptId());
+            if (CollectionUtil.isNotEmpty(jobIds)) {
+                query.setIds(jobIds);
+            }
+        }
         return jobDao.pojoByQuery(query, this::doToDto);
     }
 
@@ -112,8 +156,8 @@ public class JobServiceImpl extends ServiceImpl implements JobService {
     }
 
     @Override
-    public void exportPage(JobQuery query, Pageable pageable, HttpServletResponse response) {
-        Page<JobDto> page = jobDao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+    public void exportPage(Pageable pageable, JobQuery query, HttpServletResponse response) {
+        Page<JobDto> page = jobDao.pojoSpringPageByQuery(pageable, query, this::doToDto);
         exportDtoList(page.getContent(), response);
     }
 
@@ -128,10 +172,11 @@ public class JobServiceImpl extends ServiceImpl implements JobService {
         for (JobDto item : list) {
             Map<String, Object> map = new LinkedHashMap<>();
             map.put("ID", item.getId());
-            map.put("岗位名称", item.getName());
-            map.put("排序", item.getSequence());
-            map.put("部门ID", item.getDeptId());
-            map.put("岗位状态", item.getEnabled());
+            map.put("职务名称", item.getName());
+            map.put("职务类型", item.getType());
+            map.put("职级", item.getLevel());
+            map.put("职务顺序", item.getSequence());
+            map.put("是否禁用：1 表示禁用；0 表示启用", item.getDisabled());
             map.put("备注", item.getNote());
             map.put("创建者", item.getCreateBy());
             map.put("更新者", item.getUpdateBy());
@@ -148,10 +193,11 @@ public class JobServiceImpl extends ServiceImpl implements JobService {
             return null;
         }
 
-        DeptDto deptDto = deptDao.pojoById(entity.getDeptId(), DeptDto.class);
-        List<RoleDto> roles = roleService.pojoListByJobId(entity.getId());
         JobDto jobDto = BeanUtil.toBean(entity, JobDto.class);
-        jobDto.setDept(deptDto);
+
+        // DeptDto deptDto = deptDao.pojoById(entity.getDeptId(), DeptDto.class);
+        // jobDto.setDept(deptDto);
+        List<RoleDto> roles = roleService.pojoListByJobId(entity.getId());
         jobDto.setRoles(roles);
         return jobDto;
     }
@@ -163,6 +209,16 @@ public class JobServiceImpl extends ServiceImpl implements JobService {
         }
 
         return BeanUtil.toBean(dto, Job.class);
+    }
+
+    @Override
+    public boolean bindDept(Long deptId, Collection<Long> jobIds) {
+        return deptJobMapService.insertBatchByJobIds(deptId, jobIds);
+    }
+
+    @Override
+    public boolean unbindDept(Long deptId, Collection<Long> jobIds) {
+        return deptJobMapService.deleteBatchByJobIds(deptId, jobIds);
     }
 
 }

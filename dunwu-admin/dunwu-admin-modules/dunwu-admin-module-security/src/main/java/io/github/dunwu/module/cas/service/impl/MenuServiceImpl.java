@@ -98,7 +98,7 @@ public class MenuServiceImpl extends ServiceImpl implements MenuService {
 
     @Override
     public Page<MenuDto> pojoSpringPageByQuery(MenuQuery query, Pageable pageable) {
-        return menuDao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+        return menuDao.pojoSpringPageByQuery(pageable, query, this::doToDto);
     }
 
     @Override
@@ -123,8 +123,8 @@ public class MenuServiceImpl extends ServiceImpl implements MenuService {
     }
 
     @Override
-    public void exportPage(MenuQuery query, Pageable pageable, HttpServletResponse response) {
-        Page<MenuDto> page = menuDao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+    public void exportPage(Pageable pageable, MenuQuery query, HttpServletResponse response) {
+        Page<MenuDto> page = menuDao.pojoSpringPageByQuery(pageable, query, this::doToDto);
         exportDtoList(page.getContent(), response);
     }
 
@@ -148,8 +148,8 @@ public class MenuServiceImpl extends ServiceImpl implements MenuService {
             map.put("排序", item.getSequence());
             map.put("图标", item.getIcon());
             map.put("链接地址", item.getPath());
-            map.put("是否外链", item.getIFrame());
-            map.put("缓存", item.getCache());
+            map.put("是否外链", item.getFrame());
+            map.put("缓存", item.getCached());
             map.put("隐藏", item.getHidden());
             map.put("权限", item.getPermission());
             map.put("创建者", item.getCreateBy());
@@ -297,14 +297,14 @@ public class MenuServiceImpl extends ServiceImpl implements MenuService {
             menuVo.setPath(dto.getPid() == null ? "/" + dto.getPath() : dto.getPath());
             menuVo.setHidden(dto.getHidden());
             // 如果不是外链
-            if (!dto.getIFrame()) {
+            if (!dto.getFrame()) {
                 if (dto.getPid() == null) {
                     menuVo.setComponent(StrUtil.isEmpty(dto.getComponent()) ? "Layout" : dto.getComponent());
                 } else if (!StrUtil.isEmpty(dto.getComponent())) {
                     menuVo.setComponent(dto.getComponent());
                 }
             }
-            menuVo.setMeta(new MenuVo.MenuMetaVo(dto.getTitle(), dto.getIcon(), !dto.getCache()));
+            menuVo.setMeta(new MenuVo.MenuMetaVo(dto.getTitle(), dto.getIcon(), !dto.getCached()));
             if (CollectionUtil.isNotEmpty(children)) {
                 menuVo.setAlwaysShow(true);
                 menuVo.setRedirect("noredirect");
@@ -314,7 +314,7 @@ public class MenuServiceImpl extends ServiceImpl implements MenuService {
                 MenuVo menuVo1 = new MenuVo();
                 menuVo1.setMeta(menuVo.getMeta());
                 // 非外链
-                if (!dto.getIFrame()) {
+                if (!dto.getFrame()) {
                     menuVo1.setPath("index");
                     menuVo1.setName(menuVo.getName());
                     menuVo1.setComponent(menuVo.getComponent());

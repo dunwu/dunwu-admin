@@ -120,4 +120,33 @@ export function editMenu(data) {
   })
 }
 
-export default { add, edit, delBatch, list, page, exportList, exportPage, getById, editMenu, getLevel }
+export function bindDept(deptId, userIds) {
+  return request({
+    url: 'cas/user/bindDept/' + deptId,
+    method: 'post',
+    data: userIds
+  })
+}
+
+export function unbindDept(deptId, userIds) {
+  return request({
+    url: 'cas/user/unbindDept/' + deptId,
+    method: 'post',
+    data: userIds
+  })
+}
+
+export default {
+  add,
+  edit,
+  delBatch,
+  list,
+  page,
+  exportList,
+  exportPage,
+  getById,
+  editMenu,
+  getLevel,
+  bindDept,
+  unbindDept
+}

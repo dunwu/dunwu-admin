@@ -113,7 +113,7 @@ public class CodeDatabaseController {
     @GetMapping("export/page")
     public void exportPage(CodeDatabaseQuery query, Pageable pageable, HttpServletResponse response)
         throws IOException {
-        service.exportPage(query, pageable, response);
+        service.exportPage(pageable, query, response);
     }
 
     @ApiOperation("测试数据库链接")

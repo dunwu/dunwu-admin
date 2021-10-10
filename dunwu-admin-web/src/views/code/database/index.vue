@@ -225,7 +225,7 @@ export default {
             .testDbConnection(this.form)
             .then(res => {
               this.loading = false
-              this.crud.notify(res ? 'success' : 'error', res ? '连接成功' : '连接失败')
+              this.crud.message(res ? CRUD.NOTIFICATION_TYPE.SUCCESS : CRUD.NOTIFICATION_TYPE.ERROR, res ? '连接成功' : '连接失败')
             })
             .catch(() => {
               this.loading = false

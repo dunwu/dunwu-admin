@@ -100,7 +100,7 @@ public class HelloController {
     @ApiOperation("根据 HelloQuery 和 Pageable 分页查询 HelloDto 列表，并导出 excel 表单")
     @GetMapping("export/page")
     public void exportPage(HelloQuery query, Pageable pageable, HttpServletResponse response) {
-        service.exportPage(query, pageable, response);
+        service.exportPage(pageable, query, response);
     }
 
 }

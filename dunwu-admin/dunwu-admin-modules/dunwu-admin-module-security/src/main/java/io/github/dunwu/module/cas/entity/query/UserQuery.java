@@ -26,7 +26,7 @@ public class UserQuery implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @QueryField(blurry = { "username", "email", "nickname" })
+    @QueryField(blurry = { "id", "username", "nickname" })
     private String blurry;
 
     @ApiModelProperty(value = "ID")
@@ -68,10 +68,6 @@ public class UserQuery implements Serializable {
     @ApiModelProperty(value = "密码")
     @QueryField
     private String password;
-
-    @ApiModelProperty(value = "是否为admin账号")
-    @QueryField
-    private Boolean admin;
 
     @ApiModelProperty(value = "是否禁用：1禁用、0启用")
     @QueryField

@@ -89,7 +89,7 @@ public class DictOptionServiceImpl extends ServiceImpl implements DictOptionServ
 
     @Override
     public Page<DictOptionDto> pojoSpringPageByQuery(DictOptionQuery query, Pageable pageable) {
-        return dao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+        return dao.pojoSpringPageByQuery(pageable, query, this::doToDto);
     }
 
     @Override
@@ -114,8 +114,8 @@ public class DictOptionServiceImpl extends ServiceImpl implements DictOptionServ
     }
 
     @Override
-    public void exportPage(DictOptionQuery query, Pageable pageable, HttpServletResponse response) {
-        Page<DictOptionDto> page = dao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+    public void exportPage(Pageable pageable, DictOptionQuery query, HttpServletResponse response) {
+        Page<DictOptionDto> page = dao.pojoSpringPageByQuery(pageable, query, this::doToDto);
         exportDtoList(page.getContent(), response);
     }
 

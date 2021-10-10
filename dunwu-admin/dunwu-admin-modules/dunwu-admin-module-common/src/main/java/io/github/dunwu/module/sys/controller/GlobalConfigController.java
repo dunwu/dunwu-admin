@@ -112,7 +112,7 @@ public class GlobalConfigController {
     @AppLog(bizType = "系统全局配置表", operType = "导出", value = "分页导出 sys_global_config 表中的记录")
     @GetMapping("export/page")
     public void exportPage(GlobalConfigQuery query, Pageable pageable, HttpServletResponse response) {
-        service.exportPage(query, pageable, response);
+        service.exportPage(pageable, query, response);
     }
 
 }

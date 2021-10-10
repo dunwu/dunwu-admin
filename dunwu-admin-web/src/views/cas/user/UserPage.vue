@@ -1,156 +1,158 @@
 <template>
   <div class="app-container">
-    <el-row :gutter="20">
-      <!--工具栏-->
-      <div class="head-container">
-        <div v-if="crud.props.searchToggle">
-          <!-- 搜索 -->
-          <el-input
-            v-model="query.blurry"
-            clearable
-            size="small"
-            placeholder="输入名称或者邮箱搜索"
-            style="width: 200px"
-            class="filter-item"
-            @keyup.enter.native="crud.toQuery"
-          />
-          <el-select
-            v-model="query.disabled"
-            clearable
-            size="small"
-            placeholder="状态"
-            class="filter-item"
-            style="width: 90px"
-            @change="crud.toQuery"
-          >
-            <el-option v-for="item in enabledTypeOptions" :key="item.code" :label="item.name" :value="item.code" />
-          </el-select>
-          <TableQueryOperation />
-        </div>
-        <TableOperation v-if="canWrite" :permission="permission" />
-      </div>
-      <!--表单渲染-->
-      <el-dialog
-        append-to-body
-        :close-on-click-modal="false"
-        :before-close="crud.cancelCU"
-        :visible.sync="crud.status.cu > 0"
-        :title="crud.status.title"
-        width="570px"
-      >
-        <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="66px">
-          <el-form-item label="用户名" prop="username">
-            <el-input v-model="form.username" />
-          </el-form-item>
-          <el-form-item label="电话" prop="phone">
-            <el-input v-model.number="form.phone" />
-          </el-form-item>
-          <el-form-item label="昵称" prop="nickname">
-            <el-input v-model="form.nickname" />
-          </el-form-item>
-          <el-form-item label="邮箱" prop="email">
-            <el-input v-model="form.email" />
-          </el-form-item>
-          <el-form-item label="部门" prop="deptId">
-            <treeselect
-              v-model="form.deptId"
-              :options="depts"
-              :load-options="loadDepts"
-              style="width: 178px"
-              placeholder="请选择"
-            />
-          </el-form-item>
-          <el-form-item label="岗位" prop="jobId">
-            <el-select v-model="form.jobId" style="width: 178px" placeholder="请选择">
-              <el-option v-for="item in jobs" :key="item.id" :label="item.name" :value="item.id" />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="性别">
-            <el-radio-group v-model="form.gender" style="width: 178px">
-              <el-radio label="男">男</el-radio>
-              <el-radio label="女">女</el-radio>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item label="状态">
-            <el-radio-group v-model="form.disabled" :disabled="form.id === user.id">
-              <el-radio v-for="item in dict['disabled_status'].options" :key="item.id" :label="item.code">
-                {{ item.name }}
-              </el-radio>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item style="margin-bottom: 0" label="角色" prop="roles">
-            <el-select
-              v-model="roleDatas"
-              style="width: 437px"
-              multiple
-              placeholder="请选择"
-              @remove-tag="deleteTag"
-              @change="changeRole"
-            >
-              <el-option
-                v-for="item in roles"
-                :key="item.name"
-                :disabled="level !== 1 && item.level <= level"
-                :label="item.name"
-                :value="item.id"
-              />
-            </el-select>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button type="text" @click="crud.cancelCU">取消</el-button>
-          <el-button :loading="crud.status.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
-        </div>
-      </el-dialog>
-      <!--表格渲染-->
-      <el-table
-        ref="table"
-        v-loading="crud.loading"
-        :data="crud.data"
-        border
-        style="width: 100%"
-        @selection-change="crud.selectionChangeHandler"
-      >
-        <el-table-column v-if="canWrite" :selectable="checkboxT" type="selection" width="55" />
-        <el-table-column prop="id" label="ID" />
-        <el-table-column :show-overflow-tooltip="true" prop="username" label="用户名" />
-        <el-table-column :show-overflow-tooltip="true" prop="nickname" label="昵称" />
-        <el-table-column prop="gender" label="性别" />
-        <el-table-column :show-overflow-tooltip="true" prop="phone" width="100" label="电话" />
-        <el-table-column :show-overflow-tooltip="true" width="135" prop="email" label="邮箱" />
-        <el-table-column :show-overflow-tooltip="true" prop="dept" label="部门">
-          <template slot-scope="scope">
-            <div>{{ scope.row.dept.name }}</div>
-          </template>
-        </el-table-column>
-        <el-table-column v-if="canWrite" label="状态" prop="disabled">
-          <template slot-scope="scope">
-            <el-switch
-              v-model="scope.row.disabled"
-              :disabled="user.id === scope.row.id"
-              active-color="#409EFF"
-              inactive-color="#F56C6C"
-              :active-value="false"
-              :inactive-value="true"
-              @change="changeEnabled(scope.row, scope.row.disabled)"
-            />
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="canWrite && checkPer(['admin', 'user:edit', 'user:del'])"
-          label="操作"
-          width="115"
-          align="center"
-          fixed="right"
+    <!--工具栏-->
+    <div class="head-container">
+      <div v-if="crud.props.searchToggle">
+        <!-- 搜索 -->
+        <el-input
+          v-model="query.blurry"
+          clearable
+          size="small"
+          placeholder="输入用户ID或用户名搜索"
+          style="width: 200px"
+          class="filter-item"
+          @keyup.enter.native="crud.toQuery"
+        />
+        <el-select
+          v-model="query.disabled"
+          clearable
+          size="small"
+          placeholder="状态"
+          class="filter-item"
+          style="width: 90px"
+          @change="crud.toQuery"
         >
-          <template slot-scope="scope">
-            <TableColumnOperation :data="scope.row" :permission="permission" :disabled-dle="scope.row.id === user.id" />
-          </template>
-        </el-table-column>
-      </el-table>
-      <!--分页组件-->
-      <Pagination />
-    </el-row>
+          <el-option
+            v-for="item in dict['disabled_status'].options"
+            :key="item.code"
+            :label="item.name"
+            :value="item.code"
+          />
+        </el-select>
+        <TableQueryOperation />
+      </div>
+      <TableOperation v-if="allowOperation" :permission="permission" />
+    </div>
+    <!--表单渲染-->
+    <el-dialog
+      append-to-body
+      :close-on-click-modal="false"
+      :before-close="crud.cancelCU"
+      :visible.sync="crud.status.cu > 0"
+      :title="crud.status.title"
+      width="570px"
+    >
+      <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="66px">
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="form.username" />
+        </el-form-item>
+        <el-form-item label="电话" prop="phone">
+          <el-input v-model.number="form.phone" />
+        </el-form-item>
+        <el-form-item label="昵称" prop="nickname">
+          <el-input v-model="form.nickname" />
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="form.email" />
+        </el-form-item>
+        <el-form-item label="部门" prop="deptId">
+          <treeselect
+            v-model="form.deptId"
+            :options="depts"
+            :load-options="loadDepts"
+            style="width: 178px"
+            placeholder="请选择"
+          />
+        </el-form-item>
+        <el-form-item label="岗位" prop="jobId">
+          <el-select v-model="form.jobId" style="width: 178px" placeholder="请选择">
+            <el-option v-for="item in jobs" :key="item.id" :label="item.name" :value="item.id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="性别">
+          <el-radio-group v-model="form.gender" style="width: 178px">
+            <el-radio label="男">男</el-radio>
+            <el-radio label="女">女</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="状态">
+          <el-radio-group v-model="form.disabled" :disabled="form.id === user.id">
+            <el-radio v-for="item in dict['disabled_status'].options" :key="item.id" :label="item.code">
+              {{ item.name }}
+            </el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item style="margin-bottom: 0" label="角色" prop="roles">
+          <el-select
+            v-model="roleDatas"
+            style="width: 437px"
+            multiple
+            placeholder="请选择"
+            @remove-tag="deleteTag"
+            @change="changeRole"
+          >
+            <el-option
+              v-for="item in roles"
+              :key="item.name"
+              :disabled="level !== 1 && item.level <= level"
+              :label="item.name"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="text" @click="crud.cancelCU">取消</el-button>
+        <el-button :loading="crud.status.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
+      </div>
+    </el-dialog>
+    <!--表格渲染-->
+    <el-table
+      ref="table"
+      v-loading="crud.loading"
+      :data="crud.data"
+      border
+      @selection-change="crud.selectionChangeHandler"
+    >
+      <el-table-column v-if="allowOperation" :selectable="checkboxT" type="selection" width="55" />
+      <el-table-column prop="id" label="ID" />
+      <el-table-column :show-overflow-tooltip="true" prop="username" label="用户名" />
+      <el-table-column :show-overflow-tooltip="true" prop="nickname" label="昵称" />
+      <el-table-column prop="gender" label="性别" />
+      <el-table-column :show-overflow-tooltip="true" prop="phone" width="100" label="电话" />
+      <el-table-column :show-overflow-tooltip="true" width="135" prop="email" label="邮箱" />
+      <el-table-column :show-overflow-tooltip="true" prop="dept" label="部门">
+        <template slot-scope="scope">
+          <div>{{ scope.row.dept.name }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="allowOperation" label="状态" prop="disabled">
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.disabled"
+            :disabled="user.id === scope.row.id"
+            active-color="#409EFF"
+            inactive-color="#F56C6C"
+            :active-value="false"
+            :inactive-value="true"
+            @change="changeEnabled(scope.row, scope.row.disabled)"
+          />
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="allowOperation && checkPer(['admin', 'user:edit', 'user:del'])"
+        label="操作"
+        width="115"
+        align="center"
+        fixed="right"
+      >
+        <template slot-scope="scope">
+          <TableColumnOperation :data="scope.row" :permission="permission" :disabled-dle="scope.row.id === user.id" />
+        </template>
+      </el-table-column>
+    </el-table>
+    <!--分页组件-->
+    <Pagination />
   </div>
 </template>
 
@@ -188,7 +190,7 @@ export default {
   name: 'UserList',
   components: { Treeselect, TableOperation, TableQueryOperation, TableColumnOperation, Pagination },
   cruds() {
-    return CRUD({ title: '用户', url: 'cas/user', sort: ['id,desc'], crudMethod: { ...userApi }})
+    return CRUD({ title: '用户', url: 'cas/user', sort: ['id,asc'], crudMethod: { ...userApi }})
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   // 数据字典
@@ -225,7 +227,6 @@ export default {
         edit: ['admin', 'user:edit'],
         del: ['admin', 'user:del']
       },
-      enabledTypeOptions: [{ code: 'false', name: '启用' }, { code: 'true', name: '禁用' }],
       rules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -241,14 +242,17 @@ export default {
         ],
         phone: [{ required: true, trigger: 'blur', validator: validPhone }]
       },
-      canWrite: this.deptId == null
+      allowOperation: this.deptId == null
     }
+  },
+  computed: {
+    ...mapGetters(['user'])
   },
   watch: {
     deptId(value) {
       this.deptId = value
-      this.canWrite = this.deptId == null
-      if (!this.canWrite) {
+      this.allowOperation = this.deptId == null
+      if (!this.allowOperation) {
         this.crud.optShow.add = false
         this.crud.optShow.edit = false
         this.crud.optShow.del = false
@@ -256,9 +260,6 @@ export default {
       }
       this.crud.toQuery()
     }
-  },
-  computed: {
-    ...mapGetters(['user'])
   },
   mounted: function() {
     this.crud.msg.add = '添加成功，默认密码：123456'
@@ -396,7 +397,7 @@ export default {
           userApi
             .edit(data)
             .then(res => {
-              this.crud.notify(CRUD.NOTIFICATION_TYPE.SUCCESS, this.dict.label.disabled_status[val] + '成功')
+              this.crud.message(CRUD.NOTIFICATION_TYPE.SUCCESS, this.dict.label.disabled_status[val] + '成功')
             })
             .catch(() => {
               data.disabled = !data.disabled
@@ -435,6 +436,12 @@ export default {
     },
     checkboxT(row, rowIndex) {
       return row.id !== this.user.id
+    },
+    /**
+     * 刷新表数据
+     */
+    refreshTable() {
+      this.crud.toQuery()
     }
   }
 }

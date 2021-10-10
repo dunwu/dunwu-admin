@@ -164,7 +164,7 @@ export default {
       return isLt2M
     },
     handleSuccess(response, file, fileList) {
-      this.crud.notify(CRUD.NOTIFICATION_TYPE.SUCCESS, '上传成功')
+      this.crud.message(CRUD.NOTIFICATION_TYPE.SUCCESS, '上传成功')
       this.$refs.upload.clearFiles()
       this.crud.status.add = CRUD.STATUS.NORMAL
       this.crud.resetForm()

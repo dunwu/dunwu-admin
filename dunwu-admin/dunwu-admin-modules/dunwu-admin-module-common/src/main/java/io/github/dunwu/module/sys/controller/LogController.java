@@ -102,8 +102,8 @@ public class LogController {
 
     @ApiOperation("根据 LogQuery 和 Pageable 分页查询 LogDto 列表，并导出 excel 表单")
     @GetMapping("export/page")
-    public void exportPage(LogQuery query, Pageable pageable, HttpServletResponse response) {
-        service.exportPage(query, pageable, response);
+    public void exportPage(Pageable pageable, LogQuery query, HttpServletResponse response) {
+        service.exportPage(pageable, query, response);
     }
 
 }

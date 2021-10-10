@@ -119,7 +119,7 @@ public class DictOptionController {
     @AppLog(bizType = "数据字典详情", operType = "导出", value = "分页导出 sys_dict_option 表中的记录")
     @GetMapping("export/page")
     public void exportPage(DictOptionQuery query, Pageable pageable, HttpServletResponse response) {
-        service.exportPage(query, pageable, response);
+        service.exportPage(pageable, query, response);
     }
 
 }

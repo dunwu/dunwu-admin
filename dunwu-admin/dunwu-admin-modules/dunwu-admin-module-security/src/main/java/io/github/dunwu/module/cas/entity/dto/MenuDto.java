@@ -55,10 +55,10 @@ public class MenuDto implements Serializable, Comparable<MenuDto> {
     private String path;
 
     @ApiModelProperty(value = "是否外链")
-    private Boolean iFrame;
+    private Boolean frame;
 
     @ApiModelProperty(value = "缓存")
-    private Boolean cache;
+    private Boolean cached;
 
     @ApiModelProperty(value = "隐藏")
     private Boolean hidden;

@@ -107,24 +107,24 @@ public class MenuController {
     @ApiOperation("根据 MenuQuery 和 Pageable 分页查询 MenuDto 列表，并导出 excel 表单")
     @GetMapping("export/page")
     public void exportPage(MenuQuery query, Pageable pageable, HttpServletResponse response) {
-        service.exportPage(query, pageable, response);
+        service.exportPage(pageable, query, response);
     }
 
-    @PreAuthorize("@exp.check('menu:view')")
+    @PreAuthorize("@exp.check('cas:menu:view')")
     @ApiOperation("根据 query 条件，返回 SysMenuDto 树形列表")
     @GetMapping("treeList")
     public DataListResult<MenuDto> treeList(MenuQuery query) {
         return DataListResult.ok(service.treeList(query));
     }
 
-    @PreAuthorize("@exp.check('menu:view')")
+    @PreAuthorize("@exp.check('cas:menu:view')")
     @ApiOperation("根据ID获取同级与上级数据")
     @PostMapping("superiorTreeList")
     public DataListResult<MenuDto> superiorTreeList(@RequestBody Collection<Serializable> ids) {
         return DataListResult.ok(service.treeListByIds(ids));
     }
 
-    @PreAuthorize("@exp.check('menu:view')")
+    @PreAuthorize("@exp.check('cas:menu:view')")
     @ApiOperation("根据ID获取所有孩子节点ID")
     @GetMapping("childrenIds")
     public DataListResult<Long> childrenIds(Long id) {

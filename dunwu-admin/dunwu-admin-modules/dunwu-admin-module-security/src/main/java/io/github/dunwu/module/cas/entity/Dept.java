@@ -61,7 +61,7 @@ public class Dept implements Serializable {
     @TableField("`children_num`")
     private Integer childrenNum;
 
-    @ApiModelProperty(value = "状态")
+    @ApiModelProperty(value = "是否禁用：1 表示禁用；0 表示启用")
     @TableField("`is_disabled`")
     private Boolean disabled;
 

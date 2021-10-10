@@ -46,7 +46,7 @@ public class Dict implements Serializable {
 
     @ApiModelProperty(value = "是否禁用：1 表示禁用；0 表示启用")
     @TableField("`is_disabled`")
-    private Boolean isDisabled;
+    private Boolean disabled;
 
     @ApiModelProperty(value = "备注")
     @TableField("`note`")

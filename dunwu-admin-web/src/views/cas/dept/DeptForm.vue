@@ -81,7 +81,7 @@ import Treeselect, { LOAD_CHILDREN_OPTIONS } from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 
 /**
- * 表单实体默认值
+ * 表单默认值
  */
 const defaultForm = {
   id: null,

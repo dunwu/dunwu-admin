@@ -66,6 +66,18 @@ export function page(params) {
 }
 
 /**
+ * 根据 ID 查询记录
+ * @param id
+ * @returns {*}
+ */
+export function getById(id) {
+  return request({
+    url: 'cas/role/' + id,
+    method: 'get'
+  })
+}
+
+/**
  * 根据指定 id 列表，导出相应数据
  * @param ids
  * @returns {*}
@@ -92,19 +104,6 @@ export function exportPage(params) {
     params
   })
 }
-
-/**
- * 根据 ID 查询记录
- * @param id
- * @returns {*}
- */
-export function getById(id) {
-  return request({
-    url: 'cas/role/' + id,
-    method: 'get'
-  })
-}
-
 export function getLevel() {
   return request({
     url: 'cas/role/level',
@@ -120,4 +119,4 @@ export function editMenu(data) {
   })
 }
 
-export default { add, edit, delBatch, list, page, exportList, exportPage, getById, editMenu, getLevel }
+export default { add, edit, delBatch, list, page, getById, exportList, exportPage, getLevel, editMenu }

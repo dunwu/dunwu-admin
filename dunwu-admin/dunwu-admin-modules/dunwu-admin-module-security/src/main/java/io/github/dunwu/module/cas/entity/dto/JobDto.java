@@ -12,15 +12,15 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * 岗位 Dto 类
+ * 职务表 Dto 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-09-28
+ * @since 2021-10-10
  */
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "JobDto", description = "岗位")
+@ApiModel(value = "JobDto", description = "职务表")
 public class JobDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -28,17 +28,20 @@ public class JobDto implements Serializable {
     @ApiModelProperty(value = "ID")
     private Long id;
 
-    @ApiModelProperty(value = "岗位名称")
+    @ApiModelProperty(value = "职务名称")
     private String name;
 
-    @ApiModelProperty(value = "排序")
+    @ApiModelProperty(value = "职务类型")
+    private Integer type;
+
+    @ApiModelProperty(value = "职级")
+    private Integer level;
+
+    @ApiModelProperty(value = "职务顺序")
     private Integer sequence;
 
-    @ApiModelProperty(value = "部门ID")
-    private Long deptId;
-
-    @ApiModelProperty(value = "岗位状态")
-    private Boolean enabled;
+    @ApiModelProperty(value = "是否禁用：1 表示禁用；0 表示启用")
+    private Boolean disabled;
 
     @ApiModelProperty(value = "备注")
     private String note;

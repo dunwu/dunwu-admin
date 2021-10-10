@@ -83,7 +83,7 @@ public class DeployHistoryServiceImpl extends ServiceImpl implements DeployHisto
 
     @Override
     public Page<DeployHistoryDto> pojoSpringPageByQuery(DeployHistoryQuery query, Pageable pageable) {
-        return dao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+        return dao.pojoSpringPageByQuery(pageable, query, this::doToDto);
     }
 
     @Override
@@ -108,8 +108,8 @@ public class DeployHistoryServiceImpl extends ServiceImpl implements DeployHisto
     }
 
     @Override
-    public void exportPage(DeployHistoryQuery query, Pageable pageable, HttpServletResponse response) {
-        Page<DeployHistoryDto> page = dao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+    public void exportPage(Pageable pageable, DeployHistoryQuery query, HttpServletResponse response) {
+        Page<DeployHistoryDto> page = dao.pojoSpringPageByQuery(pageable, query, this::doToDto);
         exportDtoList(page.getContent(), response);
     }
 

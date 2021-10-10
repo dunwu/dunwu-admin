@@ -14,6 +14,7 @@ import io.github.dunwu.module.cas.entity.User;
 import io.github.dunwu.module.cas.entity.dto.DeptDto;
 import io.github.dunwu.module.cas.entity.dto.DeptRelationDto;
 import io.github.dunwu.module.cas.entity.query.DeptQuery;
+import io.github.dunwu.module.cas.service.DeptJobMapService;
 import io.github.dunwu.module.cas.service.DeptService;
 import io.github.dunwu.tool.SerializableUtil;
 import io.github.dunwu.tool.bean.BeanUtil;
@@ -48,6 +49,7 @@ public class DeptServiceImpl extends ServiceImpl implements DeptService {
     private final JobDao jobDao;
     private final UserDao userDao;
     private final DeptRoleMapDao roleDeptDao;
+    private final DeptJobMapService deptJobMapService;
 
     @Override
     public boolean insert(Dept entity) {
@@ -129,6 +131,13 @@ public class DeptServiceImpl extends ServiceImpl implements DeptService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean deleteById(Serializable id) {
+        // 删除部门职务关联记录
+        boolean isOk = deptJobMapService.deleteByDeptId(id);
+        if (!isOk) {
+            String msg = StrUtil.format("删除 jobId = {} 的部门职务关联记录失败", id);
+            throw new DataException(msg);
+        }
+
         Dept entity = deptDao.getById(id);
         if (entity == null) {
             return false;
@@ -155,6 +164,7 @@ public class DeptServiceImpl extends ServiceImpl implements DeptService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean deleteBatchByIds(Collection<? extends Serializable> ids) {
         if (CollectionUtil.isEmpty(ids)) {
             return false;
@@ -182,7 +192,7 @@ public class DeptServiceImpl extends ServiceImpl implements DeptService {
 
     @Override
     public Page<DeptDto> pojoSpringPageByQuery(DeptQuery query, Pageable pageable) {
-        return deptDao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+        return deptDao.pojoSpringPageByQuery(pageable, query, this::doToDto);
     }
 
     @Override
@@ -207,8 +217,8 @@ public class DeptServiceImpl extends ServiceImpl implements DeptService {
     }
 
     @Override
-    public void exportPage(DeptQuery query, Pageable pageable, HttpServletResponse response) {
-        Page<DeptDto> page = deptDao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+    public void exportPage(Pageable pageable, DeptQuery query, HttpServletResponse response) {
+        Page<DeptDto> page = deptDao.pojoSpringPageByQuery(pageable, query, this::doToDto);
         exportDtoList(page.getContent(), response);
     }
 
@@ -423,7 +433,7 @@ public class DeptServiceImpl extends ServiceImpl implements DeptService {
             List<Job> jobs = new ArrayList<>();
             dto.getJobIds().forEach(i -> {
                 Job job = jobDao.getById(i);
-                job.setDeptId(dto.getId());
+                // job.setDeptId(dto.getId());
                 jobs.add(job);
             });
             return jobDao.updateBatchById(jobs);

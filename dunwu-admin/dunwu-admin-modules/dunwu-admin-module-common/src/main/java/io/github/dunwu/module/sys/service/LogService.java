@@ -5,7 +5,6 @@ import io.github.dunwu.module.sys.entity.dto.LogDto;
 import io.github.dunwu.module.sys.entity.query.LogQuery;
 import io.github.dunwu.tool.data.annotation.QueryField;
 import io.github.dunwu.tool.data.mybatis.IService;
-import io.github.dunwu.tool.web.log.LogStorage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -144,12 +143,11 @@ public interface LogService extends IService {
 
     /**
      * 根据 {@link LogQuery} 和 {@link Pageable} 分页查询 {@link LogDto} 列表，并导出 excel 表单
-     *
+     *  @param pageable 分页查询条件
      * @param query    查询条件，根据 {@link LogQuery} 中的 {@link QueryField} 注解自动组装查询条件
-     * @param pageable 分页查询条件
      * @param response {@link HttpServletResponse} 实体
      */
-    void exportPage(LogQuery query, Pageable pageable, HttpServletResponse response);
+    void exportPage(Pageable pageable, LogQuery query, HttpServletResponse response);
 
     /**
      * 将 {@link Log} 转为 {@link LogDto}

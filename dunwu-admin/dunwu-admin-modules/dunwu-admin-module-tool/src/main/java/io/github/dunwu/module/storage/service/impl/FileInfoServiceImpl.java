@@ -88,7 +88,7 @@ public class FileInfoServiceImpl extends ServiceImpl implements FileInfoService 
 
     @Override
     public Page<FileInfoDto> pojoSpringPageByQuery(FileInfoQuery query, Pageable pageable) {
-        return dao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+        return dao.pojoSpringPageByQuery(pageable, query, this::doToDto);
     }
 
     @Override
@@ -113,8 +113,8 @@ public class FileInfoServiceImpl extends ServiceImpl implements FileInfoService 
     }
 
     @Override
-    public void exportPage(FileInfoQuery query, Pageable pageable, HttpServletResponse response) {
-        Page<FileInfoDto> page = dao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+    public void exportPage(Pageable pageable, FileInfoQuery query, HttpServletResponse response) {
+        Page<FileInfoDto> page = dao.pojoSpringPageByQuery(pageable, query, this::doToDto);
         exportDtoList(page.getContent(), response);
     }
 

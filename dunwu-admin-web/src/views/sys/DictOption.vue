@@ -57,7 +57,6 @@
           v-if="checkPer(['admin', 'sys:dict:edit', 'sys:dict:del'])"
           label="操作"
           width="130px"
-          align="center"
           fixed="right"
         >
           <template slot-scope="scope">
@@ -72,7 +71,7 @@
 </template>
 
 <script>
-import CRUD, { presenter, header, form } from '@crud/crud'
+import CRUD, { form, header, presenter } from '@crud/crud'
 import Pagination from '@crud/Pagination'
 import TableQueryOperation from '@crud/TableQueryOperation'
 import TableColumnOperation from '@crud/TableColumnOperation'
@@ -88,7 +87,7 @@ export default {
         title: '字典详情',
         url: 'sys/dict/option',
         query: { dictId: null },
-        sort: ['id,desc'],
+        sort: ['id,asc'],
         crudMethod: { ...DictOptionApi },
         optShow: {
           add: true,
@@ -105,7 +104,7 @@ export default {
     presenter(),
     header(),
     form(function() {
-      return Object.assign({ dict: { id: this.dictId }}, defaultForm)
+      return Object.assign({ dictId: this.dictId }, defaultForm)
     })
   ],
   data() {

@@ -286,12 +286,12 @@ export default {
       roleApi
         .editMenu(role)
         .then(() => {
-          this.crud.notify(CRUD.NOTIFICATION_TYPE.SUCCESS, '保存成功')
+          this.crud.message(CRUD.NOTIFICATION_TYPE.SUCCESS, '保存成功')
           this.menuLoading = false
           this.update()
         })
         .catch(err => {
-          this.crud.notify(CRUD.NOTIFICATION_TYPE.ERROR, '保存失败', err)
+          this.crud.message(CRUD.NOTIFICATION_TYPE.ERROR, '保存失败', err)
           this.menuLoading = false
         })
     },
@@ -309,7 +309,7 @@ export default {
     },
     // 获取部门数据
     getDepts() {
-      deptApi.treeList({ enabled: true }).then(res => {
+      deptApi.treeList({ disabled: false }).then(res => {
         this.depts = res.content.map(function(obj) {
           if (obj.hasChildren) {
             obj.children = null
@@ -342,7 +342,7 @@ export default {
     // 获取弹窗内部门数据
     loadDepts({ action, parentNode, callback }) {
       if (action === LOAD_CHILDREN_OPTIONS) {
-        deptApi.treeList({ enabled: true, pid: parentNode.id }).then(res => {
+        deptApi.treeList({ disabled: true, pid: parentNode.id }).then(res => {
           parentNode.children = res.content.map(function(obj) {
             if (obj.hasChildren) {
               obj.children = null

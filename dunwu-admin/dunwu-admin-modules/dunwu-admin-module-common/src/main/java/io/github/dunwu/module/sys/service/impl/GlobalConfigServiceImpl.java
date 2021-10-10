@@ -94,7 +94,7 @@ public class GlobalConfigServiceImpl extends ServiceImpl implements GlobalConfig
 
     @Override
     public Page<GlobalConfigDto> pojoSpringPageByQuery(GlobalConfigQuery query, Pageable pageable) {
-        return dao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+        return dao.pojoSpringPageByQuery(pageable, query, this::doToDto);
     }
 
     @Override
@@ -119,8 +119,8 @@ public class GlobalConfigServiceImpl extends ServiceImpl implements GlobalConfig
     }
 
     @Override
-    public void exportPage(GlobalConfigQuery query, Pageable pageable, HttpServletResponse response) {
-        Page<GlobalConfigDto> page = dao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+    public void exportPage(Pageable pageable, GlobalConfigQuery query, HttpServletResponse response) {
+        Page<GlobalConfigDto> page = dao.pojoSpringPageByQuery(pageable, query, this::doToDto);
         exportDtoList(page.getContent(), response);
     }
 

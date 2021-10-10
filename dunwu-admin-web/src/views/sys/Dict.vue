@@ -16,7 +16,17 @@
         <el-form-item label="字典名称" prop="name">
           <el-input v-model="form.name" style="width: 370px;" />
         </el-form-item>
-        <el-form-item label="描述">
+        <el-form-item label="状态" prop="disabled">
+          <el-radio
+            v-for="item in dict['disabled_status'].options"
+            :key="item.id"
+            v-model="form.disabled"
+            :label="item.code"
+          >
+            {{ item.name }}
+          </el-radio>
+        </el-form-item>
+        <el-form-item label="备注">
           <el-input v-model="form.note" style="width: 370px;" />
         </el-form-item>
       </el-form>
@@ -64,7 +74,6 @@
               v-if="checkPer(['admin', 'sys:dict:edit', 'sys:dict:del'])"
               label="操作"
               width="130px"
-              align="center"
               fixed="right"
             >
               <template slot-scope="scope">
@@ -109,7 +118,10 @@ import TableColumnOperation from '@crud/TableColumnOperation'
 import DictOption from './DictOption'
 import DictApi from './DictApi'
 
-const defaultForm = { id: null, name: null, note: null, enabled: true, dictOptions: [] }
+/**
+ * 表单默认值
+ */
+const defaultForm = { id: null, code: null, name: null, note: null, disabled: false, dictOptions: [] }
 
 export default {
   name: 'Dict',
@@ -118,6 +130,10 @@ export default {
     return [CRUD({ title: '字典', url: 'sys/dict', crudMethod: { ...DictApi }})]
   },
   mixins: [presenter(), header(), form(defaultForm)],
+  /**
+   * 设置数据字典
+   */
+  dicts: ['disabled_status'],
   data() {
     return {
       queryTypeOptions: [{ key: 'name', display_name: '字典名称' }, { key: 'note', display_name: '描述' }],
@@ -138,6 +154,10 @@ export default {
         this.$refs.dictOption.query.dictId = null
       }
       return true
+    },
+    // 添加与编辑前做的操作
+    [CRUD.HOOK.afterToCU](crud, form) {
+      form.disabled = `${form.disabled}`
     },
     // 选中字典后，设置字典详情数据
     handleCurrentChange(val) {

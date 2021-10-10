@@ -4,10 +4,10 @@ import io.github.dunwu.module.cas.entity.Job;
 import io.github.dunwu.tool.data.mybatis.IExtDao;
 
 /**
- * 系统岗位信息 Dao 接口
+ * 职务表 Dao 接口
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2020-05-24
+ * @since 2021-10-10
  */
 public interface JobDao extends IExtDao<Job> {
 

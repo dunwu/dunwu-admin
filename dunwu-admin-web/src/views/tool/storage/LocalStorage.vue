@@ -223,7 +223,7 @@ export default {
         this.fileList.push(fileInfo)
         this.$message({ type: 'success', message: '上传成功' })
 
-        this.crud.notify(CRUD.NOTIFICATION_TYPE.SUCCESS, '上传成功')
+        this.crud.message(CRUD.NOTIFICATION_TYPE.SUCCESS, '上传成功')
         this.$refs.upload.clearFiles()
         this.crud.status.add = CRUD.STATUS.NORMAL
         this.crud.resetForm()

@@ -79,7 +79,7 @@ public class CodeGlobalConfigServiceImpl extends ServiceImpl implements CodeGlob
 
     @Override
     public Page<CodeGlobalConfigDto> pojoSpringPageByQuery(CodeGlobalConfigQuery query, Pageable pageable) {
-        return dao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+        return dao.pojoSpringPageByQuery(pageable, query, this::doToDto);
     }
 
     @Override
@@ -106,7 +106,7 @@ public class CodeGlobalConfigServiceImpl extends ServiceImpl implements CodeGlob
     @Override
     public void exportPage(CodeGlobalConfigQuery query, Pageable pageable, HttpServletResponse response)
         throws IOException {
-        Page<CodeGlobalConfigDto> page = dao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+        Page<CodeGlobalConfigDto> page = dao.pojoSpringPageByQuery(pageable, query, this::doToDto);
         dao.exportDtoList(page.getContent(), response);
     }
 

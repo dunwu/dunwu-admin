@@ -11,6 +11,7 @@ import io.github.dunwu.module.cas.entity.dto.DeptDto;
 import io.github.dunwu.module.cas.entity.dto.MenuDto;
 import io.github.dunwu.module.cas.entity.dto.RoleDto;
 import io.github.dunwu.module.cas.entity.dto.UserDto;
+import io.github.dunwu.module.cas.entity.query.RoleQuery;
 import io.github.dunwu.module.cas.service.RoleService;
 import io.github.dunwu.tool.bean.BeanUtil;
 import io.github.dunwu.tool.core.exception.AuthException;
@@ -33,10 +34,10 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 系统角色信息 Service 类
+ * 角色 Service 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2020-05-24
+ * @since 2021-10-10
  */
 @Service
 @RequiredArgsConstructor
@@ -54,12 +55,14 @@ public class RoleServiceImpl extends ServiceImpl implements RoleService {
     private final DeptRoleMapDao roleDeptDao;
 
     @Override
-    public boolean save(Role entity) {
+    public boolean insert(Role entity) {
         checkRoleLevel(entity.getLevel());
-        if (entity.getEnabled() == null) {
-            entity.setEnabled(true);
-        }
         return roleDao.insert(entity);
+    }
+
+    @Override
+    public boolean insertBatch(Collection<Role> list) {
+        return roleDao.insertBatch(list);
     }
 
     @Override
@@ -69,31 +72,49 @@ public class RoleServiceImpl extends ServiceImpl implements RoleService {
     }
 
     @Override
-    public boolean removeById(Serializable id) {
-        Role role = roleDao.getById(id);
-        if (role == null) { return true; }
-        checkRoleLevel(role.getLevel());
+    public boolean updateBatchById(Collection<Role> list) {
+        return roleDao.updateBatchById(list);
+    }
+
+    @Override
+    public boolean save(Role entity) {
+        checkRoleLevel(entity.getLevel());
+        return roleDao.save(entity);
+    }
+
+    @Override
+    public boolean saveBatch(Collection<Role> list) {
+        return roleDao.saveBatch(list);
+    }
+
+    @Override
+    public boolean deleteById(Serializable id) {
         return roleDao.deleteById(id);
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public boolean removeByIds(Collection<Serializable> ids) {
-        if (CollectionUtil.isEmpty(ids)) {
-            return true;
-        }
-
+    public boolean deleteBatchByIds(Collection<? extends Serializable> ids) {
         return roleDao.deleteBatchByIds(ids);
     }
 
     @Override
-    public Page<RoleDto> pojoSpringPageByQuery(Object query, Pageable pageable) {
-        return roleDao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+    public List<RoleDto> pojoList() {
+        return roleDao.pojoList(this::doToDto);
     }
 
     @Override
-    public List<RoleDto> pojoListByQuery(Object query) {
+    public List<RoleDto> pojoListByIds(Collection<? extends Serializable> ids) {
+        return roleDao.pojoListByIds(ids, this::doToDto);
+    }
+
+    @Override
+    public List<RoleDto> pojoListByQuery(RoleQuery query) {
         return roleDao.pojoListByQuery(query, this::doToDto);
+    }
+
+    @Override
+    public Page<RoleDto> pojoSpringPageByQuery(Pageable pageable, RoleQuery query) {
+        return roleDao.pojoSpringPageByQuery(pageable, query, this::doToDto);
     }
 
     @Override
@@ -103,48 +124,71 @@ public class RoleServiceImpl extends ServiceImpl implements RoleService {
     }
 
     @Override
-    public RoleDto pojoByQuery(Object query) {
+    public RoleDto pojoByQuery(RoleQuery query) {
         return roleDao.pojoByQuery(query, this::doToDto);
     }
 
     @Override
-    public Integer countByQuery(Object query) {
+    public Integer countByQuery(RoleQuery query) {
         return roleDao.countByQuery(query);
     }
 
     @Override
-    public void exportByIds(Collection<Serializable> ids, HttpServletResponse response) {
-        List<RoleDto> list = roleDao.pojoListByIds(ids, RoleDto.class);
-        export(list, response);
+    public void exportList(Collection<? extends Serializable> ids, HttpServletResponse response) {
+        List<RoleDto> list = roleDao.pojoListByIds(ids, this::doToDto);
+        exportDtoList(list, response);
     }
 
     @Override
-    public void exportPageData(Object query, Pageable pageable, HttpServletResponse response) {
-        Page<RoleDto> page = roleDao.pojoSpringPageByQuery(query, pageable, RoleDto.class);
-        export(page.getContent(), response);
+    public void exportPage(Pageable pageable, RoleQuery query, HttpServletResponse response) {
+        Page<RoleDto> page = roleDao.pojoSpringPageByQuery(pageable, query, this::doToDto);
+        exportDtoList(page.getContent(), response);
     }
 
     /**
-     * 根据传入的 SysRoleDto 列表，导出 excel 表单
+     * 根据传入的 RoleDto 列表，导出 excel 表单
      *
      * @param list     {@link RoleDto} 列表
      * @param response {@link HttpServletResponse} 实体
      */
-    private void export(Collection<RoleDto> list, HttpServletResponse response) {
+    private void exportDtoList(Collection<RoleDto> list, HttpServletResponse response) {
         List<Map<String, Object>> mapList = new ArrayList<>();
         for (RoleDto item : list) {
             Map<String, Object> map = new LinkedHashMap<>();
-            map.put("角色ID", item.getId());
-            map.put("角色名称", item.getName());
-            map.put("数据范围", item.getDataScope());
+            map.put("ID", item.getId());
+            map.put("编码", item.getCode());
+            map.put("名称", item.getName());
             map.put("角色级别", item.getLevel());
-            map.put("状态", item.getEnabled());
+            map.put("数据权限", item.getDataScope());
+            map.put("是否禁用：1 表示禁用；0 表示启用", item.getDisabled());
             map.put("备注", item.getNote());
             map.put("创建者", item.getCreateBy());
             map.put("更新者", item.getUpdateBy());
+            map.put("创建时间", item.getCreateTime());
+            map.put("更新时间", item.getUpdateTime());
             mapList.add(map);
         }
         ServletUtil.downloadExcel(response, mapList);
+    }
+
+    @Override
+    public RoleDto doToDto(Role entity) {
+        if (entity == null) {
+            return null;
+        }
+        RoleDto dto = BeanUtil.toBean(entity, RoleDto.class);
+        fillDeptInfo(dto);
+        fillMenuInfo(dto);
+        return dto;
+    }
+
+    @Override
+    public Role dtoToDo(RoleDto dto) {
+        if (dto == null) {
+            return null;
+        }
+
+        return BeanUtil.toBean(dto, Role.class);
     }
 
     @Override
@@ -268,7 +312,7 @@ public class RoleServiceImpl extends ServiceImpl implements RoleService {
         if (user.getIsAdmin()) {
             permissions.add("admin");
             return permissions.stream().map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+                              .collect(Collectors.toList());
         }
 
         List<RoleDto> roles = pojoListByUserId(user.getId());
@@ -276,14 +320,7 @@ public class RoleServiceImpl extends ServiceImpl implements RoleService {
                            .filter(menu -> StrUtil.isNotBlank(menu.getPermission()))
                            .map(MenuDto::getPermission).collect(Collectors.toSet());
         return permissions.stream().map(SimpleGrantedAuthority::new)
-            .collect(Collectors.toList());
-    }
-
-    private RoleDto doToDto(Role obj) {
-        RoleDto role = BeanUtil.toBean(obj, RoleDto.class);
-        fillDeptInfo(role);
-        fillMenuInfo(role);
-        return role;
+                          .collect(Collectors.toList());
     }
 
     private void fillDeptInfo(RoleDto role) {

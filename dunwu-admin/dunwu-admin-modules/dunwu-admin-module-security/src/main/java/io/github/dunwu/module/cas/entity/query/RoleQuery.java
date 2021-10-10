@@ -13,33 +13,41 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * 系统角色信息 Query 类
+ * 角色 Query 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2020-05-24
+ * @since 2021-10-10
  */
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "RoleQuery", description = "系统角色信息")
+@ApiModel(value = "RoleQuery", description = "角色")
 public class RoleQuery implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @QueryField(blurry = { "name", "note" }, type = QueryField.QueryType.EQUALS)
+    @QueryField(blurry = { "code", "name" }, type = QueryField.QueryType.LIKE)
     private String blurry;
 
+    @ApiModelProperty(value = "ID")
+    @QueryField(value = "`id`")
+    private Long id;
+
     @ApiModelProperty(value = "角色编码")
-    @QueryField
+    @QueryField(value = "`code`")
     private String code;
 
     @ApiModelProperty(value = "角色名称")
-    @QueryField
+    @QueryField(value = "`name`")
     private String name;
 
-    @ApiModelProperty(value = "创建时间")
+    @ApiModelProperty(value = "是否禁用：1 表示禁用；0 表示启用")
+    @QueryField(value = "`is_disabled`")
+    private Boolean disabled;
+
+    @ApiModelProperty(value = "更新时间")
     @QueryField(type = QueryField.QueryType.BETWEEN)
     @JsonFormat(shape = JsonFormat.Shape.ARRAY, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private List<LocalDateTime> createTime;
+    private List<LocalDateTime> updateTimeRange;
 
 }

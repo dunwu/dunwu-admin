@@ -89,7 +89,7 @@ public class AppServiceImpl extends ServiceImpl implements AppService {
 
     @Override
     public Page<AppDto> pojoSpringPageByQuery(AppQuery query, Pageable pageable) {
-        return dao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+        return dao.pojoSpringPageByQuery(pageable, query, this::doToDto);
     }
 
     @Override
@@ -114,8 +114,8 @@ public class AppServiceImpl extends ServiceImpl implements AppService {
     }
 
     @Override
-    public void exportPage(AppQuery query, Pageable pageable, HttpServletResponse response) {
-        Page<AppDto> page = dao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+    public void exportPage(Pageable pageable, AppQuery query, HttpServletResponse response) {
+        Page<AppDto> page = dao.pojoSpringPageByQuery(pageable, query, this::doToDto);
         exportDtoList(page.getContent(), response);
     }
 

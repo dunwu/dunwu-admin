@@ -44,8 +44,8 @@ public class DeptQuery implements Serializable {
     @QueryField
     private Integer level;
 
-    @ApiModelProperty(value = "状态")
-    @QueryField(value = "is_disabled")
+    @ApiModelProperty(value = "是否禁用：1 表示禁用；0 表示启用")
+    @QueryField(value = "`is_disabled`")
     private Boolean disabled;
 
     @ApiModelProperty(value = "更新者")

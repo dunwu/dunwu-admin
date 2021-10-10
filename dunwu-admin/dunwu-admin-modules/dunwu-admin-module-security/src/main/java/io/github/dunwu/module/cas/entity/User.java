@@ -1,9 +1,6 @@
 package io.github.dunwu.module.cas.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.github.dunwu.tool.data.validator.annotation.EditCheck;
 import io.swagger.annotations.ApiModel;
@@ -37,7 +34,7 @@ public class User implements Serializable {
     private Long id;
 
     @ApiModelProperty(value = "部门ID")
-    @TableField("`dept_id`")
+    @TableField(value = "`dept_id`", updateStrategy = FieldStrategy.IGNORED)
     private Long deptId;
 
     @ApiModelProperty(value = "岗位ID")
@@ -71,10 +68,6 @@ public class User implements Serializable {
     @ApiModelProperty(value = "密码")
     @TableField("`password`")
     private String password;
-
-    @ApiModelProperty(value = "是否为admin账号")
-    @TableField("`is_admin`")
-    private Boolean admin;
 
     @ApiModelProperty(value = "是否禁用：1禁用、0启用")
     @TableField("`is_disabled`")
@@ -113,7 +106,6 @@ public class User implements Serializable {
     public static final String EMAIL = "email";
     public static final String AVATAR = "avatar";
     public static final String PASSWORD = "password";
-    public static final String IS_ADMIN = "is_admin";
     public static final String ENABLED = "enabled";
     public static final String CREATE_BY = "create_by";
     public static final String UPDATE_BY = "update_by";

@@ -35,7 +35,7 @@ public class DictDto implements Serializable {
     private String name;
 
     @ApiModelProperty(value = "是否禁用：1 表示禁用；0 表示启用")
-    private Boolean isDisabled;
+    private Boolean disabled;
 
     @ApiModelProperty(value = "备注")
     private String note;

@@ -66,6 +66,18 @@ export function page(params) {
 }
 
 /**
+ * 根据 ID 查询记录
+ * @param id
+ * @returns {*}
+ */
+export function getById(id) {
+  return request({
+    url: 'cas/job/' + id,
+    method: 'get'
+  })
+}
+
+/**
  * 根据指定 id 列表，导出相应数据
  * @param ids
  * @returns {*}
@@ -93,4 +105,20 @@ export function exportPage(params) {
   })
 }
 
-export default { add, edit, delBatch, list, page, exportList, exportPage }
+export function bindDept(deptId, userIds) {
+  return request({
+    url: 'cas/job/bindDept/' + deptId,
+    method: 'post',
+    data: userIds
+  })
+}
+
+export function unbindDept(deptId, userIds) {
+  return request({
+    url: 'cas/job/unbindDept/' + deptId,
+    method: 'post',
+    data: userIds
+  })
+}
+
+export default { add, edit, delBatch, list, page, getById, exportList, exportPage, bindDept, unbindDept }

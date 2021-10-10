@@ -139,7 +139,6 @@
         v-if="checkPer(['admin', 'deploy:edit', 'deploy:del'])"
         label="操作"
         width="150px"
-        align="center"
       >
         <template slot-scope="scope">
           <TableColumnOperation :data="scope.row" :permission="permission" />

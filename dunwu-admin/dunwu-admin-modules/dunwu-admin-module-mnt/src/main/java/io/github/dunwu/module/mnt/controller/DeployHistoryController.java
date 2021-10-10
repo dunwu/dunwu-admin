@@ -124,7 +124,7 @@ public class DeployHistoryController {
     @PreAuthorize("@exp.check('mnt:deployHistory:view')")
     @GetMapping("export/page")
     public void exportPage(DeployHistoryQuery query, Pageable pageable, HttpServletResponse response) {
-        service.exportPage(query, pageable, response);
+        service.exportPage(pageable, query, response);
     }
 
 }

@@ -88,7 +88,7 @@ public class FileContentServiceImpl extends ServiceImpl implements FileContentSe
 
     @Override
     public Page<FileContentDto> pojoSpringPageByQuery(FileContentQuery query, Pageable pageable) {
-        return dao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+        return dao.pojoSpringPageByQuery(pageable, query, this::doToDto);
     }
 
     @Override
@@ -113,8 +113,8 @@ public class FileContentServiceImpl extends ServiceImpl implements FileContentSe
     }
 
     @Override
-    public void exportPage(FileContentQuery query, Pageable pageable, HttpServletResponse response) {
-        Page<FileContentDto> page = dao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+    public void exportPage(Pageable pageable, FileContentQuery query, HttpServletResponse response) {
+        Page<FileContentDto> page = dao.pojoSpringPageByQuery(pageable, query, this::doToDto);
         exportDtoList(page.getContent(), response);
     }
 

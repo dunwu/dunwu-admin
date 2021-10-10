@@ -98,7 +98,7 @@ public class ServerServiceImpl extends ServiceImpl implements ServerService {
 
     @Override
     public Page<ServerDto> pojoSpringPageByQuery(ServerQuery query, Pageable pageable) {
-        return serverDao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+        return serverDao.pojoSpringPageByQuery(pageable, query, this::doToDto);
     }
 
     @Override
@@ -123,8 +123,8 @@ public class ServerServiceImpl extends ServiceImpl implements ServerService {
     }
 
     @Override
-    public void exportPage(ServerQuery query, Pageable pageable, HttpServletResponse response) {
-        Page<ServerDto> page = serverDao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+    public void exportPage(Pageable pageable, ServerQuery query, HttpServletResponse response) {
+        Page<ServerDto> page = serverDao.pojoSpringPageByQuery(pageable, query, this::doToDto);
         exportDtoList(page.getContent(), response);
     }
 

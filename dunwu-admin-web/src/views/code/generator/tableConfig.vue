@@ -182,7 +182,7 @@ export default {
     this.schemaName = this.$route.params.schemaName
     if (this.$store.state.user) {
       if (this.$store.state.user.user) {
-        this.createBy = this.$store.state.user.user.name
+        this.createBy = this.$store.state.user.user.username
       }
     } else {
       this.createBy = 'admin'

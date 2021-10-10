@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.github.dunwu.module.cas.dao.*;
 import io.github.dunwu.module.cas.entity.RoleMenuMap;
 import io.github.dunwu.module.cas.entity.User;
-import io.github.dunwu.module.cas.entity.UserDeptMap;
 import io.github.dunwu.module.cas.entity.UserRoleMap;
 import io.github.dunwu.module.cas.entity.dto.DeptDto;
 import io.github.dunwu.module.cas.entity.dto.JobDto;
@@ -45,7 +44,6 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
     private final RoleDao roleDao;
     private final DeptDao deptDao;
     private final JobDao jobDao;
-    private final UserDeptMapDao userDeptMapDao;
     private final UserRoleMapDao userRoleDao;
     private final RoleMenuMapDao roleMenuDao;
 
@@ -87,10 +85,7 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
         }
 
         UserRoleMap userRoleMap = new UserRoleMap().setUserId(user.getId());
-        if (userRoleDao.delete(Wrappers.query(userRoleMap))) {
-            return userDao.deleteById(user.getId());
-        }
-        log.error("试图删除用户 id = {} 及其关联数据失败", id);
+        userRoleDao.delete(Wrappers.query(userRoleMap));
         return userDao.deleteById(id);
     }
 
@@ -121,7 +116,7 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
 
     @Override
     public Page<UserDto> pojoSpringPageByQuery(UserQuery query, Pageable pageable) {
-        return userDao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+        return userDao.pojoSpringPageByQuery(pageable, query, this::doToDto);
     }
 
     @Override
@@ -146,8 +141,8 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
     }
 
     @Override
-    public void exportPage(UserQuery query, Pageable pageable, HttpServletResponse response) {
-        Page<UserDto> page = userDao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+    public void exportPage(Pageable pageable, UserQuery query, HttpServletResponse response) {
+        Page<UserDto> page = userDao.pojoSpringPageByQuery(pageable, query, this::doToDto);
         exportDtoList(page.getContent(), response);
     }
 
@@ -171,7 +166,6 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
             map.put("邮箱", item.getEmail());
             map.put("头像地址", item.getAvatar());
             map.put("密码", item.getPassword());
-            map.put("是否为admin账号", item.getAdmin());
             map.put("状态：1启用、0禁用", item.getDisabled());
             map.put("创建者", item.getCreateBy());
             map.put("更新着", item.getUpdateBy());
@@ -188,14 +182,7 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
         UserDto dto = BeanUtil.toBean(entity, UserDto.class);
         dto.setUsername(entity.getUsername());
 
-        JobDto job = jobDao.pojoById(entity.getJobId(), JobDto.class);
-        if (job != null) {
-            dto.setJob(job);
-        } else {
-            if (log.isDebugEnabled()) {
-                log.debug("用户 {} 未查询到职位信息", dto.getUsername());
-            }
-        }
+        // 查询用户关联部门信息
 
         DeptDto dept = deptDao.pojoById(entity.getDeptId(), DeptDto.class);
         if (dept != null) {
@@ -203,6 +190,15 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
         } else {
             if (log.isDebugEnabled()) {
                 log.debug("用户 {} 未查询到部门信息", dto.getUsername());
+            }
+        }
+
+        JobDto job = jobDao.pojoById(entity.getJobId(), JobDto.class);
+        if (job != null) {
+            dto.setJob(job);
+        } else {
+            if (log.isDebugEnabled()) {
+                log.debug("用户 {} 未查询到职位信息", dto.getUsername());
             }
         }
 
@@ -293,40 +289,39 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
 
     @Override
     public List<UserDto> pojoListByDeptId(Serializable deptId) {
-        QueryWrapper<UserDeptMap> wrapper = new QueryWrapper<>();
-        wrapper.eq(UserDeptMap.DEPT_ID, deptId);
-        List<UserDeptMap> list = userDeptMapDao.list(wrapper);
-        if (CollectionUtil.isEmpty(list)) {
-            return Collections.emptyList();
-        }
-
-        List<Long> userIds = list.stream().map(UserDeptMap::getUserId)
-                                 .distinct()
-                                 .collect(Collectors.toList());
-        return userDao.pojoListByIds(userIds, this::doToDto);
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.eq(User.DEPT_ID, deptId);
+        return userDao.pojoList(wrapper, this::doToDto);
     }
 
     @Override
-    public boolean saveDeptUsersMap(Long deptId, Collection<Long> userIds) {
-        QueryWrapper<UserDeptMap> wrapper = new QueryWrapper<>();
-        wrapper.eq(UserDeptMap.DEPT_ID, deptId);
-        List<UserDeptMap> list = userDeptMapDao.list(wrapper);
-        if (CollectionUtil.isNotEmpty(list)) {
-            List<Long> ids = list.stream().map(UserDeptMap::getId).collect(Collectors.toList());
-            userDeptMapDao.deleteBatchByIds(ids);
+    public boolean bindDept(Long deptId, Collection<Long> userIds) {
+        List<User> users = userDao.listByIds(userIds);
+        if (CollectionUtil.isEmpty(users)) {
+            return false;
         }
 
-        List<UserDeptMap> newRecords = new ArrayList<>();
-        for (Long userId : userIds) {
-            UserDeptMap record = new UserDeptMap(deptId, userId);
-            newRecords.add(record);
+        for (User user : users) {
+            user.setDeptId(deptId);
         }
-        return userDeptMapDao.insertBatch(newRecords);
+        return userDao.updateBatchById(users);
     }
 
     @Override
-    public int countByRoles(Set<Long> roleIds) {
-        return 0;
+    public boolean unbindDept(Long deptId, Collection<Long> userIds) {
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.eq(User.DEPT_ID, deptId);
+        wrapper.in(User.ID, userIds);
+
+        List<User> users = userDao.list(wrapper);
+        if (CollectionUtil.isEmpty(users)) {
+            return false;
+        }
+
+        for (User user : users) {
+            user.setDeptId(null);
+        }
+        return userDao.updateBatchById(users);
     }
 
 }

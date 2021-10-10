@@ -118,8 +118,8 @@ public class DictController {
     @ApiOperation("根据 DictQuery 和 Pageable 分页查询 DictDto 列表，并导出 excel 表单")
     @AppLog(bizType = "数据字典", operType = "导出", value = "分页导出 sys_dict 表中的记录")
     @GetMapping("export/page")
-    public void exportPage(DictQuery query, Pageable pageable, HttpServletResponse response) {
-        service.exportPage(query, pageable, response);
+    public void exportPage(Pageable pageable, DictQuery query, HttpServletResponse response) {
+        service.exportPage(pageable, query, response);
     }
 
 }

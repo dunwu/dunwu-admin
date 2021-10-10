@@ -125,7 +125,7 @@ public class AppController {
     @PreAuthorize("@exp.check('mnt:app:view')")
     @GetMapping("export/page")
     public void exportPage(AppQuery query, Pageable pageable, HttpServletResponse response) {
-        service.exportPage(query, pageable, response);
+        service.exportPage(pageable, query, response);
     }
 
 }

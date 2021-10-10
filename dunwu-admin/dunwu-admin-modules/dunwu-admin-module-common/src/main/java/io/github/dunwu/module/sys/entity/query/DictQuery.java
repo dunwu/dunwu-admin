@@ -36,6 +36,6 @@ public class DictQuery implements Serializable {
 
     @ApiModelProperty(value = "是否禁用：1 表示禁用；0 表示启用")
     @QueryField
-    private Boolean isDisabled;
+    private Boolean disabled;
 
 }

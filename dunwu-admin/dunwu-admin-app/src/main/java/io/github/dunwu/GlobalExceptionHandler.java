@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.validation.FieldError;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.nio.file.AccessDeniedException;
 import java.util.Set;
 import javax.security.auth.message.AuthException;
 import javax.servlet.http.HttpServletRequest;
@@ -100,6 +100,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AuthException.class)
     public DataResult<?> handleAuthException(final AuthException e) {
         log.error("认证失败，方法: {}, message: {}", e.getClass().getCanonicalName(), e.getLocalizedMessage());
+        return DataResult.fail(ResultStatus.HTTP_UNAUTHORIZED.getCode(), e.getLocalizedMessage());
+    }
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(AccessDeniedException.class)
+    public DataResult<?> handleAccessDeniedException(final AccessDeniedException e) {
+        log.error("权限不足，方法: {}, message: {}", e.getClass().getCanonicalName(), e.getLocalizedMessage());
         return DataResult.fail(ResultStatus.HTTP_UNAUTHORIZED.getCode(), e.getLocalizedMessage());
     }
 

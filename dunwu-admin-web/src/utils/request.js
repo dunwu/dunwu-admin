@@ -22,8 +22,8 @@ const service = axios.create({
 // request拦截器
 service.interceptors.request.use(
   config => {
-    console.group('%c%s', 'color:blue', '[Http Request]')
-    console.info('[request info]', config)
+    // console.group('%c%s', 'color:blue', '[Http Request]')
+    // console.info('[request info]', config)
     if (getToken()) {
       config.headers[Config.TokenKey] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
     }
@@ -32,7 +32,7 @@ service.interceptors.request.use(
   },
   error => {
     // Do something with request error
-    console.error(error) // for debug
+    // console.error(error)
     Promise.reject(error)
   }
 )
@@ -40,8 +40,8 @@ service.interceptors.request.use(
 // response 拦截器
 service.interceptors.response.use(
   response => {
-    console.info('[response info]', response)
-    console.groupEnd()
+    // console.info('[response info]', response)
+    // console.groupEnd()
     if (response.status < 200 || response.status > 300) {
       Notification.error({ title: response.data.msg, duration: 5000 })
       return Promise.reject(response.data.msg)

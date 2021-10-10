@@ -73,15 +73,15 @@ public class Menu implements Serializable {
     private String path;
 
     @ApiModelProperty(value = "是否外链")
-    @TableField("i_frame")
-    private Boolean iFrame;
+    @TableField("is_frame")
+    private Boolean frame;
 
     @ApiModelProperty(value = "缓存")
-    @TableField("`cache`")
-    private Boolean cache;
+    @TableField("`is_cached`")
+    private Boolean cached;
 
     @ApiModelProperty(value = "隐藏")
-    @TableField("hidden")
+    @TableField("is_hidden")
     private Boolean hidden;
 
     @ApiModelProperty(value = "权限")

@@ -55,9 +55,6 @@ public class UserDto implements Serializable {
     @ApiModelProperty(value = "密码")
     private String password;
 
-    @ApiModelProperty(value = "是否为admin账号")
-    private Boolean admin;
-
     @ApiModelProperty(value = "是否禁用：1禁用、0启用")
     private Boolean disabled;
 

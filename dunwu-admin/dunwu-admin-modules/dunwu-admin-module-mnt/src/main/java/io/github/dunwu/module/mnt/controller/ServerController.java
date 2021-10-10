@@ -124,7 +124,7 @@ public class ServerController {
     @PreAuthorize("@exp.check('mnt:server:view')")
     @GetMapping("export/page")
     public void exportPage(ServerQuery query, Pageable pageable, HttpServletResponse response) {
-        service.exportPage(query, pageable, response);
+        service.exportPage(pageable, query, response);
     }
 
     @AppLog("测试连接服务器")

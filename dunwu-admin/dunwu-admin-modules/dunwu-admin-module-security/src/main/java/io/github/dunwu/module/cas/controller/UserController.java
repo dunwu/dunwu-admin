@@ -116,7 +116,7 @@ public class UserController {
     @AppLog(bizType = "系统用户", operType = "导出", value = "分页导出 cas_user 表中的记录")
     @GetMapping("export/page")
     public void exportPage(UserQuery query, Pageable pageable, HttpServletResponse response) {
-        service.exportPage(query, pageable, response);
+        service.exportPage(pageable, query, response);
     }
 
     @GetMapping("listByDeptId")
@@ -124,9 +124,16 @@ public class UserController {
         return DataListResult.ok(service.pojoListByDeptId(deptId));
     }
 
-    @PostMapping("saveDeptUsers/{deptId}")
-    public DataResult<Boolean> saveDeptUserMap(@PathVariable Long deptId, Collection<Long> userIds) {
-        return DataResult.ok(service.saveDeptUsersMap(deptId, userIds));
+    @ApiOperation("绑定用户到指定部门")
+    @PostMapping("bindDept/{deptId}")
+    public DataResult<Boolean> bindDept(@PathVariable Long deptId, @RequestBody Collection<Long> userIds) {
+        return DataResult.ok(service.bindDept(deptId, userIds));
+    }
+
+    @ApiOperation("从指定部门解绑定用户")
+    @PostMapping("unbindDept/{deptId}")
+    public DataResult<Boolean> unbindDept(@PathVariable Long deptId, @RequestBody Collection<Long> userIds) {
+        return DataResult.ok(service.unbindDept(deptId, userIds));
     }
 
 }

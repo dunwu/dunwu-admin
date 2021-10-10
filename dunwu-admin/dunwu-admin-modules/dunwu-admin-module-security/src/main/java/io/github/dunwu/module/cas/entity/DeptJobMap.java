@@ -15,17 +15,17 @@ import java.io.Serializable;
 import javax.validation.constraints.NotNull;
 
 /**
- * 用户部门关联表
+ * 角色部门关联
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-07
+ * @since 2021-10-10
  */
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-@TableName("cas_user_dept_map")
-@ApiModel(value = "UserDeptMap", description = "用户部门关联表")
-public class UserDeptMap implements Serializable {
+@TableName("cas_dept_job_map")
+@ApiModel(value = "DeptJobMap", description = "角色部门关联")
+public class DeptJobMap implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -34,23 +34,23 @@ public class UserDeptMap implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    @ApiModelProperty(value = "用户ID")
-    @TableField("`user_id`")
-    private Long userId;
-
     @ApiModelProperty(value = "部门ID")
     @TableField("`dept_id`")
     private Long deptId;
 
-    public UserDeptMap() { }
+    @ApiModelProperty(value = "职务ID")
+    @TableField("`job_id`")
+    private Long jobId;
 
-    public UserDeptMap(Long userId, Long deptId) {
-        this.userId = userId;
+    public DeptJobMap() { }
+
+    public DeptJobMap(Long deptId, Long jobId) {
         this.deptId = deptId;
+        this.jobId = jobId;
     }
 
     public static final String ID = "id";
-    public static final String USER_ID = "user_id";
     public static final String DEPT_ID = "dept_id";
+    public static final String JOB_ID = "job_id";
 
 }

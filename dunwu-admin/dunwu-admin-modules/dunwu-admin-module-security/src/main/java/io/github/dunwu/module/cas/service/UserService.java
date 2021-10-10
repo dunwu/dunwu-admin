@@ -5,14 +5,12 @@ import io.github.dunwu.module.cas.entity.dto.UserDto;
 import io.github.dunwu.module.cas.entity.query.UserQuery;
 import io.github.dunwu.tool.data.annotation.QueryField;
 import io.github.dunwu.tool.data.mybatis.IService;
-import org.apache.ibatis.annotations.Select;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -153,12 +151,11 @@ public interface UserService extends IService {
 
     /**
      * 根据 {@link UserQuery} 和 {@link Pageable} 分页查询 {@link UserDto} 列表，并导出 excel 表单
-     *
+     *  @param pageable 分页查询条件
      * @param query    查询条件，根据 {@link UserQuery} 中的 {@link QueryField} 注解自动组装查询条件
-     * @param pageable 分页查询条件
      * @param response {@link HttpServletResponse} 实体
      */
-    void exportPage(UserQuery query, Pageable pageable, HttpServletResponse response);
+    void exportPage(Pageable pageable, UserQuery query, HttpServletResponse response);
 
     /**
      * 将 {@link User} 转为 {@link UserDto}
@@ -198,15 +195,8 @@ public interface UserService extends IService {
      */
     List<UserDto> pojoListByDeptId(Serializable deptId);
 
-    boolean saveDeptUsersMap(Long deptId, Collection<Long> userIds);
+    boolean bindDept(Long deptId, Collection<Long> userIds);
 
-    /**
-     * 根据角色查询
-     *
-     * @param roleIds /
-     * @return /
-     */
-    @Select("SELECT count(1) FROM sys_user u, sys_users_roles r WHERE u.user_id = r.user_id AND r.role_id in #{roleIds}")
-    int countByRoles(Set<Long> roleIds);
+    boolean unbindDept(Long deptId, Collection<Long> userIds);
 
 }

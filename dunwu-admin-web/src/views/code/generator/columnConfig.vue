@@ -327,9 +327,10 @@ export default {
     this.dbId = this.$route.params.dbId
     this.tableName = this.$route.params.tableName
     this.schemaName = this.$route.params.schemaName
+    console.info('this.$store.state.user', this.$store.state.user)
     if (this.$store.state.user) {
       if (this.$store.state.user.user) {
-        this.createBy = this.$store.state.user.user.name
+        this.createBy = this.$store.state.user.user.username
       }
     } else {
       this.createBy = 'admin'

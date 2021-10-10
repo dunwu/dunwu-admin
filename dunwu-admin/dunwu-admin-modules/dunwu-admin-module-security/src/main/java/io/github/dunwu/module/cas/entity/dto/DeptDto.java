@@ -44,7 +44,7 @@ public class DeptDto implements Serializable {
     @ApiModelProperty(value = "子部门数量")
     private Integer childrenNum;
 
-    @ApiModelProperty(value = "状态")
+    @ApiModelProperty(value = "是否禁用：1 表示禁用；0 表示启用")
     private Boolean disabled;
 
     @ApiModelProperty(value = "备注")

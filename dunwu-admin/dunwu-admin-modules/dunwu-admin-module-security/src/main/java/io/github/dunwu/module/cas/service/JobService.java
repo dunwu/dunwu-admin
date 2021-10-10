@@ -14,10 +14,10 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 岗位 Service 接口
+ * 职务表 Service 接口
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-09-28
+ * @since 2021-10-09
  */
 public interface JobService extends IService {
 
@@ -88,26 +88,34 @@ public interface JobService extends IService {
     /**
      * 查询 {@link JobDto} 全量数据列表
      *
-     * @return {@link List < JobDto >}
+     * @return {@link List<JobDto>}
      */
     List<JobDto> pojoList();
 
     /**
+     * 根据 ID 列表查询 {@link JobDto} 列表
+     *
+     * @param ids {@link Job} 主键列表
+     * @return {@link List<JobDto>}
+     */
+    List<JobDto> pojoListByIds(Collection<? extends Serializable> ids);
+
+    /**
      * 根据 {@link JobQuery} 查询 {@link JobDto} 列表
      *
-     * @param query 查询条件，根据 JobQuery 中的 {@link QueryField} 注解自动组装查询条件
-     * @return {@link List < JobDto >}
+     * @param query 查询条件，根据 {@link JobQuery} 中的 {@link QueryField} 注解自动组装查询条件
+     * @return {@link List<JobDto>}
      */
     List<JobDto> pojoListByQuery(JobQuery query);
 
     /**
-     * 根据 {@link JobQuery} 和 {@link Pageable} 分页查询 {@link JobDto} 列表
+     * 根据 {@link Pageable} 和 {@link JobQuery} 分页查询 {@link JobDto} 列表
      *
-     * @param query    查询条件，根据 JobQuery 中的 {@link QueryField} 注解自动组装查询条件
      * @param pageable 分页查询条件
-     * @return {@link Page < JobDto >}
+     * @param query    查询条件，根据 {@link JobQuery} 中的 {@link QueryField} 注解自动组装查询条件
+     * @return {@link Page<JobDto>}
      */
-    Page<JobDto> pojoSpringPageByQuery(JobQuery query, Pageable pageable);
+    Page<JobDto> pojoSpringPageByQuery(Pageable pageable, JobQuery query);
 
     /**
      * 根据 id 查询 {@link JobDto}
@@ -120,7 +128,7 @@ public interface JobService extends IService {
     /**
      * 根据 {@link JobQuery} 查询 {@link JobDto} 列表
      *
-     * @param query 查询条件，根据 JobQuery 中的 {@link QueryField} 注解自动组装查询条件
+     * @param query 查询条件，根据 {@link JobQuery} 中的 {@link QueryField} 注解自动组装查询条件
      * @return {@link JobDto}
      */
     JobDto pojoByQuery(JobQuery query);
@@ -128,7 +136,7 @@ public interface JobService extends IService {
     /**
      * 根据 {@link JobQuery} 查询匹配条件的记录数
      *
-     * @param query 查询条件，根据 JobQuery 中的 {@link QueryField} 注解自动组装查询条件
+     * @param query 查询条件，根据 {@link JobQuery} 中的 {@link QueryField} 注解自动组装查询条件
      * @return {@link Integer}
      */
     Integer countByQuery(JobQuery query);
@@ -142,13 +150,13 @@ public interface JobService extends IService {
     void exportList(Collection<? extends Serializable> ids, HttpServletResponse response);
 
     /**
-     * 根据 {@link JobQuery} 和 {@link Pageable} 分页查询 {@link JobDto} 列表，并导出 excel 表单
+     * 根据 {@link Pageable} 和 {@link JobQuery} 分页查询 {@link JobDto} 列表，并导出 excel 表单
      *
-     * @param query    查询条件，根据 JobQuery 中的 {@link QueryField} 注解自动组装查询条件
      * @param pageable 分页查询条件
+     * @param query    查询条件，根据 {@link JobQuery} 中的 {@link QueryField} 注解自动组装查询条件
      * @param response {@link HttpServletResponse} 实体
      */
-    void exportPage(JobQuery query, Pageable pageable, HttpServletResponse response);
+    void exportPage(Pageable pageable, JobQuery query, HttpServletResponse response);
 
     /**
      * 将 {@link Job} 转为 {@link JobDto}
@@ -165,5 +173,9 @@ public interface JobService extends IService {
      * @return /
      */
     Job dtoToDo(JobDto dto);
+
+    boolean bindDept(Long deptId, Collection<Long> jobIds);
+
+    boolean unbindDept(Long deptId, Collection<Long> jobIds);
 
 }

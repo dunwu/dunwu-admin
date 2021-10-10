@@ -144,12 +144,11 @@ public interface DeployService extends IService {
 
     /**
      * 根据 {@link DeployQuery} 和 {@link Pageable} 分页查询 {@link DeployDto} 列表，并导出 excel 表单
-     *
+     *  @param pageable 分页查询条件
      * @param query    查询条件，根据 {@link DeployQuery} 中的 {@link QueryField} 注解自动组装查询条件
-     * @param pageable 分页查询条件
      * @param response {@link HttpServletResponse} 实体
      */
-    void exportPage(DeployQuery query, Pageable pageable, HttpServletResponse response);
+    void exportPage(Pageable pageable, DeployQuery query, HttpServletResponse response);
 
     /**
      * 将 {@link Deploy} 转为 {@link DeployDto}

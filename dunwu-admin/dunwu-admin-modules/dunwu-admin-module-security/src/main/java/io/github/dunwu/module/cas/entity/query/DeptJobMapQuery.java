@@ -10,29 +10,29 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 
 /**
- * 用户部门关联表 Query 类
+ * 角色部门关联 Query 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-07
+ * @since 2021-10-10
  */
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "UserDeptMapQuery", description = "用户部门关联表")
-public class UserDeptMapQuery implements Serializable {
+@ApiModel(value = "DeptJobMapQuery", description = "角色部门关联")
+public class DeptJobMapQuery implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "ID")
-    @QueryField
+    @QueryField(value = "`id`")
     private Long id;
 
-    @ApiModelProperty(value = "用户ID")
-    @QueryField
-    private Long userId;
-
     @ApiModelProperty(value = "部门ID")
-    @QueryField
+    @QueryField(value = "`dept_id`")
     private Long deptId;
+
+    @ApiModelProperty(value = "职务ID")
+    @QueryField(value = "`job_id`")
+    private Long jobId;
 
 }

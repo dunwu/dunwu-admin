@@ -145,7 +145,7 @@ public class DeployServiceImpl extends ServiceImpl implements DeployService {
 
     @Override
     public Page<DeployDto> pojoSpringPageByQuery(DeployQuery query, Pageable pageable) {
-        return deployDao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+        return deployDao.pojoSpringPageByQuery(pageable, query, this::doToDto);
     }
 
     @Override
@@ -170,8 +170,8 @@ public class DeployServiceImpl extends ServiceImpl implements DeployService {
     }
 
     @Override
-    public void exportPage(DeployQuery query, Pageable pageable, HttpServletResponse response) {
-        Page<DeployDto> page = deployDao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+    public void exportPage(Pageable pageable, DeployQuery query, HttpServletResponse response) {
+        Page<DeployDto> page = deployDao.pojoSpringPageByQuery(pageable, query, this::doToDto);
         exportDtoList(page.getContent(), response);
     }
 

@@ -90,7 +90,7 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
 
     @Override
     public Page<CodeColumnConfigDto> pojoSpringPageByQuery(CodeColumnConfigQuery query, Pageable pageable) {
-        return dao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+        return dao.pojoSpringPageByQuery(pageable, query, this::doToDto);
     }
 
     @Override
@@ -117,7 +117,7 @@ public class CodeColumnConfigServiceImpl extends ServiceImpl implements CodeColu
     @Override
     public void exportPage(CodeColumnConfigQuery query, Pageable pageable, HttpServletResponse response)
         throws IOException {
-        Page<CodeColumnConfigDto> page = dao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+        Page<CodeColumnConfigDto> page = dao.pojoSpringPageByQuery(pageable, query, this::doToDto);
         dao.exportDtoList(page.getContent(), response);
     }
 

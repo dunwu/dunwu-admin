@@ -132,4 +132,15 @@ export function superiorTreeList(idList) {
   })
 }
 
-export default { add, edit, delBatch, list, page, getById, exportList, exportPage, treeList, superiorTreeList }
+export default {
+  add,
+  edit,
+  delBatch,
+  list,
+  page,
+  getById,
+  exportList,
+  exportPage,
+  treeList,
+  superiorTreeList
+}

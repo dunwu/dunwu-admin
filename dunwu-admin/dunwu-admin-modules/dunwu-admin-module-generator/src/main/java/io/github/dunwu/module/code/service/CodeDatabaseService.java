@@ -139,12 +139,12 @@ public interface CodeDatabaseService extends IService {
     /**
      * 根据 {@link CodeDatabaseQuery} 和 {@link Pageable} 分页查询 {@link CodeDatabaseDto} 列表，并导出 excel 表单
      *
-     * @param query    查询条件，根据 CodeDatabaseQuery 中的 {@link QueryField} 注解自动组装查询条件
      * @param pageable 分页查询条件
+     * @param query    查询条件，根据 CodeDatabaseQuery 中的 {@link QueryField} 注解自动组装查询条件
      * @param response {@link HttpServletResponse} 实体
      * @throws IOException /
      */
-    void exportPage(CodeDatabaseQuery query, Pageable pageable, HttpServletResponse response) throws IOException;
+    void exportPage(Pageable pageable, CodeDatabaseQuery query, HttpServletResponse response) throws IOException;
 
     /**
      * 将 {@link CodeDatabase} 转为 {@link CodeDatabaseDto}

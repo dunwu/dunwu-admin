@@ -79,7 +79,7 @@ public class CodeTableConfigServiceImpl extends ServiceImpl implements CodeTable
 
     @Override
     public Page<CodeTableConfigDto> pojoSpringPageByQuery(CodeTableConfigQuery query, Pageable pageable) {
-        return dao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+        return dao.pojoSpringPageByQuery(pageable, query, this::doToDto);
     }
 
     @Override
@@ -106,7 +106,7 @@ public class CodeTableConfigServiceImpl extends ServiceImpl implements CodeTable
     @Override
     public void exportPage(CodeTableConfigQuery query, Pageable pageable, HttpServletResponse response)
         throws IOException {
-        Page<CodeTableConfigDto> page = dao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+        Page<CodeTableConfigDto> page = dao.pojoSpringPageByQuery(pageable, query, this::doToDto);
         dao.exportDtoList(page.getContent(), response);
     }
 

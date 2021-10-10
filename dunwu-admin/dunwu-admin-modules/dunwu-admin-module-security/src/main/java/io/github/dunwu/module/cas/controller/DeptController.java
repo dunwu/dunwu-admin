@@ -4,6 +4,7 @@ import io.github.dunwu.module.cas.entity.Dept;
 import io.github.dunwu.module.cas.entity.dto.DeptDto;
 import io.github.dunwu.module.cas.entity.query.DeptQuery;
 import io.github.dunwu.module.cas.service.DeptService;
+import io.github.dunwu.module.cas.service.UserService;
 import io.github.dunwu.tool.data.DataListResult;
 import io.github.dunwu.tool.data.DataResult;
 import io.github.dunwu.tool.data.PageResult;
@@ -35,6 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 public class DeptController {
 
     private final DeptService service;
+    private final UserService userService;
 
     @ApiOperation("添加一条 Dept 记录")
     @AppLog(bizType = "部门", operType = "添加", value = "'向 cas_dept 表中添加一条记录，内容为：' + #entity")
@@ -113,25 +115,25 @@ public class DeptController {
     @AppLog(bizType = "部门", operType = "导出", value = "分页导出 cas_dept 表中的记录")
     @GetMapping("export/page")
     public void exportPage(DeptQuery query, Pageable pageable, HttpServletResponse response) {
-        service.exportPage(query, pageable, response);
+        service.exportPage(pageable, query, response);
     }
 
     @ApiOperation("根据 query 条件，返回 DeptDto 树形列表")
-    @PreAuthorize("@exp.check('dept:view')")
+    @PreAuthorize("@exp.check('cas:dept:view')")
     @GetMapping("treeList")
     public DataListResult<DeptDto> treeList(DeptQuery query) {
         return DataListResult.ok(service.pojoIncompleteTreeListByQuery(query));
     }
 
     @ApiOperation("根据ID获取同级与上级数据")
-    @PreAuthorize("@exp.check('dept:view')")
+    @PreAuthorize("@exp.check('cas:dept:view')")
     @PostMapping("superiorTreeList")
     public DataListResult<DeptDto> superiorTreeList(@RequestBody Collection<Serializable> ids) {
         return DataListResult.ok(service.pojoSuperiorListByIds(ids));
     }
 
     // @Log("更新一条 SysDept 记录的关联关系")
-    // @PreAuthorize("@exp.check('dept:edit')")
+    // @PreAuthorize("@exp.check('cas:dept:edit')")
     // @ApiOperation("更新一条 SysDept 记录的关联关系")
     // @PutMapping("relation")
     // public ResponseEntity<Object> updateRelations(@Validated @RequestBody SysDeptRelationDto dto) {

@@ -136,7 +136,6 @@ import TableOperation from '@crud/TableOperation'
 import TableColumnOperation from '@crud/TableColumnOperation'
 import TableQueryOperation from '@crud/TableQueryOperation'
 import Pagination from '@crud/Pagination'
-import DateRangePicker from '@/components/DateRangePicker'
 import GlobalConfigApi from './GlobalConfigApi'
 import GlobalConfigForm from './GlobalConfigForm'
 
@@ -147,7 +146,6 @@ export default {
     TableOperation,
     TableQueryOperation,
     TableColumnOperation,
-    DateRangePicker,
     GlobalConfigForm
   },
   mixins: [presenter(), header(), crud()],

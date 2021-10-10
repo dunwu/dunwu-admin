@@ -112,7 +112,7 @@ public class FileContentController {
     @AppLog(bizType = "文件内容表", operType = "导出", value = "分页导出 tool_file_content 表中的记录")
     @GetMapping("export/page")
     public void exportPage(FileContentQuery query, Pageable pageable, HttpServletResponse response) {
-        service.exportPage(query, pageable, response);
+        service.exportPage(pageable, query, response);
     }
 
 }

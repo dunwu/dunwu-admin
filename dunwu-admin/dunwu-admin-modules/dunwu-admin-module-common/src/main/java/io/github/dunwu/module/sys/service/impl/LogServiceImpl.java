@@ -85,7 +85,7 @@ public class LogServiceImpl extends ServiceImpl implements LogService, LogStorag
 
     @Override
     public Page<LogDto> pojoSpringPageByQuery(LogQuery query, Pageable pageable) {
-        return dao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+        return dao.pojoSpringPageByQuery(pageable, query, this::doToDto);
     }
 
     @Override
@@ -110,8 +110,8 @@ public class LogServiceImpl extends ServiceImpl implements LogService, LogStorag
     }
 
     @Override
-    public void exportPage(LogQuery query, Pageable pageable, HttpServletResponse response) {
-        Page<LogDto> page = dao.pojoSpringPageByQuery(query, pageable, this::doToDto);
+    public void exportPage(Pageable pageable, LogQuery query, HttpServletResponse response) {
+        Page<LogDto> page = dao.pojoSpringPageByQuery(pageable, query, this::doToDto);
         exportDtoList(page.getContent(), response);
     }
 
