@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="app-container">
     <!--工具栏-->
     <div class="head-container">
       <!-- 搜索 -->
@@ -31,7 +31,6 @@
         </el-select>
         <TableQueryOperation />
       </div>
-      <!-- 表级别操作 -->
       <TableOperation :permission="permission" />
     </div>
 
@@ -69,8 +68,8 @@
       </el-table-column>
     </el-table>
 
-    <!--部门编辑表单-->
-    <From />
+    <!--表单-->
+    <From :permission="permission" />
   </div>
 </template>
 
@@ -98,7 +97,7 @@ export default {
   },
   mixins: [presenter(), header(), crud()],
   /**
-   * 设置数据字典
+   * 数据字典
    */
   dicts: ['disabled_status'],
   data() {
@@ -108,8 +107,9 @@ export default {
        */
       permission: {
         add: ['admin', 'cas:dept:add'],
+        del: ['admin', 'cas:dept:del'],
         edit: ['admin', 'cas:dept:edit'],
-        del: ['admin', 'cas:dept:del']
+        view: ['admin', 'cas:dept:view']
       }
     }
   },
@@ -156,7 +156,7 @@ export default {
      * 选中表中一行记录
      */
     handleCurrentChange(val) {
-      this.$emit('selectDept', val)
+      this.$emit('selectCurrent', val)
     }
   }
 }

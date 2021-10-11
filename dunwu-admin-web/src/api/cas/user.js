@@ -120,19 +120,19 @@ export function editMenu(data) {
   })
 }
 
-export function bindDept(deptId, userIds) {
+export function bindDept(deptId, jobId, userIds) {
   return request({
-    url: 'cas/user/bindDept/' + deptId,
+    url: 'cas/user/bindDept',
     method: 'post',
-    data: userIds
+    data: { deptId, jobId, userIds }
   })
 }
 
 export function unbindDept(deptId, userIds) {
   return request({
-    url: 'cas/user/unbindDept/' + deptId,
+    url: 'cas/user/unbindDept',
     method: 'post',
-    data: userIds
+    data: { deptId, userIds }
   })
 }
 

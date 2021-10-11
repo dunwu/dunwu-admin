@@ -7,7 +7,7 @@
       <el-row :gutter="20">
         <el-col :span="8">
           <el-select
-            v-model="ids"
+            v-model="userIds"
             multiple
             filterable
             remote
@@ -16,25 +16,37 @@
             style="width: 90%"
             class="filter-item"
             placeholder="输入用户ID或用户名搜索"
-            :remote-method="getExistsList"
-            :loading="listOptionsLoading"
+            :remote-method="getUserOptionsList"
+            :loading="userOptionsLoading"
           >
-            <el-option v-for="item in list" :key="item.id" :label="item.username" :value="item.id" />
+            <el-option v-for="item in users" :key="item.id" :label="item.username" :value="item.id" />
           </el-select>
         </el-col>
         <el-col :span="8">
-          <el-input
-            v-model="query.name"
-            clearable
+          <el-select
+            v-model="jobId"
+            filterable
+            remote
+            reserve-keyword
             size="mini"
             style="width: 90%"
             class="filter-item"
-            placeholder="输入岗位名称搜索"
-            @keyup.enter.native="crud.toQuery"
-          />
+            placeholder="输入职务ID或职务名搜索"
+            :remote-method="getJobOptionsList"
+            :loading="jobOptionsLoading"
+          >
+            <el-option v-for="item in jobs" :key="item.id" :label="item.name" :value="item.id" />
+          </el-select>
         </el-col>
         <el-col :span="8">
-          <el-button :loading="addLoading" type="primary" plain size="mini" @click="bindUserToDept">
+          <el-button
+            :loading="addLoading"
+            type="primary"
+            :disabled="userIds.length === 0"
+            plain
+            size="mini"
+            @click="bindUserToDept"
+          >
             添加成员
           </el-button>
         </el-col>
@@ -132,6 +144,7 @@ import TableQueryOperation from '@crud/TableQueryOperation'
 import TableOperation from '@crud/TableOperation'
 import Pagination from '@crud/Pagination'
 import UserApi from '@/api/cas/user'
+import JobApi from '@/api/cas/job'
 
 export default {
   name: 'DeptUserForm',
@@ -158,10 +171,14 @@ export default {
   },
   data() {
     return {
-      listOptionsLoading: false,
+      deptId: null,
       addLoading: false,
-      list: [],
-      ids: []
+      jobOptionsLoading: false,
+      jobs: [],
+      jobId: null,
+      userOptionsLoading: false,
+      users: [],
+      userIds: []
     }
   },
   computed: {
@@ -172,23 +189,39 @@ export default {
     this.crud.optShow.edit = false
     this.crud.optShow.del = false
     this.crud.optShow.export = false
-    this.ids = []
-    this.getExistsList()
+    this.jobId = null
+    this.userIds = []
+    this.getUserOptionsList()
+    this.getJobOptionsList()
   },
   methods: {
     [CRUD.HOOK.beforeRefresh](crud, form) {
+      this.deptId = this.dept.id
       this.crud.query.deptId = this.dept.id
     },
     /**
-     * 根据查询条件搜索可以添加的选项
+     * 根据查询条件搜索可以添加的用户列表
      */
-    getExistsList(val) {
-      let params = {}
+    getUserOptionsList(val) {
+      const params = {}
       if (val) {
-        params = { blurry: val }
+        params.blurry = val
       }
       UserApi.list(params).then(data => {
-        this.list = data
+        this.users = data
+      })
+    },
+    /**
+     * 根据查询条件搜索可以添加的职务列表
+     */
+    getJobOptionsList(val) {
+      const params = {}
+      if (val) {
+        params.name = val
+      }
+      params.deptId = this.dept.id
+      JobApi.list(params).then(data => {
+        this.jobs = data
       })
     },
     /**
@@ -196,7 +229,7 @@ export default {
      */
     bindUserToDept() {
       this.addLoading = true
-      UserApi.bindDept(this.dept.id, this.ids)
+      UserApi.bindDept(this.dept.id, this.jobId, this.userIds)
         .then(data => {
           this.addLoading = false
           if (data) {
@@ -220,10 +253,10 @@ export default {
       })
         .then(() => {
           this.crud.delAllLoading = true
-          const ids = val.map((item, index, arr) => {
+          const userIds = val.map((item, index, arr) => {
             return item.id
           })
-          UserApi.unbindDept(this.dept.id, ids)
+          UserApi.unbindDept(this.dept.id, userIds)
             .then(data => {
               this.crud.delAllLoading = false
               if (data) {
@@ -238,7 +271,8 @@ export default {
         .catch(() => {})
     },
     clear() {
-      this.ids = []
+      this.jobId = null
+      this.userIds = []
     }
   }
 }

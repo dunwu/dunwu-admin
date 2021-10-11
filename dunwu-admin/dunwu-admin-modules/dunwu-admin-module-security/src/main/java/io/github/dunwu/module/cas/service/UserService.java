@@ -3,6 +3,7 @@ package io.github.dunwu.module.cas.service;
 import io.github.dunwu.module.cas.entity.User;
 import io.github.dunwu.module.cas.entity.dto.UserDto;
 import io.github.dunwu.module.cas.entity.query.UserQuery;
+import io.github.dunwu.module.cas.entity.vo.DeptJobUserMapVo;
 import io.github.dunwu.tool.data.annotation.QueryField;
 import io.github.dunwu.tool.data.mybatis.IService;
 import org.springframework.data.domain.Page;
@@ -195,8 +196,8 @@ public interface UserService extends IService {
      */
     List<UserDto> pojoListByDeptId(Serializable deptId);
 
-    boolean bindDept(Long deptId, Collection<Long> userIds);
+    boolean bindDept(DeptJobUserMapVo vo);
 
-    boolean unbindDept(Long deptId, Collection<Long> userIds);
+    boolean unbindDept(DeptJobUserMapVo vo);
 
 }

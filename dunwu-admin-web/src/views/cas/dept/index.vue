@@ -7,7 +7,7 @@
           <div slot="header" class="clearfix">
             <span style="font-size: 18px; font-weight: bold;">部门列表</span>
           </div>
-          <DeptTreeList @selectDept="selectDept" />
+          <DeptTreeList @selectCurrent="selectCurrent" />
         </el-card>
       </el-col>
       <el-col :span="14">
@@ -105,7 +105,7 @@ export default {
     }
   },
   methods: {
-    selectDept(val) {
+    selectCurrent(val) {
       this.dept = val
       this.deptId = val.id
     },

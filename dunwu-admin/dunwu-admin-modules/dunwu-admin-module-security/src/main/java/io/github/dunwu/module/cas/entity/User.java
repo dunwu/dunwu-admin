@@ -38,7 +38,7 @@ public class User implements Serializable {
     private Long deptId;
 
     @ApiModelProperty(value = "岗位ID")
-    @TableField("`job_id`")
+    @TableField(value = "`job_id`", updateStrategy = FieldStrategy.IGNORED)
     private Long jobId;
 
     @ApiModelProperty(value = "用户名")

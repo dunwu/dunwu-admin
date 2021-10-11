@@ -106,9 +106,17 @@ export default {
     })
   },
   /**
-   * 设置数据字典
+   * 数据字典
    */
   dicts: ['disabled_status'],
+  props: {
+    permission: {
+      type: Object,
+      default: () => {
+        return {}
+      }
+    }
+  },
   data() {
     return {
       /**

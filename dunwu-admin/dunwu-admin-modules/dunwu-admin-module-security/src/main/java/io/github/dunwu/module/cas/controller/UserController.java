@@ -3,6 +3,7 @@ package io.github.dunwu.module.cas.controller;
 import io.github.dunwu.module.cas.entity.User;
 import io.github.dunwu.module.cas.entity.dto.UserDto;
 import io.github.dunwu.module.cas.entity.query.UserQuery;
+import io.github.dunwu.module.cas.entity.vo.DeptJobUserMapVo;
 import io.github.dunwu.module.cas.service.UserService;
 import io.github.dunwu.tool.data.DataListResult;
 import io.github.dunwu.tool.data.DataResult;
@@ -125,15 +126,15 @@ public class UserController {
     }
 
     @ApiOperation("绑定用户到指定部门")
-    @PostMapping("bindDept/{deptId}")
-    public DataResult<Boolean> bindDept(@PathVariable Long deptId, @RequestBody Collection<Long> userIds) {
-        return DataResult.ok(service.bindDept(deptId, userIds));
+    @PostMapping("bindDept")
+    public DataResult<Boolean> bindDept(@RequestBody DeptJobUserMapVo vo) {
+        return DataResult.ok(service.bindDept(vo));
     }
 
     @ApiOperation("从指定部门解绑定用户")
-    @PostMapping("unbindDept/{deptId}")
-    public DataResult<Boolean> unbindDept(@PathVariable Long deptId, @RequestBody Collection<Long> userIds) {
-        return DataResult.ok(service.unbindDept(deptId, userIds));
+    @PostMapping("unbindDept")
+    public DataResult<Boolean> unbindDept(@RequestBody DeptJobUserMapVo vo) {
+        return DataResult.ok(service.unbindDept(vo));
     }
 
 }

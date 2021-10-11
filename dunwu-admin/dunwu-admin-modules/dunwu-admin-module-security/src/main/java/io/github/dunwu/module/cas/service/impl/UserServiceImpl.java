@@ -13,6 +13,7 @@ import io.github.dunwu.module.cas.entity.dto.JobDto;
 import io.github.dunwu.module.cas.entity.dto.RoleDto;
 import io.github.dunwu.module.cas.entity.dto.UserDto;
 import io.github.dunwu.module.cas.entity.query.UserQuery;
+import io.github.dunwu.module.cas.entity.vo.DeptJobUserMapVo;
 import io.github.dunwu.module.cas.service.UserService;
 import io.github.dunwu.tool.data.exception.DataException;
 import io.github.dunwu.tool.data.mybatis.ServiceImpl;
@@ -295,23 +296,26 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
     }
 
     @Override
-    public boolean bindDept(Long deptId, Collection<Long> userIds) {
-        List<User> users = userDao.listByIds(userIds);
+    public boolean bindDept(DeptJobUserMapVo vo) {
+        List<User> users = userDao.listByIds(vo.getUserIds());
         if (CollectionUtil.isEmpty(users)) {
             return false;
         }
 
         for (User user : users) {
-            user.setDeptId(deptId);
+            user.setDeptId(vo.getDeptId());
+            if (vo.getJobId() != null) {
+                user.setJobId(vo.getJobId());
+            }
         }
         return userDao.updateBatchById(users);
     }
 
     @Override
-    public boolean unbindDept(Long deptId, Collection<Long> userIds) {
+    public boolean unbindDept(DeptJobUserMapVo vo) {
         QueryWrapper<User> wrapper = new QueryWrapper<>();
-        wrapper.eq(User.DEPT_ID, deptId);
-        wrapper.in(User.ID, userIds);
+        wrapper.eq(User.DEPT_ID, vo.getDeptId());
+        wrapper.in(User.ID, vo.getUserIds());
 
         List<User> users = userDao.list(wrapper);
         if (CollectionUtil.isEmpty(users)) {
@@ -320,6 +324,7 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
 
         for (User user : users) {
             user.setDeptId(null);
+            user.setJobId(null);
         }
         return userDao.updateBatchById(users);
     }

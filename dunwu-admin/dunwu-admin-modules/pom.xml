@@ -13,6 +13,10 @@
   <artifactId>dunwu-admin-modules</artifactId>
   <packaging>pom</packaging>
 
+  <properties>
+    <dunwu-admin-modules.version>1.0.1</dunwu-admin-modules.version>
+  </properties>
+
   <modules>
     <module>dunwu-admin-module-security</module>
     <module>dunwu-admin-module-common</module>
@@ -27,32 +31,32 @@
       <dependency>
         <groupId>io.github.dunwu</groupId>
         <artifactId>dunwu-admin-module-security</artifactId>
-        <version>${dunwu-admin.version}</version>
+        <version>${dunwu-admin-modules.version}</version>
       </dependency>
       <dependency>
         <groupId>io.github.dunwu</groupId>
         <artifactId>dunwu-admin-module-common</artifactId>
-        <version>${dunwu-admin.version}</version>
+        <version>${dunwu-admin-modules.version}</version>
       </dependency>
       <dependency>
         <groupId>io.github.dunwu</groupId>
         <artifactId>dunwu-admin-module-mnt</artifactId>
-        <version>${dunwu-admin.version}</version>
+        <version>${dunwu-admin-modules.version}</version>
       </dependency>
       <dependency>
         <groupId>io.github.dunwu</groupId>
         <artifactId>dunwu-admin-module-generator</artifactId>
-        <version>${dunwu-admin.version}</version>
+        <version>${dunwu-admin-modules.version}</version>
       </dependency>
       <dependency>
         <groupId>io.github.dunwu</groupId>
         <artifactId>dunwu-admin-module-tool</artifactId>
-        <version>${dunwu-admin.version}</version>
+        <version>${dunwu-admin-modules.version}</version>
       </dependency>
       <dependency>
         <groupId>io.github.dunwu</groupId>
         <artifactId>dunwu-admin-module-demo</artifactId>
-        <version>${dunwu-admin.version}</version>
+        <version>${dunwu-admin-modules.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

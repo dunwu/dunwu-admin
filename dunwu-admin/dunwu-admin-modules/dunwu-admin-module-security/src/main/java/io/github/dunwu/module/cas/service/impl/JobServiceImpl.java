@@ -110,6 +110,8 @@ public class JobServiceImpl extends ServiceImpl implements JobService {
             Set<? extends Serializable> jobIds = deptJobMapService.getJobIdsByDeptId(query.getDeptId());
             if (CollectionUtil.isNotEmpty(jobIds)) {
                 query.setIds(jobIds);
+            } else {
+                return Collections.emptyList();
             }
         }
         return jobDao.pojoListByQuery(query, this::doToDto);
