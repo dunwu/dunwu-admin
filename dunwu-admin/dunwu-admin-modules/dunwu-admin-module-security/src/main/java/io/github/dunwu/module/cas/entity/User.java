@@ -6,7 +6,6 @@ import io.github.dunwu.tool.data.validator.annotation.EditCheck;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -14,16 +13,15 @@ import java.time.LocalDateTime;
 import javax.validation.constraints.NotNull;
 
 /**
- * 系统用户
+ * 用户表
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-07
+ * @since 2021-10-12
  */
 @Data
 @Accessors(chain = true)
-@EqualsAndHashCode(callSuper = false)
 @TableName("cas_user")
-@ApiModel(value = "User", description = "系统用户")
+@ApiModel(value = "User", description = "用户表")
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -69,22 +67,30 @@ public class User implements Serializable {
     @TableField("`password`")
     private String password;
 
-    @ApiModelProperty(value = "是否禁用：1禁用、0启用")
-    @TableField("`is_disabled`")
-    private Boolean disabled;
-
-    @ApiModelProperty(value = "创建者")
-    @TableField("`create_by`")
-    private String createBy;
-
-    @ApiModelProperty(value = "更新着")
-    @TableField("`update_by`")
-    private String updateBy;
-
     @ApiModelProperty(value = "修改密码的时间")
     @TableField("`pwd_reset_time`")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime pwdResetTime;
+
+    @ApiModelProperty(value = "是否禁用：1 表示禁用；0 表示启用")
+    @TableField("`is_disabled`")
+    private Boolean disabled;
+
+    @ApiModelProperty(value = "创建者ID")
+    @TableField("`creator_id`")
+    private Long creatorId;
+
+    @ApiModelProperty(value = "更新者ID")
+    @TableField("`updater_id`")
+    private Long updaterId;
+
+    @ApiModelProperty(value = "创建者名称")
+    @TableField("`creator_name`")
+    private String creatorName;
+
+    @ApiModelProperty(value = "更新者用户名")
+    @TableField("`updater_name`")
+    private String updaterName;
 
     @ApiModelProperty(value = "创建时间")
     @TableField("`create_time`")
@@ -106,10 +112,10 @@ public class User implements Serializable {
     public static final String EMAIL = "email";
     public static final String AVATAR = "avatar";
     public static final String PASSWORD = "password";
-    public static final String ENABLED = "enabled";
+    public static final String PWD_RESET_TIME = "pwd_reset_time";
+    public static final String IS_DISABLED = "is_disabled";
     public static final String CREATE_BY = "create_by";
     public static final String UPDATE_BY = "update_by";
-    public static final String PWD_RESET_TIME = "pwd_reset_time";
     public static final String CREATE_TIME = "create_time";
     public static final String UPDATE_TIME = "update_time";
 

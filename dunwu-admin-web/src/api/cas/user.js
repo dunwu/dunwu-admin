@@ -7,7 +7,7 @@ import request from '@/utils/request'
  */
 export function add(data) {
   return request({
-    url: 'cas/user/add',
+    url: 'cas/user/addWithRoles',
     method: 'post',
     data
   })
@@ -33,7 +33,7 @@ export function delBatch(ids) {
  */
 export function edit(data) {
   return request({
-    url: 'cas/user/edit',
+    url: 'cas/user/editWithRoles',
     method: 'post',
     data
   })

@@ -31,7 +31,7 @@
           </div>
           <!--右侧为部门详情页-->
           <div v-if="roleId">
-            <!--            <UserDetail :user-id="roleId" />-->
+            <RoleDetail :id="roleId" />
             <div style="margin-top: 20px;">
               <div style="display: flex; align-items: center;">
                 <div style="font-size: 16px; font-weight: bold; display: block;">用户角色</div>
@@ -65,11 +65,12 @@
 
 <script>
 import RolePage from './RolePage'
+import RoleDetail from './RoleDetail'
 import RolePermForm from './RolePermForm'
 
 export default {
   name: 'Role',
-  components: { RolePage, RolePermForm },
+  components: { RolePage, RoleDetail, RolePermForm },
   data() {
     return {
       role: null,

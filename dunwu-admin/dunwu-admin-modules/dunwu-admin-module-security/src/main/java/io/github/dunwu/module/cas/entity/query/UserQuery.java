@@ -10,85 +10,65 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Collection;
 
 /**
- * 系统用户 Query 类
+ * 用户表 Query 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-07
+ * @since 2021-10-12
  */
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "UserQuery", description = "系统用户")
+@ApiModel(value = "UserQuery", description = "用户表")
 public class UserQuery implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @QueryField(blurry = { "id", "username", "nickname" })
-    private String blurry;
-
     @ApiModelProperty(value = "ID")
-    @QueryField
+    @QueryField(value = "`id`")
     private Long id;
 
     @ApiModelProperty(value = "部门ID")
-    @QueryField
+    @QueryField(value = "`dept_id`")
     private Long deptId;
 
     @ApiModelProperty(value = "岗位ID")
-    @QueryField
+    @QueryField(value = "`job_id`")
     private Long jobId;
 
     @ApiModelProperty(value = "用户名")
-    @QueryField
+    @QueryField(value = "`username`")
     private String username;
 
     @ApiModelProperty(value = "昵称")
-    @QueryField
+    @QueryField(value = "`nickname`")
     private String nickname;
 
     @ApiModelProperty(value = "性别")
-    @QueryField
+    @QueryField(value = "`gender`")
     private String gender;
 
     @ApiModelProperty(value = "手机号码")
-    @QueryField
+    @QueryField(value = "`phone`")
     private String phone;
 
     @ApiModelProperty(value = "邮箱")
-    @QueryField
+    @QueryField(value = "`email`")
     private String email;
 
-    @ApiModelProperty(value = "头像地址")
-    @QueryField
-    private String avatar;
-
-    @ApiModelProperty(value = "密码")
-    @QueryField
-    private String password;
-
-    @ApiModelProperty(value = "是否禁用：1禁用、0启用")
-    @QueryField
+    @ApiModelProperty(value = "是否禁用：1 表示禁用；0 表示启用")
+    @QueryField(value = "`is_disabled`")
     private Boolean disabled;
 
-    @ApiModelProperty(value = "创建者")
-    @QueryField
-    private String createBy;
-
-    @ApiModelProperty(value = "更新着")
-    @QueryField
-    private String updateBy;
-
-    @ApiModelProperty(value = "修改密码的时间")
+    @ApiModelProperty(value = "更新时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @QueryField
-    private LocalDateTime pwdResetTime;
+    @QueryField(value = "`update_time`", type = QueryField.QueryType.BETWEEN)
+    private Collection<LocalDateTime> updateTimeRange;
 
-    @ApiModelProperty(value = "创建时间")
-    @QueryField(type = QueryField.QueryType.BETWEEN)
-    @JsonFormat(shape = JsonFormat.Shape.ARRAY, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private List<LocalDateTime> createTimeRange;
+    @ApiModelProperty(value = "ID、用户名、昵称混合查询")
+    @QueryField(blurry = { "id", "username", "nickname" }, type = QueryField.QueryType.LIKE)
+    private String blurry;
 
 }

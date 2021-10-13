@@ -41,7 +41,7 @@
           </div>
           <!--右侧为部门详情页-->
           <div v-if="deptId">
-            <DeptDetail :dept-id="deptId" />
+            <DeptDetail :id="deptId" />
             <div style="margin-top: 20px;">
               <div style="display: flex; align-items: center;">
                 <div style="font-size: 16px; font-weight: bold; display: block;">部门职务</div>

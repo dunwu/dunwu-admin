@@ -46,11 +46,17 @@ public class RoleDto implements Serializable {
     @ApiModelProperty(value = "备注")
     private String note;
 
-    @ApiModelProperty(value = "创建者")
-    private String createBy;
+    @ApiModelProperty(value = "创建者ID")
+    private Long creatorId;
 
-    @ApiModelProperty(value = "更新者")
-    private String updateBy;
+    @ApiModelProperty(value = "更新者ID")
+    private Long updaterId;
+
+    @ApiModelProperty(value = "创建者名称")
+    private String creatorName;
+
+    @ApiModelProperty(value = "更新者用户名")
+    private String updaterName;
 
     @ApiModelProperty(value = "创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")

@@ -125,6 +125,26 @@ public class MybatisHelper {
                 f.set(obj, SecurityUtil.getCurrentUsername());
             }
 
+            if (f.getName().equals("creatorName") && f.get(obj) == null) {
+                if (methodName.startsWith("insert") || methodName.startsWith("save")) {
+                    f.set(obj, SecurityUtil.getCurrentUsername());
+                }
+            }
+
+            if (f.getName().equals("updaterName")) {
+                f.set(obj, SecurityUtil.getCurrentUsername());
+            }
+
+            if (f.getName().equals("creatorId") && f.get(obj) == null) {
+                if (methodName.startsWith("insert") || methodName.startsWith("save")) {
+                    f.set(obj, SecurityUtil.getCurrentUserId());
+                }
+            }
+
+            if (f.getName().equals("updaterId")) {
+                f.set(obj, SecurityUtil.getCurrentUserId());
+            }
+
             f.setAccessible(false);
         }
     }

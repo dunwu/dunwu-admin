@@ -15,10 +15,10 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 系统用户 Service 接口
+ * 用户表 Service 接口
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-07
+ * @since 2021-10-12
  */
 public interface UserService extends IService {
 
@@ -110,13 +110,13 @@ public interface UserService extends IService {
     List<UserDto> pojoListByQuery(UserQuery query);
 
     /**
-     * 根据 {@link UserQuery} 和 {@link Pageable} 分页查询 {@link UserDto} 列表
+     * 根据 {@link Pageable} 和 {@link UserQuery} 分页查询 {@link UserDto} 列表
      *
-     * @param query    查询条件，根据 {@link UserQuery} 中的 {@link QueryField} 注解自动组装查询条件
      * @param pageable 分页查询条件
+     * @param query    查询条件，根据 {@link UserQuery} 中的 {@link QueryField} 注解自动组装查询条件
      * @return {@link Page<UserDto>}
      */
-    Page<UserDto> pojoSpringPageByQuery(UserQuery query, Pageable pageable);
+    Page<UserDto> pojoSpringPageByQuery(Pageable pageable, UserQuery query);
 
     /**
      * 根据 id 查询 {@link UserDto}
@@ -151,8 +151,9 @@ public interface UserService extends IService {
     void exportList(Collection<? extends Serializable> ids, HttpServletResponse response);
 
     /**
-     * 根据 {@link UserQuery} 和 {@link Pageable} 分页查询 {@link UserDto} 列表，并导出 excel 表单
-     *  @param pageable 分页查询条件
+     * 根据 {@link Pageable} 和 {@link UserQuery} 分页查询 {@link UserDto} 列表，并导出 excel 表单
+     *
+     * @param pageable 分页查询条件
      * @param query    查询条件，根据 {@link UserQuery} 中的 {@link QueryField} 注解自动组装查询条件
      * @param response {@link HttpServletResponse} 实体
      */
@@ -174,10 +175,12 @@ public interface UserService extends IService {
      */
     User dtoToDo(UserDto dto);
 
-    Long saveUserRelatedRecords(UserDto dto);
-
-    boolean updateUserRelatedRecords(UserDto dto);
-
+    /**
+     * 根据 username 查询 {@link UserDto}
+     *
+     * @param username 用户名
+     * @return {@link UserDto}
+     */
     UserDto pojoByUsername(String username);
 
     /**
@@ -196,8 +199,36 @@ public interface UserService extends IService {
      */
     List<UserDto> pojoListByDeptId(Serializable deptId);
 
+    /**
+     * 批量将 userIds 绑定指定的部门、职务
+     *
+     * @param vo 部门/职务/用户列表 关联映射实体
+     * @return true / false
+     */
     boolean bindDept(DeptJobUserMapVo vo);
 
+    /**
+     * 批量将 userIds 和指定的部门、职务解除绑定
+     *
+     * @param vo 部门/职务/用户列表 关联映射实体
+     * @return true / false
+     */
     boolean unbindDept(DeptJobUserMapVo vo);
+
+    /**
+     * 添加一条 {@link User} 记录，并保存关联的角色列表 roles
+     *
+     * @param dto {@link UserDto} 数据实体
+     * @return true / false
+     */
+    boolean insertWithRoles(UserDto dto);
+
+    /**
+     * 更新一条 {@link User} 记录，并保存关联的角色列表 roles
+     *
+     * @param dto {@link UserDto} 数据实体
+     * @return true / false
+     */
+    boolean updateWithRoles(UserDto dto);
 
 }

@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
  * 职务表 Controller 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-09
+ * @since 2021-10-12
  */
 @RestController
 @RequestMapping("/cas/job")
@@ -42,7 +42,7 @@ public class JobController {
     @ApiOperation("添加一条 Job 记录")
     @AppLog(bizType = "职务表", operType = "添加", value = "'向 cas_job 表中添加一条记录，内容为：' + #entity")
     @PreAuthorize("@exp.check('cas:job:add')")
-    @PostMapping("add")
+    @PostMapping("/add")
     public DataResult<Boolean> add(@Validated(AddCheck.class) @RequestBody Job entity) {
         return DataResult.ok(jobService.insert(entity));
     }
@@ -50,7 +50,7 @@ public class JobController {
     @ApiOperation("批量添加 Job 记录")
     @AppLog(bizType = "职务表", operType = "批量添加", value = "'向 cas_job 表中批量添加 ' + #list.size + ' 条记录'")
     @PreAuthorize("@exp.check('cas:job:add')")
-    @PostMapping("add/batch")
+    @PostMapping("/add/batch")
     public DataResult<Boolean> addBatch(@Validated(AddCheck.class) @RequestBody Collection<Job> list) {
         return DataResult.ok(jobService.insertBatch(list));
     }
@@ -58,7 +58,7 @@ public class JobController {
     @ApiOperation("根据 id 更新一条 Job 记录")
     @AppLog(bizType = "职务表", operType = "更新", value = "'更新 cas_job 表中 id = ' + #entity.id + ' 的记录，内容为：' + #entity")
     @PreAuthorize("@exp.check('cas:job:edit')")
-    @PostMapping("edit")
+    @PostMapping("/edit")
     public DataResult<Boolean> edit(@Validated(EditCheck.class) @RequestBody Job entity) {
         return DataResult.ok(jobService.updateById(entity));
     }
@@ -66,7 +66,7 @@ public class JobController {
     @ApiOperation("根据 id 批量更新 Job 记录")
     @AppLog(bizType = "职务表", operType = "批量更新", value = "'批量更新 cas_job 表中 ' + #list.size + ' 条记录'")
     @PreAuthorize("@exp.check('cas:job:edit')")
-    @PostMapping("edit/batch")
+    @PostMapping("/edit/batch")
     public DataResult<Boolean> editBatch(@Validated(EditCheck.class) @RequestBody Collection<Job> list) {
         return DataResult.ok(jobService.updateBatchById(list));
     }
@@ -74,7 +74,7 @@ public class JobController {
     @ApiOperation("根据 id 删除一条 Job 记录")
     @AppLog(bizType = "职务表", operType = "删除", value = "'删除 cas_job 表中 id = ' + #entity.id + ' 的记录'")
     @PreAuthorize("@exp.check('cas:job:del')")
-    @PostMapping("del/{id}")
+    @PostMapping("/del/{id}")
     public DataResult<Boolean> deleteById(@PathVariable Serializable id) {
         return DataResult.ok(jobService.deleteById(id));
     }
@@ -82,34 +82,34 @@ public class JobController {
     @ApiOperation("根据 id 列表批量删除 Job 记录")
     @AppLog(bizType = "职务表", operType = "批量删除", value = "'批量删除 cas_job 表中 id = ' + #ids + ' 的记录'")
     @PreAuthorize("@exp.check('cas:job:del')")
-    @PostMapping("del/batch")
+    @PostMapping("/del/batch")
     public DataResult<Boolean> deleteBatchByIds(@RequestBody Collection<? extends Serializable> ids) {
         return DataResult.ok(jobService.deleteBatchByIds(ids));
     }
 
     @ApiOperation("根据 JobQuery 查询 JobDto 列表")
     @PreAuthorize("@exp.check('cas:job:view')")
-    @GetMapping("list")
+    @GetMapping("/list")
     public DataListResult<JobDto> list(JobQuery query) {
         return DataListResult.ok(jobService.pojoListByQuery(query));
     }
 
     @ApiOperation("根据 Pageable 和 JobQuery 分页查询 JobDto 列表")
     @PreAuthorize("@exp.check('cas:job:view')")
-    @GetMapping("page")
+    @GetMapping("/page")
     public PageResult<JobDto> page(Pageable pageable, JobQuery query) {
         return PageResult.ok(jobService.pojoSpringPageByQuery(pageable, query));
     }
 
     @ApiOperation("根据 id 查询 JobDto")
     @PreAuthorize("@exp.check('cas:job:view')")
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public DataResult<JobDto> getById(@PathVariable Serializable id) {
         return DataResult.ok(jobService.pojoById(id));
     }
 
     @ApiOperation("根据 JobQuery 查询匹配条件的记录数")
-    @GetMapping("count")
+    @GetMapping("/count")
     public DataResult<Integer> count(JobQuery query) {
         return DataResult.ok(jobService.countByQuery(query));
     }
@@ -117,7 +117,7 @@ public class JobController {
     @ApiOperation("根据 id 列表查询 JobDto 列表，并导出 excel 表单")
     @AppLog(bizType = "职务表", operType = "导出", value = "'导出 cas_job 表中 id = ' + #ids + ' 的记录'")
     @PreAuthorize("@exp.check('cas:job:view')")
-    @PostMapping("export/list")
+    @PostMapping("/export/list")
     public void exportList(@RequestBody Collection<? extends Serializable> ids, HttpServletResponse response) {
         jobService.exportList(ids, response);
     }
@@ -125,7 +125,7 @@ public class JobController {
     @ApiOperation("根据 Pageable 和 JobQuery 分页查询 JobDto 列表，并导出 excel 表单")
     @AppLog(bizType = "职务表", operType = "导出", value = "分页导出 cas_job 表中的记录")
     @PreAuthorize("@exp.check('cas:job:view')")
-    @GetMapping("export/page")
+    @GetMapping("/export/page")
     public void exportPage(Pageable pageable, JobQuery query, HttpServletResponse response) {
         jobService.exportPage(pageable, query, response);
     }
@@ -146,12 +146,14 @@ public class JobController {
     }
 
     @ApiOperation("绑定用户到指定部门")
+    @PreAuthorize("@exp.check('cas:job:edit')")
     @PostMapping("bindDept/{deptId}")
     public DataResult<Boolean> bindDept(@PathVariable Long deptId, @RequestBody Collection<Long> jobIds) {
         return DataResult.ok(jobService.bindDept(deptId, jobIds));
     }
 
     @ApiOperation("从指定部门解绑定用户")
+    @PreAuthorize("@exp.check('cas:job:edit')")
     @PostMapping("unbindDept/{deptId}")
     public DataResult<Boolean> unbindDept(@PathVariable Long deptId, @RequestBody Collection<Long> jobIds) {
         return DataResult.ok(jobService.unbindDept(deptId, jobIds));

@@ -4,10 +4,10 @@ import io.github.dunwu.module.cas.entity.DeptJobMap;
 import io.github.dunwu.tool.data.mybatis.IExtDao;
 
 /**
- * 角色部门关联 Dao 接口
+ * 部门职务关联表 Dao 接口
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-10
+ * @since 2021-10-12
  */
 public interface DeptJobMapDao extends IExtDao<DeptJobMap> {
 

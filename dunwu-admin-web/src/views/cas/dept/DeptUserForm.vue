@@ -19,7 +19,10 @@
             :remote-method="getUserOptionsList"
             :loading="userOptionsLoading"
           >
-            <el-option v-for="item in users" :key="item.id" :label="item.username" :value="item.id" />
+            <el-option v-for="item in users" :key="item.id" :label="item.nickname" :value="item.id">
+              <span style="float: left">{{ item.nickname }}</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">{{ item.username }}</span>
+            </el-option>
           </el-select>
         </el-col>
         <el-col :span="8">

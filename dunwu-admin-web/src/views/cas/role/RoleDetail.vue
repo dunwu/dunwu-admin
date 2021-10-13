@@ -8,21 +8,39 @@
     </el-descriptions-item>
     <el-descriptions-item>
       <template slot="label">
-        部门名称
+        角色编码
+      </template>
+      {{ detail.code }}
+    </el-descriptions-item>
+    <el-descriptions-item>
+      <template slot="label">
+        角色名称
       </template>
       {{ detail.name }}
     </el-descriptions-item>
     <el-descriptions-item>
       <template slot="label">
-        部门等级
+        角色级别
       </template>
       {{ detail.label }}
+    </el-descriptions-item>
+    <el-descriptions-item>
+      <template slot="label">
+        创建者
+      </template>
+      {{ detail.creatorName }}
     </el-descriptions-item>
     <el-descriptions-item>
       <template slot="label">
         更新者
       </template>
       {{ detail.updaterName }}
+    </el-descriptions-item>
+    <el-descriptions-item>
+      <template slot="label">
+        创建时间
+      </template>
+      {{ detail.createTime }}
     </el-descriptions-item>
     <el-descriptions-item>
       <template slot="label">
@@ -41,10 +59,10 @@
 </template>
 
 <script>
-import DeptApi from '@/api/cas/dept'
+import RoleApi from '@/api/cas/role'
 
 export default {
-  name: 'DeptDetail',
+  name: 'RoleDetail',
   props: {
     id: {
       type: Number,
@@ -69,7 +87,7 @@ export default {
   },
   methods: {
     refreshById(id) {
-      DeptApi.getById(id)
+      RoleApi.getById(id)
         .then(data => {
           this.detail = data
         })

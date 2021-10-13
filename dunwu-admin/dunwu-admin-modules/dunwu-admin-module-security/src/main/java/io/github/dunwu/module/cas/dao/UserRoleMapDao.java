@@ -4,10 +4,10 @@ import io.github.dunwu.module.cas.entity.UserRoleMap;
 import io.github.dunwu.tool.data.mybatis.IExtDao;
 
 /**
- * 系统用户角色关联信息 Dao 接口
+ * 用户角色关联表 Dao 接口
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2020-05-06
+ * @since 2021-10-12
  */
 public interface UserRoleMapDao extends IExtDao<UserRoleMap> {
 

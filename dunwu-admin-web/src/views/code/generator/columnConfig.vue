@@ -371,12 +371,12 @@ export default {
         })
         .then(() => {
           this.queryColumnConfig()
+          this.$message({ type: 'success', message: '保存成功' })
           this.configLoading = false
-          this.$notify({ title: '保存成功', type: 'success' })
         })
-        .catch(err => {
+        .catch(() => {
+          this.$message({ type: 'error', message: '保存失败' })
           this.configLoading = false
-          console.error(err.response.data.msg)
         })
     },
     syncTable() {
@@ -389,30 +389,43 @@ export default {
           createBy: this.createBy
         })
         .then(data => {
-          this.loading = false
           this.data = data
-        })
-        .catch(err => {
+          this.$message({ type: 'success', message: '同步成功' })
           this.loading = false
-          this.$notify({ title: err, type: 'error' })
+        })
+        .catch(() => {
+          this.$message({ type: 'error', message: '同步失败' })
+          this.loading = false
         })
     },
     toGenerate(row) {
       // 生成代码
       this.genLoading = true
-      codeApi.generateCode({ schemaName: this.schemaName, tableName: this.tableName }).then(data => {
-        this.$notify({ title: '生成成功', type: 'success' })
-        this.genLoading = false
-      })
+      codeApi
+        .generateCode({ schemaName: this.schemaName, tableName: this.tableName })
+        .then(data => {
+          this.$message({ type: 'success', message: '生成成功' })
+          this.genLoading = false
+        })
+        .catch(() => {
+          this.$message({ type: 'error', message: '生成失败' })
+          this.genLoading = false
+        })
     },
     toDownload(row) {
       // 打包下载
       this.downloadLoading = true
-      codeApi.downloadCode({ schemaName: this.schemaName, tableName: this.tableName }).then(data => {
-        downloadFile(data, this.tableName, 'zip')
-        this.$notify({ title: '下载成功', type: 'success' })
-        this.downloadLoading = false
-      })
+      codeApi
+        .downloadCode({ schemaName: this.schemaName, tableName: this.tableName })
+        .then(data => {
+          downloadFile(data, this.tableName, 'zip')
+          this.$message({ type: 'success', message: '下载成功' })
+          this.downloadLoading = false
+        })
+        .catch(() => {
+          this.$message({ type: 'error', message: '下载失败' })
+          this.downloadLoading = false
+        })
     }
   }
 }

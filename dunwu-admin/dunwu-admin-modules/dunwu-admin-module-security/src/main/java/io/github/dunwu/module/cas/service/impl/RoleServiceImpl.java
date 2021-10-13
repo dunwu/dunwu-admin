@@ -13,8 +13,10 @@ import io.github.dunwu.module.cas.entity.dto.RoleDto;
 import io.github.dunwu.module.cas.entity.dto.UserDto;
 import io.github.dunwu.module.cas.entity.query.RoleQuery;
 import io.github.dunwu.module.cas.service.RoleService;
+import io.github.dunwu.module.cas.service.UserRoleMapService;
 import io.github.dunwu.tool.bean.BeanUtil;
 import io.github.dunwu.tool.core.exception.AuthException;
+import io.github.dunwu.tool.data.Pagination;
 import io.github.dunwu.tool.data.mybatis.ServiceImpl;
 import io.github.dunwu.tool.web.ServletUtil;
 import io.github.dunwu.tool.web.security.SecurityService;
@@ -37,22 +39,21 @@ import javax.servlet.http.HttpServletResponse;
  * 角色 Service 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-10
+ * @since 2021-10-12
  */
 @Service
 @RequiredArgsConstructor
 @CacheConfig(cacheNames = "role")
 public class RoleServiceImpl extends ServiceImpl implements RoleService {
 
-    private final SecurityService securityService;
-
     private final RoleDao roleDao;
     private final DeptDao deptDao;
     private final MenuDao menuDao;
-    private final UserRoleMapDao userRoleDao;
-    private final JobRoleMapDao jobRoleDao;
-    private final RoleMenuMapDao roleMenuDao;
-    private final DeptRoleMapDao roleDeptDao;
+    private final JobRoleMapDao jobRoleMapDao;
+    private final RoleMenuMapDao roleMenuMapDao;
+    private final DeptRoleMapDao deptRoleMapDao;
+    private final UserRoleMapService userRoleMapService;
+    private final SecurityService securityService;
 
     @Override
     public boolean insert(Role entity) {
@@ -109,11 +110,27 @@ public class RoleServiceImpl extends ServiceImpl implements RoleService {
 
     @Override
     public List<RoleDto> pojoListByQuery(RoleQuery query) {
+        if (query.getUserId() != null) {
+            Set<? extends Serializable> roleIds = userRoleMapService.getRoleIdsByUserId(query.getUserId());
+            if (CollectionUtil.isNotEmpty(roleIds)) {
+                query.setIds(roleIds);
+            } else {
+                return Collections.emptyList();
+            }
+        }
         return roleDao.pojoListByQuery(query, this::doToDto);
     }
 
     @Override
     public Page<RoleDto> pojoSpringPageByQuery(Pageable pageable, RoleQuery query) {
+        if (query.getUserId() != null) {
+            Set<? extends Serializable> roleIds = userRoleMapService.getRoleIdsByUserId(query.getUserId());
+            if (CollectionUtil.isNotEmpty(roleIds)) {
+                query.setIds(roleIds);
+            } else {
+                return new Pagination<>(Collections.emptyList(), pageable, 0L);
+            }
+        }
         return roleDao.pojoSpringPageByQuery(pageable, query, this::doToDto);
     }
 
@@ -125,11 +142,27 @@ public class RoleServiceImpl extends ServiceImpl implements RoleService {
 
     @Override
     public RoleDto pojoByQuery(RoleQuery query) {
+        if (query.getUserId() != null) {
+            Set<? extends Serializable> roleIds = userRoleMapService.getRoleIdsByUserId(query.getUserId());
+            if (CollectionUtil.isNotEmpty(roleIds)) {
+                query.setIds(roleIds);
+            } else {
+                return null;
+            }
+        }
         return roleDao.pojoByQuery(query, this::doToDto);
     }
 
     @Override
     public Integer countByQuery(RoleQuery query) {
+        if (query.getUserId() != null) {
+            Set<? extends Serializable> roleIds = userRoleMapService.getRoleIdsByUserId(query.getUserId());
+            if (CollectionUtil.isNotEmpty(roleIds)) {
+                query.setIds(roleIds);
+            } else {
+                return 0;
+            }
+        }
         return roleDao.countByQuery(query);
     }
 
@@ -141,6 +174,14 @@ public class RoleServiceImpl extends ServiceImpl implements RoleService {
 
     @Override
     public void exportPage(Pageable pageable, RoleQuery query, HttpServletResponse response) {
+        if (query.getUserId() != null) {
+            Set<? extends Serializable> roleIds = userRoleMapService.getRoleIdsByUserId(query.getUserId());
+            if (CollectionUtil.isNotEmpty(roleIds)) {
+                query.setIds(roleIds);
+            } else {
+                return;
+            }
+        }
         Page<RoleDto> page = roleDao.pojoSpringPageByQuery(pageable, query, this::doToDto);
         exportDtoList(page.getContent(), response);
     }
@@ -162,8 +203,8 @@ public class RoleServiceImpl extends ServiceImpl implements RoleService {
             map.put("数据权限", item.getDataScope());
             map.put("是否禁用：1 表示禁用；0 表示启用", item.getDisabled());
             map.put("备注", item.getNote());
-            map.put("创建者", item.getCreateBy());
-            map.put("更新者", item.getUpdateBy());
+            map.put("创建者", item.getCreatorName());
+            map.put("更新者", item.getUpdaterName());
             map.put("创建时间", item.getCreateTime());
             map.put("更新时间", item.getUpdateTime());
             mapList.add(map);
@@ -193,18 +234,9 @@ public class RoleServiceImpl extends ServiceImpl implements RoleService {
 
     @Override
     public List<RoleDto> pojoListByUserId(Long userId) {
-        List<RoleDto> sysRoleVos = new ArrayList<>();
-        UserRoleMap userRole = new UserRoleMap();
-        userRole.setUserId(userId);
-
-        List<UserRoleMap> usersRoles = userRoleDao.list(userRole);
-        if (CollectionUtil.isEmpty(usersRoles)) {
-            return sysRoleVos;
-        }
-
-        Set<Long> roleIds = usersRoles.stream().map(UserRoleMap::getRoleId).collect(Collectors.toSet());
+        Set<? extends Serializable> roleIds = userRoleMapService.getRoleIdsByUserId(userId);
         if (CollectionUtil.isEmpty(roleIds)) {
-            return sysRoleVos;
+            return Collections.emptyList();
         }
 
         return roleDao.pojoListByIds(roleIds, this::doToDto);
@@ -213,7 +245,7 @@ public class RoleServiceImpl extends ServiceImpl implements RoleService {
     @Override
     public List<RoleDto> pojoListByJobId(Long jobId) {
         List<RoleDto> dtoList = new ArrayList<>();
-        List<JobRoleMap> list = jobRoleDao.list(new JobRoleMap().setJobId(jobId));
+        List<JobRoleMap> list = jobRoleMapDao.list(new JobRoleMap().setJobId(jobId));
         if (CollectionUtil.isEmpty(list)) {
             return dtoList;
         }
@@ -228,7 +260,7 @@ public class RoleServiceImpl extends ServiceImpl implements RoleService {
     public List<RoleDto> pojoListByMenuIds(Collection<Long> menuIds) {
         LambdaQueryWrapper<RoleMenuMap> wrapper =
             new QueryWrapper<RoleMenuMap>().lambda().in(RoleMenuMap::getMenuId, menuIds);
-        List<RoleMenuMap> roleMenus = roleMenuDao.list(wrapper);
+        List<RoleMenuMap> roleMenus = roleMenuMapDao.list(wrapper);
         List<Long> roleIds = roleMenus.stream()
                                       .filter(Objects::nonNull)
                                       .map(RoleMenuMap::getRoleId)
@@ -243,7 +275,7 @@ public class RoleServiceImpl extends ServiceImpl implements RoleService {
         Role entity = roleDao.getById(roleId);
         checkRoleLevel(entity.getLevel());
 
-        List<RoleMenuMap> roleMenus = roleMenuDao.list(new RoleMenuMap().setRoleId(roleId));
+        List<RoleMenuMap> roleMenus = roleMenuMapDao.list(new RoleMenuMap().setRoleId(roleId));
         Set<Long> oldIds = roleMenus.stream().map(RoleMenuMap::getId).collect(Collectors.toSet());
         Set<Long> newIds = menus.stream().map(MenuDto::getId).collect(Collectors.toSet());
         boolean isEquals = Arrays.equals(oldIds.toArray(new Long[0]), newIds.toArray(new Long[0]));
@@ -251,17 +283,17 @@ public class RoleServiceImpl extends ServiceImpl implements RoleService {
             return true;
         }
 
-        roleMenuDao.deleteBatchByIds(oldIds);
+        roleMenuMapDao.deleteBatchByIds(oldIds);
         Set<RoleMenuMap> roleMenuSet = newIds.stream().map(menuId -> new RoleMenuMap(roleId, menuId))
                                              .collect(Collectors.toSet());
-        return roleMenuDao.insertBatch(roleMenuSet);
+        return roleMenuMapDao.insertBatch(roleMenuSet);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean updateRolesByJobId(Long jobId, Collection<Long> roleIds) {
         Set<Long> oldRoleIds = new HashSet<>();
-        List<JobRoleMap> oldJobRoles = jobRoleDao.list(new JobRoleMap().setJobId(jobId));
+        List<JobRoleMap> oldJobRoles = jobRoleMapDao.list(new JobRoleMap().setJobId(jobId));
         if (CollectionUtil.isNotEmpty(oldJobRoles)) {
             oldRoleIds.addAll(oldJobRoles.stream().map(JobRoleMap::getId).collect(Collectors.toSet()));
         }
@@ -271,10 +303,10 @@ public class RoleServiceImpl extends ServiceImpl implements RoleService {
             return true;
         }
 
-        jobRoleDao.deleteBatchByIds(oldRoleIds);
+        jobRoleMapDao.deleteBatchByIds(oldRoleIds);
         Set<JobRoleMap> jobRoleSet = roleIds.stream().map(roleId -> new JobRoleMap(jobId, roleId))
                                             .collect(Collectors.toSet());
-        return jobRoleDao.insertBatch(jobRoleSet);
+        return jobRoleMapDao.insertBatch(jobRoleSet);
     }
 
     /**
@@ -317,8 +349,8 @@ public class RoleServiceImpl extends ServiceImpl implements RoleService {
 
         List<RoleDto> roles = pojoListByUserId(user.getId());
         permissions = roles.stream().flatMap(role -> role.getMenus().stream())
-                           .filter(menu -> StrUtil.isNotBlank(menu.getPermission()))
-                           .map(MenuDto::getPermission).collect(Collectors.toSet());
+                           .filter(menu -> StrUtil.isNotBlank(menu.getExpression()))
+                           .map(MenuDto::getExpression).collect(Collectors.toSet());
         return permissions.stream().map(SimpleGrantedAuthority::new)
                           .collect(Collectors.toList());
     }
@@ -326,7 +358,7 @@ public class RoleServiceImpl extends ServiceImpl implements RoleService {
     private void fillDeptInfo(RoleDto role) {
         List<DeptDto> sysDeptVos = new ArrayList<>();
         QueryWrapper<DeptRoleMap> roleDeptQueryWrapper = Wrappers.query(new DeptRoleMap().setRoleId(role.getId()));
-        List<DeptRoleMap> deptRoleMaps = roleDeptDao.list(roleDeptQueryWrapper);
+        List<DeptRoleMap> deptRoleMaps = deptRoleMapDao.list(roleDeptQueryWrapper);
         if (CollectionUtil.isNotEmpty(deptRoleMaps)) {
             Set<Long> deptIds = deptRoleMaps.stream().map(DeptRoleMap::getDeptId).collect(Collectors.toSet());
             List<Dept> depts = deptDao.listByIds(deptIds);
@@ -340,7 +372,7 @@ public class RoleServiceImpl extends ServiceImpl implements RoleService {
     private void fillMenuInfo(RoleDto role) {
         List<MenuDto> menuDtos = new ArrayList<>();
         QueryWrapper<RoleMenuMap> roleMenuQueryWrapper = Wrappers.query(new RoleMenuMap().setRoleId(role.getId()));
-        List<RoleMenuMap> sysUserRoles = roleMenuDao.list(roleMenuQueryWrapper);
+        List<RoleMenuMap> sysUserRoles = roleMenuMapDao.list(roleMenuQueryWrapper);
         if (CollectionUtil.isNotEmpty(sysUserRoles)) {
             Set<Long> menuIds = sysUserRoles.stream().map(RoleMenuMap::getMenuId).collect(Collectors.toSet());
             List<Menu> menus = menuDao.listByIds(menuIds);

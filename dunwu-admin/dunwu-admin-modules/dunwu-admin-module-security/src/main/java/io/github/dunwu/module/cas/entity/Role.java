@@ -60,13 +60,21 @@ public class Role implements Serializable {
     @TableField("`note`")
     private String note;
 
-    @ApiModelProperty(value = "创建者")
-    @TableField("`create_by`")
-    private String createBy;
+    @ApiModelProperty(value = "创建者ID")
+    @TableField("`creator_id`")
+    private Long creatorId;
 
-    @ApiModelProperty(value = "更新者")
-    @TableField("`update_by`")
-    private String updateBy;
+    @ApiModelProperty(value = "更新者ID")
+    @TableField("`updater_id`")
+    private Long updaterId;
+
+    @ApiModelProperty(value = "创建者名称")
+    @TableField("`creator_name`")
+    private String creatorName;
+
+    @ApiModelProperty(value = "更新者用户名")
+    @TableField("`updater_name`")
+    private String updaterName;
 
     @ApiModelProperty(value = "创建时间")
     @TableField("`create_time`")

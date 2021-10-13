@@ -22,7 +22,7 @@ import javax.validation.constraints.NotNull;
  * 部门
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-05
+ * @since 2021-10-12
  */
 @Data
 @Accessors(chain = true)
@@ -69,13 +69,21 @@ public class Dept implements Serializable {
     @TableField("`note`")
     private String note;
 
-    @ApiModelProperty(value = "创建者")
-    @TableField("`create_by`")
-    private String createBy;
+    @ApiModelProperty(value = "创建者ID")
+    @TableField("`creator_id`")
+    private Long creatorId;
 
-    @ApiModelProperty(value = "更新者")
-    @TableField("`update_by`")
-    private String updateBy;
+    @ApiModelProperty(value = "更新者ID")
+    @TableField("`updater_id`")
+    private Long updaterId;
+
+    @ApiModelProperty(value = "创建者名称")
+    @TableField("`creator_name`")
+    private String creatorName;
+
+    @ApiModelProperty(value = "更新者用户名")
+    @TableField("`updater_name`")
+    private String updaterName;
 
     @ApiModelProperty(value = "创建时间")
     @TableField("`create_time`")
@@ -90,6 +98,7 @@ public class Dept implements Serializable {
     public static final String ID = "id";
     public static final String PID = "pid";
     public static final String NAME = "name";
+    public static final String LEVEL = "level";
     public static final String SEQUENCE = "sequence";
     public static final String CHILDREN_NUM = "children_num";
     public static final String IS_DISABLED = "is_disabled";

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -12,15 +11,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * 系统用户 Dto 类
+ * 用户表 Dto 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-07
+ * @since 2021-10-12
  */
 @Data
 @Accessors(chain = true)
-@EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "UserDto", description = "系统用户")
+@ApiModel(value = "UserDto", description = "用户表")
 public class UserDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -55,18 +53,24 @@ public class UserDto implements Serializable {
     @ApiModelProperty(value = "密码")
     private String password;
 
-    @ApiModelProperty(value = "是否禁用：1禁用、0启用")
-    private Boolean disabled;
-
-    @ApiModelProperty(value = "创建者")
-    private String createBy;
-
-    @ApiModelProperty(value = "更新着")
-    private String updateBy;
-
     @ApiModelProperty(value = "修改密码的时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime pwdResetTime;
+
+    @ApiModelProperty(value = "是否禁用：1 表示禁用；0 表示启用")
+    private Boolean disabled;
+
+    @ApiModelProperty(value = "创建者ID")
+    private Long creatorId;
+
+    @ApiModelProperty(value = "更新者ID")
+    private Long updaterId;
+
+    @ApiModelProperty(value = "创建者名称")
+    private String creatorName;
+
+    @ApiModelProperty(value = "更新者用户名")
+    private String updaterName;
 
     @ApiModelProperty(value = "创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")

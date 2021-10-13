@@ -2,20 +2,36 @@
   <div class="app-container">
     <!--工具栏-->
     <div class="head-container">
+      <!-- 搜索 -->
       <div v-if="crud.props.searchToggle">
-        <!-- 搜索 -->
         <el-input
           v-model="query.blurry"
-          size="small"
           clearable
-          placeholder="输入名称或者描述搜索"
+          size="small"
+          placeholder="输入角色编码或角色名称搜索"
           style="width: 200px;"
           class="filter-item"
           @keyup.enter.native="crud.toQuery"
         />
+        <el-select
+          v-model="query.disabled"
+          clearable
+          size="small"
+          placeholder="状态"
+          class="filter-item"
+          style="width: 90px"
+          @change="crud.toQuery"
+        >
+          <el-option
+            v-for="item in dict['disabled_status'].options"
+            :key="item.code"
+            :label="item.name"
+            :value="item.code"
+          />
+        </el-select>
         <TableQueryOperation />
       </div>
-      <TableOperation :permission="permission" />
+      <TableOperation v-if="allowOperation" :permission="permission" />
     </div>
 
     <!--表格-->
@@ -25,28 +41,18 @@
       :data="crud.data"
       row-key="id"
       highlight-current-row
-      style="width: 100%;"
       border
-      @selection-change="crud.selectionChangeHandler"
       @current-change="handleCurrentChange"
+      @select="crud.selectChange"
+      @select-all="crud.selectAllChange"
+      @selection-change="crud.selectionChangeHandler"
     >
-      <el-table-column :selectable="checkboxT" type="selection" width="55" />
-      <el-table-column prop="name" label="名称" />
+      <el-table-column v-if="allowOperation" :selectable="checkboxT" type="selection" width="55" />
+      <el-table-column prop="id" label="ID" />
+      <el-table-column prop="code" label="角色编码" />
+      <el-table-column prop="name" label="角色名称" />
       <el-table-column prop="dataScope" label="数据权限" />
       <el-table-column prop="level" label="角色级别" />
-      <el-table-column :show-overflow-tooltip="true" prop="note" label="描述" />
-      <el-table-column :show-overflow-tooltip="true" width="135px" prop="createTime" label="创建日期" />
-      <el-table-column
-        v-if="checkPer(['admin', 'role:edit', 'role:del'])"
-        label="操作"
-        width="130px"
-        align="center"
-        fixed="right"
-      >
-        <template slot-scope="scope">
-          <TableColumnOperation v-if="scope.row.level >= level" :data="scope.row" :permission="permission" />
-        </template>
-      </el-table-column>
     </el-table>
 
     <!--分页-->
@@ -61,7 +67,6 @@
 import CRUD, { crud, header, presenter } from '@crud/crud'
 import TableQueryOperation from '@crud/TableQueryOperation'
 import TableOperation from '@crud/TableOperation'
-import TableColumnOperation from '@crud/TableColumnOperation'
 import Pagination from '@crud/Pagination'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import Form from './RoleForm'
@@ -73,7 +78,6 @@ export default {
     Pagination,
     TableOperation,
     TableQueryOperation,
-    TableColumnOperation,
     Form
   },
   cruds() {
@@ -85,6 +89,19 @@ export default {
     })
   },
   mixins: [presenter(), header(), crud()],
+  /**
+   * 数据字典
+   */
+  dicts: ['disabled_status'],
+  props: {
+    userId: {
+      type: Number,
+      required: false,
+      default: () => {
+        return null
+      }
+    }
+  },
   data() {
     return {
       defaultProps: { children: 'children', label: 'label', isLeaf: 'leaf' },
@@ -94,12 +111,29 @@ export default {
       showButton: false,
       menus: [],
       menuIds: [],
+      /**
+       * 权限表达式
+       */
       permission: {
         add: ['admin', 'cas:role:add'],
         del: ['admin', 'cas:role:del'],
         edit: ['admin', 'cas:role:edit'],
         view: ['admin', 'cas:role:view']
+      },
+      allowOperation: this.userId == null
+    }
+  },
+  watch: {
+    userId(value) {
+      this.userId = value
+      this.allowOperation = this.userId == null
+      if (!this.allowOperation) {
+        this.crud.optShow.add = false
+        this.crud.optShow.edit = false
+        this.crud.optShow.del = false
+        this.crud.optShow.export = false
       }
+      this.crud.toQuery()
     }
   },
   created() {
@@ -108,6 +142,9 @@ export default {
     })
   },
   methods: {
+    [CRUD.HOOK.beforeRefresh](crud, form) {
+      this.crud.query.userId = this.userId
+    },
     // 触发单选
     handleCurrentChange(val) {
       if (val) {

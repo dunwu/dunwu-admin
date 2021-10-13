@@ -15,10 +15,10 @@ import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 角色部门关联 Service 接口
+ * 部门职务关联表 Service 接口
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-10
+ * @since 2021-10-12
  */
 public interface DeptJobMapService extends IService {
 

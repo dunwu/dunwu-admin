@@ -78,7 +78,7 @@
         <el-form-item v-if="form.type.toString() === '2'" label="按钮名称" prop="title">
           <el-input v-model="form.title" placeholder="按钮名称" style="width: 178px;" />
         </el-form-item>
-        <el-form-item v-show="form.type.toString() !== '0'" label="权限标识" prop="permission">
+        <el-form-item v-show="form.type.toString() !== '0'" label="权限表达式" prop="expression">
           <el-input v-model="form.permission" :disabled="form.iframe" placeholder="权限标识" style="width: 178px;" />
         </el-form-item>
         <el-form-item v-if="form.type.toString() !== '2'" label="路由地址" prop="path">
@@ -139,7 +139,7 @@
           {{ scope.row.sequence }}
         </template>
       </el-table-column>
-      <el-table-column :show-overflow-tooltip="true" prop="permission" label="权限标识" />
+      <el-table-column :show-overflow-tooltip="true" prop="expression" label="权限表达式" />
       <el-table-column :show-overflow-tooltip="true" prop="component" label="组件路径" />
       <el-table-column prop="iframe" label="外链" width="75px">
         <template slot-scope="scope">
@@ -206,7 +206,7 @@ const defaultForm = {
   cache: false,
   hidden: false,
   type: 0,
-  permission: null
+  expression: null
 }
 export default {
   name: 'Menu',

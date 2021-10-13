@@ -9,26 +9,23 @@ import io.github.dunwu.tool.data.validator.annotation.EditCheck;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import org.hibernate.validator.constraints.Range;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import javax.validation.constraints.NotNull;
 
 /**
- * 职务表
+ * 权限表
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-10
+ * @since 2021-10-12
  */
 @Data
 @Accessors(chain = true)
-@EqualsAndHashCode(callSuper = false)
-@TableName("cas_job")
-@ApiModel(value = "Job", description = "职务表")
-public class Job implements Serializable {
+@TableName("cas_permission")
+@ApiModel(value = "Permission", description = "权限表")
+public class Permission implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -37,23 +34,25 @@ public class Job implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    @ApiModelProperty(value = "职务名称")
+    @ApiModelProperty(value = "父权限ID")
+    @TableField("`pid`")
+    private Long pid;
+
+    @ApiModelProperty(value = "权限编码")
+    @TableField("`code`")
+    private String code;
+
+    @ApiModelProperty(value = "权限名称")
     @TableField("`name`")
     private String name;
 
-    @ApiModelProperty(value = "职务类型")
+    @ApiModelProperty(value = "权限类型")
     @TableField("`type`")
     private Integer type;
 
-    @ApiModelProperty(value = "职级")
-    @Range(min = 1, max = 99)
-    @TableField("`level`")
-    private Integer level;
-
-    @ApiModelProperty(value = "职务顺序")
-    @Range(min = 0, max = 999)
-    @TableField("`sequence`")
-    private Integer sequence;
+    @ApiModelProperty(value = "权限表达式")
+    @TableField("`expression`")
+    private String expression;
 
     @ApiModelProperty(value = "是否禁用：1 表示禁用；0 表示启用")
     @TableField("`is_disabled`")
@@ -63,21 +62,13 @@ public class Job implements Serializable {
     @TableField("`note`")
     private String note;
 
-    @ApiModelProperty(value = "创建者ID")
-    @TableField("`creator_id`")
-    private Long creatorId;
+    @ApiModelProperty(value = "创建者")
+    @TableField("`create_by`")
+    private String createBy;
 
-    @ApiModelProperty(value = "更新者ID")
-    @TableField("`updater_id`")
-    private Long updaterId;
-
-    @ApiModelProperty(value = "创建者名称")
-    @TableField("`creator_name`")
-    private String creatorName;
-
-    @ApiModelProperty(value = "更新者用户名")
-    @TableField("`updater_name`")
-    private String updaterName;
+    @ApiModelProperty(value = "更新者")
+    @TableField("`update_by`")
+    private String updateBy;
 
     @ApiModelProperty(value = "创建时间")
     @TableField("`create_time`")
@@ -90,10 +81,11 @@ public class Job implements Serializable {
     private LocalDateTime updateTime;
 
     public static final String ID = "id";
+    public static final String PID = "pid";
+    public static final String CODE = "code";
     public static final String NAME = "name";
     public static final String TYPE = "type";
-    public static final String LEVEL = "level";
-    public static final String SEQUENCE = "sequence";
+    public static final String EXPRESSION = "expression";
     public static final String IS_DISABLED = "is_disabled";
     public static final String NOTE = "note";
     public static final String CREATE_BY = "create_by";

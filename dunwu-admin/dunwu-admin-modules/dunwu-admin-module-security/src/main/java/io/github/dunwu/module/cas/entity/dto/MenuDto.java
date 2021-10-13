@@ -12,14 +12,14 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 
 /**
- * 菜单 Dto 类
+ * 菜单表 Dto 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-09-28
+ * @since 2021-10-12
  */
 @Data
 @Accessors(chain = true)
-@ApiModel(value = "MenuDto", description = "菜单")
+@ApiModel(value = "MenuDto", description = "菜单表")
 public class MenuDto implements Serializable, Comparable<MenuDto> {
 
     private static final long serialVersionUID = 1L;
@@ -63,14 +63,26 @@ public class MenuDto implements Serializable, Comparable<MenuDto> {
     @ApiModelProperty(value = "隐藏")
     private Boolean hidden;
 
-    @ApiModelProperty(value = "权限")
-    private String permission;
+    @ApiModelProperty(value = "权限表达式")
+    private String expression;
 
-    @ApiModelProperty(value = "创建者")
-    private String createBy;
+    @ApiModelProperty(value = "是否禁用：1 表示禁用；0 表示启用")
+    private Boolean disabled;
 
-    @ApiModelProperty(value = "更新者")
-    private String updateBy;
+    @ApiModelProperty(value = "备注")
+    private String note;
+
+    @ApiModelProperty(value = "创建者ID")
+    private Long creatorId;
+
+    @ApiModelProperty(value = "更新者ID")
+    private Long updaterId;
+
+    @ApiModelProperty(value = "创建者名称")
+    private String creatorName;
+
+    @ApiModelProperty(value = "更新者用户名")
+    private String updaterName;
 
     @ApiModelProperty(value = "创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")

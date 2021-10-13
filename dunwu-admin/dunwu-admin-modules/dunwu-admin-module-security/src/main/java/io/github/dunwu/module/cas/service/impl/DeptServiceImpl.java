@@ -39,7 +39,7 @@ import javax.servlet.http.HttpServletResponse;
  * 部门 Service 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-05
+ * @since 2021-10-12
  */
 @Service
 @RequiredArgsConstructor
@@ -191,7 +191,7 @@ public class DeptServiceImpl extends ServiceImpl implements DeptService {
     }
 
     @Override
-    public Page<DeptDto> pojoSpringPageByQuery(DeptQuery query, Pageable pageable) {
+    public Page<DeptDto> pojoSpringPageByQuery(Pageable pageable, DeptQuery query) {
         return deptDao.pojoSpringPageByQuery(pageable, query, this::doToDto);
     }
 
@@ -235,12 +235,13 @@ public class DeptServiceImpl extends ServiceImpl implements DeptService {
             map.put("ID", item.getId());
             map.put("上级部门ID", item.getPid());
             map.put("部门名称", item.getName());
+            map.put("部门等级", item.getLevel());
             map.put("部门顺序", item.getSequence());
             map.put("子部门数量", item.getChildrenNum());
-            map.put("状态", item.getDisabled());
+            map.put("是否禁用：1 表示禁用；0 表示启用", item.getDisabled());
             map.put("备注", item.getNote());
-            map.put("创建者", item.getCreateBy());
-            map.put("更新者", item.getUpdateBy());
+            map.put("创建者", item.getCreatorName());
+            map.put("更新者", item.getUpdaterName());
             map.put("创建时间", item.getCreateTime());
             map.put("更新时间", item.getUpdateTime());
             mapList.add(map);

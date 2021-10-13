@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  * 部门 Service 接口
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-05
+ * @since 2021-10-12
  */
 public interface DeptService extends IService {
 
@@ -111,13 +111,13 @@ public interface DeptService extends IService {
     List<DeptDto> pojoListByQuery(DeptQuery query);
 
     /**
-     * 根据 {@link DeptQuery} 和 {@link Pageable} 分页查询 {@link DeptDto} 列表
+     * 根据 {@link Pageable} 和 {@link DeptQuery} 分页查询 {@link DeptDto} 列表
      *
-     * @param query    查询条件，根据 {@link DeptQuery} 中的 {@link QueryField} 注解自动组装查询条件
      * @param pageable 分页查询条件
+     * @param query    查询条件，根据 {@link DeptQuery} 中的 {@link QueryField} 注解自动组装查询条件
      * @return {@link Page<DeptDto>}
      */
-    Page<DeptDto> pojoSpringPageByQuery(DeptQuery query, Pageable pageable);
+    Page<DeptDto> pojoSpringPageByQuery(Pageable pageable, DeptQuery query);
 
     /**
      * 根据 id 查询 {@link DeptDto}
@@ -152,8 +152,9 @@ public interface DeptService extends IService {
     void exportList(Collection<? extends Serializable> ids, HttpServletResponse response);
 
     /**
-     * 根据 {@link DeptQuery} 和 {@link Pageable} 分页查询 {@link DeptDto} 列表，并导出 excel 表单
-     *  @param pageable 分页查询条件
+     * 根据 {@link Pageable} 和 {@link DeptQuery} 分页查询 {@link DeptDto} 列表，并导出 excel 表单
+     *
+     * @param pageable 分页查询条件
      * @param query    查询条件，根据 {@link DeptQuery} 中的 {@link QueryField} 注解自动组装查询条件
      * @param response {@link HttpServletResponse} 实体
      */

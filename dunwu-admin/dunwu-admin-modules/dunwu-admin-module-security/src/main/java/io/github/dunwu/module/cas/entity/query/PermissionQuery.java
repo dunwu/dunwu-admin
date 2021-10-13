@@ -5,58 +5,56 @@ import io.github.dunwu.tool.data.annotation.QueryField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Set;
 
 /**
- * 角色 Query 类
+ * 权限表 Query 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
  * @since 2021-10-12
  */
 @Data
 @Accessors(chain = true)
-@EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "RoleQuery", description = "角色")
-public class RoleQuery implements Serializable {
+@ApiModel(value = "PermissionQuery", description = "权限表")
+public class PermissionQuery implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "ID")
-    @QueryField(value = "`id`", type = QueryField.QueryType.IN)
-    private Set<? extends Serializable> ids;
+    @QueryField(value = "`id`")
+    private Long id;
 
-    @ApiModelProperty(value = "角色编码")
+    @ApiModelProperty(value = "父权限ID")
+    @QueryField(value = "`pid`")
+    private Long pid;
+
+    @ApiModelProperty(value = "权限编码")
     @QueryField(value = "`code`")
     private String code;
 
-    @ApiModelProperty(value = "角色名称")
+    @ApiModelProperty(value = "权限名称")
     @QueryField(value = "`name`")
     private String name;
 
-    @ApiModelProperty(value = "角色级别")
-    @QueryField(value = "`level`")
-    private Integer level;
+    @ApiModelProperty(value = "权限类型")
+    @QueryField(value = "`type`")
+    private Integer type;
+
+    @ApiModelProperty(value = "权限表达式")
+    @QueryField(value = "`expression`")
+    private String expression;
 
     @ApiModelProperty(value = "是否禁用：1 表示禁用；0 表示启用")
     @QueryField(value = "`is_disabled`")
     private Boolean disabled;
 
     @ApiModelProperty(value = "更新时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @QueryField(value = "`update_time`", type = QueryField.QueryType.BETWEEN)
-    @JsonFormat(shape = JsonFormat.Shape.ARRAY, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Collection<LocalDateTime> updateTimeRange;
-
-    @ApiModelProperty(value = "角色编码、角色名称混合模糊查询")
-    @QueryField(blurry = { "code", "name" }, type = QueryField.QueryType.LIKE)
-    private String blurry;
-
-    @ApiModelProperty(value = "用户ID")
-    private Long userId;
 
 }

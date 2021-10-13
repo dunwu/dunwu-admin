@@ -40,6 +40,7 @@
       v-loading="crud.loading"
       :data="crud.data"
       row-key="id"
+      highlight-current-row
       border
       @current-change="handleCurrentChange"
       @select="crud.selectChange"
@@ -148,7 +149,6 @@ export default {
       this.crud.toQuery()
     }
   },
-  mounted() {},
   methods: {
     [CRUD.HOOK.beforeRefresh](crud, form) {
       this.crud.query.deptId = this.deptId

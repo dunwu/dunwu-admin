@@ -20,10 +20,10 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 角色部门关联 Service 类
+ * 部门职务关联表 Service 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-10
+ * @since 2021-10-12
  */
 @Service
 public class DeptJobMapServiceImpl extends ServiceImpl implements DeptJobMapService {

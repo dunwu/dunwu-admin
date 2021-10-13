@@ -141,6 +141,8 @@ public class JobServiceImpl extends ServiceImpl implements JobService {
             Set<? extends Serializable> jobIds = deptJobMapService.getJobIdsByDeptId(query.getDeptId());
             if (CollectionUtil.isNotEmpty(jobIds)) {
                 query.setIds(jobIds);
+            } else {
+                return null;
             }
         }
         return jobDao.pojoByQuery(query, this::doToDto);
@@ -148,6 +150,14 @@ public class JobServiceImpl extends ServiceImpl implements JobService {
 
     @Override
     public Integer countByQuery(JobQuery query) {
+        if (query.getDeptId() != null) {
+            Set<? extends Serializable> jobIds = deptJobMapService.getJobIdsByDeptId(query.getDeptId());
+            if (CollectionUtil.isNotEmpty(jobIds)) {
+                query.setIds(jobIds);
+            } else {
+                return 0;
+            }
+        }
         return jobDao.countByQuery(query);
     }
 
@@ -159,6 +169,14 @@ public class JobServiceImpl extends ServiceImpl implements JobService {
 
     @Override
     public void exportPage(Pageable pageable, JobQuery query, HttpServletResponse response) {
+        if (query.getDeptId() != null) {
+            Set<? extends Serializable> jobIds = deptJobMapService.getJobIdsByDeptId(query.getDeptId());
+            if (CollectionUtil.isNotEmpty(jobIds)) {
+                query.setIds(jobIds);
+            } else {
+                return;
+            }
+        }
         Page<JobDto> page = jobDao.pojoSpringPageByQuery(pageable, query, this::doToDto);
         exportDtoList(page.getContent(), response);
     }
@@ -180,8 +198,8 @@ public class JobServiceImpl extends ServiceImpl implements JobService {
             map.put("职务顺序", item.getSequence());
             map.put("是否禁用：1 表示禁用；0 表示启用", item.getDisabled());
             map.put("备注", item.getNote());
-            map.put("创建者", item.getCreateBy());
-            map.put("更新者", item.getUpdateBy());
+            map.put("创建者", item.getCreatorName());
+            map.put("更新者", item.getUpdaterName());
             map.put("创建时间", item.getCreateTime());
             map.put("更新时间", item.getUpdateTime());
             mapList.add(map);

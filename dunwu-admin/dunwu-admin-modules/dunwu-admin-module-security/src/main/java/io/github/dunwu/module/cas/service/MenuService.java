@@ -15,10 +15,10 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 菜单 Service 接口
+ * 菜单表 Service 接口
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-09-28
+ * @since 2021-10-12
  */
 public interface MenuService extends IService {
 
@@ -89,26 +89,34 @@ public interface MenuService extends IService {
     /**
      * 查询 {@link MenuDto} 全量数据列表
      *
-     * @return {@link List < MenuDto >}
+     * @return {@link List<MenuDto>}
      */
     List<MenuDto> pojoList();
 
     /**
+     * 根据 ID 列表查询 {@link MenuDto} 列表
+     *
+     * @param ids {@link Menu} 主键列表
+     * @return {@link List<MenuDto>}
+     */
+    List<MenuDto> pojoListByIds(Collection<? extends Serializable> ids);
+
+    /**
      * 根据 {@link MenuQuery} 查询 {@link MenuDto} 列表
      *
-     * @param query 查询条件，根据 MenuQuery 中的 {@link QueryField} 注解自动组装查询条件
-     * @return {@link List < MenuDto >}
+     * @param query 查询条件，根据 {@link MenuQuery} 中的 {@link QueryField} 注解自动组装查询条件
+     * @return {@link List<MenuDto>}
      */
     List<MenuDto> pojoListByQuery(MenuQuery query);
 
     /**
-     * 根据 {@link MenuQuery} 和 {@link Pageable} 分页查询 {@link MenuDto} 列表
+     * 根据 {@link Pageable} 和 {@link MenuQuery} 分页查询 {@link MenuDto} 列表
      *
-     * @param query    查询条件，根据 MenuQuery 中的 {@link QueryField} 注解自动组装查询条件
      * @param pageable 分页查询条件
-     * @return {@link Page < MenuDto >}
+     * @param query    查询条件，根据 {@link MenuQuery} 中的 {@link QueryField} 注解自动组装查询条件
+     * @return {@link Page<MenuDto>}
      */
-    Page<MenuDto> pojoSpringPageByQuery(MenuQuery query, Pageable pageable);
+    Page<MenuDto> pojoSpringPageByQuery(Pageable pageable, MenuQuery query);
 
     /**
      * 根据 id 查询 {@link MenuDto}
@@ -121,7 +129,7 @@ public interface MenuService extends IService {
     /**
      * 根据 {@link MenuQuery} 查询 {@link MenuDto} 列表
      *
-     * @param query 查询条件，根据 MenuQuery 中的 {@link QueryField} 注解自动组装查询条件
+     * @param query 查询条件，根据 {@link MenuQuery} 中的 {@link QueryField} 注解自动组装查询条件
      * @return {@link MenuDto}
      */
     MenuDto pojoByQuery(MenuQuery query);
@@ -129,7 +137,7 @@ public interface MenuService extends IService {
     /**
      * 根据 {@link MenuQuery} 查询匹配条件的记录数
      *
-     * @param query 查询条件，根据 MenuQuery 中的 {@link QueryField} 注解自动组装查询条件
+     * @param query 查询条件，根据 {@link MenuQuery} 中的 {@link QueryField} 注解自动组装查询条件
      * @return {@link Integer}
      */
     Integer countByQuery(MenuQuery query);
@@ -143,9 +151,10 @@ public interface MenuService extends IService {
     void exportList(Collection<? extends Serializable> ids, HttpServletResponse response);
 
     /**
-     * 根据 {@link MenuQuery} 和 {@link Pageable} 分页查询 {@link MenuDto} 列表，并导出 excel 表单
-     *  @param pageable 分页查询条件
-     * @param query    查询条件，根据 MenuQuery 中的 {@link QueryField} 注解自动组装查询条件
+     * 根据 {@link Pageable} 和 {@link MenuQuery} 分页查询 {@link MenuDto} 列表，并导出 excel 表单
+     *
+     * @param pageable 分页查询条件
+     * @param query    查询条件，根据 {@link MenuQuery} 中的 {@link QueryField} 注解自动组装查询条件
      * @param response {@link HttpServletResponse} 实体
      */
     void exportPage(Pageable pageable, MenuQuery query, HttpServletResponse response);

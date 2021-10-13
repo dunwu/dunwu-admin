@@ -3,17 +3,16 @@ package io.github.dunwu.module.cas.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.github.dunwu.module.cas.dao.*;
 import io.github.dunwu.module.cas.entity.RoleMenuMap;
 import io.github.dunwu.module.cas.entity.User;
-import io.github.dunwu.module.cas.entity.UserRoleMap;
 import io.github.dunwu.module.cas.entity.dto.DeptDto;
 import io.github.dunwu.module.cas.entity.dto.JobDto;
 import io.github.dunwu.module.cas.entity.dto.RoleDto;
 import io.github.dunwu.module.cas.entity.dto.UserDto;
 import io.github.dunwu.module.cas.entity.query.UserQuery;
 import io.github.dunwu.module.cas.entity.vo.DeptJobUserMapVo;
+import io.github.dunwu.module.cas.service.UserRoleMapService;
 import io.github.dunwu.module.cas.service.UserService;
 import io.github.dunwu.tool.data.exception.DataException;
 import io.github.dunwu.tool.data.mybatis.ServiceImpl;
@@ -22,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,25 +31,28 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 系统用户 Service 类
+ * 用户表 Service 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-07
+ * @since 2021-10-12
  */
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl extends ServiceImpl implements UserService {
 
+    public static final String INIT_PASSWORD = "123456";
     private final UserDao userDao;
     private final RoleDao roleDao;
     private final DeptDao deptDao;
     private final JobDao jobDao;
-    private final UserRoleMapDao userRoleDao;
+    private final UserRoleMapService userRoleMapService;
     private final RoleMenuMapDao roleMenuDao;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public boolean insert(User entity) {
+        entity.setPassword(passwordEncoder.encode(INIT_PASSWORD));
         return userDao.insert(entity);
     }
 
@@ -85,8 +88,7 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
             return true;
         }
 
-        UserRoleMap userRoleMap = new UserRoleMap().setUserId(user.getId());
-        userRoleDao.delete(Wrappers.query(userRoleMap));
+        userRoleMapService.deleteByUserId(user.getId());
         return userDao.deleteById(id);
     }
 
@@ -116,7 +118,7 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
     }
 
     @Override
-    public Page<UserDto> pojoSpringPageByQuery(UserQuery query, Pageable pageable) {
+    public Page<UserDto> pojoSpringPageByQuery(Pageable pageable, UserQuery query) {
         return userDao.pojoSpringPageByQuery(pageable, query, this::doToDto);
     }
 
@@ -167,10 +169,10 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
             map.put("邮箱", item.getEmail());
             map.put("头像地址", item.getAvatar());
             map.put("密码", item.getPassword());
-            map.put("状态：1启用、0禁用", item.getDisabled());
-            map.put("创建者", item.getCreateBy());
-            map.put("更新着", item.getUpdateBy());
             map.put("修改密码的时间", item.getPwdResetTime());
+            map.put("是否禁用：1 表示禁用；0 表示启用", item.getDisabled());
+            map.put("创建者", item.getCreatorName());
+            map.put("更新者", item.getUpdaterName());
             map.put("创建时间", item.getCreateTime());
             map.put("更新时间", item.getUpdateTime());
             mapList.add(map);
@@ -203,11 +205,8 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
             }
         }
 
-        UserRoleMap userRoleMap = new UserRoleMap();
-        userRoleMap.setUserId(entity.getId());
-        List<UserRoleMap> userRoleMaps = userRoleDao.list(Wrappers.query(userRoleMap));
-        if (CollectionUtil.isNotEmpty(userRoleMaps)) {
-            Set<Long> roleIds = userRoleMaps.stream().map(UserRoleMap::getRoleId).collect(Collectors.toSet());
+        Set<? extends Serializable> roleIds = userRoleMapService.getRoleIdsByUserId(entity.getId());
+        if (CollectionUtil.isNotEmpty(roleIds)) {
             List<RoleDto> roles = roleDao.pojoListByIds(roleIds, RoleDto.class);
             if (CollectionUtil.isNotEmpty(roles)) {
                 dto.setRoles(roles);
@@ -234,41 +233,6 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
         }
 
         return BeanUtil.toBean(dto, User.class);
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Long saveUserRelatedRecords(UserDto dto) {
-        User user = dtoToDo(dto);
-        if (userDao.insert(user)) {
-            List<UserRoleMap> newRecords = new ArrayList<>();
-            dto.getRoles().forEach(i -> {
-                newRecords.add(new UserRoleMap(user.getId(), i.getId()));
-            });
-            userRoleDao.insertBatch(newRecords);
-            return user.getId();
-        }
-        return null;
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public boolean updateUserRelatedRecords(UserDto dto) {
-        User entity = dtoToDo(dto);
-        if (userDao.updateById(entity)) {
-            UserRoleMap userRoleMap = new UserRoleMap();
-            userRoleMap.setUserId(entity.getId());
-            List<UserRoleMap> userRoleMaps = userRoleDao.list(userRoleMap);
-            Set<Long> oldIds = userRoleMaps.stream().map(UserRoleMap::getId).collect(Collectors.toSet());
-            List<UserRoleMap> newRecords = new ArrayList<>();
-            dto.getRoles().forEach(i -> {
-                newRecords.add(new UserRoleMap(dto.getId(), i.getId()));
-            });
-            userRoleDao.deleteBatchByIds(oldIds);
-            userRoleDao.insertBatch(newRecords);
-            return true;
-        }
-        return false;
     }
 
     @Override
@@ -327,6 +291,37 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
             user.setJobId(null);
         }
         return userDao.updateBatchById(users);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean insertWithRoles(UserDto dto) {
+        User entity = dtoToDo(dto);
+        if (userDao.insert(entity)) {
+            if (CollectionUtil.isNotEmpty(dto.getRoles())) {
+                List<Long> roleIds = dto.getRoles().stream().map(RoleDto::getId)
+                                        .collect(Collectors.toList());
+                userRoleMapService.insertBatchByRoleIds(entity.getId(), roleIds);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean updateWithRoles(UserDto dto) {
+        User entity = dtoToDo(dto);
+        if (userDao.updateById(entity)) {
+            userRoleMapService.deleteByUserId(entity.getId());
+            if (CollectionUtil.isNotEmpty(dto.getRoles())) {
+                Set<Long> roleIds = dto.getRoles().stream().map(RoleDto::getId)
+                                       .collect(Collectors.toSet());
+                userRoleMapService.insertBatchByRoleIds(entity.getId(), roleIds);
+            }
+            return true;
+        }
+        return false;
     }
 
 }

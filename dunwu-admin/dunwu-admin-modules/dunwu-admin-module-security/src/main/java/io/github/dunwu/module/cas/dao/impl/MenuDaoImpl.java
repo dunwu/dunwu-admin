@@ -10,10 +10,10 @@ import io.github.dunwu.tool.data.mybatis.BaseExtDaoImpl;
 import java.util.List;
 
 /**
- * 菜单 Dao 类
+ * 菜单表 Dao 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-09-28
+ * @since 2021-10-12
  */
 @Dao
 public class MenuDaoImpl extends BaseExtDaoImpl<MenuMapper, Menu> implements MenuDao {

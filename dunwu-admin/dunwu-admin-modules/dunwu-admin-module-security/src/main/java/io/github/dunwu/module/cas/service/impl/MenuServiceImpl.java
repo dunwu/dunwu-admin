@@ -32,10 +32,10 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 菜单 Service 类
+ * 菜单表 Service 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-09-28
+ * @since 2021-10-12
  */
 @Service
 @RequiredArgsConstructor
@@ -92,12 +92,17 @@ public class MenuServiceImpl extends ServiceImpl implements MenuService {
     }
 
     @Override
+    public List<MenuDto> pojoListByIds(Collection<? extends Serializable> ids) {
+        return menuDao.pojoListByIds(ids, this::doToDto);
+    }
+
+    @Override
     public List<MenuDto> pojoListByQuery(MenuQuery query) {
         return menuDao.pojoListByQuery(query, this::doToDto);
     }
 
     @Override
-    public Page<MenuDto> pojoSpringPageByQuery(MenuQuery query, Pageable pageable) {
+    public Page<MenuDto> pojoSpringPageByQuery(Pageable pageable, MenuQuery query) {
         return menuDao.pojoSpringPageByQuery(pageable, query, this::doToDto);
     }
 
@@ -151,9 +156,13 @@ public class MenuServiceImpl extends ServiceImpl implements MenuService {
             map.put("是否外链", item.getFrame());
             map.put("缓存", item.getCached());
             map.put("隐藏", item.getHidden());
-            map.put("权限", item.getPermission());
-            map.put("创建者", item.getCreateBy());
-            map.put("更新者", item.getUpdateBy());
+            map.put("权限表达式", item.getExpression());
+            map.put("是否禁用：1 表示禁用；0 表示启用", item.getDisabled());
+            map.put("备注", item.getNote());
+            map.put("创建者ID", item.getCreatorId());
+            map.put("更新者ID", item.getUpdaterId());
+            map.put("创建者名称", item.getCreatorName());
+            map.put("更新者用户名", item.getUpdaterName());
             map.put("创建时间", item.getCreateTime());
             map.put("更新时间", item.getUpdateTime());
             mapList.add(map);

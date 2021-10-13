@@ -37,7 +37,7 @@ CREATE TABLE cas_dept (
     KEY idx_sequence_pid (sequence,pid),
     KEY idx_name (`name`),
     KEY idx_enabled (is_disabled)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='部门';
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='部门表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -184,7 +184,7 @@ CREATE TABLE cas_menu (
     UNIQUE KEY uk_title (title),
     UNIQUE KEY uk_name (`name`),
     KEY key_pid (pid)
-) ENGINE=InnoDB AUTO_INCREMENT=122 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='系统菜单';
+) ENGINE=InnoDB AUTO_INCREMENT=122 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='菜单表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
