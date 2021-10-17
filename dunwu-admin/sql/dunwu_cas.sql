@@ -164,7 +164,7 @@ SET character_set_client = utf8mb4 ;
 CREATE TABLE cas_menu (
     id bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
     pid bigint(20) unsigned DEFAULT NULL COMMENT '上级菜单ID',
-    sub_count int(5) unsigned DEFAULT '0' COMMENT '子菜单数目',
+    children_num int(5) unsigned DEFAULT '0' COMMENT '子菜单数目',
     `type` int(5) unsigned DEFAULT NULL COMMENT '菜单类型',
     title varchar(255) DEFAULT NULL COMMENT '菜单标题',
     `name` varchar(255) DEFAULT NULL COMMENT '组件名称',

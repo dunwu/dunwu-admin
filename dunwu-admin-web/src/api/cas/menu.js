@@ -117,16 +117,23 @@ export function treeList(params) {
   })
 }
 
+export function treeListByPid(id) {
+  return request({
+    url: 'cas/menu/treeListByPid',
+    method: 'get',
+    params: { id }
+  })
+}
+
 /**
  * 根据 params 条件，返回同级和上级的树形列表
- * @param idList
+ * @param pid
  */
-export function superiorTreeList(idList) {
-  const ids = idList.length || idList.length === 0 ? idList : Array.of(idList)
+export function superiorTreeList(pid) {
   return request({
     url: 'cas/menu/superiorTreeList',
-    method: 'post',
-    data: ids
+    method: 'get',
+    params: { pid }
   })
 }
 
@@ -144,4 +151,16 @@ export function buildMenus() {
   })
 }
 
-export default { add, edit, delBatch, list, page, exportList, exportPage, treeList, superiorTreeList, childrenIds }
+export default {
+  add,
+  edit,
+  delBatch,
+  list,
+  page,
+  exportList,
+  exportPage,
+  treeList,
+  treeListByPid,
+  superiorTreeList,
+  childrenIds
+}

@@ -38,7 +38,7 @@
               布局设置
             </el-dropdown-item>
           </span>
-          <router-link to="/cas/center">
+          <router-link to="/cas/user/center">
             <el-dropdown-item>
               个人中心
             </el-dropdown-item>

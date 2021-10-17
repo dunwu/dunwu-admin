@@ -11,13 +11,14 @@ import org.springframework.data.domain.Pageable;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 
 /**
  * 权限表 Service 接口
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-12
+ * @since 2021-10-13
  */
 public interface PermissionService extends IService {
 
@@ -173,5 +174,15 @@ public interface PermissionService extends IService {
      * @return /
      */
     Permission dtoToDo(PermissionDto dto);
+
+    boolean saveByResourceId(Permission entity);
+
+    boolean deleteByResourceId(Serializable resourceId);
+
+    boolean deleteBatchByResourceIds(Collection<? extends Serializable> resourceIds);
+
+    Set<Long> getMenuIdsByRoleId(Long roleId);
+
+    Set<Long> getMenuIdsByRoleIds(Collection<Long> roleIds);
 
 }

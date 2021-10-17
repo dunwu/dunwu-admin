@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
  * 权限表
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-12
+ * @since 2021-10-17
  */
 @Data
 @Accessors(chain = true)
@@ -37,6 +37,10 @@ public class Permission implements Serializable {
     @ApiModelProperty(value = "父权限ID")
     @TableField("`pid`")
     private Long pid;
+
+    @ApiModelProperty(value = "资源ID")
+    @TableField("`resource_id`")
+    private Long resourceId;
 
     @ApiModelProperty(value = "权限编码")
     @TableField("`code`")
@@ -62,13 +66,21 @@ public class Permission implements Serializable {
     @TableField("`note`")
     private String note;
 
-    @ApiModelProperty(value = "创建者")
-    @TableField("`create_by`")
-    private String createBy;
+    @ApiModelProperty(value = "创建者ID")
+    @TableField("`creator_id`")
+    private Long creatorId;
 
-    @ApiModelProperty(value = "更新者")
-    @TableField("`update_by`")
-    private String updateBy;
+    @ApiModelProperty(value = "更新者ID")
+    @TableField("`updater_id`")
+    private Long updaterId;
+
+    @ApiModelProperty(value = "创建者名称")
+    @TableField("`creator_name`")
+    private String creatorName;
+
+    @ApiModelProperty(value = "更新者名称")
+    @TableField("`updater_name`")
+    private String updaterName;
 
     @ApiModelProperty(value = "创建时间")
     @TableField("`create_time`")
@@ -82,14 +94,17 @@ public class Permission implements Serializable {
 
     public static final String ID = "id";
     public static final String PID = "pid";
+    public static final String RESOURCE_ID = "resource_id";
     public static final String CODE = "code";
     public static final String NAME = "name";
     public static final String TYPE = "type";
     public static final String EXPRESSION = "expression";
     public static final String IS_DISABLED = "is_disabled";
     public static final String NOTE = "note";
-    public static final String CREATE_BY = "create_by";
-    public static final String UPDATE_BY = "update_by";
+    public static final String CREATOR_ID = "creator_id";
+    public static final String UPDATER_ID = "updater_id";
+    public static final String CREATOR_NAME = "creator_name";
+    public static final String UPDATER_NAME = "updater_name";
     public static final String CREATE_TIME = "create_time";
     public static final String UPDATE_TIME = "update_time";
 

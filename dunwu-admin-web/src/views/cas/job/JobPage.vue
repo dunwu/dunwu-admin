@@ -2,6 +2,7 @@
   <div class="app-container">
     <!--工具栏-->
     <div class="head-container">
+      <!-- 搜索 -->
       <div v-if="crud.props.searchToggle && allowOperation">
         <el-row>
           <el-col :span="6">
@@ -23,7 +24,7 @@
               placeholder="状态"
               class="filter-item"
               style="width: 90%"
-              @keyup.enter.native="crud.toQuery"
+              @change="crud.toQuery"
             >
               <el-option
                 v-for="item in dict['disabled_status'].options"
@@ -89,12 +90,13 @@
       <TableOperation v-if="allowOperation" :permission="permission" />
     </div>
 
-    <!--表格渲染-->
+    <!--表格-->
     <el-table
       ref="table"
       v-loading="crud.loading"
       :data="crud.data"
       border
+      highlight-current-row
       @sort-change="crud.changeTableSort"
       @selection-change="crud.selectionChangeHandler"
     >
@@ -235,7 +237,7 @@ export default {
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="scss" scoped>
 ::v-deep .el-input-number .el-input__inner {
   text-align: left;
 }

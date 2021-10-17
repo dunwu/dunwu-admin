@@ -5,9 +5,9 @@
     :before-close="crud.cancelCU"
     :visible.sync="crud.status.cu > 0"
     :title="crud.status.title"
-    width="570px"
+    width="640px"
   >
-    <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="66px">
+    <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="80px">
       <el-form-item label="用户名" prop="username">
         <el-input v-model="form.username" />
       </el-form-item>
@@ -25,32 +25,19 @@
           v-model="form.deptId"
           :options="depts"
           :load-options="loadDepts"
-          style="width: 178px"
+          style="width: 184px"
           placeholder="请选择"
         />
       </el-form-item>
       <el-form-item label="岗位" prop="jobId">
-        <el-select v-model="form.jobId" style="width: 178px" placeholder="请选择">
+        <el-select v-model="form.jobId" style="width: 184px" placeholder="请选择">
           <el-option v-for="item in jobs" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="性别">
-        <el-radio-group v-model="form.gender" style="width: 178px">
-          <el-radio label="男">男</el-radio>
-          <el-radio label="女">女</el-radio>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="状态">
-        <el-radio-group v-model="form.disabled" :disabled="form.id === user.id">
-          <el-radio v-for="item in dict['disabled_status'].options" :key="item.id" :label="item.code">
-            {{ item.name }}
-          </el-radio>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item style="margin-bottom: 0" label="角色" prop="roles">
+      <el-form-item label="角色" prop="roles">
         <el-select
           v-model="roleDatas"
-          style="width: 437px"
+          style="width: 462px"
           multiple
           placeholder="请选择"
           @remove-tag="deleteTag"
@@ -64,6 +51,18 @@
             :value="item.id"
           />
         </el-select>
+      </el-form-item>
+      <el-form-item label="性别">
+        <el-radio-group v-model="form.gender" size="mini" style="width: 184px">
+          <el-radio-button label="男">男</el-radio-button>
+          <el-radio-button label="女">女</el-radio-button>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="是否禁用" prop="disabled">
+        <el-radio-group v-model="form.disabled" size="mini" style="width: 184px">
+          <el-radio-button :label="true">是</el-radio-button>
+          <el-radio-button :label="false">否</el-radio-button>
+        </el-radio-group>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -189,11 +188,12 @@ export default {
       }
       this.getRoleLevel()
       this.getJobs({ disabled: true })
-      form.disabled = form.disabled.toString()
+      // form.disabled = form.disabled.toString()
     },
     // 添加前将多选的值设置为空
     [CRUD.HOOK.beforeToAdd]() {
       this.roleDatas = []
+      this.getJobs({ deptId: this.form.dept.id })
     },
     // 初始化编辑时候的角色与岗位
     [CRUD.HOOK.beforeToEdit](crud, form) {

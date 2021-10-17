@@ -8,6 +8,9 @@
     width="520px"
   >
     <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="80px">
+      <el-form-item label="角色名称" prop="code">
+        <el-input v-model="form.code" style="width: 380px;" />
+      </el-form-item>
       <el-form-item label="角色名称" prop="name">
         <el-input v-model="form.name" style="width: 380px;" />
       </el-form-item>
@@ -28,6 +31,12 @@
           style="width: 380px"
           placeholder="请选择"
         />
+      </el-form-item>
+      <el-form-item label="是否禁用" prop="disabled">
+        <el-radio-group v-model="form.disabled" size="mini">
+          <el-radio-button label="true">是</el-radio-button>
+          <el-radio-button label="false">否</el-radio-button>
+        </el-radio-group>
       </el-form-item>
       <el-form-item label="描述信息" prop="note">
         <el-input v-model="form.note" style="width: 380px;" rows="5" type="textarea" />
@@ -51,7 +60,16 @@ import MenuApi from '@/api/cas/menu'
 /**
  * 表单默认值
  */
-const defaultForm = { id: null, name: null, depts: [], note: null, dataScope: '全部', level: 3 }
+const defaultForm = {
+  id: null,
+  code: null,
+  name: null,
+  note: null,
+  disabled: false,
+  dataScope: '全部',
+  level: 3,
+  depts: []
+}
 export default {
   name: 'RoleForm',
   components: { Treeselect },
@@ -122,9 +140,11 @@ export default {
         this.getSupDepts(form.depts)
       }
       const _this = this
-      form.depts.forEach(function(dept) {
-        _this.deptDatas.push(dept.id)
-      })
+      if (form.depts) {
+        form.depts.forEach(function(dept) {
+          _this.deptDatas.push(dept.id)
+        })
+      }
     },
     // 提交前做的操作
     [CRUD.HOOK.afterValidateCU](crud) {

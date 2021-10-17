@@ -5,31 +5,28 @@ import io.github.dunwu.tool.data.annotation.QueryField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Set;
 
 /**
- * 角色 Query 类
+ * 角色表 Query 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-12
+ * @since 2021-10-13
  */
 @Data
 @Accessors(chain = true)
-@EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "RoleQuery", description = "角色")
+@ApiModel(value = "RoleQuery", description = "角色表")
 public class RoleQuery implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "ID")
     @QueryField(value = "`id`", type = QueryField.QueryType.IN)
-    private Set<? extends Serializable> ids;
+    private Collection<? extends Serializable> ids;
 
     @ApiModelProperty(value = "角色编码")
     @QueryField(value = "`code`")

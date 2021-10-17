@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  * 用户表 Service 接口
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-12
+ * @since 2021-10-13
  */
 public interface UserService extends IService {
 
@@ -182,14 +182,6 @@ public interface UserService extends IService {
      * @return {@link UserDto}
      */
     UserDto pojoByUsername(String username);
-
-    /**
-     * 根据菜单查询用户
-     *
-     * @param menuId 菜单ID
-     * @return /
-     */
-    List<User> findByMenuId(Long menuId);
 
     /**
      * 根据所有关联指定部门ID的用户

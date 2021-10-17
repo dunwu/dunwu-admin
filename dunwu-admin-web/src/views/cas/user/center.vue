@@ -144,8 +144,8 @@
 <script>
 import myUpload from 'vue-image-crop-upload'
 import { mapGetters } from 'vuex'
-import updatePass from './center/updatePass'
-import updateEmail from './center/updateEmail'
+import updatePass from './updatePass'
+import updateEmail from './updateEmail'
 import { getToken } from '@/utils/auth'
 import store from '@/store'
 import { isvalidPhone } from '@/utils/validate'

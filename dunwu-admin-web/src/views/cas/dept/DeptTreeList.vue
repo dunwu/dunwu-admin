@@ -9,8 +9,8 @@
           clearable
           size="small"
           placeholder="输入部门名称搜索"
-          style="width: 30%;"
           class="filter-item"
+          style="width: 30%"
           @keyup.enter.native="crud.toQuery"
         />
         <el-select
@@ -145,7 +145,7 @@ export default {
             })
             .catch(err => {
               data.disabled = !data.disabled
-              console.error(err.response.data.msg)
+              console.error(err.data.msg)
             })
         })
         .catch(() => {

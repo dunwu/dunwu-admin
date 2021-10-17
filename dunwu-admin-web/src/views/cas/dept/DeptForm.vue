@@ -5,16 +5,16 @@
     :before-close="crud.cancelCU"
     :visible.sync="crud.status.cu > 0"
     :title="crud.status.title"
-    width="500px"
+    width="600px"
   >
-    <el-form ref="form" inline :model="form" :rules="rules" size="small" label-width="80px">
+    <el-form ref="form" inline :model="form" :rules="rules" size="small" label-width="100px">
       <el-form-item label="部门名称" prop="name">
-        <el-input v-model="form.name" style="width: 370px;" placeholder="请输入部门名称" />
+        <el-input v-model="form.name" style="width: 420px" placeholder="请输入部门名称" />
       </el-form-item>
       <el-form-item label="部门顺序" prop="sequence">
         <el-input-number
           v-model.number="form.sequence"
-          style="width: 370px;"
+          style="width: 420px;"
           placeholder="请输入部门顺序"
           :min="0"
           :max="999"
@@ -22,25 +22,21 @@
         />
       </el-form-item>
       <el-form-item label="顶级部门">
-        <el-radio-group v-model="form.isTop" style="width: 140px">
-          <el-radio :label="true">是</el-radio>
-          <el-radio :label="false">否</el-radio>
+        <el-radio-group v-model="form.isTop" size="mini">
+          <el-radio-button :label="true">是</el-radio-button>
+          <el-radio-button :label="false">否</el-radio-button>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="状态" prop="disabled">
-        <el-radio
-          v-for="item in dict['disabled_status'].options"
-          :key="item.id"
-          v-model="form.disabled"
-          :label="item.code"
-        >
-          {{ item.name }}
-        </el-radio>
+      <el-form-item label="是否禁用" prop="disabled">
+        <el-radio-group v-model="form.disabled" size="mini">
+          <el-radio-button :label="true">是</el-radio-button>
+          <el-radio-button :label="false">否</el-radio-button>
+        </el-radio-group>
       </el-form-item>
       <el-form-item label="备注" prop="note">
         <el-input
           v-model="form.note"
-          style="width: 370px;"
+          style="width: 420px;"
           placeholder="请输入备注"
           type="textarea"
           :autosize="{ minRows: 2, maxRows: 4 }"
@@ -51,7 +47,7 @@
           v-model="form.pid"
           :load-options="loadDeptList"
           :options="deptList"
-          style="width: 370px;"
+          style="width: 420px;"
           search-nested
           :show-count="true"
           :default-expand-level="1"
@@ -135,7 +131,6 @@ export default {
     [CRUD.HOOK.afterToCU](crud, form) {
       this.deptList = []
       form.isTop = form.pid === 0
-      form.disabled = `${form.disabled}`
       this.getAllTreeList(form.id, form.pid)
     },
     // 提交前的验证

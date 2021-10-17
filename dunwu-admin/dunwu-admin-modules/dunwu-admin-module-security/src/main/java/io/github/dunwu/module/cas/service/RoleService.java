@@ -15,13 +15,14 @@ import org.springframework.security.core.GrantedAuthority;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 角色 Service 接口
+ * 角色表 Service 接口
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-10
+ * @since 2021-10-13
  */
 public interface RoleService extends IService {
 
@@ -181,8 +182,6 @@ public interface RoleService extends IService {
     List<RoleDto> pojoListByUserId(Long userId);
 
     List<RoleDto> pojoListByJobId(Long jobId);
-
-    List<RoleDto> pojoListByMenuIds(Collection<Long> menuIds);
 
     boolean updateMenusByRoleId(Long roleId, List<MenuDto> menus);
 

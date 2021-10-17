@@ -9,7 +9,7 @@ import java.util.List;
  * 菜单表 Dao 接口
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-12
+ * @since 2021-10-13
  */
 public interface MenuDao extends IExtDao<Menu> {
 

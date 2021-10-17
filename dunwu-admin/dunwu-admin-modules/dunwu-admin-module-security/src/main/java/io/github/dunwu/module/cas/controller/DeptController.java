@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
  * 部门 Controller 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-12
+ * @since 2021-10-13
  */
 @RestController
 @RequestMapping("/cas/dept")

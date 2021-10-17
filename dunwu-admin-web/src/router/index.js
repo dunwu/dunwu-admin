@@ -38,8 +38,8 @@ const router = new Router({
  * 导航守卫-全局前置守卫
  */
 router.beforeEach((to, from, next) => {
-  if (to.meta.title) {
-    document.title = to.meta.title + ' - ' + Config.title
+  if (to.meta.name) {
+    document.title = to.meta.name + ' - ' + Config.title
   }
 
   // console.info('白名单', whiteListPaths)

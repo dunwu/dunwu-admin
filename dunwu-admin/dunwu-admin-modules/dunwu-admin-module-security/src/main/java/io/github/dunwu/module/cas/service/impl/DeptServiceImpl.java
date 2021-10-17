@@ -3,10 +3,7 @@ package io.github.dunwu.module.cas.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
-import io.github.dunwu.module.cas.dao.DeptDao;
-import io.github.dunwu.module.cas.dao.DeptRoleMapDao;
-import io.github.dunwu.module.cas.dao.JobDao;
-import io.github.dunwu.module.cas.dao.UserDao;
+import io.github.dunwu.module.cas.dao.*;
 import io.github.dunwu.module.cas.entity.Dept;
 import io.github.dunwu.module.cas.entity.DeptRoleMap;
 import io.github.dunwu.module.cas.entity.Job;
@@ -14,7 +11,6 @@ import io.github.dunwu.module.cas.entity.User;
 import io.github.dunwu.module.cas.entity.dto.DeptDto;
 import io.github.dunwu.module.cas.entity.dto.DeptRelationDto;
 import io.github.dunwu.module.cas.entity.query.DeptQuery;
-import io.github.dunwu.module.cas.service.DeptJobMapService;
 import io.github.dunwu.module.cas.service.DeptService;
 import io.github.dunwu.tool.SerializableUtil;
 import io.github.dunwu.tool.bean.BeanUtil;
@@ -36,10 +32,10 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 部门 Service 类
+ * 部门表 Service 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-12
+ * @since 2021-10-13
  */
 @Service
 @RequiredArgsConstructor
@@ -49,7 +45,7 @@ public class DeptServiceImpl extends ServiceImpl implements DeptService {
     private final JobDao jobDao;
     private final UserDao userDao;
     private final DeptRoleMapDao roleDeptDao;
-    private final DeptJobMapService deptJobMapService;
+    private final DeptJobMapDao deptJobDao;
 
     @Override
     public boolean insert(Dept entity) {
@@ -132,7 +128,7 @@ public class DeptServiceImpl extends ServiceImpl implements DeptService {
     @Transactional(rollbackFor = Exception.class)
     public boolean deleteById(Serializable id) {
         // 删除部门职务关联记录
-        boolean isOk = deptJobMapService.deleteByDeptId(id);
+        boolean isOk = deptJobDao.deleteByDeptId(id);
         if (!isOk) {
             String msg = StrUtil.format("删除 jobId = {} 的部门职务关联记录失败", id);
             throw new DataException(msg);
@@ -240,8 +236,10 @@ public class DeptServiceImpl extends ServiceImpl implements DeptService {
             map.put("子部门数量", item.getChildrenNum());
             map.put("是否禁用：1 表示禁用；0 表示启用", item.getDisabled());
             map.put("备注", item.getNote());
-            map.put("创建者", item.getCreatorName());
-            map.put("更新者", item.getUpdaterName());
+            map.put("创建者ID", item.getCreatorId());
+            map.put("更新者ID", item.getUpdaterId());
+            map.put("创建者名称", item.getCreatorName());
+            map.put("更新者名称", item.getUpdaterName());
             map.put("创建时间", item.getCreateTime());
             map.put("更新时间", item.getUpdateTime());
             mapList.add(map);

@@ -15,7 +15,7 @@ import java.util.Collection;
  * 权限表 Query 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-12
+ * @since 2021-10-17
  */
 @Data
 @Accessors(chain = true)
@@ -31,6 +31,10 @@ public class PermissionQuery implements Serializable {
     @ApiModelProperty(value = "父权限ID")
     @QueryField(value = "`pid`")
     private Long pid;
+
+    @ApiModelProperty(value = "资源ID")
+    @QueryField(value = "`resource_id`")
+    private Long resourceId;
 
     @ApiModelProperty(value = "权限编码")
     @QueryField(value = "`code`")

@@ -2,7 +2,7 @@
   <el-card class="box-card" shadow="never">
     <div slot="header" class="clearfix">
       <el-tooltip class="item" effect="dark" content="选择指定角色分配菜单" placement="top">
-        <span class="role-span">菜单分配</span>
+        <span class="role-span">权限分配</span>
       </el-tooltip>
       <el-button
         :disabled="!showButton"
@@ -108,13 +108,16 @@ export default {
             }
           }
         } else {
-          for (let i = 0; i < ids.length; i++) {
-            const index = this.menuIds.indexOf(ids[i])
-            if (index === -1) {
-              this.menuIds.push(ids[i])
+          if (ids) {
+            for (let i = 0; i < ids.length; i++) {
+              const index = this.menuIds.indexOf(ids[i])
+              if (index === -1) {
+                this.menuIds.push(ids[i])
+              }
             }
           }
         }
+        this.menuIds.push(menu.id)
         this.$refs.menu.setCheckedKeys(this.menuIds)
       })
     },

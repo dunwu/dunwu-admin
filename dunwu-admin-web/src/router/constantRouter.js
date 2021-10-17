@@ -9,7 +9,7 @@ import whiteListRouter from './whiteListRouter'
 const defaultRouter = [
   {
     path: '/login',
-    meta: { title: '登录', noCache: true },
+    meta: { name: '登录', noCache: true },
     component: resolve => require(['@/views/login'], resolve),
     hidden: true
   },
@@ -43,7 +43,7 @@ const defaultRouter = [
         path: 'dashboard',
         component: () => import('@/views/home'),
         name: 'Dashboard',
-        meta: { title: '首页', icon: 'index', affix: true, noCache: true }
+        meta: { name: '首页', icon: 'index', affix: true, noCache: true }
       }
     ]
   },
@@ -57,7 +57,7 @@ const defaultRouter = [
         path: 'center',
         component: () => import('@/views/cas/user/center'),
         name: '个人中心',
-        meta: { title: '个人中心' }
+        meta: { name: '个人中心' }
       }
     ]
   }

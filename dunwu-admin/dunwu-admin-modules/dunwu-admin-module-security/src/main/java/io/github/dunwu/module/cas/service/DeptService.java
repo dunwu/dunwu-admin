@@ -16,10 +16,10 @@ import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 部门 Service 接口
+ * 部门表 Service 接口
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-12
+ * @since 2021-10-13
  */
 public interface DeptService extends IService {
 

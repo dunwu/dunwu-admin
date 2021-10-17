@@ -155,9 +155,11 @@ export default {
         this.currentId = val.id
         // 初始化默认选中的key
         this.menuIds = []
-        val.menus.forEach(function(data) {
-          _this.menuIds.push(data.id)
-        })
+        if (val.menus) {
+          val.menus.forEach(function(data) {
+            _this.menuIds.push(data.id)
+          })
+        }
         this.showButton = true
       }
       this.$emit('selectCurrent', val)

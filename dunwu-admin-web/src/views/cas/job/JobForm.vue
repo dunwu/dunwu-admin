@@ -37,15 +37,11 @@
           style="width: 370px;"
         />
       </el-form-item>
-      <el-form-item label="状态" prop="disabled">
-        <el-radio
-          v-for="item in dict['disabled_status'].options"
-          :key="item.id"
-          v-model="form.disabled"
-          :label="item.code"
-        >
-          {{ item.name }}
-        </el-radio>
+      <el-form-item label="是否禁用" prop="disabled">
+        <el-radio-group v-model="form.disabled" size="mini">
+          <el-radio-button :label="true">是</el-radio-button>
+          <el-radio-button :label="false">否</el-radio-button>
+        </el-radio-group>
       </el-form-item>
       <el-form-item label="备注" prop="note">
         <el-input
@@ -102,14 +98,13 @@ export default {
         type: [{ required: true, message: '请选择职务类型', trigger: 'blur' }],
         level: [{ required: true, message: '请选择职级', trigger: 'blur' }],
         sequence: [{ required: true, message: '请输入顺序', trigger: 'blur', type: 'number' }],
-        disabled: [{ required: true, message: '请选择状态', trigger: 'blur' }]
+        disabled: [{ required: true, message: '请选择是否禁用', trigger: 'blur' }]
       }
     }
   },
   methods: {
     // 添加与编辑前做的操作
     [CRUD.HOOK.afterToCU](crud, form) {
-      form.disabled = `${form.disabled}`
       form.type = `${form.type}`
       form.level = `${form.level}`
     }

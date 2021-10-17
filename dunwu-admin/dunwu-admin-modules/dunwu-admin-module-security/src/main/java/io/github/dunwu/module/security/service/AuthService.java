@@ -25,6 +25,7 @@ import io.github.dunwu.module.security.entity.vo.UserVo;
 import io.github.dunwu.module.security.util.CaptchaUtil;
 import io.github.dunwu.module.security.util.EncryptUtil;
 import io.github.dunwu.module.security.util.JwtTokenUtil;
+import io.github.dunwu.module.security.util.SecurityUtil;
 import io.github.dunwu.tool.core.exception.AuthException;
 import io.github.dunwu.tool.data.exception.DataException;
 import io.github.dunwu.tool.data.redis.RedisHelper;
@@ -34,6 +35,9 @@ import io.github.dunwu.tool.web.SpringUtil;
 import io.github.dunwu.tool.web.security.SecurityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Async;
@@ -59,6 +63,7 @@ import javax.servlet.http.HttpServletRequest;
  * @date 2019年10月26日21:56:27
  */
 @Slf4j
+@CacheConfig(cacheNames = "user")
 @RequiredArgsConstructor
 @Service("userDetailsService")
 public class AuthService implements UserDetailsService {
@@ -77,29 +82,20 @@ public class AuthService implements UserDetailsService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @Override
+    @Cacheable(key = "'name:' + #username")
     public UserVo loadUserByUsername(String username) {
-        boolean searchDb = true;
-        UserVo userVo = null;
-        if (securityProperties.isCacheEnable() && userDtoCache.containsKey(username)) {
-            userVo = userDtoCache.get(username);
-            searchDb = false;
+        UserDto user;
+        user = userService.pojoByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("");
         }
-        if (searchDb) {
-            UserDto user;
-            user = userService.pojoByUsername(username);
-            if (user == null) {
-                throw new UsernameNotFoundException("");
-            } else {
-                if (user.getDisabled()) {
-                    throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "账号未激活！");
-                }
 
-                Set<Long> deptIds = deptService.getOwnAndChildrenDeptIds(user.getDeptId());
-                userVo = new UserVo(user, deptIds, roleService.mapToGrantedAuthorities(user));
-                userDtoCache.put(username, userVo);
-            }
+        if (user.getDisabled()) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "账号未激活！");
         }
-        return userVo;
+
+        Set<Long> deptIds = deptService.getOwnAndChildrenDeptIds(user.getDeptId());
+        return new UserVo(user, deptIds, roleService.mapToGrantedAuthorities(user));
     }
 
     /**
@@ -119,8 +115,10 @@ public class AuthService implements UserDetailsService {
      * 处理登出请求
      */
     public boolean logout(String token) {
+        String username = SecurityUtil.getCurrentUsername();
         String key = securityProperties.getToken().getOnlinePrefix() + token;
         redisHelper.del(key);
+        cleanUserCache(username);
         return true;
     }
 
@@ -287,18 +285,18 @@ public class AuthService implements UserDetailsService {
      */
     public void delCaches(Long id, String username) {
         redisHelper.del("user::id:" + id);
+        redisHelper.del("user::name:" + username);
         flushCache(username);
     }
 
     /**
      * 清理特定用户缓存信息<br> 用户信息变更时
      *
-     * @param userName /
+     * @param username /
      */
-    public void cleanUserCache(String userName) {
-        if (StrUtil.isNotEmpty(userName)) {
-            userDtoCache.remove(userName);
-        }
+    @CacheEvict(key = "'name:' + #username", allEntries=true)
+    public void cleanUserCache(String username) {
+        log.info("清理用户 {} 的缓存", username);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -341,13 +339,6 @@ public class AuthService implements UserDetailsService {
             redisHelper.del(key);
         }
         return true;
-    }
-
-    /**
-     * 清理所有用户的缓存信息<br> 如发生角色授权信息变化，可以简便的全部失效缓存
-     */
-    public void cleanAll() {
-        userDtoCache.clear();
     }
 
     /**

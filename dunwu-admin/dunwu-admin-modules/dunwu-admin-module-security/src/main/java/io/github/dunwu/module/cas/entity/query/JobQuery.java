@@ -10,13 +10,12 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Set;
 
 /**
  * 职务表 Query 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-12
+ * @since 2021-10-13
  */
 @Data
 @Accessors(chain = true)
@@ -27,7 +26,7 @@ public class JobQuery implements Serializable {
 
     @ApiModelProperty(value = "ID")
     @QueryField(value = "`id`", type = QueryField.QueryType.IN)
-    private Set<? extends Serializable> ids;
+    private Collection<? extends Serializable> ids;
 
     @ApiModelProperty(value = "职务名称")
     @QueryField(value = "`name`", type = QueryField.QueryType.LIKE)

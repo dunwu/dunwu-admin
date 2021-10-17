@@ -3,12 +3,12 @@ package io.github.dunwu.module.cas.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
+import io.github.dunwu.module.cas.dao.DeptJobMapDao;
 import io.github.dunwu.module.cas.dao.JobDao;
 import io.github.dunwu.module.cas.entity.Job;
 import io.github.dunwu.module.cas.entity.dto.JobDto;
 import io.github.dunwu.module.cas.entity.dto.RoleDto;
 import io.github.dunwu.module.cas.entity.query.JobQuery;
-import io.github.dunwu.module.cas.service.DeptJobMapService;
 import io.github.dunwu.module.cas.service.JobService;
 import io.github.dunwu.module.cas.service.RoleService;
 import io.github.dunwu.tool.data.Pagination;
@@ -29,14 +29,14 @@ import javax.servlet.http.HttpServletResponse;
  * 职务表 Service 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-10
+ * @since 2021-10-13
  */
 @Service
 @RequiredArgsConstructor
 public class JobServiceImpl extends ServiceImpl implements JobService {
 
     private final JobDao jobDao;
-    private final DeptJobMapService deptJobMapService;
+    private final DeptJobMapDao deptJobMapDao;
     private final RoleService roleService;
 
     @Override
@@ -73,7 +73,7 @@ public class JobServiceImpl extends ServiceImpl implements JobService {
     @Transactional(rollbackFor = Exception.class)
     public boolean deleteById(Serializable id) {
         // 删除部门职务关联记录
-        boolean isOk = deptJobMapService.deleteByJobId(id);
+        boolean isOk = deptJobMapDao.deleteByJobId(id);
         if (!isOk) {
             String msg = StrUtil.format("删除 deptId = {} 的部门职务关联记录失败", id);
             throw new DataException(msg);
@@ -107,7 +107,7 @@ public class JobServiceImpl extends ServiceImpl implements JobService {
     @Override
     public List<JobDto> pojoListByQuery(JobQuery query) {
         if (query.getDeptId() != null) {
-            Set<? extends Serializable> jobIds = deptJobMapService.getJobIdsByDeptId(query.getDeptId());
+            Set<? extends Serializable> jobIds = deptJobMapDao.getJobIdsByDeptId(query.getDeptId());
             if (CollectionUtil.isNotEmpty(jobIds)) {
                 query.setIds(jobIds);
             } else {
@@ -120,7 +120,7 @@ public class JobServiceImpl extends ServiceImpl implements JobService {
     @Override
     public Page<JobDto> pojoSpringPageByQuery(Pageable pageable, JobQuery query) {
         if (query.getDeptId() != null) {
-            Set<? extends Serializable> jobIds = deptJobMapService.getJobIdsByDeptId(query.getDeptId());
+            Set<? extends Serializable> jobIds = deptJobMapDao.getJobIdsByDeptId(query.getDeptId());
             if (CollectionUtil.isNotEmpty(jobIds)) {
                 query.setIds(jobIds);
             } else {
@@ -138,7 +138,7 @@ public class JobServiceImpl extends ServiceImpl implements JobService {
     @Override
     public JobDto pojoByQuery(JobQuery query) {
         if (query.getDeptId() != null) {
-            Set<? extends Serializable> jobIds = deptJobMapService.getJobIdsByDeptId(query.getDeptId());
+            Set<? extends Serializable> jobIds = deptJobMapDao.getJobIdsByDeptId(query.getDeptId());
             if (CollectionUtil.isNotEmpty(jobIds)) {
                 query.setIds(jobIds);
             } else {
@@ -151,7 +151,7 @@ public class JobServiceImpl extends ServiceImpl implements JobService {
     @Override
     public Integer countByQuery(JobQuery query) {
         if (query.getDeptId() != null) {
-            Set<? extends Serializable> jobIds = deptJobMapService.getJobIdsByDeptId(query.getDeptId());
+            Set<? extends Serializable> jobIds = deptJobMapDao.getJobIdsByDeptId(query.getDeptId());
             if (CollectionUtil.isNotEmpty(jobIds)) {
                 query.setIds(jobIds);
             } else {
@@ -170,7 +170,7 @@ public class JobServiceImpl extends ServiceImpl implements JobService {
     @Override
     public void exportPage(Pageable pageable, JobQuery query, HttpServletResponse response) {
         if (query.getDeptId() != null) {
-            Set<? extends Serializable> jobIds = deptJobMapService.getJobIdsByDeptId(query.getDeptId());
+            Set<? extends Serializable> jobIds = deptJobMapDao.getJobIdsByDeptId(query.getDeptId());
             if (CollectionUtil.isNotEmpty(jobIds)) {
                 query.setIds(jobIds);
             } else {
@@ -198,8 +198,10 @@ public class JobServiceImpl extends ServiceImpl implements JobService {
             map.put("职务顺序", item.getSequence());
             map.put("是否禁用：1 表示禁用；0 表示启用", item.getDisabled());
             map.put("备注", item.getNote());
-            map.put("创建者", item.getCreatorName());
-            map.put("更新者", item.getUpdaterName());
+            map.put("创建者ID", item.getCreatorId());
+            map.put("更新者ID", item.getUpdaterId());
+            map.put("创建者名称", item.getCreatorName());
+            map.put("更新者名称", item.getUpdaterName());
             map.put("创建时间", item.getCreateTime());
             map.put("更新时间", item.getUpdateTime());
             mapList.add(map);
@@ -233,12 +235,12 @@ public class JobServiceImpl extends ServiceImpl implements JobService {
 
     @Override
     public boolean bindDept(Long deptId, Collection<Long> jobIds) {
-        return deptJobMapService.insertBatchByJobIds(deptId, jobIds);
+        return deptJobMapDao.insertBatchByJobIds(deptId, jobIds);
     }
 
     @Override
     public boolean unbindDept(Long deptId, Collection<Long> jobIds) {
-        return deptJobMapService.deleteBatchByJobIds(deptId, jobIds);
+        return deptJobMapDao.deleteBatchByJobIds(deptId, jobIds);
     }
 
 }

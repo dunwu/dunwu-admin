@@ -13,7 +13,7 @@ import java.util.List;
  * 菜单表 Dao 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-12
+ * @since 2021-10-13
  */
 @Dao
 public class MenuDaoImpl extends BaseExtDaoImpl<MenuMapper, Menu> implements MenuDao {

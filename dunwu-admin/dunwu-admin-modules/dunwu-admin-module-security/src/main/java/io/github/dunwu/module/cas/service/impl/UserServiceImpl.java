@@ -4,7 +4,6 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.github.dunwu.module.cas.dao.*;
-import io.github.dunwu.module.cas.entity.RoleMenuMap;
 import io.github.dunwu.module.cas.entity.User;
 import io.github.dunwu.module.cas.entity.dto.DeptDto;
 import io.github.dunwu.module.cas.entity.dto.JobDto;
@@ -12,7 +11,6 @@ import io.github.dunwu.module.cas.entity.dto.RoleDto;
 import io.github.dunwu.module.cas.entity.dto.UserDto;
 import io.github.dunwu.module.cas.entity.query.UserQuery;
 import io.github.dunwu.module.cas.entity.vo.DeptJobUserMapVo;
-import io.github.dunwu.module.cas.service.UserRoleMapService;
 import io.github.dunwu.module.cas.service.UserService;
 import io.github.dunwu.tool.data.exception.DataException;
 import io.github.dunwu.tool.data.mybatis.ServiceImpl;
@@ -34,7 +32,7 @@ import javax.servlet.http.HttpServletResponse;
  * 用户表 Service 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-12
+ * @since 2021-10-13
  */
 @Slf4j
 @Service
@@ -46,8 +44,7 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
     private final RoleDao roleDao;
     private final DeptDao deptDao;
     private final JobDao jobDao;
-    private final UserRoleMapService userRoleMapService;
-    private final RoleMenuMapDao roleMenuDao;
+    private final UserRoleMapDao userRoleDao;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -88,7 +85,7 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
             return true;
         }
 
-        userRoleMapService.deleteByUserId(user.getId());
+        userRoleDao.deleteByUserId(user.getId());
         return userDao.deleteById(id);
     }
 
@@ -171,8 +168,10 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
             map.put("密码", item.getPassword());
             map.put("修改密码的时间", item.getPwdResetTime());
             map.put("是否禁用：1 表示禁用；0 表示启用", item.getDisabled());
-            map.put("创建者", item.getCreatorName());
-            map.put("更新者", item.getUpdaterName());
+            map.put("创建者ID", item.getCreatorId());
+            map.put("更新者ID", item.getUpdaterId());
+            map.put("创建者名称", item.getCreatorName());
+            map.put("更新者名称", item.getUpdaterName());
             map.put("创建时间", item.getCreateTime());
             map.put("更新时间", item.getUpdateTime());
             mapList.add(map);
@@ -186,7 +185,6 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
         dto.setUsername(entity.getUsername());
 
         // 查询用户关联部门信息
-
         DeptDto dept = deptDao.pojoById(entity.getDeptId(), DeptDto.class);
         if (dept != null) {
             dto.setDept(dept);
@@ -205,7 +203,7 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
             }
         }
 
-        Set<? extends Serializable> roleIds = userRoleMapService.getRoleIdsByUserId(entity.getId());
+        Set<? extends Serializable> roleIds = userRoleDao.getRoleIdsByUserId(entity.getId());
         if (CollectionUtil.isNotEmpty(roleIds)) {
             List<RoleDto> roles = roleDao.pojoListByIds(roleIds, RoleDto.class);
             if (CollectionUtil.isNotEmpty(roles)) {
@@ -240,16 +238,6 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
         User userQuery = new User().setUsername(username);
         User user = userDao.getOne(userQuery);
         return doToDto(user);
-    }
-
-    @Override
-    public List<User> findByMenuId(Long menuId) {
-        RoleMenuMap query1 = new RoleMenuMap();
-        List<RoleMenuMap> roleMenus = roleMenuDao.list(query1);
-        if (CollectionUtil.isEmpty(roleMenus)) {
-            return null;
-        }
-        return null;
     }
 
     @Override
@@ -301,7 +289,7 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
             if (CollectionUtil.isNotEmpty(dto.getRoles())) {
                 List<Long> roleIds = dto.getRoles().stream().map(RoleDto::getId)
                                         .collect(Collectors.toList());
-                userRoleMapService.insertBatchByRoleIds(entity.getId(), roleIds);
+                userRoleDao.insertBatchByRoleIds(entity.getId(), roleIds);
             }
             return true;
         }
@@ -313,11 +301,11 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
     public boolean updateWithRoles(UserDto dto) {
         User entity = dtoToDo(dto);
         if (userDao.updateById(entity)) {
-            userRoleMapService.deleteByUserId(entity.getId());
+            userRoleDao.deleteByUserId(entity.getId());
             if (CollectionUtil.isNotEmpty(dto.getRoles())) {
                 Set<Long> roleIds = dto.getRoles().stream().map(RoleDto::getId)
                                        .collect(Collectors.toSet());
-                userRoleMapService.insertBatchByRoleIds(entity.getId(), roleIds);
+                userRoleDao.insertBatchByRoleIds(entity.getId(), roleIds);
             }
             return true;
         }

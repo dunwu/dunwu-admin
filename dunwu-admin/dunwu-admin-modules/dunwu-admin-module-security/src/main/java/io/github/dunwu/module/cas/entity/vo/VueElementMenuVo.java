@@ -8,14 +8,12 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 构建前端路由时用到
- *
- * @author Zheng Jie
- * @date 2018-12-20
+ * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
+ * @since 2021-10-16
  */
 @Data
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class MenuVo implements Serializable {
+public class VueElementMenuVo implements Serializable {
 
     private String name;
 
@@ -35,17 +33,13 @@ public class MenuVo implements Serializable {
 
     private boolean hasChildren;
 
-    private List<MenuVo> children;
+    private List<VueElementMenuVo> children;
 
-    /**
-     * @author Zheng Jie
-     * @date 2018-12-20
-     */
     @Data
     @AllArgsConstructor
     public static class MenuMetaVo implements Serializable {
 
-        private String title;
+        private String name;
         private String icon;
         private Boolean noCache;
 
