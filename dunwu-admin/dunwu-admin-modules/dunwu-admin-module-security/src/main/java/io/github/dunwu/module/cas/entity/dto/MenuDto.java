@@ -12,10 +12,10 @@ import java.util.Collection;
 import java.util.Objects;
 
 /**
- * 菜单表 Dto 类（基于 children 字段构成树形结构）
+ * 菜单表 Dto 类
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-16
+ * @since 2021-10-18
  */
 @Data
 @Accessors(chain = true)
@@ -31,25 +31,22 @@ public class MenuDto extends BaseConfigDto implements Comparable<MenuDto> {
     @ApiModelProperty(value = "上级菜单ID")
     private Long pid;
 
-    @ApiModelProperty(value = "子菜单数目")
-    private Integer childrenNum;
-
-    @ApiModelProperty(value = "编码")
+    @ApiModelProperty(value = "菜单编码")
     private String code;
 
-    @ApiModelProperty(value = "名称")
+    @ApiModelProperty(value = "菜单名称")
     private String name;
-
-    @ApiModelProperty(value = "菜单类型")
-    private Integer menuType;
 
     @ApiModelProperty(value = "权限表达式")
     private String expression;
 
+    @ApiModelProperty(value = "菜单类型")
+    private Integer menuType;
+
     @ApiModelProperty(value = "组件")
     private String component;
 
-    @ApiModelProperty(value = "排序")
+    @ApiModelProperty(value = "菜单顺序")
     private Integer sequence;
 
     @ApiModelProperty(value = "图标")
@@ -66,6 +63,12 @@ public class MenuDto extends BaseConfigDto implements Comparable<MenuDto> {
 
     @ApiModelProperty(value = "隐藏")
     private Boolean hidden;
+
+    @ApiModelProperty(value = "菜单级别")
+    private Integer level;
+
+    @ApiModelProperty(value = "子菜单数目")
+    private Integer childrenNum;
 
     @ApiModelProperty(value = "备注")
     private String note;

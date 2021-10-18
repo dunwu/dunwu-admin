@@ -4,6 +4,9 @@ import lombok.Data;
 
 /**
  * 令牌配置
+ *
+ * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
+ * @since 2020-04-08
  */
 @Data
 public class TokenProperties {

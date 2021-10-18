@@ -71,6 +71,4 @@ public class UserDto extends BaseConfigDto {
     @ApiModelProperty(value = "用户所属角色编码集合", hidden = true)
     private List<String> roleCodes;
 
-    private Boolean isAdmin = false;
-
 }

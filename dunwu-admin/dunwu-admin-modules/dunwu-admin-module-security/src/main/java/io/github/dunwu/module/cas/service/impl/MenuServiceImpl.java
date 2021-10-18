@@ -17,6 +17,7 @@ import io.github.dunwu.module.cas.entity.vo.VueElementMenuVo;
 import io.github.dunwu.module.cas.service.MenuService;
 import io.github.dunwu.module.cas.service.PermissionService;
 import io.github.dunwu.module.cas.service.RoleService;
+import io.github.dunwu.tool.data.exception.DataException;
 import io.github.dunwu.tool.data.mybatis.ServiceImpl;
 import io.github.dunwu.tool.util.tree.Node;
 import io.github.dunwu.tool.util.tree.TreeNodeConfig;
@@ -59,6 +60,7 @@ public class MenuServiceImpl extends ServiceImpl implements MenuService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean insert(Menu entity) {
+        autoRefreshLevelAndChildrenNum(entity);
         boolean isOk = menuDao.insert(entity);
         if (!isOk) {
             return false;
@@ -84,6 +86,7 @@ public class MenuServiceImpl extends ServiceImpl implements MenuService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean updateById(Menu entity) {
+        autoRefreshLevelAndChildrenNum(entity);
         boolean isOk = menuDao.updateById(entity);
         if (!isOk) {
             return false;
@@ -109,6 +112,7 @@ public class MenuServiceImpl extends ServiceImpl implements MenuService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean save(Menu entity) {
+        autoRefreshLevelAndChildrenNum(entity);
         boolean isOk = menuDao.save(entity);
         if (!isOk) {
             return false;
@@ -129,6 +133,37 @@ public class MenuServiceImpl extends ServiceImpl implements MenuService {
 
         list.forEach(this::save);
         return true;
+    }
+
+    private void autoRefreshLevelAndChildrenNum(Menu entity) {
+
+        if (entity.getId() != null) {
+            Menu oldRecord = menuDao.getById(entity.getId());
+            if (!oldRecord.getPid().equals(entity.getPid())) {
+                if (oldRecord.getPid() != 0) {
+                    Menu oldParentRecord = menuDao.getById(oldRecord.getPid());
+                    int num = oldParentRecord.getChildrenNum() - 1;
+                    int max = Math.max(num, 0);
+                    oldParentRecord.setChildrenNum(max);
+                    menuDao.updateById(oldParentRecord);
+                }
+            }
+        }
+
+        if (entity.getPid() != 0) {
+            Menu newParentRecord = menuDao.getById(entity.getPid());
+            if (newParentRecord == null) {
+                String msg = StrUtil.format("上级菜单 id = {} 不存在", entity.getPid());
+                throw new DataException(msg);
+            }
+
+            newParentRecord.setChildrenNum(newParentRecord.getChildrenNum() + 1);
+            menuDao.updateById(newParentRecord);
+
+            entity.setLevel(newParentRecord.getLevel() + 1);
+        } else {
+            entity.setLevel(1);
+        }
     }
 
     @Override
@@ -214,18 +249,19 @@ public class MenuServiceImpl extends ServiceImpl implements MenuService {
             Map<String, Object> map = new LinkedHashMap<>();
             map.put("ID", item.getId());
             map.put("上级菜单ID", item.getPid());
-            map.put("子菜单数目", item.getChildrenNum());
-            map.put("编码", item.getCode());
-            map.put("名称", item.getName());
-            map.put("菜单类型", item.getMenuType());
+            map.put("菜单编码", item.getCode());
+            map.put("菜单名称", item.getName());
             map.put("权限表达式", item.getExpression());
+            map.put("菜单类型", item.getMenuType());
             map.put("组件", item.getComponent());
-            map.put("排序", item.getSequence());
+            map.put("菜单顺序", item.getSequence());
             map.put("图标", item.getIcon());
             map.put("链接地址", item.getPath());
             map.put("是否外链", item.getFrame());
             map.put("缓存", item.getCached());
             map.put("隐藏", item.getHidden());
+            map.put("菜单级别", item.getLevel());
+            map.put("子菜单数目", item.getChildrenNum());
             map.put("备注", item.getNote());
             map.put("是否禁用：1 表示禁用；0 表示启用", item.getDisabled());
             map.put("创建者ID", item.getCreatorId());

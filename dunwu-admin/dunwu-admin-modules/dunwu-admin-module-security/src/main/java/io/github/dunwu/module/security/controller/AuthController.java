@@ -1,7 +1,7 @@
 package io.github.dunwu.module.security.controller;
 
 import io.github.dunwu.module.cas.entity.User;
-import io.github.dunwu.module.cas.entity.vo.UserPassVo;
+import io.github.dunwu.module.cas.entity.vo.UserPasswordVo;
 import io.github.dunwu.module.security.annotation.AnonymousGetMapping;
 import io.github.dunwu.module.security.annotation.AnonymousPostMapping;
 import io.github.dunwu.module.security.constant.enums.CodeBiEnum;
@@ -66,16 +66,14 @@ public class AuthController {
     @AppLog("修改用户：个人中心")
     @ApiOperation("修改用户：个人中心")
     @PostMapping("edit/center")
-    public DataResult center(@Validated(EditCheck.class) @RequestBody User entity) {
-        authService.updateCenter(entity);
-        return DataResult.ok();
+    public DataResult<Boolean> center(@Validated(EditCheck.class) @RequestBody User entity) {
+        return DataResult.ok(authService.updateCenter(entity));
     }
 
     @ApiOperation("修改用户密码")
     @PostMapping("edit/password")
-    public DataResult updatePass(@RequestBody UserPassVo entity) {
-        authService.updatePass(entity);
-        return DataResult.ok();
+    public DataResult<Boolean> updatePass(@RequestBody UserPasswordVo entity) {
+        return DataResult.ok(authService.updatePassword(entity));
     }
 
     @AppLog("修改用户邮箱")

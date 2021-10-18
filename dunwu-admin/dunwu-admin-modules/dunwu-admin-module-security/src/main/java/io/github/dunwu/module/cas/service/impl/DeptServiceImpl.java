@@ -100,17 +100,30 @@ public class DeptServiceImpl extends ServiceImpl implements DeptService {
 
     private void autoRefreshLevelAndChildrenNum(Dept entity) {
 
+        if (entity.getId() != null) {
+            Dept oldRecord = deptDao.getById(entity.getId());
+            if (!oldRecord.getPid().equals(entity.getPid())) {
+                if (oldRecord.getPid() != 0) {
+                    Dept oldParentRecord = deptDao.getById(oldRecord.getPid());
+                    int num = oldParentRecord.getChildrenNum() - 1;
+                    int max = Math.max(num, 0);
+                    oldParentRecord.setChildrenNum(max);
+                    deptDao.updateById(oldParentRecord);
+                }
+            }
+        }
+
         if (entity.getPid() != 0) {
-            Dept superiorDept = deptDao.getById(entity.getPid());
-            if (superiorDept == null) {
+            Dept newParentRecord = deptDao.getById(entity.getPid());
+            if (newParentRecord == null) {
                 String msg = StrUtil.format("上级部门 id = {} 不存在", entity.getPid());
                 throw new DataException(msg);
             }
 
-            superiorDept.setChildrenNum(superiorDept.getChildrenNum() + 1);
-            deptDao.updateById(superiorDept);
+            newParentRecord.setChildrenNum(newParentRecord.getChildrenNum() + 1);
+            deptDao.updateById(newParentRecord);
 
-            entity.setLevel(superiorDept.getLevel() + 1);
+            entity.setLevel(newParentRecord.getLevel() + 1);
         } else {
             entity.setLevel(1);
         }

@@ -21,8 +21,6 @@ public class LoginDto {
     @NotBlank
     private String password;
 
-    private Boolean rememberMe;
-
     private String code;
 
     private String uuid = "";

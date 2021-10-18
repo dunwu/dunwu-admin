@@ -9,8 +9,7 @@ import cn.hutool.crypto.asymmetric.RSA;
 import com.wf.captcha.base.Captcha;
 import io.github.dunwu.module.cas.entity.User;
 import io.github.dunwu.module.cas.entity.dto.UserDto;
-import io.github.dunwu.module.cas.entity.query.UserQuery;
-import io.github.dunwu.module.cas.entity.vo.UserPassVo;
+import io.github.dunwu.module.cas.entity.vo.UserPasswordVo;
 import io.github.dunwu.module.cas.service.DeptService;
 import io.github.dunwu.module.cas.service.RoleService;
 import io.github.dunwu.module.cas.service.UserService;
@@ -27,7 +26,6 @@ import io.github.dunwu.module.security.util.EncryptUtil;
 import io.github.dunwu.module.security.util.JwtTokenUtil;
 import io.github.dunwu.module.security.util.SecurityUtil;
 import io.github.dunwu.tool.core.exception.AuthException;
-import io.github.dunwu.tool.data.exception.DataException;
 import io.github.dunwu.tool.data.redis.RedisHelper;
 import io.github.dunwu.tool.data.util.PageUtil;
 import io.github.dunwu.tool.web.ServletUtil;
@@ -36,7 +34,6 @@ import io.github.dunwu.tool.web.security.SecurityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -54,7 +51,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
 
@@ -63,12 +59,10 @@ import javax.servlet.http.HttpServletRequest;
  * @date 2019年10月26日21:56:27
  */
 @Slf4j
-@CacheConfig(cacheNames = "user")
+@CacheConfig(cacheNames = "dunwu::user")
 @RequiredArgsConstructor
 @Service("userDetailsService")
 public class AuthService implements UserDetailsService {
-
-    static final Map<String, UserVo> userDtoCache = new ConcurrentHashMap<>();
 
     private final RSA rsa;
     private final RedisHelper redisHelper;
@@ -84,8 +78,8 @@ public class AuthService implements UserDetailsService {
     @Override
     @Cacheable(key = "'name:' + #username")
     public UserVo loadUserByUsername(String username) {
-        UserDto user;
-        user = userService.pojoByUsername(username);
+        log.info("查询用户 {} 的信息", username);
+        UserDto user = userService.pojoByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException("");
         }
@@ -134,6 +128,7 @@ public class AuthService implements UserDetailsService {
             new UsernamePasswordAuthenticationToken(loginDto.getUsername(), password);
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
         // 生成令牌
         String token = jwtTokenUtil.createToken(authentication);
         final UserVo userVo = (UserVo) authentication.getPrincipal();
@@ -236,11 +231,13 @@ public class AuthService implements UserDetailsService {
      * @return /
      */
     public Map<String, Object> getAllOnlineUsers(String filter, Pageable pageable) {
-        List<OnlineUserDto> onlineUserDtos = getAllOnlineUsers(filter);
-        return PageUtil.toMap(
-            PageUtil.toList(pageable.getPageNumber(), pageable.getPageSize(), onlineUserDtos),
-            onlineUserDtos.size()
-        );
+        List<OnlineUserDto> list = getAllOnlineUsers(filter);
+        int pageNumber = 0;
+        if (pageable.getPageNumber() > 0) {
+            pageNumber = pageable.getPageNumber() - 1;
+        }
+        List<OnlineUserDto> content = PageUtil.toList(pageNumber, pageable.getPageSize(), list);
+        return PageUtil.toMap(content, list.size());
     }
 
     /**
@@ -253,56 +250,45 @@ public class AuthService implements UserDetailsService {
         return (OnlineUserDto) redisHelper.get(key);
     }
 
-    public void setEnableCache(boolean enableCache) {
-        securityProperties.setCacheEnable(enableCache);
-    }
-
+    /**
+     * 更新用户中心的个人信息
+     *
+     * @param entity 用户实体
+     * @return true / false
+     */
     @Transactional(rollbackFor = Exception.class)
-    public void updateCenter(User entity) {
+    public boolean updateCenter(User entity) {
         if (!entity.getId().equals(securityService.getCurrentUserId())) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "不能修改他人资料");
         }
-        UserDto user = userService.pojoById(entity.getId());
-        UserQuery query = new UserQuery();
-        query.setPhone(entity.getPhone());
-        UserDto user1 = userService.pojoByQuery(query);
-        if (user1 != null && !user.getId().equals(user1.getId())) {
-            throw new DataException(StrUtil.format("未找到 phone = {} 的用户", entity.getPhone()));
+
+        UserDto userDto = userService.pojoById(entity.getId());
+        User record = BeanUtil.toBean(userDto, User.class);
+        record.setNickname(entity.getNickname());
+        record.setPhone(entity.getPhone());
+        record.setGender(entity.getGender());
+        boolean isOk = userService.updateById(record);
+        if (!isOk) {
+            return false;
         }
-        User sysUser = BeanUtil.toBean(user, User.class);
-        sysUser.setNickname(entity.getNickname());
-        sysUser.setPhone(entity.getPhone());
-        sysUser.setGender(entity.getGender());
-        userService.updateById(sysUser);
+
         // 清理缓存
-        delCaches(user.getId(), user.getUsername());
+        cleanUserCache(userDto.getId(), userDto.getUsername());
+        return true;
     }
 
     /**
-     * 清理缓存
+     * 更新用户密码
      *
-     * @param id /
+     * @param passVo 用户密码重置实体
+     * @return true / false
      */
-    public void delCaches(Long id, String username) {
-        redisHelper.del("user::id:" + id);
-        redisHelper.del("user::name:" + username);
-        flushCache(username);
-    }
-
-    /**
-     * 清理特定用户缓存信息<br> 用户信息变更时
-     *
-     * @param username /
-     */
-    @CacheEvict(key = "'name:' + #username", allEntries=true)
-    public void cleanUserCache(String username) {
-        log.info("清理用户 {} 的缓存", username);
-    }
-
     @Transactional(rollbackFor = Exception.class)
-    public void updatePass(UserPassVo passVo) {
+    public boolean updatePassword(UserPasswordVo passVo) {
+
         String oldPass = rsa.decryptStr(passVo.getOldPass(), KeyType.PrivateKey);
         String newPass = rsa.decryptStr(passVo.getNewPass(), KeyType.PrivateKey);
+
         UserDto userDto = userService.pojoByUsername(securityService.getCurrentUsername());
         if (!passwordEncoder.matches(oldPass, userDto.getPassword())) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "修改失败，旧密码错误");
@@ -310,13 +296,26 @@ public class AuthService implements UserDetailsService {
         if (passwordEncoder.matches(newPass, userDto.getPassword())) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "新密码不能与旧密码相同");
         }
+
         User user = new User();
         user.setId(userDto.getId());
         user.setPassword(passwordEncoder.encode(newPass));
-        userService.updateById(user);
-        flushCache(userDto.getUsername());
+        boolean isOk = userService.updateById(user);
+        if (!isOk) {
+            return false;
+        }
+
+        cleanUserCache(userDto.getUsername());
+        return true;
     }
 
+    /**
+     * 更新用户邮箱
+     *
+     * @param code   校验码
+     * @param entity 用户实体
+     * @return true / false
+     */
     public boolean updateEmail(String code, User entity) {
         String password = rsa.decryptStr(entity.getPassword(), KeyType.PrivateKey);
         UserDto userDto = userService.pojoByUsername(securityService.getCurrentUsername());
@@ -329,6 +328,29 @@ public class AuthService implements UserDetailsService {
         user.setPassword(passwordEncoder.encode(entity.getPassword()));
         userService.updateById(user);
         return true;
+    }
+
+    /**
+     * 清理用户缓存
+     *
+     * @param id       用户ID
+     * @param username 用户名
+     */
+    @Async
+    public void cleanUserCache(Long id, String username) {
+        redisHelper.del("user::id:" + id);
+        cleanUserCache(username);
+    }
+
+    /**
+     * 清理特定用户缓存信息<br> 用户信息变更时
+     *
+     * @param username 用户名
+     */
+    @Async
+    public void cleanUserCache(String username) {
+        log.info("清理用户 {} 的缓存", username);
+        redisHelper.del("dunwu::user::name:" + username);
     }
 
     public boolean validated(String key, String code) {
@@ -384,15 +406,6 @@ public class AuthService implements UserDetailsService {
                 }
             }
         }
-    }
-
-    /**
-     * 清理 登陆时 用户缓存信息
-     *
-     * @param username /
-     */
-    private void flushCache(String username) {
-        cleanUserCache(username);
     }
 
 }

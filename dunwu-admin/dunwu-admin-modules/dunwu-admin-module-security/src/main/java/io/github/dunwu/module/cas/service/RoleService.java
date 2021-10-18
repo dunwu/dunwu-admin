@@ -7,7 +7,6 @@ import io.github.dunwu.module.cas.entity.dto.UserDto;
 import io.github.dunwu.module.cas.entity.query.RoleQuery;
 import io.github.dunwu.tool.data.annotation.QueryField;
 import io.github.dunwu.tool.data.mybatis.IService;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,7 +14,6 @@ import org.springframework.security.core.GrantedAuthority;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -191,7 +189,6 @@ public interface RoleService extends IService {
 
     Integer getRoleLevel();
 
-    @Cacheable(key = "'auth:' + #p0.id")
     List<GrantedAuthority> mapToGrantedAuthorities(UserDto user);
 
 }

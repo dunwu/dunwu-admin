@@ -3,13 +3,13 @@ package io.github.dunwu.module.cas.entity.vo;
 import lombok.Data;
 
 /**
- * 修改密码的 Vo 类
+ * 密码重置实体
  *
- * @author Zheng Jie
- * @date 2019年7月11日13:59:49
+ * @author peng.zhang
+ * @date 2021-10-18
  */
 @Data
-public class UserPassVo {
+public class UserPasswordVo {
 
     private String oldPass;
 

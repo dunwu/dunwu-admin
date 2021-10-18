@@ -20,6 +20,7 @@ import io.github.dunwu.tool.web.ServletUtil;
 import io.github.dunwu.tool.web.security.SecurityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,7 +42,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "role")
+@CacheConfig(cacheNames = "dunwu::role")
 public class RoleServiceImpl extends ServiceImpl implements RoleService {
 
     private final RoleDao roleDao;
@@ -56,6 +57,7 @@ public class RoleServiceImpl extends ServiceImpl implements RoleService {
     private final SecurityService securityService;
 
     @Override
+    @CacheEvict(key = "'id:' + #p0.id")
     public boolean insert(Role entity) {
         checkRoleLevel(entity.getLevel());
         return roleDao.insert(entity);
@@ -67,6 +69,7 @@ public class RoleServiceImpl extends ServiceImpl implements RoleService {
     }
 
     @Override
+    @CacheEvict(key = "'id:' + #p0.id")
     public boolean updateById(Role entity) {
         checkRoleLevel(entity.getLevel());
         return roleDao.updateById(entity);
@@ -78,6 +81,7 @@ public class RoleServiceImpl extends ServiceImpl implements RoleService {
     }
 
     @Override
+    @CacheEvict(key = "'id:' + #p0.id")
     public boolean save(Role entity) {
         checkRoleLevel(entity.getLevel());
         return roleDao.save(entity);
@@ -89,6 +93,7 @@ public class RoleServiceImpl extends ServiceImpl implements RoleService {
     }
 
     @Override
+    @CacheEvict(key = "'id:' + #p0")
     public boolean deleteById(Serializable id) {
         return roleDao.deleteById(id);
     }
@@ -311,14 +316,20 @@ public class RoleServiceImpl extends ServiceImpl implements RoleService {
     @Cacheable(key = "'auth:' + #p0.id")
     public List<GrantedAuthority> mapToGrantedAuthorities(UserDto user) {
         Set<String> permissions = new HashSet<>();
+
+        List<RoleDto> roles = pojoListByUserId(user.getId());
+        if (CollectionUtil.isEmpty(roles)) {
+            return Collections.emptyList();
+        }
+
         // 如果是管理员直接返回
-        if (user.getIsAdmin()) {
+        List<String> roleNames = roles.stream().map(RoleDto::getCode)
+                                      .collect(Collectors.toList());
+        if (roleNames.contains("admin")) {
             permissions.add("admin");
             return permissions.stream().map(SimpleGrantedAuthority::new)
                               .collect(Collectors.toList());
         }
-
-        List<RoleDto> roles = pojoListByUserId(user.getId());
         permissions = roles.stream().flatMap(role -> role.getMenus().stream())
                            .filter(menu -> StrUtil.isNotBlank(menu.getExpression()))
                            .map(MenuDto::getExpression).collect(Collectors.toSet());

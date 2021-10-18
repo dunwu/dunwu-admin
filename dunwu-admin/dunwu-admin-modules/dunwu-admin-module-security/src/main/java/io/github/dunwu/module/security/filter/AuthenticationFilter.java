@@ -61,8 +61,7 @@ public class AuthenticationFilter extends GenericFilterBean {
                 cleanUserCache = true;
             } finally {
                 if (cleanUserCache || Objects.isNull(onlineUserDto)) {
-                    authService.cleanUserCache(
-                        String.valueOf(jwtTokenUtil.getClaims(token).get(JwtTokenUtil.AUTHORITIES_KEY)));
+                    authService.cleanUserCache(String.valueOf(jwtTokenUtil.getClaims(token).get(JwtTokenUtil.AUTHORITIES_KEY)));
                 }
             }
             if (onlineUserDto != null && StringUtils.hasText(token)) {

@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
  * 菜单表
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-13
+ * @since 2021-10-18
  */
 @Data
 @Accessors(chain = true)
@@ -38,31 +38,27 @@ public class Menu extends BaseConfigEntity {
     @TableField("`pid`")
     private Long pid;
 
-    @ApiModelProperty(value = "编码")
+    @ApiModelProperty(value = "菜单编码")
     @TableField("`code`")
     private String code;
 
-    @ApiModelProperty(value = "名称")
+    @ApiModelProperty(value = "菜单名称")
     @TableField("`name`")
     private String name;
-
-    @ApiModelProperty(value = "菜单类型")
-    @TableField("`menu_type`")
-    private Integer menuType;
 
     @ApiModelProperty(value = "权限表达式")
     @TableField("`expression`")
     private String expression;
 
-    @ApiModelProperty(value = "子菜单数目")
-    @TableField("`children_num`")
-    private Integer childrenNum;
+    @ApiModelProperty(value = "菜单类型")
+    @TableField("`menu_type`")
+    private Integer menuType;
 
     @ApiModelProperty(value = "组件")
     @TableField("`component`")
     private String component;
 
-    @ApiModelProperty(value = "排序")
+    @ApiModelProperty(value = "菜单顺序")
     @TableField("`sequence`")
     private Integer sequence;
 
@@ -86,17 +82,24 @@ public class Menu extends BaseConfigEntity {
     @TableField("`is_hidden`")
     private Boolean hidden;
 
+    @ApiModelProperty(value = "菜单级别")
+    @TableField("`level`")
+    private Integer level;
+
+    @ApiModelProperty(value = "子菜单数目")
+    @TableField("`children_num`")
+    private Integer childrenNum;
+
     @ApiModelProperty(value = "备注")
     @TableField("`note`")
     private String note;
 
     public static final String ID = "id";
     public static final String PID = "pid";
-    public static final String CHILDREN_NUM = "children_num";
     public static final String CODE = "code";
     public static final String NAME = "name";
-    public static final String TYPE = "type";
     public static final String EXPRESSION = "expression";
+    public static final String MENU_TYPE = "menu_type";
     public static final String COMPONENT = "component";
     public static final String SEQUENCE = "sequence";
     public static final String ICON = "icon";
@@ -104,6 +107,8 @@ public class Menu extends BaseConfigEntity {
     public static final String IS_FRAME = "is_frame";
     public static final String IS_CACHED = "is_cached";
     public static final String IS_HIDDEN = "is_hidden";
+    public static final String LEVEL = "level";
+    public static final String CHILDREN_NUM = "children_num";
     public static final String NOTE = "note";
 
 }

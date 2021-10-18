@@ -32,17 +32,25 @@ public class MenuQuery implements Serializable {
     @QueryField(value = "`pid`")
     private Long pid;
 
-    @ApiModelProperty(value = "编码")
+    @ApiModelProperty(value = "菜单编码")
     @QueryField(value = "`code`")
     private String code;
 
-    @ApiModelProperty(value = "名称")
+    @ApiModelProperty(value = "菜单名称")
     @QueryField(value = "`name`")
     private String name;
 
     @ApiModelProperty(value = "菜单类型")
     @QueryField(value = "`menu_type`")
     private Integer menuType;
+
+    @ApiModelProperty(value = "组件")
+    @QueryField(value = "`component`")
+    private String component;
+
+    @ApiModelProperty(value = "链接地址")
+    @QueryField(value = "`path`")
+    private String path;
 
     @ApiModelProperty(value = "是否外链")
     @QueryField(value = "`is_frame`")
@@ -55,6 +63,10 @@ public class MenuQuery implements Serializable {
     @ApiModelProperty(value = "隐藏")
     @QueryField(value = "`is_hidden`")
     private Boolean hidden;
+
+    @ApiModelProperty(value = "菜单级别")
+    @QueryField(value = "`level`")
+    private Integer level;
 
     @ApiModelProperty(value = "是否禁用：1 表示禁用；0 表示启用")
     @QueryField(value = "`is_disabled`")
