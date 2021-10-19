@@ -1,5 +1,6 @@
 <template>
   <el-dialog
+    v-el-drag-dialog
     append-to-body
     :close-on-click-modal="false"
     :before-close="crud.cancelCU"
@@ -75,6 +76,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import CRUD, { crud, form } from '@crud/crud'
+import ElDragDialog from '@/directive/el-drag-dialog'
 import Treeselect, { LOAD_CHILDREN_OPTIONS } from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import UserApi from '@/api/cas/user'
@@ -101,6 +103,7 @@ const defaultForm = {
 export default {
   name: 'UserForm',
   components: { Treeselect },
+  directives: { ElDragDialog },
   cruds() {
     return CRUD({
       title: '用户',

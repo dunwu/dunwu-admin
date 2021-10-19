@@ -1,5 +1,6 @@
 <template>
   <el-dialog
+    v-el-drag-dialog
     append-to-body
     :close-on-click-modal="false"
     :before-close="crud.cancelCU"
@@ -51,6 +52,7 @@
 
 <script>
 import CRUD, { crud, form } from '@crud/crud'
+import ElDragDialog from '@/directive/el-drag-dialog'
 import Treeselect, { LOAD_CHILDREN_OPTIONS } from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import RoleApi from '@/api/cas/role'
@@ -73,6 +75,7 @@ const defaultForm = {
 export default {
   name: 'RoleForm',
   components: { Treeselect },
+  directives: { ElDragDialog },
   mixins: [form(defaultForm), crud()],
   cruds() {
     return CRUD({

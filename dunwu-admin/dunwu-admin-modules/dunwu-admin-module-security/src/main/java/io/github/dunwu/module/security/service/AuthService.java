@@ -6,6 +6,7 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.crypto.asymmetric.RSA;
+import cn.hutool.crypto.symmetric.DES;
 import com.wf.captcha.base.Captcha;
 import io.github.dunwu.module.cas.entity.User;
 import io.github.dunwu.module.cas.entity.dto.UserDto;
@@ -22,7 +23,6 @@ import io.github.dunwu.module.security.entity.dto.OnlineUserDto;
 import io.github.dunwu.module.security.entity.vo.LoginSuccessVo;
 import io.github.dunwu.module.security.entity.vo.UserVo;
 import io.github.dunwu.module.security.util.CaptchaUtil;
-import io.github.dunwu.module.security.util.EncryptUtil;
 import io.github.dunwu.module.security.util.JwtTokenUtil;
 import io.github.dunwu.module.security.util.SecurityUtil;
 import io.github.dunwu.tool.core.exception.AuthException;
@@ -35,12 +35,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -53,17 +56,19 @@ import org.springframework.web.client.HttpClientErrorException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Zheng Jie
  * @date 2019年10月26日21:56:27
  */
 @Slf4j
-@CacheConfig(cacheNames = "dunwu::user")
+@CacheConfig(cacheNames = "dunwu::auth")
 @RequiredArgsConstructor
 @Service("userDetailsService")
 public class AuthService implements UserDetailsService {
 
+    private final DES des;
     private final RSA rsa;
     private final RedisHelper redisHelper;
     private final UserService userService;
@@ -109,10 +114,16 @@ public class AuthService implements UserDetailsService {
      * 处理登出请求
      */
     public boolean logout(String token) {
-        String username = SecurityUtil.getCurrentUsername();
-        String key = securityProperties.getToken().getOnlinePrefix() + token;
-        redisHelper.del(key);
-        cleanUserCache(username);
+        try {
+            String key = securityProperties.getToken().getOnlinePrefix() + token;
+            redisHelper.del(key);
+            String username = SecurityUtil.getCurrentUsername();
+            if (StrUtil.isNotBlank(username)) {
+                cleanUserCache(username);
+            }
+        } catch (AuthenticationException e) {
+            // 直接忽略
+        }
         return true;
     }
 
@@ -171,8 +182,9 @@ public class AuthService implements UserDetailsService {
         String address = requestIdentityInfo.getLocation();
         OnlineUserDto onlineUserDto = null;
         try {
+
             onlineUserDto = new OnlineUserDto(userVo.getUsername(), userVo.getUser().getNickname(), dept,
-                browser, ip, address, EncryptUtil.desEncrypt(token), new Date());
+                browser, ip, address, des.encryptBase64(token), new Date());
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -183,9 +195,24 @@ public class AuthService implements UserDetailsService {
     /**
      * 强制用户下线
      */
-    public void offline(String id) {
+    public boolean offline(String id) {
         id = securityProperties.getToken().getOnlinePrefix() + id;
         redisHelper.del(id);
+        return true;
+    }
+
+    public boolean batchOffline(Collection<String> ids) {
+        for (String id : ids) {
+            // 解密Key
+            try {
+                id = des.decryptStr(id);
+            } catch (Exception e) {
+                log.error("【权限管理】【下线】id = {} 解析失败", id, e);
+                return false;
+            }
+            offline(id);
+        }
+        return true;
     }
 
     /**
@@ -198,7 +225,7 @@ public class AuthService implements UserDetailsService {
         List<OnlineUserDto> onlineUsers = getAllOnlineUsers(username);
         for (OnlineUserDto onlineUser : onlineUsers) {
             if (onlineUser.getUserName().equals(username)) {
-                String token = EncryptUtil.desDecrypt(onlineUser.getKey());
+                String token = des.decryptStr(onlineUser.getKey());
                 offline(token);
             }
         }
@@ -221,23 +248,6 @@ public class AuthService implements UserDetailsService {
         redisHelper.set(uuid, captchaValue, securityProperties.getCaptcha().getExpiration(), TimeUnit.SECONDS);
         // 返回验证码信息
         return new CaptchaImageDto(captcha.toBase64(), uuid);
-    }
-
-    /**
-     * 查询全部数据
-     *
-     * @param filter   /
-     * @param pageable /
-     * @return /
-     */
-    public Map<String, Object> getAllOnlineUsers(String filter, Pageable pageable) {
-        List<OnlineUserDto> list = getAllOnlineUsers(filter);
-        int pageNumber = 0;
-        if (pageable.getPageNumber() > 0) {
-            pageNumber = pageable.getPageNumber() - 1;
-        }
-        List<OnlineUserDto> content = PageUtil.toList(pageNumber, pageable.getPageSize(), list);
-        return PageUtil.toMap(content, list.size());
     }
 
     /**
@@ -363,6 +373,28 @@ public class AuthService implements UserDetailsService {
         return true;
     }
 
+    public Page<OnlineUserDto> pageOnlineUsers(Pageable pageable, String filter) {
+        List<OnlineUserDto> list = getAllOnlineUsers(filter);
+        return new PageImpl<>(list, pageable, list.size());
+    }
+
+    /**
+     * 查询全部数据
+     *
+     * @param pageable /
+     * @param filter   /
+     * @return /
+     */
+    public Map<String, Object> getAllOnlineUsers(Pageable pageable, String filter) {
+        List<OnlineUserDto> list = getAllOnlineUsers(filter);
+        int pageNumber = 0;
+        if (pageable.getPageNumber() > 0) {
+            pageNumber = pageable.getPageNumber() - 1;
+        }
+        List<OnlineUserDto> content = PageUtil.toList(pageNumber, pageable.getPageSize(), list);
+        return PageUtil.toMap(content, list.size());
+    }
+
     /**
      * 查询全部在线用户数据，不分页
      */
@@ -395,7 +427,7 @@ public class AuthService implements UserDetailsService {
         for (OnlineUserDto onlineUserDto : onlineUsers) {
             if (onlineUserDto.getUserName().equals(userName)) {
                 try {
-                    String token = EncryptUtil.desDecrypt(onlineUserDto.getKey());
+                    String token = des.decryptStr(onlineUserDto.getKey());
                     if (StrUtil.isNotBlank(ignoreToken) && !ignoreToken.equals(token)) {
                         this.offline(token);
                     } else if (StrUtil.isBlank(ignoreToken)) {
@@ -406,6 +438,34 @@ public class AuthService implements UserDetailsService {
                 }
             }
         }
+    }
+
+    public void exportPage(Pageable pageable, String filter, HttpServletResponse response) {
+        List<OnlineUserDto> list = getAllOnlineUsers(filter);
+        exportDtoList(list, response);
+    }
+
+    /**
+     * 根据传入的 {@link OnlineUserDto} 列表，导出 excel 表单
+     *
+     * @param list     {@link OnlineUserDto} 列表
+     * @param response {@link HttpServletResponse} 实体
+     */
+    private void exportDtoList(Collection<OnlineUserDto> list, HttpServletResponse response) {
+        List<Map<String, Object>> mapList = new ArrayList<>();
+        for (OnlineUserDto item : list) {
+            Map<String, Object> map = new LinkedHashMap<>();
+            map.put("用户名", item.getUserName());
+            map.put("昵称", item.getNickname());
+            map.put("部门", item.getDept());
+            map.put("浏览器", item.getBrowser());
+            map.put("IP", item.getIp());
+            map.put("地址", item.getAddress());
+            map.put("token", item.getKey());
+            map.put("登录时间", item.getLoginTime());
+            mapList.add(map);
+        }
+        ServletUtil.downloadExcel(response, mapList);
     }
 
 }

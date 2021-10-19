@@ -77,6 +77,7 @@
     </div>
     <!--表单组件-->
     <el-dialog
+      v-el-drag-dialog
       append-to-body
       :close-on-click-modal="false"
       :before-close="crud.cancelCU"
@@ -135,11 +136,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="createTime" label="部署日期" />
-      <el-table-column
-        v-if="checkPer(['admin', 'deploy:edit', 'deploy:del'])"
-        label="操作"
-        width="150px"
-      >
+      <el-table-column v-if="checkPer(['admin', 'deploy:edit', 'deploy:del'])" label="操作" width="150px">
         <template slot-scope="scope">
           <TableColumnOperation :data="scope.row" :permission="permission" />
         </template>
@@ -157,6 +154,7 @@ import TableOperation from '@crud/TableOperation'
 import TableColumnOperation from '@crud/TableColumnOperation'
 import Pagination from '@crud/Pagination'
 import DateRangePicker from '@/components/DateRangePicker'
+import ElDragDialog from '@/directive/el-drag-dialog'
 import AppApi from './AppApi'
 import ServerApi from './ServerApi'
 import DeployApi from './DeployApi'
@@ -175,8 +173,13 @@ export default {
     TableColumnOperation,
     DateRangePicker
   },
+  directives: { ElDragDialog },
   cruds() {
-    return CRUD({ title: '部署', url: 'deploy', crudMethod: { ...DeployApi }})
+    return CRUD({
+      title: '部署',
+      url: 'deploy',
+      crudMethod: { ...DeployApi }
+    })
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   data() {

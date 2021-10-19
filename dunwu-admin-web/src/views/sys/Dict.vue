@@ -2,6 +2,7 @@
   <div class="app-container">
     <!--表单组件-->
     <el-dialog
+      v-el-drag-dialog
       append-to-body
       :close-on-click-modal="false"
       :before-close="crud.cancelCU"
@@ -115,6 +116,7 @@ import TableOperation from '@crud/TableOperation'
 import Pagination from '@crud/Pagination'
 import TableQueryOperation from '@crud/TableQueryOperation'
 import TableColumnOperation from '@crud/TableColumnOperation'
+import ElDragDialog from '@/directive/el-drag-dialog'
 import DictOption from './DictOption'
 import DictApi from './DictApi'
 
@@ -126,8 +128,15 @@ const defaultForm = { id: null, code: null, name: null, note: null, disabled: fa
 export default {
   name: 'Dict',
   components: { TableOperation, Pagination, TableQueryOperation, TableColumnOperation, DictOption },
+  directives: { ElDragDialog },
   cruds() {
-    return [CRUD({ title: '字典', url: 'sys/dict', crudMethod: { ...DictApi }})]
+    return [
+      CRUD({
+        title: '字典',
+        url: 'sys/dict',
+        crudMethod: { ...DictApi }
+      })
+    ]
   },
   mixins: [presenter(), header(), form(defaultForm)],
   /**

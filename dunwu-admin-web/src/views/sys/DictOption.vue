@@ -22,6 +22,7 @@
       </div>
       <!--表单组件-->
       <el-dialog
+        v-el-drag-dialog
         append-to-body
         :close-on-click-modal="false"
         :before-close="crud.cancelCU"
@@ -75,12 +76,14 @@ import CRUD, { form, header, presenter } from '@crud/crud'
 import Pagination from '@crud/Pagination'
 import TableQueryOperation from '@crud/TableQueryOperation'
 import TableColumnOperation from '@crud/TableColumnOperation'
+import ElDragDialog from '@/directive/el-drag-dialog'
 import DictOptionApi from './DictOptionApi'
 
 const defaultForm = { id: null, code: null, name: null }
 
 export default {
   components: { Pagination, TableQueryOperation, TableColumnOperation },
+  directives: { ElDragDialog },
   cruds() {
     return [
       CRUD({

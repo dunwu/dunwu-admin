@@ -12,7 +12,7 @@
       class="header-search-select"
       @change="change"
     >
-      <el-option v-for="item in options" :key="item.path" :value="item" :label="item.title.join(' > ')" />
+      <el-option v-for="item in options" :key="item.path" :value="item" :label="item.name.join(' > ')" />
     </el-select>
   </div>
 </template>
@@ -103,7 +103,7 @@ export default {
       })
     },
     // Filter out the routes that can be displayed in the sidebar
-    // And generate the internationalized title
+    // And generate the internationalized name
     generateRoutes(routes, basePath = '/', prefixTitle = []) {
       let res = []
 
@@ -115,14 +115,14 @@ export default {
 
         const data = {
           path: !this.ishttp(router.path) ? path.resolve(basePath, router.path) : router.path,
-          title: [...prefixTitle]
+          name: [...prefixTitle]
         }
 
         if (router.meta && router.meta.name) {
-          data.title = [...data.title, router.meta.name]
+          data.name = [...data.name, router.meta.name]
 
           if (router.redirect !== 'noRedirect') {
-            // only push the routes with title
+            // only push the routes with name
             // special case: need to exclude parent router without redirect
             res.push(data)
           }

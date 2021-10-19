@@ -148,7 +148,9 @@ export const loadMenus = (next, to) => {
 
     store.dispatch('GenerateRoutes', rewriteRoutes).then(() => {
       // 存储路由
-      router.addRoutes(rewriteRoutes) // 动态添加可访问路由表
+      rewriteRoutes.forEach(r => {
+        router.addRoute(r) // 动态添加可访问路由表
+      })
       next({ ...to, replace: true })
     })
     store.dispatch('SetSidebarRouters', sidebarRoutes)

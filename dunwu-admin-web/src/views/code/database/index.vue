@@ -80,6 +80,7 @@
     <!--表单组件-->
     <eForm ref="execute" :database-info="currentRow" />
     <el-dialog
+      v-el-drag-dialog
       append-to-body
       :close-on-click-modal="false"
       :before-close="crud.cancelCU"
@@ -124,7 +125,9 @@
               <el-input v-model="form.schemaName" />
             </el-form-item>
           </el-col>
-          <el-button :loading="loading" type="primary" plain style="margin-left: 50px" @click="testDbConnection">测试链接</el-button>
+          <el-button :loading="loading" type="primary" plain style="margin-left: 50px" @click="testDbConnection">
+            测试链接
+          </el-button>
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -177,6 +180,7 @@ import TableOperation from '@crud/TableOperation'
 import TableColumnOperation from '@crud/TableColumnOperation'
 import Pagination from '@crud/Pagination'
 import DateRangePicker from '@/components/DateRangePicker'
+import ElDragDialog from '@/directive/el-drag-dialog'
 
 const defaultForm = {
   id: null,
@@ -190,8 +194,13 @@ const defaultForm = {
 export default {
   name: 'DataBase',
   components: { eForm, Pagination, TableOperation, TableQueryOperation, TableColumnOperation, DateRangePicker },
+  directives: { ElDragDialog },
   cruds() {
-    return CRUD({ title: '数据库', url: 'code/database', crudMethod: { ...databaseApi }})
+    return CRUD({
+      title: '数据库',
+      url: 'code/database',
+      crudMethod: { ...databaseApi }
+    })
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   data() {
@@ -225,7 +234,10 @@ export default {
             .testDbConnection(this.form)
             .then(res => {
               this.loading = false
-              this.crud.message(res ? CRUD.NOTIFICATION_TYPE.SUCCESS : CRUD.NOTIFICATION_TYPE.ERROR, res ? '连接成功' : '连接失败')
+              this.crud.message(
+                res ? CRUD.NOTIFICATION_TYPE.SUCCESS : CRUD.NOTIFICATION_TYPE.ERROR,
+                res ? '连接成功' : '连接失败'
+              )
             })
             .catch(() => {
               this.loading = false

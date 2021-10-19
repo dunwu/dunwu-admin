@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.ui.Model;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.validation.FieldError;
@@ -93,6 +94,20 @@ public class GlobalExceptionHandler {
      * 处理认证异常
      *
      * @param e AuthenticationException
+     * @return {@link DataResult}
+     */
+    @ResponseBody
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(AuthenticationException.class)
+    public DataResult<?> handleAuthException(final AuthenticationException e) {
+        log.error("认证失败，方法: {}, message: {}", e.getClass().getCanonicalName(), e.getLocalizedMessage());
+        return DataResult.fail(ResultStatus.HTTP_UNAUTHORIZED.getCode(), e.getLocalizedMessage());
+    }
+
+    /**
+     * 处理认证异常
+     *
+     * @param e AuthException
      * @return {@link DataResult}
      */
     @ResponseBody

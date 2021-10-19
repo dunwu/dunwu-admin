@@ -326,14 +326,6 @@ public class MenuServiceImpl extends ServiceImpl implements MenuService {
 
         List<MenuDto> list = new ArrayList<>();
 
-        // 查找父节点
-        MenuDto parentNode = pojoById(pid);
-        if (parentNode == null) {
-            return Collections.emptyList();
-        }
-        parentNode.setIsDefaultExpanded(true);
-        list.add(parentNode);
-
         MenuQuery query = new MenuQuery();
         query.setPid(pid);
         List<MenuDto> children = menuDao.pojoListByQuery(query, this::doToDto);
@@ -342,6 +334,14 @@ public class MenuServiceImpl extends ServiceImpl implements MenuService {
         }
 
         if (pid != 0) {
+            // 查找父节点
+            MenuDto parentNode = pojoById(pid);
+            if (parentNode == null) {
+                return Collections.emptyList();
+            }
+            parentNode.setIsDefaultExpanded(true);
+            list.add(parentNode);
+
             List<MenuDto> brothers = pojoListByPid(parentNode.getPid());
             if (CollectionUtil.isNotEmpty(brothers)) {
                 list.addAll(brothers);

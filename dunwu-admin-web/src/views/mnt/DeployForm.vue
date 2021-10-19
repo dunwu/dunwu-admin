@@ -1,5 +1,12 @@
 <template>
-  <el-dialog append-to-body :close-on-click-modal="false" :visible.sync="dialog" title="应用部署" width="400px">
+  <el-dialog
+    v-el-drag-dialog
+    append-to-body
+    :close-on-click-modal="false"
+    :visible.sync="dialog"
+    title="应用部署"
+    width="400px"
+  >
     <el-form ref="form" :model="form" :rules="rules" size="small">
       <el-upload
         :action="deployUploadApi"
@@ -32,8 +39,10 @@ import { getToken } from '@/utils/auth'
 import AppApi from './AppApi'
 import ServerApi from './ServerApi'
 import DeployApi from './DeployApi'
+import ElDragDialog from '@/directive/el-drag-dialog'
 
 export default {
+  directives: { ElDragDialog },
   props: {},
   data() {
     return {

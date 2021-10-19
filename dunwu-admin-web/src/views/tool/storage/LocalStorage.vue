@@ -33,6 +33,7 @@
     </div>
     <!--表单组件-->
     <el-dialog
+      v-el-drag-dialog
       append-to-body
       :close-on-click-modal="false"
       :before-close="crud.cancelCU"
@@ -152,6 +153,7 @@ import TableQueryOperation from '@crud/TableQueryOperation'
 import TableOperation from '@crud/TableOperation'
 import Pagination from '@crud/Pagination'
 import DateRangePicker from '@/components/DateRangePicker'
+import ElDragDialog from '@/directive/el-drag-dialog'
 import { getToken } from '@/utils/auth'
 import StorageApi from './StorageApi'
 import qs from 'qs'
@@ -160,9 +162,14 @@ const defaultForm = { id: null, namespace: null, tag: null, originName: null, st
 const IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/bmp', 'image/gif', 'image/webp']
 export default {
   components: { Pagination, TableOperation, TableQueryOperation, DateRangePicker },
+  directives: { ElDragDialog },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   cruds() {
-    return CRUD({ title: '文件', url: 'tool/storage', crudMethod: { ...StorageApi }})
+    return CRUD({
+      title: '文件',
+      url: 'tool/storage',
+      crudMethod: { ...StorageApi }
+    })
   },
   data() {
     return {
@@ -239,10 +246,7 @@ export default {
       this.loading = false
     },
     removeFile(file, fileList) {
-      this.fileList.splice(
-        this.fileList.findIndex(f => f.url === file.url),
-        1
-      )
+      this.fileList.splice(this.fileList.findIndex(f => f.url === file.url), 1)
     },
     clearFiles() {
       this.fileList.splice(0, this.fileList.length)

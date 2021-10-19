@@ -91,7 +91,7 @@
       </el-table-column>
       <el-table-column prop="bizType" label="业务类型" />
       <el-table-column prop="operateType" label="操作类型" />
-      <el-table-column prop="message" label="日志内容" />
+      <!--      <el-table-column prop="message" label="日志内容" />-->
       <el-table-column prop="operatorName" label="操作者" />
       <el-table-column prop="clientIp" label="IP" />
       <el-table-column :show-overflow-tooltip="true" prop="clientLocation" label="IP来源" />

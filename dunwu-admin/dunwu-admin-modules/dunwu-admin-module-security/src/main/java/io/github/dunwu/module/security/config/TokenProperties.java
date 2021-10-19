@@ -21,10 +21,10 @@ public class TokenProperties {
     private Long tokenValidityInSeconds = 4 * 60 * 60L;
     /** 令牌过期时间 此处单位/秒 */
     private Long expireTime;
-    /** 在线用户 key，根据 key 查询 redis 中在线用户的数据 */
-    private String onlinePrefix = "dunwu:online:";
-    /** 验证码 key */
-    private String captchaPrefix = "dunwu:captcha:";
+    /** 在线用户 key 前缀 */
+    private String onlinePrefix = "dunwu::online::";
+    /** 验证码 key 前缀 */
+    private String captchaPrefix = "dunwu::captcha::";
     /** token 续期检查时间，单位秒，默认30分钟 */
     private Long detect = 1800L;
     /** 续期时间，单位秒，默认1小时 */

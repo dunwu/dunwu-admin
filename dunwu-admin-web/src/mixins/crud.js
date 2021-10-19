@@ -9,7 +9,7 @@ export default {
       // 排序规则，默认 id 降序， 支持多字段排序 ['id,desc', 'createTime,asc']
       sort: ['id,desc'],
       // 页码
-      page: 1,
+      page: 0,
       // 每页数据条数
       size: 10,
       // 总数据条数
@@ -123,12 +123,12 @@ export default {
     },
     // 改变页码
     pageChange(e) {
-      this.page = e
+      this.page = e - 1
       this.init()
     },
     // 改变每页显示数
     sizeChange(e) {
-      this.page = 1
+      this.page = 0
       this.size = e
       this.init()
     },
@@ -137,13 +137,13 @@ export default {
       if (size === undefined) {
         size = 1
       }
-      if (this.data.length === size && this.page !== 1) {
-        this.page = this.page
+      if (this.data.length === size && this.page !== 0) {
+        this.page = this.page - 1
       }
     },
     // 查询方法
     toQuery() {
-      this.page = 1
+      this.page = 0
       this.init()
     },
     /**

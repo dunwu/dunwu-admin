@@ -1,5 +1,6 @@
 <template>
   <el-dialog
+    v-el-drag-dialog
     :close-on-click-modal="false"
     :before-close="crud.cancelCU"
     :visible.sync="crud.status.cu > 0"
@@ -35,6 +36,7 @@
 
 <script>
 import { form } from '@crud/crud'
+import ElDragDialog from '@/directive/el-drag-dialog'
 import ServerApi from './ServerApi'
 
 /**
@@ -43,6 +45,7 @@ import ServerApi from './ServerApi'
 const defaultForm = { account: null, ip: null, name: null, password: null, port: null }
 export default {
   name: 'ServerForm',
+  directives: { ElDragDialog },
   mixins: [form(defaultForm)],
   data() {
     return {

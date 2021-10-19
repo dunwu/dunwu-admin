@@ -33,6 +33,7 @@
     </div>
     <!--表单组件-->
     <el-dialog
+      v-el-drag-dialog
       append-to-body
       :close-on-click-modal="false"
       :before-close="crud.cancelCU"
@@ -113,15 +114,21 @@ import TableOperation from '@crud/TableOperation'
 import Pagination from '@crud/Pagination'
 import DateRangePicker from '@/components/DateRangePicker'
 import Upload from '@/components/Upload'
+import ElDragDialog from '@/directive/el-drag-dialog'
 import { getToken } from '@/utils/auth'
 import StorageApi from './StorageApi'
 
 const defaultForm = { id: null, name: '' }
 export default {
   components: { Pagination, TableOperation, TableQueryOperation, DateRangePicker, Upload },
+  directives: { ElDragDialog },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   cruds() {
-    return CRUD({ title: '文件', url: 'tool/storage', crudMethod: { ...StorageApi }})
+    return CRUD({
+      title: '文件',
+      url: 'tool/storage',
+      crudMethod: { ...StorageApi }
+    })
   },
   data() {
     return {

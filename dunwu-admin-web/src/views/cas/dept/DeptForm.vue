@@ -1,5 +1,6 @@
 <template>
   <el-dialog
+    v-el-drag-dialog
     append-to-body
     :close-on-click-modal="false"
     :before-close="crud.cancelCU"
@@ -75,6 +76,7 @@ import CRUD, { crud, form } from '@crud/crud'
 import DeptApi from '@/api/cas/dept'
 import Treeselect, { LOAD_CHILDREN_OPTIONS } from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+import ElDragDialog from '@/directive/el-drag-dialog'
 
 /**
  * 表单默认值
@@ -92,6 +94,7 @@ const defaultForm = {
 export default {
   name: 'DeptForm',
   components: { Treeselect },
+  directives: { ElDragDialog },
   mixins: [form(defaultForm), crud()],
   cruds() {
     return CRUD({
@@ -181,6 +184,9 @@ export default {
           this.buildDeptOptions(data.children, id, pid)
         }
       })
+    },
+    handleDrag() {
+      this.$refs.select.blur()
     }
   }
 }

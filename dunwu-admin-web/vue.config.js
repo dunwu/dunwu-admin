@@ -80,7 +80,7 @@ module.exports = {
 
     config
       // https://webpack.js.org/configuration/devtool/#development
-      .when(process.env.NODE_ENV === 'development', config => config.devtool('cheap-source-map'))
+      .when(process.env.NODE_ENV === 'development', config => config.devtool('source-map'))
 
     config.when(process.env.NODE_ENV !== 'development', config => {
       config

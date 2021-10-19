@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import onlineApi from '@/api/monitor/onlineApi'
+import OnlineApi from '@/api/cas/online'
 import CRUD, { presenter, header, crud } from '@crud/crud'
 import TableQueryOperation from '@crud/TableQueryOperation'
 import TableOperation from '@crud/TableOperation'
@@ -80,7 +80,10 @@ export default {
   name: 'OnlineUser',
   components: { Pagination, TableOperation, TableQueryOperation },
   cruds() {
-    return CRUD({ title: '在线用户', crudMethod: { ...onlineApi }})
+    return CRUD({
+      title: '在线用户',
+      crudMethod: { ...OnlineApi }
+    })
   },
   mixins: [presenter(), header(), crud()],
   data() {
@@ -114,8 +117,7 @@ export default {
         })
       } else ids.push(key)
       this.delLoading = true
-      onlineApi
-        .delBatch(ids)
+      OnlineApi.delBatch(ids)
         .then(() => {
           this.delLoading = false
           if (this.$refs[index]) {

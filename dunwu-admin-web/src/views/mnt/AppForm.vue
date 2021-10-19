@@ -1,5 +1,6 @@
 <template>
   <el-dialog
+    v-el-drag-dialog
     :close-on-click-modal="false"
     :before-close="crud.cancelCU"
     :visible.sync="crud.status.cu > 0"
@@ -73,6 +74,7 @@
 
 <script>
 import { form } from '@crud/crud'
+import ElDragDialog from '@/directive/el-drag-dialog'
 
 /**
  * 表单实体默认值
@@ -93,6 +95,7 @@ const defaultForm = {
 }
 export default {
   name: 'AppForm',
+  directives: { ElDragDialog },
   mixins: [form(defaultForm)],
   data() {
     return {

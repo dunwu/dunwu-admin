@@ -23,7 +23,6 @@
     <module>dunwu-admin-module-mnt</module>
     <module>dunwu-admin-module-generator</module>
     <module>dunwu-admin-module-tool</module>
-    <module>dunwu-admin-module-demo</module>
   </modules>
 
   <dependencyManagement>
@@ -51,11 +50,6 @@
       <dependency>
         <groupId>io.github.dunwu</groupId>
         <artifactId>dunwu-admin-module-tool</artifactId>
-        <version>${dunwu-admin-modules.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.github.dunwu</groupId>
-        <artifactId>dunwu-admin-module-demo</artifactId>
         <version>${dunwu-admin-modules.version}</version>
       </dependency>
     </dependencies>

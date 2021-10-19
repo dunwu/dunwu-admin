@@ -1,5 +1,12 @@
 <template>
-  <el-dialog append-to-body :close-on-click-modal="false" :visible.sync="dialog" title="系统还原" width="800px">
+  <el-dialog
+    v-el-drag-dialog
+    append-to-body
+    :close-on-click-modal="false"
+    :visible.sync="dialog"
+    title="系统还原"
+    width="800px"
+  >
     <!--工具栏-->
     <div class="head-container">
       <date-range-picker v-model="query.createTime" class="date-item" />
@@ -40,10 +47,12 @@
 <script>
 import crud from '@/mixins/crud'
 import DateRangePicker from '@/components/DateRangePicker'
+import ElDragDialog from '@/directive/el-drag-dialog'
 import DeployApi from './DeployApi'
 
 export default {
   components: { DateRangePicker },
+  directives: { ElDragDialog },
   mixins: [crud],
   props: {
     appName: {

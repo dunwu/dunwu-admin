@@ -1,5 +1,12 @@
 <template>
-  <el-dialog append-to-body :close-on-click-modal="false" :visible.sync="dialog" title="执行脚本" width="400px">
+  <el-dialog
+    v-el-drag-dialog
+    append-to-body
+    :close-on-click-modal="false"
+    :visible.sync="dialog"
+    title="执行脚本"
+    width="400px"
+  >
     <el-form ref="form" :rules="rules" size="small">
       <el-upload
         :action="databaseUploadApi"
@@ -26,8 +33,11 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import ElDragDialog from '@/directive/el-drag-dialog'
 import { getToken } from '@/utils/auth'
+
 export default {
+  directives: { ElDragDialog },
   props: {
     databaseInfo: {
       type: Object,

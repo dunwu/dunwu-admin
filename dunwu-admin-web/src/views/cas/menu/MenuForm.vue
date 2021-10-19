@@ -1,5 +1,6 @@
 <template>
   <el-dialog
+    v-el-drag-dialog
     append-to-body
     :close-on-click-modal="false"
     :before-close="crud.cancelCU"
@@ -111,6 +112,7 @@
 import CRUD, { crud, form } from '@crud/crud'
 import MenuApi from '@/api/cas/menu'
 import IconSelect from '@/components/IconSelect'
+import ElDragDialog from '@/directive/el-drag-dialog'
 import Treeselect, { LOAD_CHILDREN_OPTIONS } from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 
@@ -139,6 +141,7 @@ const defaultForm = {
 export default {
   name: 'MenuForm',
   components: { Treeselect, IconSelect },
+  directives: { ElDragDialog },
   mixins: [form(defaultForm), crud()],
   cruds() {
     return CRUD({
@@ -167,9 +170,7 @@ export default {
         code: [{ required: true, trigger: 'blur', message: '编码不能为空' }],
         name: [{ required: true, trigger: 'blur', message: '名称不能为空' }],
         menuType: [{ required: true, trigger: 'blur', message: '菜单类型不能为空' }],
-        expression: [{ required: true, trigger: 'blur', message: '权限表达式不能为空' }],
         component: [{ required: true, trigger: 'blur', message: '组件不能为空' }],
-        icon: [{ required: true, trigger: 'blur', message: '图标不能为空' }],
         path: [{ required: true, trigger: 'blur', message: '链接地址不能为空' }],
         frame: [{ required: true, trigger: 'blur', message: '是否外链不能为空' }],
         cached: [{ required: true, trigger: 'blur', message: '缓存不能为空' }],
@@ -197,7 +198,6 @@ export default {
           return obj
         })
         this.menus.push({ id: 0, label: '顶级类目', hasChildren: true, children })
-        console.info('getSuperiorTreeList menus', this.menus)
       })
     },
     /**

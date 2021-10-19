@@ -15,6 +15,7 @@
  */
 package io.github.dunwu.module.security.entity.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -42,7 +43,7 @@ public class OnlineUserDto {
     private String nickname;
 
     /**
-     * 岗位
+     * 部门
      */
     private String dept;
 
@@ -69,6 +70,7 @@ public class OnlineUserDto {
     /**
      * 登录时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date loginTime;
 
 }

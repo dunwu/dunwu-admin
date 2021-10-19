@@ -26,13 +26,15 @@ import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @author Zheng Jie
- * @date 2018-11-23 授权、根据token获取用户详细信息
+ * 认证服务 Controller
+ *
+ * @author peng.zhang
+ * @date 2021-10-19
  */
 @Slf4j
 @RestController
 @RequestMapping("auth")
-@Api(tags = "系统：系统授权接口")
+@Api(tags = "【权限管理】认证管理接口")
 @RequiredArgsConstructor
 public class AuthController {
 

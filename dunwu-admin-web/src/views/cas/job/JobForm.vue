@@ -1,5 +1,6 @@
 <template>
   <el-dialog
+    v-el-drag-dialog
     append-to-body
     :close-on-click-modal="false"
     :before-close="crud.cancelCU"
@@ -68,6 +69,7 @@
 
 <script>
 import CRUD, { crud, form } from '@crud/crud'
+import ElDragDialog from '@/directive/el-drag-dialog'
 
 /**
  * 表单默认值
@@ -83,6 +85,7 @@ const defaultForm = {
 }
 export default {
   name: 'JobForm',
+  directives: { ElDragDialog },
   mixins: [form(defaultForm), crud()],
   props: {
     dict: { type: Object, required: true }

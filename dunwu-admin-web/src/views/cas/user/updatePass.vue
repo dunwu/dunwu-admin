@@ -1,6 +1,7 @@
 <template>
   <div style="display: inline-block">
     <el-dialog
+      v-el-drag-dialog
       :visible.sync="dialog"
       :close-on-click-modal="false"
       :before-close="cancel"
@@ -30,8 +31,11 @@
 
 <script>
 import store from '@/store'
+import ElDragDialog from '@/directive/el-drag-dialog'
 import authApi from '@/api/auth'
+
 export default {
+  directives: { ElDragDialog },
   data() {
     const confirmPass = (rule, value, callback) => {
       if (value) {

@@ -15,7 +15,10 @@
  */
 package io.github.dunwu.module.security.config;
 
+import cn.hutool.crypto.Mode;
+import cn.hutool.crypto.Padding;
 import cn.hutool.crypto.asymmetric.RSA;
+import cn.hutool.crypto.symmetric.DES;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -37,9 +40,26 @@ public class ConfigBeanConfiguration {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * RSA 加密算法工具实例
+     *
+     * @return /
+     */
     @Bean
     public RSA rsa(DunwuWebSecurityProperties securityProperties) {
         return new RSA(securityProperties.getRsaPrivateKey(), securityProperties.getRsaPublicKey());
+    }
+
+    /**
+     * DES 加密算法工具实例
+     *
+     * @return /
+     */
+    @Bean
+    public DES des() {
+        final String key = "芝麻开门";
+        final String iv = "dunwu666";
+        return new DES(Mode.CBC, Padding.PKCS5Padding, key.getBytes(), iv.getBytes());
     }
 
 }
