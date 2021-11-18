@@ -12,7 +12,9 @@ import lombok.Data;
 @Data
 public class WebSocketMsg {
 
+    /** 消息内容 */
     private String msg;
+    /** 消息类型 */
     private WebSocketMsgType msgType;
 
     public WebSocketMsg(String msg, WebSocketMsgType msgType) {

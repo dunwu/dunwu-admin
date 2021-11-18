@@ -19,7 +19,17 @@
     <dependencies>
         <dependency>
             <groupId>io.github.dunwu</groupId>
-            <artifactId>dunwu-admin-module-common</artifactId>
+            <artifactId>dunwu-admin-common</artifactId>
+        </dependency>
+
+        <!--dunwu 自封装 Boot 框架-->
+        <dependency>
+            <groupId>io.github.dunwu.boot</groupId>
+            <artifactId>dunwu-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.dunwu.boot</groupId>
+            <artifactId>dunwu-starter-mybatis</artifactId>
         </dependency>
 
         <!--Spring boot 安全框架-->

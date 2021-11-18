@@ -14,6 +14,7 @@
   <packaging>pom</packaging>
 
   <properties>
+    <dunwu-admin-common.version>1.0.1</dunwu-admin-common.version>
     <dunwu-admin-modules.version>1.0.1</dunwu-admin-modules.version>
   </properties>
 
@@ -27,6 +28,11 @@
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>io.github.dunwu</groupId>
+        <artifactId>dunwu-admin-common</artifactId>
+        <version>${dunwu-admin-common.version}</version>
+      </dependency>
       <dependency>
         <groupId>io.github.dunwu</groupId>
         <artifactId>dunwu-admin-module-security</artifactId>

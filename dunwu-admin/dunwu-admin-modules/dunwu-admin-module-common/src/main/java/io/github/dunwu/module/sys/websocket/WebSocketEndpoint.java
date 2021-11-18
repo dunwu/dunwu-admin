@@ -1,13 +1,17 @@
 package io.github.dunwu.module.sys.websocket;
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Objects;
-import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
@@ -18,36 +22,41 @@ import javax.websocket.server.ServerEndpoint;
  */
 @Slf4j
 @Component
-@ServerEndpoint("/webSocket/{sid}")
+@ServerEndpoint("/webSocket/{module}/{userId}")
 public class WebSocketEndpoint {
 
-    private static ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     /**
      * 线程安全的 WebSocketEndpoint Set
      */
-    private static final CopyOnWriteArraySet<WebSocketEndpoint> WEB_SOCKET_SET = new CopyOnWriteArraySet<>();
+    private static final ConcurrentHashMap<Long, WebSocketEndpoint> SOCKET_MAP = new ConcurrentHashMap<>();
 
     /**
      * 与某个客户端的连接会话，需要通过它来给客户端发送数据
      */
     private Session session;
-
     /**
-     * 接收 sid
+     * 接收模块
      */
-    private String sid = "";
+    private String module = "";
+    /**
+     * 用户ID
+     */
+    private Long userId;
 
     /**
      * 连接建立成功调用的方法
      */
     @OnOpen
-    public void onOpen(Session session, @PathParam("sid") String sid) {
+    public void onOpen(Session session, @PathParam("module") String module, @PathParam("userId") Long userId) {
         // 如果存在就先删除一个，防止重复推送消息
-        WEB_SOCKET_SET.removeIf(webSocket -> webSocket.sid.equals(sid));
-        WEB_SOCKET_SET.add(this);
+        SOCKET_MAP.keySet().removeIf(key -> key.equals(userId));
+        SOCKET_MAP.put(userId, this);
         this.session = session;
-        this.sid = sid;
+        session.getUserPrincipal();
+        this.module = module;
+        this.userId = userId;
     }
 
     /**
@@ -55,7 +64,7 @@ public class WebSocketEndpoint {
      */
     @OnClose
     public void onClose() {
-        WEB_SOCKET_SET.remove(this);
+        SOCKET_MAP.remove(userId);
     }
 
     /**
@@ -65,11 +74,17 @@ public class WebSocketEndpoint {
      */
     @OnMessage
     public void onMessage(String message, Session session) {
-        log.info("【WebSocket】收到来自" + sid + "的信息:" + message);
+
+        log.info("【WebSocket】【接收消息】module = {}, userId = {}，message = {}", module, userId, message);
+
+        if (MapUtil.isEmpty(SOCKET_MAP)) {
+            return;
+        }
+
         //群发消息
-        for (WebSocketEndpoint item : WEB_SOCKET_SET) {
+        for (WebSocketEndpoint item : SOCKET_MAP.values()) {
             try {
-                item.sendMessage(message);
+                item.send(message);
             } catch (IOException e) {
                 log.error(e.getMessage(), e);
             }
@@ -84,23 +99,77 @@ public class WebSocketEndpoint {
     /**
      * 实现服务器主动推送
      */
-    private void sendMessage(String message) throws IOException {
+    private void send(String message) throws IOException {
         this.session.getBasicRemote().sendText(message);
     }
 
     /**
-     * 群发自定义消息
+     * 向指定用户发送消息
      */
-    public static void sendInfo(WebSocketMsg socketMsg, @PathParam("sid") String sid) throws JsonProcessingException {
-        String message = objectMapper.writeValueAsString(socketMsg);
-        log.info("【WebSocket】推送消息到" + sid + "，推送内容:" + message);
-        for (WebSocketEndpoint item : WEB_SOCKET_SET) {
+    public static void sendToOneUser(WebSocketMsg socketMsg, String module, Long userId)
+        throws JsonProcessingException {
+
+        if (userId == null) {
+            return;
+        }
+        if (MapUtil.isEmpty(SOCKET_MAP)) {
+            return;
+        }
+
+        WebSocketEndpoint endpoint = SOCKET_MAP.get(userId);
+        if (endpoint == null) {
+            return;
+        }
+
+        String message = OBJECT_MAPPER.writeValueAsString(socketMsg);
+        log.info("【WebSocket】【发送消息】module = {}, userId = {}，message = {}", module, userId, message);
+
+        try {
+            //这里可以设定只推送给这个模块，为null则全部推送
+            if (StrUtil.isBlank(module)) {
+                endpoint.send(message);
+            } else if (endpoint.module.equals(module)) {
+                endpoint.send(message);
+            }
+        } catch (IOException e) {
+            // 忽略
+        }
+    }
+
+    /**
+     * 向指定用户群发送消息
+     */
+    public static void sendToMultiUser(WebSocketMsg socketMsg, String module, Collection<Long> userIds)
+        throws JsonProcessingException {
+
+        if (CollectionUtil.isEmpty(userIds)) {
+            return;
+        }
+
+        for (Long userId : userIds) {
+            sendToOneUser(socketMsg, module, userId);
+        }
+    }
+
+    /**
+     * 向所有用户群发送消息
+     */
+    public static void sendToAllUser(WebSocketMsg socketMsg, String module) throws JsonProcessingException {
+
+        String message = OBJECT_MAPPER.writeValueAsString(socketMsg);
+        log.info("【WebSocket】【发送消息】module = {}, message = {}", module, message);
+
+        if (MapUtil.isEmpty(SOCKET_MAP)) {
+            return;
+        }
+
+        for (WebSocketEndpoint item : SOCKET_MAP.values()) {
             try {
-                //这里可以设定只推送给这个sid的，为null则全部推送
-                if (sid == null) {
-                    item.sendMessage(message);
-                } else if (item.sid.equals(sid)) {
-                    item.sendMessage(message);
+                //这里可以设定只推送给这个模块，为null则全部推送
+                if (StrUtil.isNotBlank(module)) {
+                    item.send(message);
+                } else if (item.module.equals(module)) {
+                    item.send(message);
                 }
             } catch (IOException e) {
                 // 忽略
@@ -113,17 +182,17 @@ public class WebSocketEndpoint {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof WebSocketEndpoint)) {
             return false;
         }
         WebSocketEndpoint that = (WebSocketEndpoint) o;
         return Objects.equals(session, that.session) &&
-            Objects.equals(sid, that.sid);
+            Objects.equals(module, that.module);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(session, sid);
+        return Objects.hash(session, module);
     }
 
 }

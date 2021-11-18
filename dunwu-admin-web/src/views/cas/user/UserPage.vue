@@ -48,7 +48,6 @@
       @selection-change="crud.selectionChangeHandler"
     >
       <el-table-column v-if="allowOperation" type="selection" width="55" />
-      <el-table-column prop="id" label="ID" />
       <el-table-column :show-overflow-tooltip="true" prop="username" label="用户名" />
       <el-table-column :show-overflow-tooltip="true" prop="nickname" label="昵称" />
       <el-table-column :show-overflow-tooltip="true" prop="dept" label="部门">

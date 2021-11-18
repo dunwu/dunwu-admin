@@ -51,9 +51,8 @@
       @selection-change="crud.selectionChangeHandler"
     >
       <el-table-column type="selection" width="55" />
-      <el-table-column label="ID" prop="id" />
       <el-table-column label="部门名称" prop="name" />
-      <el-table-column label="状态" prop="disabled">
+      <el-table-column label="是否启用" prop="disabled">
         <template slot-scope="scope">
           <el-switch
             v-model="scope.row.disabled"
@@ -64,6 +63,16 @@
             :inactive-value="true"
             @change="changeStatus(scope.row, scope.row.disabled)"
           />
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="checkPer(['admin', 'cas:dept:edit', 'cas:dept:del'])"
+        label="操作"
+        width="200px"
+        fixed="right"
+      >
+        <template slot-scope="scope">
+          <TableColumnOperation :data="scope.row" :permission="permission" />
         </template>
       </el-table-column>
     </el-table>
@@ -77,6 +86,7 @@
 import CRUD, { crud, header, presenter } from '@crud/crud'
 import TableQueryOperation from '@crud/TableQueryOperation'
 import TableOperation from '@crud/TableOperation'
+import TableColumnOperation from '@crud/TableColumnOperation'
 import From from './DeptForm'
 import DeptApi from '@/api/cas/dept'
 
@@ -85,6 +95,7 @@ export default {
   components: {
     TableOperation,
     TableQueryOperation,
+    TableColumnOperation,
     From
   },
   cruds() {

@@ -141,11 +141,7 @@ public class DeptServiceImpl extends ServiceImpl implements DeptService {
     @Transactional(rollbackFor = Exception.class)
     public boolean deleteById(Serializable id) {
         // 删除部门职务关联记录
-        boolean isOk = deptJobDao.deleteByDeptId(id);
-        if (!isOk) {
-            String msg = StrUtil.format("删除 jobId = {} 的部门职务关联记录失败", id);
-            throw new DataException(msg);
-        }
+        deptJobDao.deleteByDeptId(id);
 
         Dept entity = deptDao.getById(id);
         if (entity == null) {

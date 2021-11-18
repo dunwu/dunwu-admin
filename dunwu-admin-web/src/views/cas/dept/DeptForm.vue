@@ -134,7 +134,7 @@ export default {
     [CRUD.HOOK.afterToCU](crud, form) {
       this.deptList = []
       form.isTop = form.pid === 0
-      this.getAllTreeList(form.id, form.pid)
+      this.getDeptTreeList(form.id, form.pid)
     },
     // 提交前的验证
     [CRUD.HOOK.afterValidateCU]() {
@@ -147,7 +147,7 @@ export default {
       }
       return true
     },
-    getAllTreeList(id, pid) {
+    getDeptTreeList(id, pid) {
       DeptApi.treeList().then(res => {
         const children = res.map(function(obj) {
           return obj

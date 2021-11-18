@@ -296,7 +296,7 @@ public class DeployServiceImpl extends ServiceImpl implements DeployService {
 
     private void sendMsg(String msg, WebSocketMsgType webSocketMsgType) {
         try {
-            WebSocketEndpoint.sendInfo(new WebSocketMsg(msg, webSocketMsgType), "deploy");
+            WebSocketEndpoint.sendToAllUser(new WebSocketMsg(msg, webSocketMsgType), "deploy");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }

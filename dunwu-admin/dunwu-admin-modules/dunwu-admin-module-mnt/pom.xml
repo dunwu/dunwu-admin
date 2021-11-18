@@ -19,7 +19,7 @@
     <dependencies>
         <dependency>
             <groupId>io.github.dunwu</groupId>
-            <artifactId>dunwu-admin-module-security</artifactId>
+            <artifactId>dunwu-admin-module-common</artifactId>
         </dependency>
 
         <!-- linux的管理 -->

@@ -25,10 +25,20 @@
         <treeselect
           v-model="form.deptId"
           :options="depts"
-          :load-options="loadDepts"
+          :load-options="loadDeptList"
           style="width: 184px"
-          placeholder="请选择"
+          search-nested
+          :show-count="true"
+          :default-expand-level="1"
         />
+        <label
+          slot="option-label"
+          slot-scope="{ node, shouldShowCount, count, labelClassName, countClassName }"
+          :class="labelClassName"
+        >
+          {{ node.label }}
+          <span v-if="shouldShowCount" :class="countClassName">({{ count }})</span>
+        </label>
       </el-form-item>
       <el-form-item label="岗位" prop="jobId">
         <el-select v-model="form.jobId" style="width: 184px" placeholder="请选择">
@@ -184,13 +194,10 @@ export default {
     // 添加与编辑前做的操作
     [CRUD.HOOK.afterToCU](crud, form) {
       this.getRoles()
-      if (form.id == null) {
-        this.getDepts()
-      } else {
-        this.getSupDepts(form.dept.id)
-      }
+      this.getDeptTreeList()
       this.getRoleLevel()
-      this.getJobs({ disabled: true })
+      console.info('form', form)
+      this.getJobs({ disabled: false, deptId: form.deptId })
       // form.disabled = form.disabled.toString()
     },
     // 添加前将多选的值设置为空
@@ -234,46 +241,24 @@ export default {
       crud.form.roles = userRoles
       return true
     },
-    getDepts() {
-      DeptApi.treeList({ disabled: true }).then(res => {
-        this.depts = res.map(function(obj) {
-          if (obj.hasChildren) {
-            obj.children = null
-          }
+    getDeptTreeList() {
+      DeptApi.treeList().then(res => {
+        const children = res.map(function(obj) {
           return obj
         })
-      })
-    },
-    getSupDepts(deptId) {
-      DeptApi.superiorTreeList(deptId).then(res => {
-        const data = res
-        this.buildDepts(data)
-        this.depts = data
-      })
-    },
-    buildDepts(depts) {
-      depts.forEach(data => {
-        if (data.children) {
-          this.buildDepts(data.children)
-        }
-        if (data.hasChildren && !data.children) {
-          data.children = null
-        }
+        this.depts = [{ id: 0, label: '顶级类目', children: children }]
       })
     },
     // 获取弹窗内部门数据
-    loadDepts({ action, parentNode, callback }) {
+    loadDeptList({ action, parentNode, callback }) {
       if (action === LOAD_CHILDREN_OPTIONS) {
-        DeptApi.treeList({ disabled: true, pid: parentNode.id }).then(res => {
+        DeptApi.treeList({ disabled: false, pid: parentNode.id !== 0 ? parentNode.id : 0 }).then(res => {
           parentNode.children = res.map(function(obj) {
-            if (obj.hasChildren) {
-              obj.children = null
-            }
             return obj
           })
           setTimeout(() => {
             callback()
-          }, 200)
+          }, 100)
         })
       }
     },
@@ -289,6 +274,7 @@ export default {
     getJobs(params) {
       JobApi.list(params)
         .then(res => {
+          console.info('jobs', res)
           this.jobs = res
         })
         .catch(() => {})

@@ -25,8 +25,8 @@
         placement="top"
         width="180"
         trigger="manual"
-        @show="onPopoverShow"
-        @hide="onPopoverHide"
+        @show="doPopoverShow"
+        @hide="doPopoverHide"
       >
         <p>{{ msg }}</p>
         <div style="text-align: right; margin: 0">
@@ -40,7 +40,7 @@
             确定
           </el-button>
         </div>
-        <el-button slot="reference" :disabled="disabledDle" size="mini" type="text" @click="toDelete">
+        <el-button slot="reference" :disabled="disabledDle" size="mini" type="text" @click="doDelete">
           删除
         </el-button>
       </el-popover>
@@ -64,8 +64,8 @@
         placement="top"
         width="180"
         trigger="manual"
-        @show="onPopoverShow"
-        @hide="onPopoverHide"
+        @show="doPopoverShow"
+        @hide="doPopoverHide"
       >
         <p>{{ msg }}</p>
         <div style="text-align: right; margin: 0">
@@ -79,7 +79,7 @@
             确定
           </el-button>
         </div>
-        <el-button slot="reference" :disabled="disabledDle" size="mini" type="text" @click="toDelete">
+        <el-button slot="reference" :disabled="disabledDle" size="mini" type="text" @click="doDelete">
           删除
         </el-button>
       </el-popover>
@@ -121,27 +121,27 @@ export default {
     }
   },
   methods: {
-    doCancel() {
-      this.pop = false
-      this.crud.cancelDelete(this.data)
-    },
-    toDelete() {
-      this.pop = true
-    },
     [CRUD.HOOK.afterDelete](crud, data) {
       if (data === this.data) {
         this.pop = false
       }
     },
-    onPopoverShow() {
+    doCancel() {
+      this.pop = false
+      this.crud.cancelDelete(this.data)
+    },
+    doDelete() {
+      this.pop = true
+    },
+    doPopoverShow() {
       setTimeout(() => {
-        document.addEventListener('click', this.handleDocumentClick)
+        document.addEventListener('click', this.doDocumentClick)
       }, 0)
     },
-    onPopoverHide() {
-      document.removeEventListener('click', this.handleDocumentClick)
+    doPopoverHide() {
+      document.removeEventListener('click', this.doDocumentClick)
     },
-    handleDocumentClick(event) {
+    doDocumentClick(event) {
       this.pop = false
     }
   }

@@ -15,6 +15,7 @@
     <version>1.0.1</version>
 
     <modules>
+        <module>dunwu-admin-common</module>
         <module>dunwu-admin-modules</module>
         <module>dunwu-admin-app</module>
     </modules>

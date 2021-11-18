@@ -7,7 +7,19 @@
       @toggleClick="toggleSideBar"
     />
 
-    <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
+    <!--<breadcrumb id="breadcrumb-container" class="breadcrumb-container" />-->
+    <el-carousel
+      indicator-position="none"
+      arrow="never"
+      direction="vertical"
+      style="float: left; margin-top: 15px; width: 400px; font-size: 12px"
+      :interval="5000"
+    >
+      <el-carousel-item v-for="i in messages" :key="i" class="notice_item">
+        <i class="el-alert__icon el-icon-info" />
+        {{ i }}
+      </el-carousel-item>
+    </el-carousel>
 
     <div class="right-menu">
       <template v-if="device !== 'mobile'">
@@ -56,7 +68,6 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import Doc from '@/components/Doc'
 import Screenfull from '@/components/Screenfull'
@@ -66,7 +77,6 @@ import Avatar from '@/assets/images/avatar.png'
 
 export default {
   components: {
-    Breadcrumb,
     Hamburger,
     Screenfull,
     SizeSelect,
@@ -76,7 +86,8 @@ export default {
   data() {
     return {
       Avatar: Avatar,
-      dialogVisible: false
+      dialogVisible: false,
+      messages: ['欢迎访问 Dunwu 系统']
     }
   },
   computed: {
@@ -92,6 +103,9 @@ export default {
         })
       }
     }
+  },
+  created() {
+    this.initWebSocket()
   },
   methods: {
     toggleSideBar() {
@@ -110,6 +124,45 @@ export default {
       this.$store.dispatch('LogOut').then(() => {
         location.reload()
       })
+    },
+    initWebSocket() {
+      const wsUri = process.env.VUE_APP_WS_API + '/webSocket/notify/' + this.user.id
+      this.websock = new WebSocket(wsUri)
+      this.websock.onerror = this.webSocketOnError
+      this.websock.onmessage = this.webSocketOnMessage
+    },
+    webSocketOnError(e) {
+      this.$notify({
+        title: 'WebSocket连接发生错误',
+        type: 'error',
+        duration: 0
+      })
+    },
+    webSocketOnMessage(e) {
+      const data = JSON.parse(e.data)
+      console.info('webSocketOnMessage', data)
+      if (data.msgType === 'INFO') {
+        this.$notify({
+          title: '',
+          message: data.msg,
+          type: 'success',
+          dangerouslyUseHTMLString: true,
+          duration: 5500
+        })
+        // this.msg = data.msg
+        this.messages.push(data.msg)
+      } else if (data.msgType === 'ERROR') {
+        this.$notify({
+          title: '',
+          message: data.msg,
+          dangerouslyUseHTMLString: true,
+          type: 'error',
+          duration: 0
+        })
+      }
+    },
+    webSocketSend(agentData) {
+      this.websock.send(agentData)
     }
   }
 }
@@ -138,6 +191,7 @@ export default {
 
   .breadcrumb-container {
     float: left;
+    padding-top: 15px;
   }
 
   .errLog-container {
@@ -195,6 +249,10 @@ export default {
         }
       }
     }
+  }
+  /*使文字和公告图片在一行*/
+  .notice_item {
+    color: #e6a23c;
   }
 }
 </style>

@@ -204,7 +204,7 @@ export default {
     // 获取弹窗内部门数据
     loadDepts({ action, parentNode, callback }) {
       if (action === LOAD_CHILDREN_OPTIONS) {
-        DeptApi.treeList({ disabled: true, pid: parentNode.id }).then(res => {
+        DeptApi.treeList({ disabled: false, pid: parentNode.id }).then(res => {
           parentNode.children = res.content.map(function(obj) {
             if (obj.hasChildren) {
               obj.children = null
