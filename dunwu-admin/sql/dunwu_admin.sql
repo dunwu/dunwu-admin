@@ -34,7 +34,7 @@ CREATE TABLE `cas_dept` (
     KEY `idx_sequence_pid` (`sequence`,`pid`) USING BTREE,
     KEY `idx_name` (`name`) USING BTREE,
     KEY `idx_enabled` (`is_disabled`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='部门表';
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='部门表';
 
 /*Data for the table `cas_dept` */
 
@@ -169,7 +169,7 @@ CREATE TABLE `cas_menu` (
     UNIQUE KEY `uk_title` (`name`) USING BTREE,
     UNIQUE KEY `uk_name` (`code`) USING BTREE,
     KEY `key_pid` (`pid`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=123 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='菜单表';
+) ENGINE=InnoDB AUTO_INCREMENT=124 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='菜单表';
 
 /*Data for the table `cas_menu` */
 
@@ -189,7 +189,7 @@ insert  into `cas_menu`(`id`,`pid`,`code`,`name`,`expression`,`menu_type`,`compo
 insert  into `cas_menu`(`id`,`pid`,`code`,`name`,`expression`,`menu_type`,`component`,`sequence`,`icon`,`path`,`is_frame`,`is_cached`,`is_hidden`,`level`,`children_num`,`note`,`is_disabled`,`creator_id`,`updater_id`,`creator_name`,`updater_name`,`create_time`,`update_time`) values (33,10,'Markdown','Markdown',NULL,1,'demo/MarkDown',53,'markdown','markdown',0,0,0,2,0,NULL,0,1,1,'admin','admin','2019-03-08 13:46:44','2021-10-19 23:56:36');
 insert  into `cas_menu`(`id`,`pid`,`code`,`name`,`expression`,`menu_type`,`component`,`sequence`,`icon`,`path`,`is_frame`,`is_cached`,`is_hidden`,`level`,`children_num`,`note`,`is_disabled`,`creator_id`,`updater_id`,`creator_name`,`updater_name`,`create_time`,`update_time`) values (34,10,'YamlEdit','Yaml编辑器',NULL,1,'demo/YamlEdit',54,'dev','yaml',0,0,0,2,0,NULL,0,1,1,'admin','admin','2019-03-08 15:49:40','2021-10-19 23:56:36');
 insert  into `cas_menu`(`id`,`pid`,`code`,`name`,`expression`,`menu_type`,`component`,`sequence`,`icon`,`path`,`is_frame`,`is_cached`,`is_hidden`,`level`,`children_num`,`note`,`is_disabled`,`creator_id`,`updater_id`,`creator_name`,`updater_name`,`create_time`,`update_time`) values (35,1,'Dept','部门管理','cas:dept:view',1,'cas/dept',1,'dept','dept',0,0,0,2,3,NULL,0,1,1,'admin','admin','2019-03-25 09:46:00','2021-10-19 15:02:12');
-insert  into `cas_menu`(`id`,`pid`,`code`,`name`,`expression`,`menu_type`,`component`,`sequence`,`icon`,`path`,`is_frame`,`is_cached`,`is_hidden`,`level`,`children_num`,`note`,`is_disabled`,`creator_id`,`updater_id`,`creator_name`,`updater_name`,`create_time`,`update_time`) values (36,0,'Tool','系统工具',NULL,0,'',3,'sys-tools','tool',0,0,0,1,7,NULL,0,1,1,'admin','admin','2019-03-29 10:57:35','2021-10-19 15:26:59');
+insert  into `cas_menu`(`id`,`pid`,`code`,`name`,`expression`,`menu_type`,`component`,`sequence`,`icon`,`path`,`is_frame`,`is_cached`,`is_hidden`,`level`,`children_num`,`note`,`is_disabled`,`creator_id`,`updater_id`,`creator_name`,`updater_name`,`create_time`,`update_time`) values (36,0,'Tool','系统工具',NULL,0,'',3,'sys-tools','tool',0,0,0,1,9,NULL,0,1,1,'admin','admin','2019-03-29 10:57:35','2021-10-19 15:26:59');
 insert  into `cas_menu`(`id`,`pid`,`code`,`name`,`expression`,`menu_type`,`component`,`sequence`,`icon`,`path`,`is_frame`,`is_cached`,`is_hidden`,`level`,`children_num`,`note`,`is_disabled`,`creator_id`,`updater_id`,`creator_name`,`updater_name`,`create_time`,`update_time`) values (37,1,'Job','岗位管理','cas:job:view',1,'cas/job',2,'Steve-Jobs','job',0,0,0,2,3,NULL,0,1,1,'admin','admin','2019-03-29 13:51:18','2021-10-19 15:02:12');
 insert  into `cas_menu`(`id`,`pid`,`code`,`name`,`expression`,`menu_type`,`component`,`sequence`,`icon`,`path`,`is_frame`,`is_cached`,`is_hidden`,`level`,`children_num`,`note`,`is_disabled`,`creator_id`,`updater_id`,`creator_name`,`updater_name`,`create_time`,`update_time`) values (38,36,'Swagger','接口文档','',1,'tool/swagger/index',36,'swagger','swagger2',0,0,0,1,0,NULL,0,1,1,'admin','admin','2019-03-29 19:57:53','2021-10-12 20:43:18');
 insert  into `cas_menu`(`id`,`pid`,`code`,`name`,`expression`,`menu_type`,`component`,`sequence`,`icon`,`path`,`is_frame`,`is_cached`,`is_hidden`,`level`,`children_num`,`note`,`is_disabled`,`creator_id`,`updater_id`,`creator_name`,`updater_name`,`create_time`,`update_time`) values (39,121,'Dict','字典管理','sys:dict:view',1,'sys/Dict',2,'dictionary','dict',0,0,0,2,3,NULL,0,1,1,'admin','admin','2019-04-10 11:49:04','2021-10-20 00:02:17');
@@ -241,6 +241,7 @@ insert  into `cas_menu`(`id`,`pid`,`code`,`name`,`expression`,`menu_type`,`compo
 insert  into `cas_menu`(`id`,`pid`,`code`,`name`,`expression`,`menu_type`,`component`,`sequence`,`icon`,`path`,`is_frame`,`is_cached`,`is_hidden`,`level`,`children_num`,`note`,`is_disabled`,`creator_id`,`updater_id`,`creator_name`,`updater_name`,`create_time`,`update_time`) values (119,121,'GlobalConfig','全局配置','sys:config:view',1,'sys/GlobalConfigList',1,'system1','config',0,0,0,2,0,NULL,0,1,1,'admin','admin','2021-10-03 19:00:00','2021-10-20 00:02:17');
 insert  into `cas_menu`(`id`,`pid`,`code`,`name`,`expression`,`menu_type`,`component`,`sequence`,`icon`,`path`,`is_frame`,`is_cached`,`is_hidden`,`level`,`children_num`,`note`,`is_disabled`,`creator_id`,`updater_id`,`creator_name`,`updater_name`,`create_time`,`update_time`) values (121,0,'Sys','系统管理',NULL,1,NULL,1,'app','sys',0,0,0,1,4,NULL,0,1,1,'admin','admin','2021-10-05 09:15:30','2021-10-20 00:03:35');
 insert  into `cas_menu`(`id`,`pid`,`code`,`name`,`expression`,`menu_type`,`component`,`sequence`,`icon`,`path`,`is_frame`,`is_cached`,`is_hidden`,`level`,`children_num`,`note`,`is_disabled`,`creator_id`,`updater_id`,`creator_name`,`updater_name`,`create_time`,`update_time`) values (122,1,'UserCenter','用户中心','cas:user:view',1,'cas/user/center',6,'user','user/center',0,0,1,2,0,NULL,0,1,1,'admin','admin','2021-10-17 17:48:53','2021-10-19 15:03:03');
+insert  into `cas_menu`(`id`,`pid`,`code`,`name`,`expression`,`menu_type`,`component`,`sequence`,`icon`,`path`,`is_frame`,`is_cached`,`is_hidden`,`level`,`children_num`,`note`,`is_disabled`,`creator_id`,`updater_id`,`creator_name`,`updater_name`,`create_time`,`update_time`) values (123,36,'test','测试',NULL,1,'tool/test',1,NULL,'test',0,0,0,2,0,NULL,0,1,1,'admin','admin','2019-03-29 10:57:35','2021-10-19 15:26:59');
 
 /*Table structure for table `cas_permission` */
 
@@ -263,7 +264,7 @@ CREATE TABLE `cas_permission` (
     `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=151 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='权限表';
+) ENGINE=InnoDB AUTO_INCREMENT=152 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='权限表';
 
 /*Data for the table `cas_permission` */
 
@@ -335,6 +336,7 @@ insert  into `cas_permission`(`id`,`pid`,`resource_id`,`code`,`name`,`type`,`exp
 insert  into `cas_permission`(`id`,`pid`,`resource_id`,`code`,`name`,`type`,`expression`,`is_disabled`,`note`,`creator_id`,`updater_id`,`creator_name`,`updater_name`,`create_time`,`update_time`) values (148,NULL,119,'GlobalConfig','全局配置',1,'sys:config:view',0,NULL,1,1,'admin','admin','2021-10-03 19:00:00','2021-10-19 23:57:51');
 insert  into `cas_permission`(`id`,`pid`,`resource_id`,`code`,`name`,`type`,`expression`,`is_disabled`,`note`,`creator_id`,`updater_id`,`creator_name`,`updater_name`,`create_time`,`update_time`) values (149,NULL,121,NULL,'系统管理',1,NULL,0,NULL,1,1,'admin','admin','2021-10-05 09:15:30','2021-10-16 20:22:42');
 insert  into `cas_permission`(`id`,`pid`,`resource_id`,`code`,`name`,`type`,`expression`,`is_disabled`,`note`,`creator_id`,`updater_id`,`creator_name`,`updater_name`,`create_time`,`update_time`) values (150,NULL,122,'UserCenter','用户中心',1,'cas:user:view',0,NULL,1,1,'admin','admin','2021-10-17 17:48:53','2021-10-17 22:18:46');
+insert  into `cas_permission`(`id`,`pid`,`resource_id`,`code`,`name`,`type`,`expression`,`is_disabled`,`note`,`creator_id`,`updater_id`,`creator_name`,`updater_name`,`create_time`,`update_time`) values (151,NULL,123,'test','测试',1,NULL,0,NULL,1,1,'admin','admin','2019-03-29 10:57:35','2021-10-19 15:26:59');
 
 /*Table structure for table `cas_role` */
 
@@ -491,96 +493,100 @@ CREATE TABLE `cas_role_permission_map` (
     `permission_id` bigint(20) unsigned NOT NULL COMMENT '权限ID',
     PRIMARY KEY (`id`) USING BTREE,
     UNIQUE KEY `uk_role_permission` (`permission_id`,`role_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=237 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='角色权限关联表';
+) ENGINE=InnoDB AUTO_INCREMENT=327 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='角色权限关联表';
 
 /*Data for the table `cas_role_permission_map` */
 
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (149,1,76);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (150,1,77);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (151,1,78);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (152,1,79);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (153,1,80);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (154,1,81);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (155,1,82);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (156,1,83);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (226,2,83);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (157,1,84);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (227,2,84);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (158,1,85);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (159,1,86);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (228,2,86);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (160,1,87);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (161,1,88);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (229,2,88);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (162,1,89);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (230,2,89);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (163,1,90);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (231,2,90);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (164,1,91);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (232,2,91);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (165,1,92);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (233,2,92);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (166,1,93);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (167,1,94);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (234,2,94);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (168,1,95);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (235,2,95);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (169,1,96);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (170,1,97);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (171,1,98);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (172,1,99);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (173,1,100);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (174,1,101);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (175,1,102);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (176,1,103);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (177,1,104);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (178,1,105);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (179,1,106);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (180,1,107);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (181,1,108);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (182,1,109);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (183,1,110);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (184,1,111);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (185,1,112);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (186,1,113);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (187,1,114);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (188,1,115);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (189,1,116);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (190,1,117);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (191,1,118);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (192,1,119);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (193,1,120);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (194,1,121);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (195,1,122);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (196,1,123);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (197,1,124);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (198,1,125);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (236,2,125);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (199,1,126);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (200,1,127);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (201,1,128);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (202,1,129);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (203,1,130);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (204,1,131);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (205,1,132);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (206,1,133);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (207,1,134);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (208,1,135);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (209,1,136);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (210,1,137);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (211,1,138);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (212,1,139);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (213,1,140);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (214,1,141);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (215,1,142);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (216,1,143);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (217,1,144);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (218,1,145);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (219,1,146);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (220,1,147);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (221,1,148);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (222,1,149);
-insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (223,1,150);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (237,1,76);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (238,1,77);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (239,1,78);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (240,1,79);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (241,1,80);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (242,1,81);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (243,1,82);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (244,1,83);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (306,2,83);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (245,1,84);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (307,2,84);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (246,1,85);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (308,2,85);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (247,1,86);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (309,2,86);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (248,1,87);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (310,2,87);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (249,1,93);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (311,2,93);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (250,1,94);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (312,2,94);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (251,1,95);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (313,2,95);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (252,1,96);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (253,1,97);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (314,2,97);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (254,1,98);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (255,1,99);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (315,2,99);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (256,1,100);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (257,1,101);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (258,1,102);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (259,1,103);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (260,1,104);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (261,1,105);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (262,1,106);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (263,1,107);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (264,1,108);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (265,1,109);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (266,1,110);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (267,1,111);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (268,1,112);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (269,1,113);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (270,1,114);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (271,1,115);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (272,1,116);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (273,1,117);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (274,1,118);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (275,1,119);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (276,1,120);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (316,2,120);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (277,1,121);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (317,2,121);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (278,1,122);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (318,2,122);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (279,1,123);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (280,1,124);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (319,2,124);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (281,1,125);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (320,2,125);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (282,1,126);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (283,1,127);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (284,1,128);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (285,1,129);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (286,1,130);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (287,1,131);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (321,2,131);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (288,1,132);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (289,1,133);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (290,1,134);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (291,1,135);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (292,1,136);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (293,1,137);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (294,1,138);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (295,1,139);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (296,1,140);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (297,1,141);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (298,1,142);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (322,2,142);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (299,1,143);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (323,2,143);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (300,1,144);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (324,2,144);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (301,1,145);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (325,2,145);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (302,1,148);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (303,1,149);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (304,1,150);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (305,1,151);
+insert  into `cas_role_permission_map`(`id`,`role_id`,`permission_id`) values (326,2,151);
 
 /*Table structure for table `cas_user` */
 
@@ -640,12 +646,12 @@ CREATE TABLE `cas_user_role_map` (
     `role_id` bigint(20) unsigned NOT NULL COMMENT '角色ID',
     PRIMARY KEY (`id`) USING BTREE,
     UNIQUE KEY `uk_user_role` (`user_id`,`role_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='用户角色关联表';
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='用户角色关联表';
 
 /*Data for the table `cas_user_role_map` */
 
 insert  into `cas_user_role_map`(`id`,`user_id`,`role_id`) values (9,1,1);
-insert  into `cas_user_role_map`(`id`,`user_id`,`role_id`) values (7,2,2);
+insert  into `cas_user_role_map`(`id`,`user_id`,`role_id`) values (10,2,2);
 
 /*Table structure for table `code_column_config` */
 
@@ -1039,7 +1045,7 @@ CREATE TABLE `sys_log` (
     KEY `idx_class_method` (`method_name`,`class_name`) USING BTREE,
     KEY `idx_level` (`level`) USING BTREE,
     KEY `idx_create_time` (`create_time`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='系统日志记录';
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='系统日志记录';
 
 /*Data for the table `sys_log` */
 
@@ -1062,6 +1068,9 @@ insert  into `sys_log`(`id`,`level`,`biz_type`,`message`,`exception_message`,`cl
 insert  into `sys_log`(`id`,`level`,`biz_type`,`message`,`exception_message`,`class_name`,`method_name`,`params`,`operate_type`,`operator_id`,`operator_name`,`server_ip`,`client_ip`,`client_location`,`client_device`,`request_time`,`create_time`) values (17,'ERROR','部门','【部门】admin批量删除 cas_dept 表中 id = 10 的记录失败','删除 jobId = 10 的部门职务关联记录失败','io.github.dunwu.module.cas.controller.DeptController','deleteBatchByIds','[10]','批量删除',1,'admin','172.22.211.75','127.0.0.1','本机地址','Chrome 91',24139,'2021-11-16 16:59:07');
 insert  into `sys_log`(`id`,`level`,`biz_type`,`message`,`exception_message`,`class_name`,`method_name`,`params`,`operate_type`,`operator_id`,`operator_name`,`server_ip`,`client_ip`,`client_location`,`client_device`,`request_time`,`create_time`) values (18,'INFO','部门','【部门】admin批量删除 cas_dept 表中 id = 10 的记录',NULL,'io.github.dunwu.module.cas.controller.DeptController','deleteBatchByIds','[10]','批量删除',1,'admin','172.22.211.75','127.0.0.1','本机地址','Chrome 91',101,'2021-11-16 16:59:51');
 insert  into `sys_log`(`id`,`level`,`biz_type`,`message`,`exception_message`,`class_name`,`method_name`,`params`,`operate_type`,`operator_id`,`operator_name`,`server_ip`,`client_ip`,`client_location`,`client_device`,`request_time`,`create_time`) values (19,'INFO','用户','【用户】admin更新 cas_user 表中 id = 1 的记录，内容为：UserDto(id=1, deptId=1, jobId=6, username=admin, nickname=管理员, gender=男, phone=18888888888, email=201507802@qq.com, avatar=http://dunwu.test.upcdn.net/common/logo/dunwu-logo.png, password=$2a$10$/wOEzFwYkE.gGyp9Aor.yeZVm.pvRAfqPgsHeEN4GC/kKuwr6NWUa, pwdResetTime=null, dept=DeptDto(id=1, pid=0, name=研发部, level=1, sequence=1, childrenNum=3, note=null, label=null, hasChildren=false, children=null), job=JobDto(id=3, name=高级工程师, type=1, level=3, sequence=3, note=高级工程师, dept=null, roles=null), roles=[RoleDto(id=1, code=null, name=null, level=null, dataScope=null, note=null, menus=null, depts=null)], roleCodes=[admin])',NULL,'io.github.dunwu.module.cas.controller.UserController','editWithRoles','{\"gender\":\"男\",\"roles\":[{\"id\":1}],\"deptId\":1,\"creatorId\":1,\"creatorName\":\"admin\",\"roleCodes\":[\"admin\"],\"updateTime\":1634523347000,\"avatar\":\"http://dunwu.test.upcdn.net/common/logo/dunwu-logo.png\",\"dept\":{\"level\":1,\"hasChildren\":false,\"creatorId\":1,\"creatorName\":\"admin\",\"pid\":0,\"updateTime\":1634549033000,\"sequence\":1,\"updaterId\":1,\"createTime\":1596350947000,\"childrenNum\":3,\"name\":\"研发部\",\"updaterName\":\"admin\",\"disabled\":false,\"id\":1},\"jobId\":6,\"password\":\"$2a$10$/wOEzFwYkE.gGyp9Aor.yeZVm.pvRAfqPgsHeEN4GC/kKuwr6NWUa\",\"phone\":\"18888888888\",\"updaterId\":1,\"createTime\":1588495111000,\"nickname\":\"管理员\",\"updaterName\":\"admin\",\"disabled\":false,\"id\":1,\"job\":{\"note\":\"高级工程师\",\"level\":3,\"creatorId\":1,\"creatorName\":\"admin\",\"updateTime\":1634083752000,\"type\":1,\"sequence\":3,\"updaterId\":1,\"createTime\":1554010770000,\"name\":\"高级工程师\",\"updaterName\":\"admin\",\"disabled\":false,\"id\":3},\"email\":\"201507802@qq.com\",\"username\":\"admin\"}','更新',1,'admin','172.22.211.75','127.0.0.1','本机地址','Chrome 91',105,'2021-11-16 17:14:48');
+insert  into `sys_log`(`id`,`level`,`biz_type`,`message`,`exception_message`,`class_name`,`method_name`,`params`,`operate_type`,`operator_id`,`operator_name`,`server_ip`,`client_ip`,`client_location`,`client_device`,`request_time`,`create_time`) values (20,'INFO','菜单','【菜单】admin向 cas_menu 表中添加一条记录，内容为：Menu(id=123, pid=36, code=test, name=测试, expression=null, menuType=1, component=test, sequence=1, icon=null, path=test, frame=false, cached=false, hidden=false, level=2, childrenNum=0, note=null)',NULL,'io.github.dunwu.module.cas.controller.MenuController','add','{\"code\":\"test\",\"hidden\":false,\"level\":2,\"creatorId\":1,\"creatorName\":\"admin\",\"pid\":36,\"updateTime\":1634628419000,\"sequence\":1,\"path\":\"test\",\"component\":\"test\",\"updaterId\":1,\"createTime\":1553828255000,\"childrenNum\":0,\"cached\":false,\"name\":\"测试\",\"updaterName\":\"admin\",\"menuType\":1,\"disabled\":false,\"id\":123,\"frame\":false}','添加',1,'admin','172.22.211.75','127.0.0.1','本机地址','Chrome 91',255,'2021-11-17 10:00:53');
+insert  into `sys_log`(`id`,`level`,`biz_type`,`message`,`exception_message`,`class_name`,`method_name`,`params`,`operate_type`,`operator_id`,`operator_name`,`server_ip`,`client_ip`,`client_location`,`client_device`,`request_time`,`create_time`) values (21,'INFO','菜单','【菜单】admin更新 cas_menu 表中 id = 123 的记录，内容为：Menu(id=123, pid=36, code=test, name=测试, expression=null, menuType=1, component=tool/test, sequence=1, icon=null, path=test, frame=false, cached=false, hidden=false, level=2, childrenNum=0, note=null)',NULL,'io.github.dunwu.module.cas.controller.MenuController','edit','{\"code\":\"test\",\"hidden\":false,\"level\":2,\"creatorId\":1,\"creatorName\":\"admin\",\"pid\":36,\"updateTime\":1634628419000,\"sequence\":1,\"path\":\"test\",\"component\":\"tool/test\",\"updaterId\":1,\"createTime\":1553828255000,\"childrenNum\":0,\"cached\":false,\"name\":\"测试\",\"updaterName\":\"admin\",\"menuType\":1,\"disabled\":false,\"id\":123,\"frame\":false}','更新',1,'admin','172.22.211.75','127.0.0.1','本机地址','Chrome 91',90,'2021-11-17 10:01:14');
+insert  into `sys_log`(`id`,`level`,`biz_type`,`message`,`exception_message`,`class_name`,`method_name`,`params`,`operate_type`,`operator_id`,`operator_name`,`server_ip`,`client_ip`,`client_location`,`client_device`,`request_time`,`create_time`) values (22,'INFO','用户','【用户】admin更新 cas_user 表中 id = 2 的记录，内容为：UserDto(id=2, deptId=2, jobId=3, username=test, nickname=测试, gender=男, phone=15199999999, email=231@qq.com, avatar=http://dunwu.test.upcdn.net/common/logo/dunwu-logo.png, password=$2a$10$4XcyudOYTSz6fue6KFNMHeUQnCX5jbBQypLEnGk1PmekXt5c95JcK, pwdResetTime=null, dept=DeptDto(id=2, pid=0, name=产品部, level=1, sequence=2, childrenNum=2, note=null, label=null, hasChildren=false, children=null), job=JobDto(id=3, name=高级工程师, type=1, level=3, sequence=3, note=高级工程师, dept=null, roles=null), roles=[RoleDto(id=2, code=null, name=null, level=null, dataScope=null, note=null, menus=null, depts=null)], roleCodes=[user])',NULL,'io.github.dunwu.module.cas.controller.UserController','editWithRoles','{\"gender\":\"男\",\"roles\":[{\"id\":2}],\"deptId\":2,\"creatorId\":1,\"creatorName\":\"admin\",\"roleCodes\":[\"user\"],\"updateTime\":1634083752000,\"avatar\":\"http://dunwu.test.upcdn.net/common/logo/dunwu-logo.png\",\"dept\":{\"level\":1,\"hasChildren\":false,\"creatorId\":1,\"creatorName\":\"admin\",\"pid\":0,\"updateTime\":1634549022000,\"sequence\":2,\"updaterId\":1,\"createTime\":1553476532000,\"childrenNum\":2,\"name\":\"产品部\",\"updaterName\":\"admin\",\"disabled\":false,\"id\":2},\"jobId\":3,\"password\":\"$2a$10$4XcyudOYTSz6fue6KFNMHeUQnCX5jbBQypLEnGk1PmekXt5c95JcK\",\"phone\":\"15199999999\",\"updaterId\":1,\"createTime\":1588648549000,\"nickname\":\"测试\",\"updaterName\":\"admin\",\"disabled\":false,\"id\":2,\"job\":{\"note\":\"高级工程师\",\"level\":3,\"creatorId\":1,\"creatorName\":\"admin\",\"updateTime\":1634083752000,\"type\":1,\"sequence\":3,\"updaterId\":1,\"createTime\":1554010770000,\"name\":\"高级工程师\",\"updaterName\":\"admin\",\"disabled\":false,\"id\":3},\"email\":\"231@qq.com\",\"username\":\"test\"}','更新',1,'admin','172.22.211.75','127.0.0.1','本机地址','Chrome 91',144,'2021-11-18 09:21:22');
 
 /*Table structure for table `sys_quartz_job` */
 
