@@ -8,7 +8,6 @@ import io.github.dunwu.tool.core.constant.enums.ResultStatus;
 import io.github.dunwu.tool.data.DataResult;
 import io.github.dunwu.tool.data.PageResult;
 import io.github.dunwu.tool.web.ServletUtil;
-import io.github.dunwu.tool.web.log.annotation.AppLog;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +37,6 @@ public class StorageController {
     private final StorageService storageService;
 
     @ApiOperation("添加一条 FileInfo 记录")
-    @AppLog(bizType = "文件信息表", operType = "添加", value = "'向 tool_file_info 表中添加一条记录，内容为：' + #fileDto.originName")
     @PostMapping("upload")
     public DataResult<FileInfoDto> upload(HttpServletRequest request, UploadFileDto fileDto)
         throws IOException {
@@ -56,7 +54,6 @@ public class StorageController {
     }
 
     @ApiOperation("根据 id 列表批量删除 FileInfo 记录")
-    @AppLog(bizType = "应用配置", operType = "批量删除", value = "'批量删除 tool_file_info 表中 ' + #list.size + ' 条记录'")
     @PreAuthorize("@exp.check('mnt:app:del')")
     @PostMapping("del/batch")
     public DataResult<Boolean> deleteBatchByIds(@RequestBody Collection<? extends Serializable> ids) {

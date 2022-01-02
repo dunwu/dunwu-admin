@@ -105,7 +105,7 @@
             size="mini"
             style="width: 90%"
             class="filter-item"
-            :loading="crud.delAllLoading"
+            :loading="crud.batchDelLoading"
             :disabled="crud.selections.length === 0"
             @click="unbindUserToDept(crud.selections)"
           >
@@ -255,20 +255,20 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          this.crud.delAllLoading = true
+          this.crud.batchDelLoading = true
           const userIds = val.map((item, index, arr) => {
             return item.id
           })
           UserApi.unbindDept(this.dept.id, userIds)
             .then(data => {
-              this.crud.delAllLoading = false
+              this.crud.batchDelLoading = false
               if (data) {
                 this.$message({ message: '删除成功', type: 'success' })
               }
               this.crud.toQuery()
             })
             .catch(() => {
-              this.crud.delAllLoading = false
+              this.crud.batchDelLoading = false
             })
         })
         .catch(() => {})

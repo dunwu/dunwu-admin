@@ -10,7 +10,6 @@ import io.github.dunwu.tool.data.DataResult;
 import io.github.dunwu.tool.data.PageResult;
 import io.github.dunwu.tool.data.validator.annotation.AddCheck;
 import io.github.dunwu.tool.data.validator.annotation.EditCheck;
-import io.github.dunwu.tool.web.log.annotation.AppLog;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +37,6 @@ public class UserController {
     private final UserService service;
 
     @ApiOperation("添加一条 User 记录")
-    @AppLog(bizType = "用户", operType = "添加", value = "'向 cas_user 表中添加一条记录，内容为：' + #entity")
     @PreAuthorize("@exp.check('cas:user:add')")
     @PostMapping("/add")
     public DataResult<Boolean> add(@Validated(AddCheck.class) @RequestBody User entity) {
@@ -46,7 +44,6 @@ public class UserController {
     }
 
     @ApiOperation("批量添加 User 记录")
-    @AppLog(bizType = "用户", operType = "批量添加", value = "'向 cas_user 表中批量添加 ' + #list.size + ' 条记录'")
     @PreAuthorize("@exp.check('cas:user:add')")
     @PostMapping("/add/batch")
     public DataResult<Boolean> addBatch(@Validated(AddCheck.class) @RequestBody Collection<User> list) {
@@ -54,7 +51,6 @@ public class UserController {
     }
 
     @ApiOperation("根据 id 更新一条 User 记录")
-    @AppLog(bizType = "用户", operType = "更新", value = "'更新 cas_user 表中 id = ' + #entity.id + ' 的记录，内容为：' + #entity")
     @PreAuthorize("@exp.check('cas:user:edit')")
     @PostMapping("/edit")
     public DataResult<Boolean> edit(@Validated(EditCheck.class) @RequestBody User entity) {
@@ -62,7 +58,6 @@ public class UserController {
     }
 
     @ApiOperation("根据 id 批量更新 User 记录")
-    @AppLog(bizType = "用户", operType = "批量更新", value = "'批量更新 cas_user 表中 ' + #list.size + ' 条记录'")
     @PreAuthorize("@exp.check('cas:user:edit')")
     @PostMapping("/edit/batch")
     public DataResult<Boolean> editBatch(@Validated(EditCheck.class) @RequestBody Collection<User> list) {
@@ -70,7 +65,6 @@ public class UserController {
     }
 
     @ApiOperation("根据 id 删除一条 User 记录")
-    @AppLog(bizType = "用户", operType = "删除", value = "'删除 cas_user 表中 id = ' + #entity.id + ' 的记录'")
     @PreAuthorize("@exp.check('cas:user:del')")
     @PostMapping("/del/{id}")
     public DataResult<Boolean> deleteById(@PathVariable Serializable id) {
@@ -78,7 +72,6 @@ public class UserController {
     }
 
     @ApiOperation("根据 id 列表批量删除 User 记录")
-    @AppLog(bizType = "用户", operType = "批量删除", value = "'批量删除 cas_user 表中 id = ' + #ids + ' 的记录'")
     @PreAuthorize("@exp.check('cas:user:del')")
     @PostMapping("/del/batch")
     public DataResult<Boolean> deleteBatchByIds(@RequestBody Collection<? extends Serializable> ids) {
@@ -113,7 +106,6 @@ public class UserController {
     }
 
     @ApiOperation("根据 id 列表查询 UserDto 列表，并导出 excel 表单")
-    @AppLog(bizType = "用户", operType = "导出", value = "'导出 cas_user 表中 id = ' + #ids + ' 的记录'")
     @PreAuthorize("@exp.check('cas:user:view')")
     @PostMapping("/export/list")
     public void exportList(@RequestBody Collection<? extends Serializable> ids, HttpServletResponse response) {
@@ -121,7 +113,6 @@ public class UserController {
     }
 
     @ApiOperation("根据 Pageable 和 UserQuery 分页查询 UserDto 列表，并导出 excel 表单")
-    @AppLog(bizType = "用户", operType = "导出", value = "分页导出 cas_user 表中的记录")
     @PreAuthorize("@exp.check('cas:user:view')")
     @GetMapping("/export/page")
     public void exportPage(Pageable pageable, UserQuery query, HttpServletResponse response) {
@@ -150,7 +141,6 @@ public class UserController {
     }
 
     @ApiOperation("添加一条 User 记录，并保存关联的角色列表 roles")
-    @AppLog(bizType = "用户", operType = "添加", value = "'向 cas_user 表中添加一条记录，内容为：' + #dto")
     @PreAuthorize("@exp.check('cas:user:add')")
     @PostMapping("/addWithRoles")
     public DataResult<Boolean> addWithRoles(@Validated(AddCheck.class) @RequestBody UserDto dto) {
@@ -158,7 +148,6 @@ public class UserController {
     }
 
     @ApiOperation("更新一条 User 记录，并保存关联的角色列表 roles")
-    @AppLog(bizType = "用户", operType = "更新", value = "'更新 cas_user 表中 id = ' + #dto.id + ' 的记录，内容为：' + #dto")
     @PreAuthorize("@exp.check('cas:user:edit')")
     @PostMapping("/editWithRoles")
     public DataResult<Boolean> editWithRoles(@Validated(EditCheck.class) @RequestBody UserDto dto) {

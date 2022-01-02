@@ -35,7 +35,7 @@ export default {
       // 删除 Loading 属性
       delLoading: false,
       // 批量删除 Loading 属性
-      delAllLoading: false,
+      batchDelLoading: false,
       // 弹窗属性
       dialog: false,
       // Form 表单
@@ -233,7 +233,7 @@ export default {
      * 多选删除
      */
     delAllMethod() {
-      this.delAllLoading = true
+      this.batchDelLoading = true
       const data = this.$refs.table.selection
       const ids = []
       for (let i = 0; i < data.length; i++) {
@@ -242,7 +242,7 @@ export default {
       this.crudMethod
         .delBatch(ids)
         .then(() => {
-          this.delAllLoading = false
+          this.batchDelLoading = false
           this.dleChangePage(ids.length)
           this.init()
           this.$notify({
@@ -252,7 +252,7 @@ export default {
           })
         })
         .catch(() => {
-          this.delAllLoading = false
+          this.batchDelLoading = false
         })
     },
     /**

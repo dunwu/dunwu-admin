@@ -51,7 +51,7 @@
         type="danger"
         icon="el-icon-delete"
         size="mini"
-        :loading="crud.delAllLoading"
+        :loading="crud.batchDelLoading"
         :disabled="crud.selections.length === 0"
         @click="toDelete(crud.selections)"
       >
@@ -104,7 +104,7 @@
         type="danger"
         icon="el-icon-delete"
         size="mini"
-        :loading="crud.delAllLoading"
+        :loading="crud.batchDelLoading"
         :disabled="crud.selections.length === 0"
         @click="toDelete(crud.selections)"
       >
@@ -241,7 +241,7 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          this.crud.delAllLoading = true
+          this.crud.batchDelLoading = true
           this.crud.doDelete(datas)
         })
         .catch(() => {})

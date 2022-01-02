@@ -11,7 +11,12 @@
           class="filter-item"
           @keyup.enter.native="crud.toQuery"
         />
-        <date-range-picker v-model="query.createTimeRange" class="date-item" />
+        <date-range-picker
+          v-model="query.createTimeRange"
+          type="datetimerange"
+          class="filter-item"
+          style="width: 90%"
+        />
         <TableQueryOperation />
       </div>
       <TableOperation :permission="permission" />

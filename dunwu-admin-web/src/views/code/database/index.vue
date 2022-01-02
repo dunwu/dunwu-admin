@@ -46,7 +46,12 @@
               />
             </el-col>
             <el-col :span="6">
-              <date-range-picker v-model="query.createTimeRange" class="date-item" style="width: 90%" />
+              <date-range-picker
+                v-model="query.createTimeRange"
+                type="datetimerange"
+                class="filter-item"
+                style="width: 90%"
+              />
             </el-col>
           </template>
           <el-col :span="6">

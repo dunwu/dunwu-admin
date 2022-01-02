@@ -13,6 +13,8 @@ import io.github.dunwu.module.sys.service.DictOptionService;
 import io.github.dunwu.module.sys.service.DictService;
 import io.github.dunwu.tool.data.mybatis.ServiceImpl;
 import io.github.dunwu.tool.web.ServletUtil;
+import io.github.dunwu.tool.web.log.annotation.OperationLog;
+import io.github.dunwu.tool.web.log.constant.OperationType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,36 +40,43 @@ public class DictServiceImpl extends ServiceImpl implements DictService {
     private final DictOptionService dictOptionService;
 
     @Override
+    @OperationLog(bizType = "数据字典", operation = OperationType.ADD)
     public boolean insert(Dict entity) {
         return dictDao.insert(entity);
     }
 
     @Override
+    @OperationLog(bizType = "数据字典", operation = OperationType.BATCH_ADD)
     public boolean insertBatch(Collection<Dict> list) {
         return dictDao.insertBatch(list);
     }
 
     @Override
+    @OperationLog(bizType = "数据字典", operation = OperationType.EDIT, bizNo = "{{#entity.id}}")
     public boolean updateById(Dict entity) {
         return dictDao.updateById(entity);
     }
 
     @Override
+    @OperationLog(bizType = "数据字典", operation = OperationType.BATCH_EDIT)
     public boolean updateBatchById(Collection<Dict> list) {
         return dictDao.updateBatchById(list);
     }
 
     @Override
+    @OperationLog(bizType = "数据字典", operation = OperationType.SAVE, bizNo = "{{#entity.id}}")
     public boolean save(Dict entity) {
         return dictDao.save(entity);
     }
 
     @Override
+    @OperationLog(bizType = "数据字典", operation = OperationType.BATCH_SAVE)
     public boolean saveBatch(Collection<Dict> list) {
         return dictDao.saveBatch(list);
     }
 
     @Override
+    @OperationLog(bizType = "数据字典", operation = OperationType.DEL, bizNo = "{{#id}}")
     public boolean deleteById(Serializable id) {
         Dict dict = dictDao.getById(id);
         if (dict == null) { return true; }
@@ -87,6 +96,7 @@ public class DictServiceImpl extends ServiceImpl implements DictService {
     }
 
     @Override
+    @OperationLog(bizType = "数据字典", operation = OperationType.BATCH_DEL, bizNo = "{{#ids}}")
     public boolean deleteBatchByIds(Collection<? extends Serializable> ids) {
         return dictDao.deleteBatchByIds(ids);
     }
@@ -127,12 +137,17 @@ public class DictServiceImpl extends ServiceImpl implements DictService {
     }
 
     @Override
+    @OperationLog(bizType = "数据字典", operation = OperationType.EXPORT_LIST, bizNo = "{{#ids}}")
     public void exportList(Collection<? extends Serializable> ids, HttpServletResponse response) {
         List<DictDto> list = dictDao.pojoListByIds(ids, this::doToDto);
         exportDtoList(list, response);
     }
 
     @Override
+    @OperationLog(bizType = "数据字典", operation = OperationType.EXPORT_PAGE,
+        success = "分页查询导出数据字典(page={{#pageable.getPageNumber()}}, size={{#pageable.getPageSize()}}, query={{#query.toJsonStr()}})『成功』",
+        fail = "分页查询导出数据字典(page={{#pageable.getPageNumber()}}, size={{#pageable.getPageSize()}}, query={{#query.toJsonStr()}})『失败』"
+    )
     public void exportPage(Pageable pageable, DictQuery query, HttpServletResponse response) {
         Page<DictDto> page = dictDao.pojoSpringPageByQuery(pageable, query, this::doToDto);
         exportDtoList(page.getContent(), response);

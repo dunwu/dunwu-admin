@@ -26,7 +26,12 @@
           </el-col>
           <template v-if="crud.showExtendSearch">
             <el-col :span="8">
-              <date-range-picker v-model="query.createTimeRange" type="datetimerange" class="filter-item" />
+              <date-range-picker
+                v-model="query.createTimeRange"
+                type="datetimerange"
+                class="filter-item"
+                style="width: 90%"
+              />
             </el-col>
           </template>
           <template v-if="crud.showExtendSearch">

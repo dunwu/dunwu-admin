@@ -114,7 +114,7 @@ function CRUD(options) {
     // 导出的 Loading
     downloadLoading: false,
     // 删除的 Loading
-    delAllLoading: false
+    batchDelLoading: false
   }
   const methods = {
     /**
@@ -376,40 +376,56 @@ function CRUD(options) {
      * @param {*} data 数据项
      */
     doDelete(data) {
-      let delAll = false
+      let batchDel = false
       let dataStatus
+      let id
       const ids = []
       if (data instanceof Array) {
-        delAll = true
+        batchDel = true
         data.forEach(val => {
           ids.push(crud.getDataId(val))
         })
       } else {
-        ids.push(this.getDataId(data))
-        dataStatus = crud.getDataStatus(crud.getDataId(data))
+        id = crud.getDataId(data)
+        ids.push(id)
+        dataStatus = crud.getDataStatus(id)
       }
       if (!callVmHook(crud, CRUD.HOOK.beforeDelete, data)) {
         return
       }
-      if (!delAll) {
+      if (!batchDel && crud.crudMethod.del) {
+        // 如果是删除单条记录，并且存在 del 方法则请求删除单条记录
         dataStatus.delete = CRUD.STATUS.PROCESSING
+        return crud.crudMethod
+          .del(id)
+          .then(() => {
+            dataStatus.delete = CRUD.STATUS.PREPARED
+            crud.dleChangePage(1)
+            crud.delSuccessNotify()
+            callVmHook(crud, CRUD.HOOK.afterDelete, data)
+            crud.refresh()
+          })
+          .catch(() => {
+            dataStatus.delete = CRUD.STATUS.PREPARED
+          })
+      } else {
+        return crud.crudMethod
+          .delBatch(ids)
+          .then(() => {
+            if (batchDel) {
+              crud.batchDelLoading = false
+            } else dataStatus.delete = CRUD.STATUS.PREPARED
+            crud.dleChangePage(1)
+            crud.delSuccessNotify()
+            callVmHook(crud, CRUD.HOOK.afterDelete, data)
+            crud.refresh()
+          })
+          .catch(() => {
+            if (batchDel) {
+              crud.batchDelLoading = false
+            } else dataStatus.delete = CRUD.STATUS.PREPARED
+          })
       }
-      return crud.crudMethod
-        .delBatch(ids)
-        .then(() => {
-          if (delAll) {
-            crud.delAllLoading = false
-          } else dataStatus.delete = CRUD.STATUS.PREPARED
-          crud.dleChangePage(1)
-          crud.delSuccessNotify()
-          callVmHook(crud, CRUD.HOOK.afterDelete, data)
-          crud.refresh()
-        })
-        .catch(() => {
-          if (delAll) {
-            crud.delAllLoading = false
-          } else dataStatus.delete = CRUD.STATUS.PREPARED
-        })
     },
     /**
      * 通用导出数据方法

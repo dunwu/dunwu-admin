@@ -67,7 +67,8 @@
             @selection-change="crud.selectionChangeHandler"
             @current-change="handleCurrentChange"
           >
-            <el-table-column type="selection" width="55" />
+            <el-table-column type="selection" width="50" />
+            <el-table-column prop="id" label="ID" width="50" />
             <el-table-column :show-overflow-tooltip="true" prop="code" label="编码" />
             <el-table-column :show-overflow-tooltip="true" prop="name" label="名称" />
             <el-table-column :show-overflow-tooltip="true" prop="note" label="描述" />
@@ -147,6 +148,7 @@ export default {
     return {
       queryTypeOptions: [{ key: 'name', display_name: '字典名称' }, { key: 'note', display_name: '描述' }],
       rules: {
+        code: [{ required: true, message: '请输入编码', trigger: 'blur' }],
         name: [{ required: true, message: '请输入名称', trigger: 'blur' }]
       },
       permission: {

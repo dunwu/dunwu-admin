@@ -4,7 +4,6 @@ import io.github.dunwu.module.security.entity.dto.OnlineUserDto;
 import io.github.dunwu.module.security.service.AuthService;
 import io.github.dunwu.tool.data.DataResult;
 import io.github.dunwu.tool.data.PageResult;
-import io.github.dunwu.tool.web.log.annotation.AppLog;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +43,6 @@ public class OnlineController {
     }
 
     @ApiOperation("根据 Pageable 和 DeptQuery 分页查询 DeptDto 列表，并导出 excel 表单")
-    @AppLog(bizType = "部门", operType = "导出", value = "分页导出 cas_dept 表中的记录")
     @PreAuthorize("@exp.check('cas:dept:view')")
     @GetMapping("/export/page")
     public void exportPage(String filter, Pageable pageable, HttpServletResponse response) {

@@ -51,7 +51,7 @@ public class DictOptionQuery implements Serializable {
     private String updateBy;
 
     @ApiModelProperty(value = "创建时间")
-    @QueryField(type = QueryField.QueryType.BETWEEN)
+    @QueryField(value = "createTime", type = QueryField.QueryType.BETWEEN)
     @JsonFormat(shape = JsonFormat.Shape.ARRAY, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private List<LocalDateTime> createTimeRange;
 

@@ -14,7 +14,6 @@ import io.github.dunwu.module.security.service.AuthService;
 import io.github.dunwu.module.security.util.JwtTokenUtil;
 import io.github.dunwu.tool.data.DataResult;
 import io.github.dunwu.tool.data.validator.annotation.EditCheck;
-import io.github.dunwu.tool.web.log.annotation.AppLog;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -65,7 +64,6 @@ public class AuthController {
         return DataResult.ok(authService.getCaptcha());
     }
 
-    @AppLog("修改用户：个人中心")
     @ApiOperation("修改用户：个人中心")
     @PostMapping("edit/center")
     public DataResult<Boolean> center(@Validated(EditCheck.class) @RequestBody User entity) {
@@ -78,7 +76,6 @@ public class AuthController {
         return DataResult.ok(authService.updatePassword(entity));
     }
 
-    @AppLog("修改用户邮箱")
     @ApiOperation("修改用户邮箱")
     @PostMapping("edit/email/{code}")
     public DataResult<Boolean> updateEmail(@PathVariable String code,
