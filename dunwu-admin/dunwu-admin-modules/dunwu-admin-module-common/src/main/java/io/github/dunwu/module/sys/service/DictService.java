@@ -95,7 +95,7 @@ public interface DictService extends IService {
     /**
      * 根据 ID 列表查询 {@link DictDto} 列表
      *
-     * @param {@link Dict} 主键列表
+     * @param ids {@link Dict} 主键列表
      * @return {@link List<DictDto>}
      */
     List<DictDto> pojoListByIds(Collection<? extends Serializable> ids);
@@ -109,13 +109,13 @@ public interface DictService extends IService {
     List<DictDto> pojoListByQuery(DictQuery query);
 
     /**
-     * 根据 {@link DictQuery} 和 {@link Pageable} 分页查询 {@link DictDto} 列表
+     * 根据 {@link Pageable} 和 {@link DictQuery} 分页查询 {@link DictDto} 列表
      *
-     * @param query    查询条件，根据 {@link DictQuery} 中的 {@link QueryField} 注解自动组装查询条件
      * @param pageable 分页查询条件
+     * @param query    查询条件，根据 {@link DictQuery} 中的 {@link QueryField} 注解自动组装查询条件
      * @return {@link Page<DictDto>}
      */
-    Page<DictDto> pojoSpringPageByQuery(DictQuery query, Pageable pageable);
+    Page<DictDto> pojoSpringPageByQuery(Pageable pageable, DictQuery query);
 
     /**
      * 根据 id 查询 {@link DictDto}
@@ -150,7 +150,7 @@ public interface DictService extends IService {
     void exportList(Collection<? extends Serializable> ids, HttpServletResponse response);
 
     /**
-     * 根据 {@link DictQuery} 和 {@link Pageable} 分页查询 {@link DictDto} 列表，并导出 excel 表单
+     * 根据 {@link Pageable} 和 {@link DictQuery} 分页查询 {@link DictDto} 列表，并导出 excel 表单
      *
      * @param pageable 分页查询条件
      * @param query    查询条件，根据 {@link DictQuery} 中的 {@link QueryField} 注解自动组装查询条件

@@ -14,18 +14,6 @@ export function add(data) {
 }
 
 /**
- * 根据 ID 删除一条记录
- * @param id
- * @returns {*}
- */
-export function del(id) {
-  return request({
-    url: 'sys/dict/del/' + id,
-    method: 'post'
-  })
-}
-
-/**
  * 修改一条记录
  * @param data
  * @returns {*}
@@ -35,6 +23,18 @@ export function edit(data) {
     url: 'sys/dict/edit',
     method: 'post',
     data
+  })
+}
+
+/**
+ * 根据 ID 删除一条记录
+ * @param id
+ * @returns {*}
+ */
+export function del(id) {
+  return request({
+    url: 'sys/dict/del/' + id,
+    method: 'post'
   })
 }
 

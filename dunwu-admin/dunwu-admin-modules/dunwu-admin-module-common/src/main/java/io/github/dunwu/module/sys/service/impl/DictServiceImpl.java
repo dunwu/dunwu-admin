@@ -117,7 +117,7 @@ public class DictServiceImpl extends ServiceImpl implements DictService {
     }
 
     @Override
-    public Page<DictDto> pojoSpringPageByQuery(DictQuery query, Pageable pageable) {
+    public Page<DictDto> pojoSpringPageByQuery(Pageable pageable, DictQuery query) {
         return dictDao.pojoSpringPageByQuery(pageable, query, this::doToDto);
     }
 

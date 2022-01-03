@@ -9,7 +9,6 @@ import io.github.dunwu.tool.data.validator.annotation.EditCheck;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -17,16 +16,15 @@ import java.time.LocalDateTime;
 import javax.validation.constraints.NotNull;
 
 /**
- * 数据字典
+ * 数据字典实体
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-03
+ * @since 2022-01-03
  */
 @Data
 @Accessors(chain = true)
-@EqualsAndHashCode(callSuper = false)
 @TableName("sys_dict")
-@ApiModel(value = "Dict", description = "数据字典")
+@ApiModel(value = "Dict", description = "数据字典实体")
 public class Dict implements Serializable {
 
     private static final long serialVersionUID = 1L;

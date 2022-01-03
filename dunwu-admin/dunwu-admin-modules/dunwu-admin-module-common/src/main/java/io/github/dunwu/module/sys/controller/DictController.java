@@ -12,7 +12,6 @@ import io.github.dunwu.tool.data.validator.annotation.EditCheck;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -38,78 +37,83 @@ public class DictController {
 
     @ApiOperation("添加一条 Dict 记录")
     @PreAuthorize("@exp.check('sys:dict:add')")
-    @PostMapping("add")
+    @PostMapping("/add")
     public DataResult<Boolean> add(@Validated(AddCheck.class) @RequestBody Dict entity) {
         return DataResult.ok(service.insert(entity));
     }
 
     @ApiOperation("批量添加 Dict 记录")
     @PreAuthorize("@exp.check('sys:dict:add')")
-    @PostMapping("add/batch")
+    @PostMapping("/add/batch")
     public DataResult<Boolean> addBatch(@Validated(AddCheck.class) @RequestBody Collection<Dict> list) {
         return DataResult.ok(service.insertBatch(list));
     }
 
     @ApiOperation("根据 id 更新一条 Dict 记录")
     @PreAuthorize("@exp.check('sys:dict:edit')")
-    @PostMapping("edit")
+    @PostMapping("/edit")
     public DataResult<Boolean> edit(@Validated(EditCheck.class) @RequestBody Dict entity) {
         return DataResult.ok(service.updateById(entity));
     }
 
     @ApiOperation("根据 id 批量更新 Dict 记录")
     @PreAuthorize("@exp.check('sys:dict:edit')")
-    @PostMapping("edit/batch")
+    @PostMapping("/edit/batch")
     public DataResult<Boolean> editBatch(@Validated(EditCheck.class) @RequestBody Collection<Dict> list) {
         return DataResult.ok(service.updateBatchById(list));
     }
 
     @ApiOperation("根据 id 删除一条 Dict 记录")
     @PreAuthorize("@exp.check('sys:dict:del')")
-    @PostMapping("del/{id}")
+    @PostMapping("/del/{id}")
     public DataResult<Boolean> deleteById(@PathVariable Serializable id) {
         return DataResult.ok(service.deleteById(id));
     }
 
     @ApiOperation("根据 id 列表批量删除 Dict 记录")
     @PreAuthorize("@exp.check('sys:dict:del')")
-    @PostMapping("del/batch")
+    @PostMapping("/del/batch")
     public DataResult<Boolean> deleteBatchByIds(@RequestBody Collection<? extends Serializable> ids) {
         return DataResult.ok(service.deleteBatchByIds(ids));
     }
 
     @ApiOperation("根据 DictQuery 查询 DictDto 列表")
-    @GetMapping("list")
+    @PreAuthorize("@exp.check('sys:dict:view')")
+    @GetMapping("/list")
     public DataListResult<DictDto> list(DictQuery query) {
         return DataListResult.ok(service.pojoListByQuery(query));
     }
 
-    @ApiOperation("根据 DictQuery 和 Pageable 分页查询 DictDto 列表")
-    @GetMapping("page")
-    public PageResult<DictDto> page(DictQuery query, Pageable pageable) {
-        return PageResult.ok(service.pojoSpringPageByQuery(query, pageable));
+    @ApiOperation("根据 Pageable 和 DictQuery 分页查询 DictDto 列表")
+    @PreAuthorize("@exp.check('sys:dict:view')")
+    @GetMapping("/page")
+    public PageResult<DictDto> page(Pageable pageable, DictQuery query) {
+        return PageResult.ok(service.pojoSpringPageByQuery(pageable, query));
     }
 
     @ApiOperation("根据 id 查询 DictDto")
-    @GetMapping("{id}")
+    @PreAuthorize("@exp.check('sys:dict:view')")
+    @GetMapping("/{id}")
     public DataResult<DictDto> getById(@PathVariable Serializable id) {
         return DataResult.ok(service.pojoById(id));
     }
 
     @ApiOperation("根据 DictQuery 查询匹配条件的记录数")
-    @GetMapping("count")
+    @GetMapping("/count")
     public DataResult<Integer> count(DictQuery query) {
         return DataResult.ok(service.countByQuery(query));
     }
 
     @ApiOperation("根据 id 列表查询 DictDto 列表，并导出 excel 表单")
-    @PostMapping("export/list")
+    @PreAuthorize("@exp.check('sys:dict:view')")
+    @PostMapping("/export/list")
     public void exportList(@RequestBody Collection<? extends Serializable> ids, HttpServletResponse response) {
         service.exportList(ids, response);
     }
 
-    @ApiOperation("根据 DictQuery 和 Pageable 分页查询 DictDto 列表，并导出 excel 表单")
-    @GetMapping("export/page")
+    @ApiOperation("根据 Pageable 和 DictQuery 分页查询 DictDto 列表，并导出 excel 表单")
+    @PreAuthorize("@exp.check('sys:dict:view')")
+    @GetMapping("/export/page")
     public void exportPage(Pageable pageable, DictQuery query, HttpServletResponse response) {
         service.exportPage(pageable, query, response);
     }
