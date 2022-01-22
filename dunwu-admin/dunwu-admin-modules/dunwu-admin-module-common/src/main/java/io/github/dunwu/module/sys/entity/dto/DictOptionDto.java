@@ -4,22 +4,20 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 数据字典详情 Dto 类
+ * 数据字典选项 Dto 实体
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-03
+ * @since 2022-01-22
  */
 @Data
 @Accessors(chain = true)
-@EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "DictOptionDto", description = "数据字典详情")
+@ApiModel(value = "DictOptionDto", description = "数据字典选项 Dto 实体")
 public class DictOptionDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -35,6 +33,12 @@ public class DictOptionDto implements Serializable {
 
     @ApiModelProperty(value = "字典选项名称")
     private String name;
+
+    @ApiModelProperty(value = "备注")
+    private String note;
+
+    @ApiModelProperty(value = "是否禁用：1 表示禁用；0 表示启用")
+    private Boolean disabled;
 
     @ApiModelProperty(value = "创建者")
     private String createBy;

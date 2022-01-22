@@ -7,7 +7,7 @@
     <parent>
         <groupId>io.github.dunwu</groupId>
         <artifactId>dunwu-parent</artifactId>
-        <version>1.0.7-SNAPSHOT</version>
+        <version>1.0.7</version>
     </parent>
 
     <artifactId>dunwu-admin</artifactId>
@@ -29,8 +29,8 @@
         <druid.version>1.1.24</druid.version>
         <commons-pool2.version>2.5.0</commons-pool2.version>
         <mapstruct.version>1.3.1.Final</mapstruct.version>
-        <dunwu-tool.version>1.0.7-SNAPSHOT</dunwu-tool.version>
-        <dunwu-boot.version>1.0.7-SNAPSHOT</dunwu-boot.version>
+        <dunwu-tool.version>1.0.7</dunwu-tool.version>
+        <dunwu-boot.version>1.0.7</dunwu-boot.version>
         <dunwu-admin.version>1.0.1</dunwu-admin.version>
     </properties>
 

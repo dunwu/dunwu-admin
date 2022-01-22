@@ -6,11 +6,13 @@
   <div>
     <!--执行权限校验-->
     <div v-if="crud.enablePermission">
+      <slot name="left" />
       <!--列表行记录操作按钮 - 编辑-->
       <el-button
         v-permission="permission.edit"
         :loading="crud.status.cu === 2"
         :disabled="disabledEdit"
+        class="filter-item"
         size="mini"
         type="text"
         @click="crud.toEdit(data)"
@@ -40,17 +42,28 @@
             确定
           </el-button>
         </div>
-        <el-button slot="reference" :disabled="disabledDle" size="mini" type="text" @click="doDelete">
+        <el-button
+          slot="reference"
+          class="filter-item"
+          :disabled="disabledDle"
+          size="mini"
+          type="text"
+          @click="doDelete"
+        >
           删除
         </el-button>
       </el-popover>
+
+      <slot name="right" />
     </div>
     <!--不执行权限校验-->
     <div v-else>
+      <slot name="left" />
       <!--列表行记录操作按钮 - 编辑-->
       <el-button
         :loading="crud.status.cu === 2"
         :disabled="disabledEdit"
+        class="filter-item"
         size="mini"
         type="text"
         @click="crud.toEdit(data)"
@@ -79,10 +92,19 @@
             确定
           </el-button>
         </div>
-        <el-button slot="reference" :disabled="disabledDle" size="mini" type="text" @click="doDelete">
+        <el-button
+          slot="reference"
+          class="filter-item"
+          :disabled="disabledDle"
+          size="mini"
+          type="text"
+          @click="doDelete"
+        >
           删除
         </el-button>
       </el-popover>
+
+      <slot name="right" />
     </div>
   </div>
 </template>

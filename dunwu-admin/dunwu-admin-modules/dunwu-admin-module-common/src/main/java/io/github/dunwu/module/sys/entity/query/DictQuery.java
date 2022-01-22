@@ -22,8 +22,9 @@ public class DictQuery implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @QueryField(blurry = { "code", "name" }, type = QueryField.QueryType.LIKE)
-    private String blurry;
+    @ApiModelProperty(value = "ID")
+    @QueryField(value = "`id`", type = QueryField.QueryType.EQUALS)
+    private Long id;
 
     @ApiModelProperty(value = "字典编码")
     @QueryField(value = "`code`", type = QueryField.QueryType.LIKE)

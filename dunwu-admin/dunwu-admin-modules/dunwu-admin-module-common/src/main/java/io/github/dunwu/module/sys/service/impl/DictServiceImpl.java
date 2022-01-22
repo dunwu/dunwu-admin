@@ -166,8 +166,8 @@ public class DictServiceImpl extends ServiceImpl implements DictService {
             map.put("ID", item.getId());
             map.put("字典编码", item.getCode());
             map.put("字典名称", item.getName());
-            map.put("是否禁用：1 表示禁用；0 表示启用", item.getDisabled());
             map.put("备注", item.getNote());
+            map.put("是否禁用：1 表示禁用；0 表示启用", item.getDisabled());
             map.put("创建者", item.getCreateBy());
             map.put("更新者", item.getUpdateBy());
             map.put("创建时间", item.getCreateTime());

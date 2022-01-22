@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import DictApi from '@/views/sys/DictApi'
+import DictApi from '@/views/sys/dict/DictApi'
 
 export default class Dict {
   constructor(dict) {

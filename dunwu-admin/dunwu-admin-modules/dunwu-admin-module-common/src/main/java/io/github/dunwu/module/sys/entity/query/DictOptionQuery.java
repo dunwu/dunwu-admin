@@ -1,58 +1,44 @@
 package io.github.dunwu.module.sys.entity.query;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.github.dunwu.tool.data.annotation.QueryField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.List;
 
 /**
- * 数据字典详情 Query 类
+ * 数据字典选项 Query 实体
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
- * @since 2021-10-03
+ * @since 2022-01-22
  */
 @Data
 @Accessors(chain = true)
-@EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "DictOptionQuery", description = "数据字典详情")
+@ApiModel(value = "DictOptionQuery", description = "数据字典选项 Query 实体")
 public class DictOptionQuery implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "ID")
-    @QueryField
+    @QueryField(value = "`id`", type = QueryField.QueryType.EQUALS)
     private Long id;
 
     @ApiModelProperty(value = "字典id")
-    @QueryField
+    @QueryField(value = "`dict_id`")
     private Long dictId;
 
     @ApiModelProperty(value = "字典选项编码")
-    @QueryField
+    @QueryField(value = "`code`", type = QueryField.QueryType.LIKE)
     private String code;
 
     @ApiModelProperty(value = "字典选项名称")
-    @QueryField
+    @QueryField(value = "`name`", type = QueryField.QueryType.LIKE)
     private String name;
 
-    @ApiModelProperty(value = "创建者")
-    @QueryField
-    private String createBy;
-
-    @ApiModelProperty(value = "更新者")
-    @QueryField
-    private String updateBy;
-
-    @ApiModelProperty(value = "创建时间")
-    @QueryField(value = "createTime", type = QueryField.QueryType.BETWEEN)
-    @JsonFormat(shape = JsonFormat.Shape.ARRAY, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private List<LocalDateTime> createTimeRange;
+    @ApiModelProperty(value = "是否禁用：1 表示禁用；0 表示启用")
+    @QueryField(value = "`is_disabled`")
+    private Boolean disabled;
 
 }

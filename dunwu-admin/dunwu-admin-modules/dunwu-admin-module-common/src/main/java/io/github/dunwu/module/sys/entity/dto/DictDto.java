@@ -32,11 +32,11 @@ public class DictDto implements Serializable {
     @ApiModelProperty(value = "字典名称")
     private String name;
 
-    @ApiModelProperty(value = "是否禁用：1 表示禁用；0 表示启用")
-    private Boolean disabled;
-
     @ApiModelProperty(value = "备注")
     private String note;
+
+    @ApiModelProperty(value = "是否禁用：1 表示禁用；0 表示启用")
+    private Boolean disabled;
 
     @ApiModelProperty(value = "创建者")
     private String createBy;
@@ -52,7 +52,7 @@ public class DictDto implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime updateTime;
 
-    @ApiModelProperty(value = "字典项")
+    @ApiModelProperty(value = "字典选项")
     private List<DictOptionDto> options;
 
 }

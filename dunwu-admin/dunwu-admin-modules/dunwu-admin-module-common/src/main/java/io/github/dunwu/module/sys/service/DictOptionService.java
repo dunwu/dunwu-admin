@@ -14,7 +14,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 数据字典详情 Service 接口
+ * 数据字典选项 Service 接口
  *
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
  * @since 2021-10-03
@@ -95,7 +95,7 @@ public interface DictOptionService extends IService {
     /**
      * 根据 ID 列表查询 {@link DictOptionDto} 列表
      *
-     * @param {@link DictOption} 主键列表
+     * @param ids {@link DictOption} 主键列表
      * @return {@link List<DictOptionDto>}
      */
     List<DictOptionDto> pojoListByIds(Collection<? extends Serializable> ids);
@@ -109,13 +109,13 @@ public interface DictOptionService extends IService {
     List<DictOptionDto> pojoListByQuery(DictOptionQuery query);
 
     /**
-     * 根据 {@link DictOptionQuery} 和 {@link Pageable} 分页查询 {@link DictOptionDto} 列表
+     * 根据 {@link Pageable} 和 {@link DictOptionQuery} 分页查询 {@link DictOptionDto} 列表
      *
-     * @param query    查询条件，根据 {@link DictOptionQuery} 中的 {@link QueryField} 注解自动组装查询条件
      * @param pageable 分页查询条件
+     * @param query    查询条件，根据 {@link DictOptionQuery} 中的 {@link QueryField} 注解自动组装查询条件
      * @return {@link Page<DictOptionDto>}
      */
-    Page<DictOptionDto> pojoSpringPageByQuery(DictOptionQuery query, Pageable pageable);
+    Page<DictOptionDto> pojoSpringPageByQuery(Pageable pageable, DictOptionQuery query);
 
     /**
      * 根据 id 查询 {@link DictOptionDto}
@@ -150,7 +150,7 @@ public interface DictOptionService extends IService {
     void exportList(Collection<? extends Serializable> ids, HttpServletResponse response);
 
     /**
-     * 根据 {@link DictOptionQuery} 和 {@link Pageable} 分页查询 {@link DictOptionDto} 列表，并导出 excel 表单
+     * 根据 {@link Pageable} 和 {@link DictOptionQuery} 分页查询 {@link DictOptionDto} 列表，并导出 excel 表单
      *
      * @param pageable 分页查询条件
      * @param query    查询条件，根据 {@link DictOptionQuery} 中的 {@link QueryField} 注解自动组装查询条件
