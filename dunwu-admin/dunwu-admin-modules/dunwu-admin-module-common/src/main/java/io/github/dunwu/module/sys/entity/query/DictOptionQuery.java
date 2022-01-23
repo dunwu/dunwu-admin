@@ -1,5 +1,6 @@
 package io.github.dunwu.module.sys.entity.query;
 
+import cn.hutool.json.JSONUtil;
 import io.github.dunwu.tool.data.annotation.QueryField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -40,5 +41,9 @@ public class DictOptionQuery implements Serializable {
     @ApiModelProperty(value = "是否禁用：1 表示禁用；0 表示启用")
     @QueryField(value = "`is_disabled`")
     private Boolean disabled;
+
+    public String toJsonStr() {
+        return JSONUtil.toJsonStr(this);
+    }
 
 }

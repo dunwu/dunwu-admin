@@ -16,12 +16,17 @@ import io.github.dunwu.tool.web.ServletUtil;
 import io.github.dunwu.tool.web.log.annotation.OperationLog;
 import io.github.dunwu.tool.web.log.constant.OperationType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.io.Serializable;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
@@ -31,6 +36,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
  * @since 2021-10-03
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DictServiceImpl extends ServiceImpl implements DictService {
@@ -140,7 +146,11 @@ public class DictServiceImpl extends ServiceImpl implements DictService {
     @OperationLog(bizType = "数据字典", operation = OperationType.EXPORT_LIST, bizNo = "{{#ids}}")
     public void exportList(Collection<? extends Serializable> ids, HttpServletResponse response) {
         List<DictDto> list = dictDao.pojoListByIds(ids, this::doToDto);
-        exportDtoList(list, response);
+        try {
+            ServletUtil.downloadEasyExcel(response, list, DictDto.class);
+        } catch (IOException e) {
+            log.error("【数据字典】【导出失败】", e);
+        }
     }
 
     @Override
@@ -150,31 +160,11 @@ public class DictServiceImpl extends ServiceImpl implements DictService {
     )
     public void exportPage(Pageable pageable, DictQuery query, HttpServletResponse response) {
         Page<DictDto> page = dictDao.pojoSpringPageByQuery(pageable, query, this::doToDto);
-        exportDtoList(page.getContent(), response);
-    }
-
-    /**
-     * 根据传入的 DictDto 列表，导出 excel 表单
-     *
-     * @param list     {@link DictDto} 列表
-     * @param response {@link HttpServletResponse} 实体
-     */
-    private void exportDtoList(Collection<DictDto> list, HttpServletResponse response) {
-        List<Map<String, Object>> mapList = new ArrayList<>();
-        for (DictDto item : list) {
-            Map<String, Object> map = new LinkedHashMap<>();
-            map.put("ID", item.getId());
-            map.put("字典编码", item.getCode());
-            map.put("字典名称", item.getName());
-            map.put("备注", item.getNote());
-            map.put("是否禁用：1 表示禁用；0 表示启用", item.getDisabled());
-            map.put("创建者", item.getCreateBy());
-            map.put("更新者", item.getUpdateBy());
-            map.put("创建时间", item.getCreateTime());
-            map.put("更新时间", item.getUpdateTime());
-            mapList.add(map);
+        try {
+            ServletUtil.downloadEasyExcel(response, page.getContent(), DictDto.class);
+        } catch (IOException e) {
+            log.error("【数据字典】【导出失败】", e);
         }
-        ServletUtil.downloadExcel(response, mapList);
     }
 
     @Override
