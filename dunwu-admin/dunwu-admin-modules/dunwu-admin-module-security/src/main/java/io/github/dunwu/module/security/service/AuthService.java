@@ -26,6 +26,7 @@ import io.github.dunwu.module.security.util.CaptchaUtil;
 import io.github.dunwu.module.security.util.JwtTokenUtil;
 import io.github.dunwu.module.security.util.SecurityUtil;
 import io.github.dunwu.tool.core.exception.AuthException;
+import io.github.dunwu.tool.data.excel.ExcelUtil;
 import io.github.dunwu.tool.data.redis.RedisHelper;
 import io.github.dunwu.tool.data.util.PageUtil;
 import io.github.dunwu.tool.web.ServletUtil;
@@ -465,7 +466,7 @@ public class AuthService implements UserDetailsService {
             map.put("登录时间", item.getLoginTime());
             mapList.add(map);
         }
-        ServletUtil.downloadExcel(response, mapList);
+        ExcelUtil.downloadExcel(response, mapList);
     }
 
 }

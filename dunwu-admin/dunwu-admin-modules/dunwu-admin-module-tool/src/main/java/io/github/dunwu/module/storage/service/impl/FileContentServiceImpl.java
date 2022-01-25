@@ -2,12 +2,12 @@ package io.github.dunwu.module.storage.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import io.github.dunwu.module.storage.dao.FileContentDao;
-import io.github.dunwu.module.storage.entity.dto.FileContentDto;
-import io.github.dunwu.module.storage.service.FileContentService;
 import io.github.dunwu.module.storage.entity.FileContent;
+import io.github.dunwu.module.storage.entity.dto.FileContentDto;
 import io.github.dunwu.module.storage.entity.query.FileContentQuery;
+import io.github.dunwu.module.storage.service.FileContentService;
+import io.github.dunwu.tool.data.excel.ExcelUtil;
 import io.github.dunwu.tool.data.mybatis.ServiceImpl;
-import io.github.dunwu.tool.web.ServletUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -138,7 +138,7 @@ public class FileContentServiceImpl extends ServiceImpl implements FileContentSe
             map.put("文件内容", item.getContent());
             mapList.add(map);
         }
-        ServletUtil.downloadExcel(response, mapList);
+        ExcelUtil.downloadExcel(response, mapList);
     }
 
     @Override

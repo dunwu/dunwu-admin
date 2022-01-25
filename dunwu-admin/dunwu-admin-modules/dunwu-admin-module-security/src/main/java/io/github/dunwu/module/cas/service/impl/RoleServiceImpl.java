@@ -15,8 +15,8 @@ import io.github.dunwu.module.cas.service.RoleService;
 import io.github.dunwu.tool.bean.BeanUtil;
 import io.github.dunwu.tool.core.exception.AuthException;
 import io.github.dunwu.tool.data.Pagination;
+import io.github.dunwu.tool.data.excel.ExcelUtil;
 import io.github.dunwu.tool.data.mybatis.ServiceImpl;
-import io.github.dunwu.tool.web.ServletUtil;
 import io.github.dunwu.tool.web.security.SecurityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
@@ -216,7 +216,7 @@ public class RoleServiceImpl extends ServiceImpl implements RoleService {
             map.put("更新时间", item.getUpdateTime());
             mapList.add(map);
         }
-        ServletUtil.downloadExcel(response, mapList);
+        ExcelUtil.downloadExcel(response, mapList);
     }
 
     @Override

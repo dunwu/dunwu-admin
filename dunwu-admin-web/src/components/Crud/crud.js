@@ -20,6 +20,8 @@ function CRUD(options) {
     tableType: 'page',
     // 请求数据的url
     url: '',
+    // 上传请求的url
+    importUrl: '',
     // 表格数据
     data: [],
     // 选择项
@@ -51,9 +53,11 @@ function CRUD(options) {
     },
     // 主页操作栏显示哪些按钮
     optShow: {
+      all: false,
       add: true,
       edit: true,
       del: true,
+      import: false,
       export: true,
       query: true,
       reset: true,
@@ -112,7 +116,7 @@ function CRUD(options) {
     // 整体loading
     loading: false,
     // 导出的 Loading
-    downloadLoading: false,
+    exportLoading: false,
     // 删除的 Loading
     batchDelLoading: false
   }
@@ -407,6 +411,7 @@ function CRUD(options) {
           })
           .catch(() => {
             dataStatus.delete = CRUD.STATUS.PREPARED
+            callVmHook(crud, CRUD.HOOK.afterDelError)
           })
       } else {
         return crud.crudMethod
@@ -424,14 +429,15 @@ function CRUD(options) {
             if (batchDel) {
               crud.batchDelLoading = false
             } else dataStatus.delete = CRUD.STATUS.PREPARED
+            callVmHook(crud, CRUD.HOOK.afterDelError)
           })
       }
     },
     /**
-     * 通用导出数据方法
+     * 执行导出
      */
     doExport() {
-      crud.downloadLoading = true
+      crud.exportLoading = true
       const ids = []
       if (crud.selections instanceof Array) {
         crud.selections.forEach(val => {
@@ -445,10 +451,10 @@ function CRUD(options) {
           .exportList(ids)
           .then(result => {
             downloadFile(result, crud.title + '数据', 'xlsx')
-            crud.downloadLoading = false
+            crud.exportLoading = false
           })
           .catch(() => {
-            crud.downloadLoading = false
+            crud.exportLoading = false
           })
       } else {
         // 如果没有选中记录，则导出分页查询匹配的记录
@@ -456,10 +462,10 @@ function CRUD(options) {
           .exportPage(crud.getQueryParams())
           .then(result => {
             downloadFile(result, crud.title + '数据', 'xlsx')
-            crud.downloadLoading = false
+            crud.exportLoading = false
           })
           .catch(() => {
-            crud.downloadLoading = false
+            crud.exportLoading = false
           })
       }
     },
@@ -989,8 +995,12 @@ CRUD.HOOK = {
   beforeSubmit: 'beforeCrudSubmitCU',
   /** 提交 - 之后 */
   afterSubmit: 'afterCrudSubmitCU',
+  /** 添加错误 - 之后 */
   afterAddError: 'afterCrudAddError',
-  afterEditError: 'afterCrudEditError'
+  /** 编辑错误 - 之后 */
+  afterEditError: 'afterCrudEditError',
+  /** 删除错误 - 之后 */
+  afterDelError: 'afterCrudDelError'
 }
 
 /**

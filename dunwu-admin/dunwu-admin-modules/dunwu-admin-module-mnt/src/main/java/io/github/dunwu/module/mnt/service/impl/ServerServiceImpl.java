@@ -11,8 +11,8 @@ import io.github.dunwu.module.mnt.entity.dto.ServerDto;
 import io.github.dunwu.module.mnt.entity.query.ServerQuery;
 import io.github.dunwu.module.mnt.service.ServerService;
 import io.github.dunwu.module.mnt.util.ShellUtil;
+import io.github.dunwu.tool.data.excel.ExcelUtil;
 import io.github.dunwu.tool.data.mybatis.ServiceImpl;
-import io.github.dunwu.tool.web.ServletUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -151,7 +151,7 @@ public class ServerServiceImpl extends ServiceImpl implements ServerService {
             map.put("更新时间", item.getUpdateTime());
             mapList.add(map);
         }
-        ServletUtil.downloadExcel(response, mapList);
+        ExcelUtil.downloadExcel(response, mapList);
     }
 
     @Override

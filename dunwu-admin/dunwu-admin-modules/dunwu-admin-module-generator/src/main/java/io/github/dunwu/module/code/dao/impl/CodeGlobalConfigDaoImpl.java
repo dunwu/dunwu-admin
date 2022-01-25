@@ -5,8 +5,8 @@ import io.github.dunwu.module.code.dao.mapper.CodeGlobalConfigMapper;
 import io.github.dunwu.module.code.entity.CodeGlobalConfig;
 import io.github.dunwu.module.code.entity.dto.CodeGlobalConfigDto;
 import io.github.dunwu.tool.data.annotation.Dao;
+import io.github.dunwu.tool.data.excel.ExcelUtil;
 import io.github.dunwu.tool.data.mybatis.BaseExtDaoImpl;
-import io.github.dunwu.tool.web.ServletUtil;
 
 import java.io.IOException;
 import java.util.*;
@@ -45,7 +45,7 @@ public class CodeGlobalConfigDaoImpl extends BaseExtDaoImpl<CodeGlobalConfigMapp
             map.put("更新时间", item.getUpdateTime());
             mapList.add(map);
         }
-        ServletUtil.downloadExcel(response, mapList);
+        ExcelUtil.downloadExcel(response, mapList);
     }
 
 }

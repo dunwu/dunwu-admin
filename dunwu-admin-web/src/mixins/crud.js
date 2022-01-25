@@ -28,14 +28,16 @@ export default {
       isAdd: false,
       // 是否展示扩展搜索栏
       showExtendSearch: false,
-      // 导出的 Loading
-      downloadLoading: false,
       // 表格 Loading 属性
       loading: true,
       // 删除 Loading 属性
       delLoading: false,
       // 批量删除 Loading 属性
       batchDelLoading: false,
+      // 导入的 Loading
+      importLoading: false,
+      // 导出的 Loading
+      exportLoading: false,
       // 弹窗属性
       dialog: false,
       // Form 表单
@@ -374,18 +376,18 @@ export default {
     /**
      * 通用导出
      */
-    downloadMethod() {
+    exportMethod() {
       this.beforeInit()
-      this.downloadLoading = true
+      this.exportLoading = true
 
       this.crudMethod
         .exportPage(this.getQueryParams())
         .then(result => {
           downloadFile(result, this.title + '数据', 'xlsx')
-          this.downloadLoading = false
+          this.exportLoading = false
         })
         .catch(() => {
-          this.downloadLoading = false
+          this.exportLoading = false
         })
     }
   }

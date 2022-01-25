@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -102,6 +103,14 @@ public class DictController {
     @GetMapping("/count")
     public DataResult<Integer> count(DictQuery query) {
         return DataResult.ok(service.countByQuery(query));
+    }
+
+    @ApiOperation("导入 excel 表单")
+    @PreAuthorize("@exp.check('sys:dict:edit')")
+    @PostMapping("/import/list")
+    public DataResult<Boolean> importList(@RequestBody MultipartFile file) {
+        service.importList(file);
+        return DataResult.ok();
     }
 
     @ApiOperation("根据 id 列表查询 DictDto 列表，并导出 excel 表单")

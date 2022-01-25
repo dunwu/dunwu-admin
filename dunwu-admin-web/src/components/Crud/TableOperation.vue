@@ -1,7 +1,6 @@
 <!--
   - 表格公共操作按钮组合，包含 [ 添加、编辑、删除、导出 ] 按钮。
   -->
-
 <template>
   <div class="crud-opts">
     <!--执行权限校验-->
@@ -9,7 +8,7 @@
       <!--左侧插槽-->
       <slot name="left" />
       <el-button
-        v-if="crud.optShow.add === undefined || crud.optShow.add === null || crud.optShow.add"
+        v-if="enableAdd"
         v-permission="permission.add"
         class="filter-item"
         size="mini"
@@ -20,7 +19,7 @@
         添加
       </el-button>
       <el-button
-        v-if="crud.optShow.edit === undefined || crud.optShow.edit === null || crud.optShow.edit"
+        v-if="enableEdit"
         v-permission="permission.edit"
         class="filter-item"
         size="mini"
@@ -31,9 +30,23 @@
       >
         编辑
       </el-button>
+      <el-upload
+        v-if="importUrl && enableImport"
+        class="filter-item"
+        accept=".xls,.xlsx"
+        :action="importUrl"
+        :headers="headers"
+        :loading="crud.importLoading"
+        :show-file-list="false"
+        :before-upload="beforeUpload"
+        :on-success="onImportSuccess"
+        :on-error="onImportError"
+      >
+        <el-button size="mini" type="primary" icon="el-icon-upload2">导入</el-button>
+      </el-upload>
       <el-button
         v-if="crud.optShow.export === undefined || crud.optShow.export === null || crud.optShow.export"
-        :loading="crud.downloadLoading"
+        :loading="crud.exportLoading"
         :disabled="!crud.data.length"
         class="filter-item"
         size="mini"
@@ -44,7 +57,7 @@
         导出
       </el-button>
       <el-button
-        v-if="crud.optShow.del === undefined || crud.optShow.del === null || crud.optShow.del"
+        v-if="enableDel"
         slot="reference"
         v-permission="permission.del"
         class="filter-item"
@@ -65,7 +78,7 @@
       <!--左侧插槽-->
       <slot name="left" />
       <el-button
-        v-if="crud.optShow.add === undefined || crud.optShow.add === null || crud.optShow.add"
+        v-if="enableAdd"
         class="filter-item"
         size="mini"
         type="primary"
@@ -75,7 +88,7 @@
         添加
       </el-button>
       <el-button
-        v-if="crud.optShow.edit === undefined || crud.optShow.edit === null || crud.optShow.edit"
+        v-if="enableEdit"
         class="filter-item"
         size="mini"
         type="primary"
@@ -85,9 +98,23 @@
       >
         编辑
       </el-button>
+      <el-upload
+        v-if="importUrl && enableImport"
+        class="filter-item"
+        accept=".xls,.xlsx"
+        :action="importUrl"
+        :headers="headers"
+        :loading="crud.importLoading"
+        :show-file-list="false"
+        :before-upload="beforeUpload"
+        :on-success="onImportSuccess"
+        :on-error="onImportError"
+      >
+        <el-button size="mini" type="primary" icon="el-icon-upload2">导入</el-button>
+      </el-upload>
       <el-button
         v-if="crud.optShow.export === undefined || crud.optShow.export === null || crud.optShow.export"
-        :loading="crud.downloadLoading"
+        :loading="crud.exportLoading"
         :disabled="!crud.data.length"
         class="filter-item"
         size="mini"
@@ -98,7 +125,7 @@
         导出
       </el-button>
       <el-button
-        v-if="crud.optShow.del === undefined || crud.optShow.del === null || crud.optShow.del"
+        v-if="enableDel"
         slot="reference"
         class="filter-item"
         type="danger"
@@ -113,7 +140,10 @@
       <!--右侧-->
       <slot name="right" />
     </span>
-    <el-button-group v-if="crud.optShow.tools === undefined || crud.optShow.tools === null || crud.optShow.tools" class="crud-opts-right">
+    <el-button-group
+      v-if="crud.optShow.tools === undefined || crud.optShow.tools === null || crud.optShow.tools"
+      class="crud-opts-right"
+    >
       <el-button size="mini" plain type="info" icon="el-icon-search" @click="toggleSearch()" />
       <el-button size="mini" icon="el-icon-refresh" @click="crud.refresh()" />
       <el-popover placement="bottom-end" width="150" trigger="click">
@@ -139,8 +169,11 @@
     </el-button-group>
   </div>
 </template>
+
 <script>
 import CRUD, { crud } from '@crud/crud'
+import { getToken } from '@/utils/auth'
+import { mapGetters } from 'vuex'
 
 function sortWithRef(src, ref) {
   const result = Object.assign([], ref)
@@ -186,8 +219,26 @@ export default {
       allColumnsSelectedIndeterminate: false,
       tableUnwatcher: null,
       // 忽略下次表格列变动
-      ignoreNextTableColumnsChange: false
+      ignoreNextTableColumnsChange: false,
+      headers: {
+        DunwuToken: getToken()
+      },
+      // 导入地址
+      importUrl: null,
+      // 允许展示添加按钮
+      enableAdd: false,
+      // 允许展示编辑按钮
+      enableEdit: false,
+      // 允许展示删除按钮
+      enableDel: false,
+      // 允许展示导入按钮
+      enableImport: false,
+      // 允许展示导出按钮
+      enableExport: false
     }
+  },
+  computed: {
+    ...mapGetters(['baseApi'])
   },
   watch: {
     'crud.props.table'() {
@@ -205,6 +256,17 @@ export default {
   },
   created() {
     this.crud.updateProp('searchToggle', true)
+    if (this.crud.importUrl) {
+      this.importUrl = this.baseApi + '/' + this.crud.importUrl
+    } else {
+      console.error(this.crud.title + ' 页面没有配置 importUrl，不能使用导入功能')
+    }
+
+    this.enableAdd = this.getEnableStatus(this.crud.optShow.add)
+    this.enableEdit = this.getEnableStatus(this.crud.optShow.edit)
+    this.enableDel = this.getEnableStatus(this.crud.optShow.del)
+    this.enableImport = this.getEnableStatus(this.crud.optShow.import)
+    this.enableExport = this.getEnableStatus(this.crud.optShow.export)
   },
   methods: {
     updateTableColumns() {
@@ -234,15 +296,15 @@ export default {
       })
       this.tableColumns = columns
     },
-    toDelete(datas) {
-      this.$confirm(`确认删除选中的${datas.length}条数据?`, '提示', {
+    toDelete(data) {
+      this.$confirm(`确认删除选中的${data.length}条数据?`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
         .then(() => {
           this.crud.batchDelLoading = true
-          this.crud.doDelete(datas)
+          this.crud.doDelete(data)
         })
         .catch(() => {})
     },
@@ -293,6 +355,35 @@ export default {
     },
     toggleSearch() {
       this.crud.props.searchToggle = !this.crud.props.searchToggle
+    },
+    beforeUpload(file) {
+      console.info('beforeUpload', file)
+      const isLt1M = file.size / 1024 / 1024 < 1
+      if (isLt1M) {
+        return true
+      }
+
+      this.$message({
+        message: '请不要上传大于1m的文件.',
+        type: 'warning'
+      })
+      return false
+    },
+    onImportSuccess(response, file, fileList) {
+      if (response && response.code === 0) {
+        this.$message({ type: 'success', message: '导入成功' })
+        this.crud.toQuery()
+      } else {
+        console.error('导入失败', response)
+        this.$message({ type: 'error', message: '导入失败' })
+      }
+    },
+    onImportError(err, file, fileList) {
+      console.error('导入失败', err)
+      this.$message({ type: 'error', message: '导入失败' })
+    },
+    getEnableStatus(val) {
+      return this.crud.optShow.all === true || val === undefined || val === null || val
     }
   }
 }
@@ -305,6 +396,7 @@ export default {
   display: flex;
   align-items: center;
 }
+
 .crud-opts .crud-opts-right {
   margin-left: auto;
 }

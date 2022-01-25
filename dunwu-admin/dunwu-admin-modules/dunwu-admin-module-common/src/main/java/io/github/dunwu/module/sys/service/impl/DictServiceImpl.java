@@ -11,8 +11,10 @@ import io.github.dunwu.module.sys.entity.dto.DictOptionDto;
 import io.github.dunwu.module.sys.entity.query.DictQuery;
 import io.github.dunwu.module.sys.service.DictOptionService;
 import io.github.dunwu.module.sys.service.DictService;
+import io.github.dunwu.tool.core.constant.enums.ResultStatus;
+import io.github.dunwu.tool.core.exception.AppException;
+import io.github.dunwu.tool.data.excel.ExcelUtil;
 import io.github.dunwu.tool.data.mybatis.ServiceImpl;
-import io.github.dunwu.tool.web.ServletUtil;
 import io.github.dunwu.tool.web.log.annotation.OperationLog;
 import io.github.dunwu.tool.web.log.constant.OperationType;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -143,27 +147,44 @@ public class DictServiceImpl extends ServiceImpl implements DictService {
     }
 
     @Override
-    @OperationLog(bizType = "数据字典", operation = OperationType.EXPORT_LIST, bizNo = "{{#ids}}")
-    public void exportList(Collection<? extends Serializable> ids, HttpServletResponse response) {
-        List<DictDto> list = dictDao.pojoListByIds(ids, this::doToDto);
+    @Transactional(rollbackFor = { Exception.class })
+    @OperationLog(bizType = "数据字典", operation = OperationType.IMPORT_EXCEL,
+        success = "导入数据字典(Excel文件：{{#file.getOriginalFilename()}})『成功』",
+        fail = "导入数据字典(Excel文件：{{#file.getOriginalFilename()}})『失败』"
+    )
+    public void importList(MultipartFile file) {
         try {
-            ServletUtil.downloadEasyExcel(response, list, DictDto.class);
+            ExcelUtil.saveExcelData(file.getInputStream(), Dict.class, dictDao);
         } catch (IOException e) {
-            log.error("【数据字典】【导出失败】", e);
+            log.error("【数据字典】【导入失败】", e);
+            throw new AppException(ResultStatus.IO_ERROR.getCode(), "【数据字典】【导入失败】");
         }
     }
 
     @Override
-    @OperationLog(bizType = "数据字典", operation = OperationType.EXPORT_PAGE,
+    @OperationLog(bizType = "数据字典", operation = OperationType.EXPORT_EXCEL, bizNo = "{{#ids}}")
+    public void exportList(Collection<? extends Serializable> ids, HttpServletResponse response) {
+        List<DictDto> list = dictDao.pojoListByIds(ids, this::doToDto);
+        try {
+            ExcelUtil.downloadEasyExcel(response, list, DictDto.class);
+        } catch (IOException e) {
+            log.error("【数据字典】【导出失败】", e);
+            throw new AppException(ResultStatus.IO_ERROR.getCode(), "【数据字典】【导出失败】");
+        }
+    }
+
+    @Override
+    @OperationLog(bizType = "数据字典", operation = OperationType.EXPORT_EXCEL,
         success = "分页查询导出数据字典(page={{#pageable.getPageNumber()}}, size={{#pageable.getPageSize()}}, query={{#query.toJsonStr()}})『成功』",
         fail = "分页查询导出数据字典(page={{#pageable.getPageNumber()}}, size={{#pageable.getPageSize()}}, query={{#query.toJsonStr()}})『失败』"
     )
     public void exportPage(Pageable pageable, DictQuery query, HttpServletResponse response) {
         Page<DictDto> page = dictDao.pojoSpringPageByQuery(pageable, query, this::doToDto);
         try {
-            ServletUtil.downloadEasyExcel(response, page.getContent(), DictDto.class);
+            ExcelUtil.downloadEasyExcel(response, page.getContent(), DictDto.class);
         } catch (IOException e) {
             log.error("【数据字典】【导出失败】", e);
+            throw new AppException(ResultStatus.IO_ERROR.getCode(), "【数据字典】【导出失败】");
         }
     }
 

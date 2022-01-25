@@ -10,7 +10,6 @@ import io.github.dunwu.tool.data.validator.annotation.EditCheck;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -24,7 +23,6 @@ import javax.validation.constraints.NotNull;
  * @since 2022-01-22
  */
 @Data
-@Accessors(chain = true)
 @TableName("sys_dict_option")
 @ApiModel(value = "DictOption", description = "数据字典选项实体")
 public class DictOption implements Serializable {

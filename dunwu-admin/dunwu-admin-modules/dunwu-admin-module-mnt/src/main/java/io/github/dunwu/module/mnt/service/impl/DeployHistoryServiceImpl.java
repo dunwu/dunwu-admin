@@ -6,8 +6,8 @@ import io.github.dunwu.module.mnt.entity.DeployHistory;
 import io.github.dunwu.module.mnt.entity.dto.DeployHistoryDto;
 import io.github.dunwu.module.mnt.entity.query.DeployHistoryQuery;
 import io.github.dunwu.module.mnt.service.DeployHistoryService;
+import io.github.dunwu.tool.data.excel.ExcelUtil;
 import io.github.dunwu.tool.data.mybatis.ServiceImpl;
-import io.github.dunwu.tool.web.ServletUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -131,7 +131,7 @@ public class DeployHistoryServiceImpl extends ServiceImpl implements DeployHisto
             map.put("服务器IP", item.getIp());
             mapList.add(map);
         }
-        ServletUtil.downloadExcel(response, mapList);
+        ExcelUtil.downloadExcel(response, mapList);
     }
 
     @Override

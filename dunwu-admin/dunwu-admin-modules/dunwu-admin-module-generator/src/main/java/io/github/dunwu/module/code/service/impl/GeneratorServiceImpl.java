@@ -20,7 +20,10 @@ import io.github.dunwu.tool.generator.config.*;
 import io.github.dunwu.tool.generator.config.builder.ConfigBuilder;
 import io.github.dunwu.tool.generator.config.po.TableField;
 import io.github.dunwu.tool.generator.config.po.TableInfo;
+import io.github.dunwu.tool.generator.config.rules.FormType;
 import io.github.dunwu.tool.generator.config.rules.JavaColumnType;
+import io.github.dunwu.tool.generator.config.rules.ListType;
+import io.github.dunwu.tool.generator.config.rules.ValidateType;
 import io.github.dunwu.tool.generator.engine.CodeGenerateContentDto;
 import io.github.dunwu.tool.web.ServletUtil;
 import lombok.RequiredArgsConstructor;
@@ -451,6 +454,24 @@ public class GeneratorServiceImpl implements GeneratorService {
         column.setSchemaName(schemaName).setTableName(tableName);
         if (field.getJavaType() != null) {
             column.setJavaType(field.getJavaType().getType());
+            JavaColumnType javaType = (JavaColumnType) field.getJavaType();
+            switch (javaType) {
+                case DATE_SQL:
+                case TIME:
+                case TIMESTAMP:
+                case LOCAL_DATE:
+                case LOCAL_TIME:
+                case LOCAL_DATE_TIME:
+                case DATE:
+                    column.setListType(ListType.Date.getCode());
+                    column.setFormType(FormType.DateTimePicker.getCode());
+                    break;
+                case STRING:
+                default:
+                    column.setFormType(FormType.Input.getCode());
+                    column.setValidateType(ValidateType.STRING.getCode());
+                    break;
+            }
         }
         return column;
     }

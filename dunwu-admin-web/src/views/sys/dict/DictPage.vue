@@ -103,16 +103,26 @@ import ElDragDialog from '@/directive/el-drag-dialog'
 import DictOptionPage from './DictOptionPage'
 import Form from './DictForm'
 import DictApi from './DictApi'
+import { getToken } from '@/utils/auth'
 
 export default {
   name: 'DictPage',
-  components: { Pagination, TableOperation, TableQueryOperation, TableColumnOperation, DictOptionPage, Form },
+  components: {
+    Pagination,
+    TableOperation,
+    TableQueryOperation,
+    TableColumnOperation,
+    DictOptionPage,
+    Form
+  },
   directives: { ElDragDialog },
   cruds() {
     return [
       CRUD({
         title: '字典',
         url: 'sys/dict',
+        importUrl: 'sys/dict/import/list',
+        optShow: { all: true },
         crudMethod: { ...DictApi }
       })
     ]
@@ -124,7 +134,11 @@ export default {
   dicts: ['disabled_status'],
   data() {
     return {
+      // fileList: [],
       showDictOptionPage: false,
+      headers: {
+        DunwuToken: getToken()
+      },
       permission: {
         add: ['admin', 'sys:dict:add'],
         edit: ['admin', 'sys:dict:edit'],

@@ -6,8 +6,8 @@ import io.github.dunwu.module.sys.entity.OperationLog;
 import io.github.dunwu.module.sys.entity.dto.OperationLogDto;
 import io.github.dunwu.module.sys.entity.query.OperationLogQuery;
 import io.github.dunwu.module.sys.service.OperationLogService;
+import io.github.dunwu.tool.data.excel.ExcelUtil;
 import io.github.dunwu.tool.data.mybatis.ServiceImpl;
-import io.github.dunwu.tool.web.ServletUtil;
 import io.github.dunwu.tool.web.log.entity.LogRecord;
 import io.github.dunwu.tool.web.log.service.LogRecordService;
 import org.springframework.data.domain.Page;
@@ -152,7 +152,7 @@ public class OperationLogServiceImpl extends ServiceImpl implements OperationLog
             map.put("操作时间", item.getCreateTime());
             mapList.add(map);
         }
-        ServletUtil.downloadExcel(response, mapList);
+        ExcelUtil.downloadExcel(response, mapList);
     }
 
     @Override

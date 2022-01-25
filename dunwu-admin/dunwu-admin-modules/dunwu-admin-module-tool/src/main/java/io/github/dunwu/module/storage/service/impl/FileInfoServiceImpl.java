@@ -2,12 +2,12 @@ package io.github.dunwu.module.storage.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import io.github.dunwu.module.storage.dao.FileInfoDao;
-import io.github.dunwu.module.storage.entity.dto.FileInfoDto;
-import io.github.dunwu.module.storage.service.FileInfoService;
 import io.github.dunwu.module.storage.entity.FileInfo;
+import io.github.dunwu.module.storage.entity.dto.FileInfoDto;
 import io.github.dunwu.module.storage.entity.query.FileInfoQuery;
+import io.github.dunwu.module.storage.service.FileInfoService;
+import io.github.dunwu.tool.data.excel.ExcelUtil;
 import io.github.dunwu.tool.data.mybatis.ServiceImpl;
-import io.github.dunwu.tool.web.ServletUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -145,7 +145,7 @@ public class FileInfoServiceImpl extends ServiceImpl implements FileInfoService 
             map.put("更新时间", item.getUpdateTime());
             mapList.add(map);
         }
-        ServletUtil.downloadExcel(response, mapList);
+        ExcelUtil.downloadExcel(response, mapList);
     }
 
     @Override

@@ -59,13 +59,7 @@
       </el-tooltip>
     </div>
     <el-form size="small" label-width="90px">
-      <el-table
-        v-loading="loading"
-        :data="data"
-        :max-height="tableHeight"
-        stripe
-        style="width: 100%; margin-bottom: 15px"
-      >
+      <el-table v-loading="loading" :data="data" stripe style="width: 100%;">
         <el-table-column type="expand">
           <template slot-scope="props">
             <el-form label-position="left" inline class="generator-table-expand">
@@ -89,7 +83,7 @@
         </el-table-column>
         <el-table-column prop="propertyName" label="属性名" width="150px">
           <template slot-scope="scope">
-            <el-input v-model="data[scope.$index].propertyName" size="mini" class="edit-input" />
+            <el-input v-model="data[scope.$index].propertyName" size="mini" class="edit-input" disabled />
           </template>
         </el-table-column>
         <el-table-column prop="labelName" label="Label名" width="150px">
@@ -311,7 +305,6 @@ export default {
       schemaName: '',
       tableName: '',
       createBy: '',
-      tableHeight: 550,
       data: [],
       dicts: [],
       loading: false,

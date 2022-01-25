@@ -10,9 +10,9 @@ import io.github.dunwu.module.sys.entity.GlobalConfig;
 import io.github.dunwu.module.sys.entity.dto.GlobalConfigDto;
 import io.github.dunwu.module.sys.entity.query.GlobalConfigQuery;
 import io.github.dunwu.module.sys.service.GlobalConfigService;
+import io.github.dunwu.tool.data.excel.ExcelUtil;
 import io.github.dunwu.tool.data.exception.DataException;
 import io.github.dunwu.tool.data.mybatis.ServiceImpl;
-import io.github.dunwu.tool.web.ServletUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -151,7 +151,7 @@ public class GlobalConfigServiceImpl extends ServiceImpl implements GlobalConfig
             map.put("更新时间", item.getUpdateTime());
             mapList.add(map);
         }
-        ServletUtil.downloadExcel(response, mapList);
+        ExcelUtil.downloadExcel(response, mapList);
     }
 
     @Override

@@ -7,6 +7,7 @@ import io.github.dunwu.tool.data.annotation.QueryField;
 import io.github.dunwu.tool.data.mybatis.IService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -140,6 +141,8 @@ public interface DictOptionService extends IService {
      * @return {@link Integer}
      */
     Integer countByQuery(DictOptionQuery query);
+
+    void importList(MultipartFile file);
 
     /**
      * 根据 id 列表查询 {@link DictOptionDto} 列表，并导出 excel 表单

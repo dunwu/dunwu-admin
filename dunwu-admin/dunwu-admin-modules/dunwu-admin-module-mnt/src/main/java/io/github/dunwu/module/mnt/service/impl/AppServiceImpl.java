@@ -7,8 +7,8 @@ import io.github.dunwu.module.mnt.entity.App;
 import io.github.dunwu.module.mnt.entity.dto.AppDto;
 import io.github.dunwu.module.mnt.entity.query.AppQuery;
 import io.github.dunwu.module.mnt.service.AppService;
+import io.github.dunwu.tool.data.excel.ExcelUtil;
 import io.github.dunwu.tool.data.mybatis.ServiceImpl;
-import io.github.dunwu.tool.web.ServletUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -147,7 +147,7 @@ public class AppServiceImpl extends ServiceImpl implements AppService {
             map.put("更新时间", item.getUpdateTime());
             mapList.add(map);
         }
-        ServletUtil.downloadExcel(response, mapList);
+        ExcelUtil.downloadExcel(response, mapList);
     }
 
     @Override

@@ -7,14 +7,16 @@ import io.github.dunwu.module.sys.entity.DictOption;
 import io.github.dunwu.module.sys.entity.dto.DictOptionDto;
 import io.github.dunwu.module.sys.entity.query.DictOptionQuery;
 import io.github.dunwu.module.sys.service.DictOptionService;
+import io.github.dunwu.tool.data.excel.ExcelUtil;
 import io.github.dunwu.tool.data.mybatis.ServiceImpl;
-import io.github.dunwu.tool.web.ServletUtil;
 import io.github.dunwu.tool.web.log.annotation.OperationLog;
 import io.github.dunwu.tool.web.log.constant.OperationType;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -30,13 +32,10 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class DictOptionServiceImpl extends ServiceImpl implements DictOptionService {
 
     private final DictOptionDao dao;
-
-    public DictOptionServiceImpl(DictOptionDao dao) {
-        this.dao = dao;
-    }
 
     @Override
     @OperationLog(bizType = "数据字典选项", operation = OperationType.ADD)
@@ -122,25 +121,38 @@ public class DictOptionServiceImpl extends ServiceImpl implements DictOptionServ
     }
 
     @Override
-    @OperationLog(bizType = "数据字典选项", operation = OperationType.EXPORT_LIST, bizNo = "{{#ids}}")
+    @OperationLog(bizType = "数据字典选项", operation = OperationType.IMPORT_EXCEL,
+        success = "导入数据字典选项(Excel文件：{{#file.getOriginalFilename()}})『成功』",
+        fail = "导入数据字典选项(Excel文件：{{#file.getOriginalFilename()}})『失败』"
+    )
+    public void importList(MultipartFile file) {
+        try {
+            ExcelUtil.saveExcelData(file.getInputStream(), DictOption.class, dao);
+        } catch (IOException e) {
+            log.error("【数据字典选项】【导入失败】", e);
+        }
+    }
+
+    @Override
+    @OperationLog(bizType = "数据字典选项", operation = OperationType.EXPORT_EXCEL, bizNo = "{{#ids}}")
     public void exportList(Collection<? extends Serializable> ids, HttpServletResponse response) {
         List<DictOptionDto> list = dao.pojoListByIds(ids, this::doToDto);
         try {
-            ServletUtil.downloadEasyExcel(response, list, DictOptionDto.class);
+            ExcelUtil.downloadEasyExcel(response, list, DictOptionDto.class);
         } catch (IOException e) {
             log.error("【数据字典选项】【导出失败】", e);
         }
     }
 
     @Override
-    @OperationLog(bizType = "数据字典选项", operation = OperationType.EXPORT_PAGE,
+    @OperationLog(bizType = "数据字典选项", operation = OperationType.EXPORT_EXCEL,
         success = "分页查询导出数据字典选项(page={{#pageable.getPageNumber()}}, size={{#pageable.getPageSize()}}, query={{#query.toJsonStr()}})『成功』",
         fail = "分页查询导出数据字典选项(page={{#pageable.getPageNumber()}}, size={{#pageable.getPageSize()}}, query={{#query.toJsonStr()}})『失败』"
     )
     public void exportPage(Pageable pageable, DictOptionQuery query, HttpServletResponse response) {
         Page<DictOptionDto> page = dao.pojoSpringPageByQuery(pageable, query, this::doToDto);
         try {
-            ServletUtil.downloadEasyExcel(response, page.getContent(), DictOptionDto.class);
+            ExcelUtil.downloadEasyExcel(response, page.getContent(), DictOptionDto.class);
         } catch (IOException e) {
             log.error("【数据字典选项】【导出失败】", e);
         }

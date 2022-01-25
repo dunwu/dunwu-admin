@@ -90,6 +90,7 @@
                 inactive-color="#F56C6C"
                 :active-value="false"
                 :inactive-value="true"
+                operation-type
                 @change="changeStatus(scope.row, scope.row.disabled)"
               />
             </template>
@@ -137,9 +138,11 @@ export default {
       CRUD({
         title: '字典选项',
         url: 'sys/dict/option',
+        importUrl: 'sys/dict/option/import/list',
+        optShow: { all: true },
+        crudMethod: { ...DictOptionApi },
         query: { dictId: null },
         sort: ['id,asc'],
-        crudMethod: { ...DictOptionApi },
         queryOnPresenterCreated: false
       })
     ]
