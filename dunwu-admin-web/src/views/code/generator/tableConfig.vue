@@ -2,7 +2,7 @@
   <el-card shadow="never">
     <div slot="header" class="clearfix">
       <span class="role-span">
-        <el-tag type="info">{{ tableName }}</el-tag>
+        <el-tag type="info">{{ info.tableName }}</el-tag>
         表级别配置
       </span>
       <el-button
@@ -35,6 +35,13 @@
           <el-radio-button label="true">是</el-radio-button>
           <el-radio-button label="false">否</el-radio-button>
           <span style="color: #C0C0C0;margin-left: 10px;">是否开启 Swagger2</span>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="开启EasyExcel" prop="enableEasyExcel">
+        <el-radio-group v-model="form.enableEasyExcel" size="mini" style="width: 40%">
+          <el-radio-button label="true">是</el-radio-button>
+          <el-radio-button label="false">否</el-radio-button>
+          <span style="color: #C0C0C0;margin-left: 10px;">是否开启 EasyExcel</span>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="作者" prop="author">
@@ -125,18 +132,29 @@
 <script>
 import codeApi from '@/api/code/codeApi'
 import databaseApi from '@/api/code/databaseApi'
+
 export default {
   name: 'TableConfig',
   components: {},
+  props: {
+    info: {
+      type: Object,
+      required: true,
+      default: () => {
+        return {
+          dbId: null,
+          schemaName: null,
+          tableName: null,
+          createBy: null
+        }
+      }
+    }
+  },
   data() {
     return {
       loading: false,
       databaseLoading: false,
       configLoading: false,
-      dbId: null,
-      schemaName: '',
-      tableName: '',
-      createBy: '',
       tableHeight: 550,
       database: null,
       form: {
@@ -175,19 +193,6 @@ export default {
   },
   mounted() {
     this.tableHeight = document.documentElement.clientHeight - 385
-
-    // 根据 router、store 获取页面必要属性
-    this.dbId = this.$route.params.dbId
-    this.tableName = this.$route.params.tableName
-    this.schemaName = this.$route.params.schemaName
-    if (this.$store.state.user) {
-      if (this.$store.state.user.user) {
-        this.createBy = this.$store.state.user.user.username
-      }
-    } else {
-      this.createBy = 'admin'
-    }
-
     this.$nextTick(() => {
       this.findDatabase()
       this.queryTableConfig()
@@ -197,7 +202,7 @@ export default {
     findDatabase() {
       this.databaseLoading = false
       databaseApi
-        .getById(this.dbId)
+        .getById(this.info.dbId)
         .then(data => {
           this.database = data
           this.databaseLoading = true
@@ -210,12 +215,7 @@ export default {
     queryTableConfig() {
       this.loading = true
       codeApi
-        .queryTableConfig({
-          dbId: this.dbId,
-          schemaName: this.schemaName,
-          tableName: this.tableName,
-          createBy: this.createBy
-        })
+        .queryTableConfig(this.info)
         .then(data => {
           this.loading = false
           this.form = data
@@ -229,13 +229,14 @@ export default {
       this.$refs['form'].validate(valid => {
         if (valid) {
           this.configLoading = true
-          this.form.dbId = this.dbId
+          this.form.dbId = this.info.dbId
           codeApi
             .saveTableConfig(this.form)
             .then(res => {
-              this.configLoading = false
+              this.$emit('getCodeConfigInfo')
               this.$notify({ title: '保存成功', type: 'success' })
-              this.queryTableConfig()
+              // this.queryTableConfig()
+              this.configLoading = false
             })
             .catch(err => {
               this.configLoading = false

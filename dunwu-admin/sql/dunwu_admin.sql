@@ -11,7 +11,7 @@
  Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 25/01/2022 23:24:11
+ Date: 30/01/2022 18:39:53
 */
 
 SET NAMES utf8mb4;
@@ -25,11 +25,11 @@ CREATE TABLE `cas_dept`  (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `pid` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '上级部门ID',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '部门名称',
-  `level` int(5) UNSIGNED NOT NULL DEFAULT 1 COMMENT '部门等级',
-  `sequence` int(5) UNSIGNED NULL DEFAULT 1 COMMENT '部门顺序',
-  `children_num` int(5) UNSIGNED NULL DEFAULT 0 COMMENT '子部门数量',
+  `level` int(10) UNSIGNED NOT NULL DEFAULT 1 COMMENT '部门等级',
+  `sequence` int(10) UNSIGNED NULL DEFAULT 1 COMMENT '部门顺序',
+  `children_num` int(10) UNSIGNED NULL DEFAULT 0 COMMENT '子部门数量',
   `note` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
-  `is_disabled` tinyint(1) UNSIGNED NOT NULL COMMENT '是否禁用：1 表示禁用；0 表示启用',
+  `is_disabled` tinyint(1) NOT NULL COMMENT '是否禁用：1 表示禁用；0 表示启用',
   `creator_id` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '创建者ID',
   `updater_id` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '更新者ID',
   `creator_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建者名称',
@@ -106,11 +106,11 @@ DROP TABLE IF EXISTS `cas_job`;
 CREATE TABLE `cas_job`  (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '职务名称',
-  `type` int(5) UNSIGNED NOT NULL COMMENT '职务类型',
-  `level` int(5) UNSIGNED NOT NULL COMMENT '职级',
-  `sequence` int(5) UNSIGNED NULL DEFAULT 1 COMMENT '职务顺序',
+  `type` int(10) UNSIGNED NOT NULL COMMENT '职务类型',
+  `level` int(10) UNSIGNED NOT NULL COMMENT '职级',
+  `sequence` int(10) UNSIGNED NULL DEFAULT 1 COMMENT '职务顺序',
   `note` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
-  `is_disabled` tinyint(1) UNSIGNED NOT NULL COMMENT '是否禁用：1 表示禁用；0 表示启用',
+  `is_disabled` tinyint(1) NOT NULL COMMENT '是否禁用：1 表示禁用；0 表示启用',
   `creator_id` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '创建者ID',
   `updater_id` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '更新者ID',
   `creator_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建者名称',
@@ -144,7 +144,7 @@ CREATE TABLE `cas_job_role_map`  (
   `role_id` bigint(20) UNSIGNED NOT NULL COMMENT '角色ID',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uk_job_role`(`job_id`, `role_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '职务角色关联表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '职务角色关联表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of cas_job_role_map
@@ -160,18 +160,18 @@ CREATE TABLE `cas_menu`  (
   `code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '菜单编码',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '菜单名称',
   `expression` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '权限表达式',
-  `menu_type` int(5) UNSIGNED NULL DEFAULT NULL COMMENT '菜单类型',
+  `menu_type` int(10) UNSIGNED NULL DEFAULT NULL COMMENT '菜单类型',
   `component` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '组件',
-  `sequence` int(5) UNSIGNED NULL DEFAULT NULL COMMENT '菜单顺序',
+  `sequence` int(10) UNSIGNED NULL DEFAULT NULL COMMENT '菜单顺序',
   `icon` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '图标',
   `path` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '链接地址',
-  `is_frame` tinyint(1) UNSIGNED NULL DEFAULT 0 COMMENT '是否外链',
-  `is_cached` tinyint(1) UNSIGNED NULL DEFAULT 0 COMMENT '缓存',
-  `is_hidden` tinyint(1) UNSIGNED NULL DEFAULT 0 COMMENT '隐藏',
-  `level` int(5) UNSIGNED NULL DEFAULT 1 COMMENT '菜单级别',
-  `children_num` int(5) UNSIGNED NULL DEFAULT 0 COMMENT '子菜单数目',
+  `is_frame` tinyint(1) NULL DEFAULT 0 COMMENT '是否外链',
+  `is_cached` tinyint(1) NULL DEFAULT 0 COMMENT '缓存',
+  `is_hidden` tinyint(1) NULL DEFAULT 0 COMMENT '隐藏',
+  `level` int(10) UNSIGNED NULL DEFAULT 1 COMMENT '菜单级别',
+  `children_num` int(10) UNSIGNED NULL DEFAULT 0 COMMENT '子菜单数目',
   `note` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
-  `is_disabled` tinyint(1) UNSIGNED NOT NULL COMMENT '是否禁用：1 表示禁用；0 表示启用',
+  `is_disabled` tinyint(1) NOT NULL COMMENT '是否禁用：1 表示禁用；0 表示启用',
   `creator_id` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '创建者ID',
   `updater_id` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '更新者ID',
   `creator_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建者名称',
@@ -199,11 +199,11 @@ INSERT INTO `cas_menu` VALUES (11, 10, 'Icons', '图标库', NULL, 1, 'demo/icon
 INSERT INTO `cas_menu` VALUES (14, 36, 'Email', '邮件工具', NULL, 1, 'tool/email/index', 35, 'email', 'email', 0, 0, 0, 1, 0, NULL, 0, 1, 1, 'admin', 'admin', '2018-12-27 10:13:09', '2021-10-12 20:43:18');
 INSERT INTO `cas_menu` VALUES (15, 10, 'Editor', '富文本', NULL, 1, 'demo/Editor', 52, 'fwb', 'tinymce', 0, 0, 0, 3, 0, NULL, 0, 1, 1, 'admin', 'admin', '2018-12-27 11:58:25', '2021-10-19 23:56:36');
 INSERT INTO `cas_menu` VALUES (18, 36, 'Storage', '存储管理', 'tool:storage:view', 1, 'tool/storage/index', 34, 'qiniu', 'storage', 0, 0, 0, 1, 3, NULL, 0, 1, 1, 'admin', 'admin', '2018-12-31 11:12:15', '2021-10-12 20:43:18');
-INSERT INTO `cas_menu` VALUES (30, 36, 'CodeIndex', '代码生成', NULL, 1, 'code/generator/index', 32, 'dev', 'code', 0, 1, 0, 1, 0, NULL, 0, 1, 1, 'admin', 'admin', '2019-01-11 15:45:55', '2021-10-12 20:43:18');
+INSERT INTO `cas_menu` VALUES (30, 36, 'CodeIndex', '代码生成', NULL, 1, 'code/generator/index', 32, 'coding', 'code/generator', 0, 1, 0, 2, 7, NULL, 0, 1, 1, 'admin', 'admin', '2019-01-11 15:45:55', '2021-10-12 20:43:18');
 INSERT INTO `cas_menu` VALUES (33, 10, 'Markdown', 'Markdown', NULL, 1, 'demo/MarkDown', 53, 'markdown', 'markdown', 0, 0, 0, 2, 0, NULL, 0, 1, 1, 'admin', 'admin', '2019-03-08 13:46:44', '2021-10-19 23:56:36');
 INSERT INTO `cas_menu` VALUES (34, 10, 'YamlEdit', 'Yaml编辑器', NULL, 1, 'demo/YamlEdit', 54, 'dev', 'yaml', 0, 0, 0, 2, 0, NULL, 0, 1, 1, 'admin', 'admin', '2019-03-08 15:49:40', '2021-10-19 23:56:36');
 INSERT INTO `cas_menu` VALUES (35, 1, 'Dept', '部门管理', 'cas:dept:view', 1, 'cas/dept', 1, 'dept', 'dept', 0, 0, 0, 2, 3, NULL, 0, 1, 1, 'admin', 'admin', '2019-03-25 09:46:00', '2021-10-19 15:02:12');
-INSERT INTO `cas_menu` VALUES (36, 0, 'Tool', '系统工具', NULL, 0, '', 3, 'sys-tools', 'tool', 0, 0, 0, 1, 7, NULL, 0, 1, 1, 'admin', 'admin', '2019-03-29 10:57:35', '2021-10-19 15:26:59');
+INSERT INTO `cas_menu` VALUES (36, 0, 'Tool', '系统工具', NULL, 0, '', 3, 'sys-tools', 'tool', 0, 0, 0, 1, 13, NULL, 0, 1, 1, 'admin', 'admin', '2019-03-29 10:57:35', '2021-10-19 15:26:59');
 INSERT INTO `cas_menu` VALUES (37, 1, 'Job', '岗位管理', 'cas:job:view', 1, 'cas/job', 2, 'Steve-Jobs', 'job', 0, 0, 0, 2, 3, NULL, 0, 1, 1, 'admin', 'admin', '2019-03-29 13:51:18', '2021-10-19 15:02:12');
 INSERT INTO `cas_menu` VALUES (38, 36, 'Swagger', '接口文档', '', 1, 'tool/swagger/index', 36, 'swagger', 'swagger2', 0, 0, 0, 1, 0, NULL, 0, 1, 1, 'admin', 'admin', '2019-03-29 19:57:53', '2021-10-12 20:43:18');
 INSERT INTO `cas_menu` VALUES (39, 121, 'Dict', '数据字典', 'sys:dict:view', 1, 'sys/dict', 2, 'dictionary', 'dict', 0, 0, 0, 2, 3, NULL, 0, 1, 1, 'admin', 'admin', '2019-04-10 11:49:04', '2021-10-20 00:02:17');
@@ -230,7 +230,7 @@ INSERT INTO `cas_menu` VALUES (77, 18, NULL, '上传文件', 'tool:storage:add',
 INSERT INTO `cas_menu` VALUES (78, 18, NULL, '文件编辑', 'tool:storage:edit', 2, '', 3, '', '', 0, 0, 0, 1, 0, NULL, 0, 1, 1, 'admin', 'admin', '2019-10-29 13:09:22', '2021-10-12 20:43:18');
 INSERT INTO `cas_menu` VALUES (79, 18, NULL, '文件删除', 'tool:storage:del', 2, '', 4, '', '', 0, 0, 0, 1, 0, NULL, 0, 1, 1, 'admin', 'admin', '2019-10-29 13:09:34', '2021-10-12 20:43:18');
 INSERT INTO `cas_menu` VALUES (80, 6, 'ServerMonitor', '服务监控', 'monitor:view', 1, 'monitor/server/index', 14, 'codeConsole', 'server', 0, 0, 0, 1, 0, NULL, 0, 1, 1, 'admin', 'admin', '2019-11-07 13:06:39', '2021-10-12 20:43:18');
-INSERT INTO `cas_menu` VALUES (82, 36, 'GeneratorConfig', '生成配置', '', 1, 'code/generator/config', 33, 'dev', 'code/config/:dbId/:schemaName/:tableName', 0, 1, 1, 1, 0, NULL, 0, 1, 1, 'admin', 'admin', '2019-11-17 20:08:56', '2021-10-12 20:43:18');
+INSERT INTO `cas_menu` VALUES (82, 36, 'GeneratorConfig', '生成配置', '', 1, 'code/generator/config', 33, 'dev', 'code/generator/config/:dbId/:schemaName/:tableName', 0, 1, 1, 2, 0, NULL, 0, 1, 1, 'admin', 'admin', '2019-11-17 20:08:56', '2021-10-12 20:43:18');
 INSERT INTO `cas_menu` VALUES (83, 10, 'Echarts', '图表库', NULL, 1, 'demo/Echarts', 50, 'chart', 'echarts', 0, 0, 0, 2, 0, NULL, 0, 1, 1, 'admin', 'admin', '2019-11-21 09:04:32', '2021-10-19 23:56:20');
 INSERT INTO `cas_menu` VALUES (90, 0, 'Mnt', '运维管理', NULL, 1, '', 5, 'mnt', 'mnt', 0, 0, 0, 1, 5, NULL, 0, 1, 1, 'admin', 'admin', '2019-11-09 10:31:08', '2021-10-16 20:22:42');
 INSERT INTO `cas_menu` VALUES (92, 90, 'ServerDeploy', '服务器配置', 'mnt:server:view', 1, 'mnt/ServerList', 23, 'server', 'server', 0, 0, 0, 1, 3, NULL, 0, 1, 1, 'admin', 'admin', '2019-11-10 10:29:25', '2021-10-12 20:43:18');
@@ -251,7 +251,7 @@ INSERT INTO `cas_menu` VALUES (111, 94, NULL, '部署删除', 'deploy:del', 2, '
 INSERT INTO `cas_menu` VALUES (112, 98, NULL, '数据库新增', 'database:add', 2, '', 999, '', '', 0, 0, 0, 1, 0, NULL, 0, 1, 1, 'admin', 'admin', '2019-11-17 11:12:43', '2021-10-12 20:43:18');
 INSERT INTO `cas_menu` VALUES (113, 98, NULL, '数据库编辑', 'database:edit', 2, '', 999, '', '', 0, 0, 0, 1, 0, NULL, 0, 1, 1, 'admin', 'admin', '2019-11-17 11:12:58', '2021-10-12 20:43:18');
 INSERT INTO `cas_menu` VALUES (114, 98, NULL, '数据库删除', 'database:del', 2, '', 999, '', '', 0, 0, 0, 1, 0, NULL, 0, 1, 1, 'admin', 'admin', '2019-11-17 11:13:14', '2021-10-12 20:43:18');
-INSERT INTO `cas_menu` VALUES (116, 36, 'Preview', '生成预览', NULL, 1, 'code/generator/preview', 999, 'java', 'code/preview/:dbId/:schemaName/:tableName', 0, 1, 1, 1, 0, NULL, 0, 1, 1, 'admin', 'admin', '2019-11-26 14:54:36', '2021-10-12 20:43:18');
+INSERT INTO `cas_menu` VALUES (116, 36, 'Preview', '生成预览', NULL, 1, 'code/generator/preview', 999, 'java', 'code/generator/preview/:dbId/:schemaName/:tableName', 0, 1, 1, 2, 0, NULL, 0, 1, 1, 'admin', 'admin', '2019-11-26 14:54:36', '2021-10-12 20:43:18');
 INSERT INTO `cas_menu` VALUES (119, 121, 'GlobalConfig', '全局配置', 'sys:config:view', 1, 'sys/GlobalConfigList', 1, 'system1', 'config', 0, 0, 0, 2, 0, NULL, 0, 1, 1, 'admin', 'admin', '2021-10-03 19:00:00', '2021-10-20 00:02:17');
 INSERT INTO `cas_menu` VALUES (121, 0, 'Sys', '系统管理', NULL, 1, NULL, 1, 'app', 'sys', 0, 0, 0, 1, 7, NULL, 0, 1, 1, 'admin', 'admin', '2021-10-05 09:15:30', '2021-10-20 00:03:35');
 INSERT INTO `cas_menu` VALUES (122, 1, 'UserCenter', '用户中心', 'cas:user:view', 1, 'cas/user/center', 6, 'user', 'user/center', 0, 0, 1, 2, 0, NULL, 0, 1, 1, 'admin', 'admin', '2021-10-17 17:48:53', '2021-10-19 15:03:03');
@@ -267,9 +267,9 @@ CREATE TABLE `cas_permission`  (
   `resource_id` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '资源ID',
   `code` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '权限编码',
   `name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '权限名称',
-  `type` int(1) UNSIGNED NULL DEFAULT NULL COMMENT '权限类型',
+  `type` int(10) UNSIGNED NULL DEFAULT NULL COMMENT '权限类型',
   `expression` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '权限表达式',
-  `is_disabled` tinyint(1) UNSIGNED NOT NULL COMMENT '是否禁用：1 表示禁用；0 表示启用',
+  `is_disabled` tinyint(1) NOT NULL COMMENT '是否禁用：1 表示禁用；0 表示启用',
   `note` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
   `creator_id` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '创建者ID',
   `updater_id` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '更新者ID',
@@ -326,7 +326,7 @@ INSERT INTO `cas_permission` VALUES (120, NULL, 77, NULL, '上传文件', 1, 'to
 INSERT INTO `cas_permission` VALUES (121, NULL, 78, NULL, '文件编辑', 1, 'tool:storage:edit', 0, NULL, 1, 1, 'admin', 'admin', '2019-10-29 13:09:22', '2021-10-12 20:43:18');
 INSERT INTO `cas_permission` VALUES (122, NULL, 79, NULL, '文件删除', 1, 'tool:storage:del', 0, NULL, 1, 1, 'admin', 'admin', '2019-10-29 13:09:34', '2021-10-12 20:43:18');
 INSERT INTO `cas_permission` VALUES (123, NULL, 80, 'ServerMonitor', '服务监控', 1, 'monitor:view', 0, NULL, 1, 1, 'admin', 'admin', '2019-11-07 13:06:39', '2021-10-12 20:43:18');
-INSERT INTO `cas_permission` VALUES (124, NULL, 82, 'GeneratorConfig', '生成配置', 1, NULL, 0, NULL, 1, 1, 'admin', 'admin', '2019-11-17 20:08:56', '2021-10-19 23:57:32');
+INSERT INTO `cas_permission` VALUES (124, NULL, 82, 'GeneratorConfig', '生成配置', 1, '', 0, NULL, 1, 1, 'admin', 'admin', '2019-11-17 20:08:56', '2021-10-12 20:43:18');
 INSERT INTO `cas_permission` VALUES (125, NULL, 83, 'Echarts', '图表库', 1, NULL, 0, NULL, 1, 1, 'admin', 'admin', '2019-11-21 09:04:32', '2021-10-19 23:57:32');
 INSERT INTO `cas_permission` VALUES (126, NULL, 90, 'Mnt', '运维管理', 1, NULL, 0, NULL, 1, 1, 'admin', 'admin', '2019-11-09 10:31:08', '2021-10-16 20:22:42');
 INSERT INTO `cas_permission` VALUES (127, NULL, 92, 'ServerDeploy', '服务器配置', 1, 'mnt:server:view', 0, NULL, 1, 1, 'admin', 'admin', '2019-11-10 10:29:25', '2021-10-12 20:43:18');
@@ -361,10 +361,10 @@ CREATE TABLE `cas_role`  (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '角色编码',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '角色名称',
-  `level` int(5) UNSIGNED NULL DEFAULT NULL COMMENT '角色级别',
+  `level` int(10) UNSIGNED NULL DEFAULT NULL COMMENT '角色级别',
   `data_scope` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '数据权限',
   `note` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
-  `is_disabled` tinyint(1) UNSIGNED NOT NULL COMMENT '是否禁用：1 表示禁用；0 表示启用',
+  `is_disabled` tinyint(1) NOT NULL COMMENT '是否禁用：1 表示禁用；0 表示启用',
   `creator_id` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '创建者ID',
   `updater_id` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '更新者ID',
   `creator_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建者名称',
@@ -612,7 +612,7 @@ CREATE TABLE `cas_user`  (
   `avatar` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '头像地址',
   `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '密码',
   `pwd_reset_time` datetime NULL DEFAULT NULL COMMENT '修改密码的时间',
-  `is_disabled` tinyint(1) UNSIGNED NOT NULL COMMENT '是否禁用：1 表示禁用；0 表示启用',
+  `is_disabled` tinyint(1) NOT NULL COMMENT '是否禁用：1 表示禁用；0 表示启用',
   `creator_id` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '创建者ID',
   `updater_id` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '更新者ID',
   `creator_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建者名称',
@@ -641,7 +641,7 @@ CREATE TABLE `cas_user_dept_map`  (
   `dept_id` bigint(20) UNSIGNED NOT NULL COMMENT '部门ID',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uk_user_dept`(`user_id`, `dept_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户部门关联表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户部门关联表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of cas_user_dept_map
@@ -671,6 +671,7 @@ INSERT INTO `cas_user_role_map` VALUES (7, 2, 2);
 DROP TABLE IF EXISTS `code_column_config`;
 CREATE TABLE `code_column_config`  (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `db_id` bigint(20) UNSIGNED NOT NULL COMMENT '数据库ID',
   `table_id` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '所属表的ID',
   `schema_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'Schema名称',
   `table_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'Table名称',
@@ -703,7 +704,7 @@ CREATE TABLE `code_column_config`  (
   `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uk_schema_table_field`(`schema_name`, `table_name`, `field_name`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 364 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '代码生成-字段级别配置' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 496 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '代码生成-字段级别配置' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of code_column_config
@@ -732,7 +733,7 @@ CREATE TABLE `code_database`  (
 -- ----------------------------
 -- Records of code_database
 -- ----------------------------
-INSERT INTO `code_database` VALUES (1, 'dunwu_admin', 'localhost', 3306, 'jdbc:mysql://localhost:3306/dunwu_admin?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false', 'root', 'root', 'dunwu_admin', 'admin', 'admin', '2021-08-05 17:26:50', '2021-08-05 17:26:50');
+INSERT INTO `code_database` VALUES (1, 'dunwu_admin 开发数据库', 'localhost', 3306, 'jdbc:mysql://localhost:3306/dunwu_admin?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false', 'root', 'root', 'dunwu_admin', 'admin', 'admin', '2021-08-05 17:26:50', '2022-01-30 09:11:51');
 INSERT INTO `code_database` VALUES (2, 'dunwu_cas', 'localhost', 3306, 'jdbc:mysql://localhost:3306/dunwu_cas?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false', 'root', 'root', 'dunwu_cas', 'admin', 'admin', '2021-08-05 17:26:50', '2021-08-05 17:26:50');
 
 -- ----------------------------
@@ -741,9 +742,10 @@ INSERT INTO `code_database` VALUES (2, 'dunwu_cas', 'localhost', 3306, 'jdbc:mys
 DROP TABLE IF EXISTS `code_global_config`;
 CREATE TABLE `code_global_config`  (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `enable_permission` tinyint(1) UNSIGNED NULL DEFAULT NULL COMMENT '开启权限校验',
-  `enable_override` tinyint(1) UNSIGNED NULL DEFAULT NULL COMMENT '开启文件覆盖模式',
-  `enable_swagger` tinyint(1) UNSIGNED NULL DEFAULT NULL COMMENT '开启Swagger',
+  `enable_permission` tinyint(1) NULL DEFAULT NULL COMMENT '开启权限校验',
+  `enable_override` tinyint(1) NULL DEFAULT NULL COMMENT '开启文件覆盖模式',
+  `enable_swagger` tinyint(1) NULL DEFAULT NULL COMMENT '开启Swagger',
+  `enable_easy_excel` tinyint(1) NULL DEFAULT NULL COMMENT '开启EasyExcel',
   `author` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '作者',
   `output_dir` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '输出路径',
   `backend_path` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '后端代码路径',
@@ -762,7 +764,7 @@ CREATE TABLE `code_global_config`  (
 -- ----------------------------
 -- Records of code_global_config
 -- ----------------------------
-INSERT INTO `code_global_config` VALUES (1, 1, 1, 1, '<a href=\"mailto:forbreak@163.com\">Zhang Peng</a>', 'D:\\Codes\\zp\\zproject\\dunwu-boot-admin\\dunwu-admin\\dunwu-admin-modules\\dunwu-admin-module-common', 'D:\\Codes\\zp\\zproject\\dunwu-boot-admin\\dunwu-admin\\dunwu-admin-modules\\dunwu-admin-module-common', 'D:\\Codes\\zp\\zproject\\dunwu-boot-admin\\dunwu-admin\\dunwu-admin-modules\\dunwu-admin-module-common', 'io.github.dunwu.module', 'AUTO', 'TIME_PACK', 'yyyy-MM-dd HH:mm:ss', 'admin', 'admin', '2021-09-17 20:44:16', '2021-09-17 20:44:16');
+INSERT INTO `code_global_config` VALUES (1, 1, 1, 1, 1, '<a href=\"mailto:forbreak@163.com\">Zhang Peng</a>', 'D:\\Codes\\zp\\zproject\\dunwu-boot-admin\\dunwu-admin\\dunwu-admin-modules\\dunwu-admin-module-common', 'D:\\Codes\\zp\\zproject\\dunwu-boot-admin\\dunwu-admin\\dunwu-admin-modules\\dunwu-admin-module-common', 'D:\\Codes\\zp\\zproject\\dunwu-boot-admin\\dunwu-admin\\dunwu-admin-modules\\dunwu-admin-module-common', 'io.github.dunwu.module', 'AUTO', 'TIME_PACK', 'yyyy-MM-dd HH:mm:ss', 'admin', 'admin', '2021-09-17 20:44:16', '2022-01-28 10:06:32');
 
 -- ----------------------------
 -- Table structure for code_table_config
@@ -774,9 +776,10 @@ CREATE TABLE `code_table_config`  (
   `schema_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'Schema名称',
   `table_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'Table名称',
   `comment` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'Table注释',
-  `enable_permission` tinyint(1) UNSIGNED NULL DEFAULT NULL COMMENT '开启权限校验',
-  `enable_override` tinyint(1) UNSIGNED NULL DEFAULT NULL COMMENT '开启文件覆盖模式',
-  `enable_swagger` tinyint(1) UNSIGNED NULL DEFAULT NULL COMMENT '开启Swagger2',
+  `enable_permission` tinyint(1) NULL DEFAULT NULL COMMENT '开启权限校验',
+  `enable_override` tinyint(1) NULL DEFAULT NULL COMMENT '开启文件覆盖模式',
+  `enable_swagger` tinyint(1) NULL DEFAULT NULL COMMENT '开启Swagger2',
+  `enable_easy_excel` tinyint(1) NULL DEFAULT NULL COMMENT '开启EasyExcel',
   `author` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '作者',
   `output_dir` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '输出路径',
   `backend_path` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '后端代码路径',
@@ -785,11 +788,11 @@ CREATE TABLE `code_table_config`  (
   `id_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '主键类型',
   `date_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '时间类型',
   `date_pattern` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '时间格式',
-  `enable_form` bit(1) NULL DEFAULT NULL COMMENT '允许表单',
-  `enable_list` bit(1) NULL DEFAULT NULL COMMENT '允许列表',
-  `enable_query` bit(1) NULL DEFAULT NULL COMMENT '允许查询',
-  `enable_sort` bit(1) NULL DEFAULT NULL COMMENT '允许排序',
-  `enable_validate` bit(1) NULL DEFAULT NULL COMMENT '允许校验',
+  `enable_form` tinyint(1) NULL DEFAULT NULL COMMENT '允许表单',
+  `enable_list` tinyint(1) NULL DEFAULT NULL COMMENT '允许列表',
+  `enable_query` tinyint(1) NULL DEFAULT NULL COMMENT '允许查询',
+  `enable_sort` tinyint(1) NULL DEFAULT NULL COMMENT '允许排序',
+  `enable_validate` tinyint(1) NULL DEFAULT NULL COMMENT '允许校验',
   `module_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '模块名称',
   `table_prefix` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '表前缀',
   `api_base_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'REST接口根路径',
@@ -799,12 +802,13 @@ CREATE TABLE `code_table_config`  (
   `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uk_schema_table`(`schema_name`, `table_name`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 34 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '代码生成-表级别配置' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 36 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '代码生成-表级别配置' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of code_table_config
 -- ----------------------------
-INSERT INTO `code_table_config` VALUES (33, 1, 'dunwu_admin', 'sys_dict', '数据字典', 1, 1, 1, '<a href=\"mailto:forbreak@163.com\">Zhang Peng</a>', 'D:\\Codes\\zp\\zproject\\dunwu-boot-admin\\dunwu-admin\\dunwu-admin-modules\\dunwu-admin-module-common', 'D:\\Codes\\zp\\zproject\\dunwu-boot-admin\\dunwu-admin\\dunwu-admin-modules\\dunwu-admin-module-common', 'D:\\Codes\\zp\\zproject\\dunwu-boot-admin\\dunwu-admin\\dunwu-admin-modules\\dunwu-admin-module-common', 'io.github.dunwu.module', 'AUTO', 'TIME_PACK', 'yyyy-MM-dd HH:mm:ss', b'1', b'1', b'1', b'1', b'1', 'sys', 'sys_', 'dict', 'admin', 'admin', '2021-09-17 20:44:16', '2021-09-17 20:44:16');
+INSERT INTO `code_table_config` VALUES (33, 1, 'dunwu_admin', 'sys_dict', '数据字典', 1, 1, 1, 1, '<a href=\"mailto:forbreak@163.com\">Zhang Peng</a>', 'D:\\Codes\\zp\\zproject\\dunwu-boot-admin\\dunwu-admin\\dunwu-admin-modules\\dunwu-admin-module-common', 'D:\\Codes\\zp\\zproject\\dunwu-boot-admin\\dunwu-admin\\dunwu-admin-modules\\dunwu-admin-module-common', 'D:\\Codes\\zp\\zproject\\dunwu-boot-admin\\dunwu-admin\\dunwu-admin-modules\\dunwu-admin-module-common', 'io.github.dunwu.module', 'AUTO', 'TIME_PACK', 'yyyy-MM-dd HH:mm:ss', 1, 1, 1, 1, 1, 'sys', 'sys_', 'dict', 'admin', 'admin', '2021-09-17 20:44:16', '2021-09-17 20:44:16');
+INSERT INTO `code_table_config` VALUES (35, 1, 'dunwu_admin', 'sys_dict_option', '数据字典选项', 1, 1, 1, 1, '<a href=\"mailto:forbreak@163.com\">Zhang Peng</a>', 'D:\\Codes\\zp\\zproject\\dunwu-boot-admin\\dunwu-admin\\dunwu-admin-modules\\dunwu-admin-module-common', 'D:\\Codes\\zp\\zproject\\dunwu-boot-admin\\dunwu-admin\\dunwu-admin-modules\\dunwu-admin-module-common', 'D:\\Codes\\zp\\zproject\\dunwu-boot-admin\\dunwu-admin\\dunwu-admin-modules\\dunwu-admin-module-common', 'io.github.dunwu.module', 'AUTO', 'TIME_PACK', 'yyyy-MM-dd HH:mm:ss', 1, 1, 1, 1, 1, 'sys', 'sys', 'dict/option', 'admin', 'admin', '2021-09-17 20:44:16', '2022-01-28 10:06:32');
 
 -- ----------------------------
 -- Table structure for hello
@@ -813,7 +817,7 @@ DROP TABLE IF EXISTS `hello`;
 CREATE TABLE `hello`  (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '名字',
-  `age` smallint(3) NOT NULL COMMENT '年龄',
+  `age` smallint(6) NOT NULL COMMENT '年龄',
   `avatar` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '头像',
   `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE,
@@ -885,7 +889,7 @@ CREATE TABLE `mnt_deploy_history`  (
   `deploy_user` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '部署用户',
   `ip` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '服务器IP',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '部署历史表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '部署历史表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of mnt_deploy_history
@@ -945,7 +949,7 @@ CREATE TABLE `sys_dict`  (
   `code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '字典编码',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '字典名称',
   `note` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
-  `is_disabled` tinyint(1) UNSIGNED NOT NULL COMMENT '是否禁用：1 表示禁用；0 表示启用',
+  `is_disabled` tinyint(1) NOT NULL COMMENT '是否禁用：1 表示禁用；0 表示启用',
   `create_by` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建者',
   `update_by` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '更新者',
   `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -970,7 +974,7 @@ CREATE TABLE `sys_dict_option`  (
   `code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '字典选项编码',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '字典选项名称',
   `note` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
-  `is_disabled` tinyint(1) UNSIGNED NULL DEFAULT NULL COMMENT '是否禁用：1 表示禁用；0 表示启用',
+  `is_disabled` tinyint(1) NULL DEFAULT NULL COMMENT '是否禁用：1 表示禁用；0 表示启用',
   `create_by` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建者',
   `update_by` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '更新者',
   `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -994,6 +998,36 @@ INSERT INTO `sys_dict_option` VALUES (9, 3, '5', '高级专家', NULL, 0, 'admin
 INSERT INTO `sys_dict_option` VALUES (10, 3, '6', '资深专家', NULL, 0, 'admin', 'admin', '2021-10-10 14:15:02', '2022-01-22 21:13:25');
 
 -- ----------------------------
+-- Table structure for sys_global_config
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_global_config`;
+CREATE TABLE `sys_global_config`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `app_code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '应用编码',
+  `module_code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '模块编码',
+  `namespace` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '命名空间',
+  `code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '配置项编码',
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '配置项配置名称',
+  `value` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '配置项值',
+  `default_value` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '配置项默认值',
+  `value_type` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '配置项值类型',
+  `is_disabled` tinyint(1) NOT NULL COMMENT '是否禁用：1 表示禁用；0 表示启用',
+  `note` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `create_by` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建者',
+  `update_by` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '更新者',
+  `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `uk_composite`(`code`, `namespace`, `module_code`, `app_code`) USING BTREE,
+  INDEX `idx_update_time`(`update_time`) USING BTREE,
+  INDEX `idx_is_disabled`(`is_disabled`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '系统全局配置表' ROW_FORMAT = COMPACT;
+
+-- ----------------------------
+-- Records of sys_global_config
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for sys_operation_log
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_operation_log`;
@@ -1002,7 +1036,7 @@ CREATE TABLE `sys_operation_log`  (
   `app_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '应用名',
   `biz_no` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '业务编码',
   `biz_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '业务类型',
-  `is_success` tinyint(1) UNSIGNED NOT NULL COMMENT '是否成功：0.失败；1.成功',
+  `is_success` tinyint(1) NOT NULL COMMENT '是否成功：0.失败；1.成功',
   `message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '基本信息',
   `detail` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '详情信息',
   `exception` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '异常信息',
@@ -1021,7 +1055,7 @@ CREATE TABLE `sys_operation_log`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_biz`(`biz_no`, `biz_type`) USING BTREE,
   INDEX `idx_create_time`(`create_time`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 102 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '操作日志表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 103 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '操作日志表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of sys_operation_log
@@ -1039,6 +1073,7 @@ INSERT INTO `sys_operation_log` VALUES (98, 'dunwu', '', '数据字典', 1, '分
 INSERT INTO `sys_operation_log` VALUES (99, 'dunwu', '', '数据字典选项', 1, '分页查询导出数据字典选项(page=0, size=10, query={\"dictId\":3})『成功』', '分页查询导出数据字典选项(page=0, size=10, query={\"dictId\":3})『成功』——请求参数：{\"DictOptionQuery\":{\"dictId\":3},\"PageRequest\":{\"sort\":[{\"nullHandling\":\"NATIVE\",\"ignoreCase\":false,\"property\":\"id\",\"direction\":\"ASC\"}]},\"StatHttpServletResponseWrapper\":{\"response\":{\"response\":{\"response\":{}}},\"status\":200}}；响应结果：null', '', 'io.github.dunwu.module.sys.service.impl.DictOptionServiceImpl', 'exportPage', '{\"DictOptionQuery\":{\"dictId\":3},\"PageRequest\":{\"sort\":[{\"nullHandling\":\"NATIVE\",\"ignoreCase\":false,\"property\":\"id\",\"direction\":\"ASC\"}]},\"StatHttpServletResponseWrapper\":{\"response\":{\"response\":{\"response\":{}}},\"status\":200}}', 'EXPORT_PAGE', 1, 'admin', '192.168.1.8', '127.0.0.1', '本机地址', 'Chrome 96', 680, '2022-01-23 22:14:45');
 INSERT INTO `sys_operation_log` VALUES (100, 'dunwu', '', '数据字典选项', 1, '分页查询导出数据字典选项(page=0, size=10, query={\"dictId\":3})『成功』', '分页查询导出数据字典选项(page=0, size=10, query={\"dictId\":3})『成功』——请求参数：{\"DictOptionQuery\":{\"dictId\":3},\"PageRequest\":{\"sort\":[{\"nullHandling\":\"NATIVE\",\"ignoreCase\":false,\"property\":\"id\",\"direction\":\"ASC\"}]},\"StatHttpServletResponseWrapper\":{\"response\":{\"response\":{\"response\":{}}},\"status\":200}}；响应结果：null', '', 'io.github.dunwu.module.sys.service.impl.DictOptionServiceImpl', 'exportPage', '{\"DictOptionQuery\":{\"dictId\":3},\"PageRequest\":{\"sort\":[{\"nullHandling\":\"NATIVE\",\"ignoreCase\":false,\"property\":\"id\",\"direction\":\"ASC\"}]},\"StatHttpServletResponseWrapper\":{\"response\":{\"response\":{\"response\":{}}},\"status\":200}}', 'EXPORT_PAGE', 1, 'admin', '192.168.1.8', '127.0.0.1', '本机地址', 'Chrome 96', 63, '2022-01-23 22:14:58');
 INSERT INTO `sys_operation_log` VALUES (101, 'dunwu', '1', '数据字典', 1, '更新数据字典(id = 1)『成功』', '更新数据字典(id = 1)『成功』——请求参数：{\"Dict\":{\"note\":\"是否禁用状态\",\"code\":\"disabled_status\",\"updateTime\":1633839097000,\"createBy\":\"admin\",\"updateBy\":\"admin\",\"createTime\":1572179496000,\"name\":\"是否禁用状态\",\"disabled\":false,\"id\":1}}；响应结果：true', '', 'io.github.dunwu.module.sys.service.impl.DictServiceImpl', 'updateById', '{\"Dict\":{\"note\":\"是否禁用状态\",\"code\":\"disabled_status\",\"updateTime\":1633839097000,\"createBy\":\"admin\",\"updateBy\":\"admin\",\"createTime\":1572179496000,\"name\":\"是否禁用状态\",\"disabled\":false,\"id\":1}}', 'EDIT', 1, 'admin', '192.168.1.3', '127.0.0.1', '本机地址', 'Chrome 96', 10, '2022-01-25 22:17:58');
+INSERT INTO `sys_operation_log` VALUES (102, 'dunwu', '', '数据字典', 1, '分页查询导出数据字典(page=0, size=10, query=DictQuery(id=null, code=null, name=null, disabled=null))『成功』', '分页查询导出数据字典(page=0, size=10, query=DictQuery(id=null, code=null, name=null, disabled=null))『成功』——请求参数：{\"DictQuery\":{},\"PageRequest\":{\"sort\":[{\"nullHandling\":\"NATIVE\",\"ignoreCase\":false,\"property\":\"id\",\"direction\":\"DESC\"}]},\"StatHttpServletResponseWrapper\":{\"response\":{\"response\":{\"response\":{}}},\"status\":200}}；响应结果：null', '', 'io.github.dunwu.module.sys.service.impl.DictServiceImpl', 'exportPage', '{\"DictQuery\":{},\"PageRequest\":{\"sort\":[{\"nullHandling\":\"NATIVE\",\"ignoreCase\":false,\"property\":\"id\",\"direction\":\"DESC\"}]},\"StatHttpServletResponseWrapper\":{\"response\":{\"response\":{\"response\":{}}},\"status\":200}}', 'EXPORT_EXCEL', 1, 'admin', '172.22.211.75', '127.0.0.1', '本机地址', 'Chrome 91', 764, '2022-01-27 19:01:44');
 
 -- ----------------------------
 -- Table structure for sys_quartz_job
@@ -1089,7 +1124,7 @@ CREATE TABLE `sys_quartz_log`  (
   `params` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `time` bigint(20) UNSIGNED NULL DEFAULT NULL,
   PRIMARY KEY (`log_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '定时任务日志' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '定时任务日志' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of sys_quartz_log
@@ -1131,7 +1166,7 @@ CREATE TABLE `tool_email_config`  (
   `port` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '端口',
   `user` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '发件者用户名',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '邮箱配置' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '邮箱配置' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of tool_email_config
@@ -1153,7 +1188,7 @@ CREATE TABLE `tool_file_content`  (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uk_file_name`(`file_name`) USING BTREE,
   UNIQUE INDEX `uk_store_url`(`store_url`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '文件内容表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '文件内容表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of tool_file_content
@@ -1183,7 +1218,7 @@ CREATE TABLE `tool_file_info`  (
   UNIQUE INDEX `uk_file_name`(`file_name`) USING BTREE,
   UNIQUE INDEX `uk_access_url`(`access_url`) USING BTREE,
   UNIQUE INDEX `uk_keys`(`origin_name`, `tag`, `namespace`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '文件信息表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '文件信息表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of tool_file_info
@@ -1206,7 +1241,7 @@ CREATE TABLE `tool_local_storage`  (
   `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '本地存储' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '本地存储' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of tool_local_storage
@@ -1225,7 +1260,7 @@ CREATE TABLE `tool_qiniu_config`  (
   `type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '空间类型',
   `zone` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '机房',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '七牛云配置' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '七牛云配置' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of tool_qiniu_config
@@ -1246,7 +1281,7 @@ CREATE TABLE `tool_qiniu_content`  (
   `update_time` datetime NULL DEFAULT NULL COMMENT '上传或同步的时间',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uk_name`(`name`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '七牛云文件存储' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '七牛云文件存储' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of tool_qiniu_content

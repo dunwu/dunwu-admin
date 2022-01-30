@@ -1,17 +1,17 @@
 package io.github.dunwu.module.code.service;
 
-import io.github.dunwu.tool.generator.config.builder.ConfigBuilder;
-import io.github.dunwu.tool.generator.engine.CodeGenerateContentDto;
-import io.github.dunwu.module.code.entity.dto.CodeGlobalConfigDto;
-import io.github.dunwu.module.code.entity.dto.CodeTableConfigDto;
-import io.github.dunwu.module.code.entity.dto.TableColumnInfoDto;
-import io.github.dunwu.module.code.entity.query.CodeGlobalConfigQuery;
-import io.github.dunwu.module.code.entity.query.CodeTableConfigQuery;
 import io.github.dunwu.module.code.entity.CodeColumnConfig;
 import io.github.dunwu.module.code.entity.CodeGlobalConfig;
 import io.github.dunwu.module.code.entity.CodeTableConfig;
 import io.github.dunwu.module.code.entity.dto.CodeColumnConfigDto;
+import io.github.dunwu.module.code.entity.dto.CodeGlobalConfigDto;
+import io.github.dunwu.module.code.entity.dto.CodeTableConfigDto;
+import io.github.dunwu.module.code.entity.dto.TableColumnInfoDto;
 import io.github.dunwu.module.code.entity.query.CodeColumnConfigQuery;
+import io.github.dunwu.module.code.entity.query.CodeGlobalConfigQuery;
+import io.github.dunwu.module.code.entity.query.CodeTableConfigQuery;
+import io.github.dunwu.tool.generator.config.builder.ConfigBuilder;
+import io.github.dunwu.tool.generator.engine.CodeGenerateContentDto;
 
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -34,28 +34,12 @@ public interface GeneratorService {
     CodeGlobalConfigDto queryOrCreateGlobalConfig(CodeGlobalConfigQuery query);
 
     /**
-     * 保存当前用户的 CodeGlobalConfigDto 配置
-     *
-     * @param entity 实体
-     * @return /
-     */
-    boolean saveGlobalConfig(CodeGlobalConfig entity);
-
-    /**
-     * 查询当前用户的 {@link CodeTableConfigDto} 配置
+     * 根据条件查询表配置，如果不存在，返回默认配置
      *
      * @param query 查询实体
      * @return /
      */
-    CodeTableConfigDto queryTableConfig(CodeTableConfigQuery query);
-
-    /**
-     * 保存当前用户的 {@link CodeTableConfig} 配置
-     *
-     * @param entity 实体
-     * @return /
-     */
-    boolean saveTableConfig(CodeTableConfig entity);
+    CodeTableConfigDto queryOrCreateCodeTableConfig(CodeTableConfigQuery query);
 
     /**
      * 查询当前用户的 {@link CodeColumnConfigDto} 配置
@@ -67,7 +51,33 @@ public interface GeneratorService {
      * @param query 查询实体
      * @return /
      */
-    List<CodeColumnConfigDto> queryColumnConfigList(CodeColumnConfigQuery query);
+    List<CodeColumnConfigDto> queryOrCreateColumnConfigList(CodeColumnConfigQuery query);
+
+    List<CodeColumnConfigDto> syncQueryColumnConfigList(CodeTableConfigQuery query);
+
+    /**
+     * 保存当前用户的 CodeGlobalConfigDto 配置
+     *
+     * @param entity 实体
+     * @return /
+     */
+    boolean saveGlobalConfig(CodeGlobalConfig entity);
+
+    // /**
+    //  * 查询当前用户的 {@link CodeTableConfigDto} 配置
+    //  *
+    //  * @param query 查询实体
+    //  * @return /
+    //  */
+    // CodeTableConfigDto queryTableConfig(CodeTableConfigQuery query);
+
+    /**
+     * 保存当前用户的 {@link CodeTableConfig} 配置
+     *
+     * @param entity 实体
+     * @return /
+     */
+    boolean saveTableConfig(CodeTableConfig entity);
 
     /**
      * 保存当前用户的 {@link CodeColumnConfig} 配置
@@ -76,8 +86,6 @@ public interface GeneratorService {
      * @return /
      */
     boolean saveColumnConfigList(TableColumnInfoDto entity);
-
-    List<CodeColumnConfigDto> querySyncTableInfo(CodeTableConfigQuery query);
 
     /**
      * 根据表级别配置、列级别配置生成代码
@@ -105,13 +113,5 @@ public interface GeneratorService {
      * @return /
      */
     List<CodeGenerateContentDto> previewCode(CodeTableConfigQuery query);
-
-    /**
-     * 根据条件查询表配置，如果不存在，返回默认配置
-     *
-     * @param query 查询实体
-     * @return /
-     */
-    CodeTableConfigDto queryOrCreateCodeTableConfig(CodeTableConfigQuery query);
 
 }

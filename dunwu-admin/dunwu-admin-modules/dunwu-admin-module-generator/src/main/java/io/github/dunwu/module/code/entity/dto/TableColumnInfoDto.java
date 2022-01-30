@@ -16,6 +16,9 @@ import javax.validation.constraints.NotNull;
 @Accessors(chain = true)
 public class TableColumnInfoDto {
 
+    /** 数据库ID */
+    @NotNull
+    private Long dbId;
     /** Schema名称 */
     @NotNull
     private String schemaName;
@@ -23,7 +26,6 @@ public class TableColumnInfoDto {
     @NotNull
     private String tableName;
     /** 创建者 */
-    @NotNull
     private String createBy;
     /** 表字段列表 */
     @NotEmpty

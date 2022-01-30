@@ -36,6 +36,9 @@ public class CodeGlobalConfigDto implements Serializable {
     @ApiModelProperty(value = "开启Swagger")
     private Boolean enableSwagger;
 
+    @ApiModelProperty(value = "开启EasyExcel")
+    private Boolean enableEasyExcel;
+
     @ApiModelProperty(value = "作者")
     private String author;
 

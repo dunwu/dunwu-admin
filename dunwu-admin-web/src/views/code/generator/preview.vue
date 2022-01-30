@@ -15,16 +15,32 @@ export default {
   data() {
     return {
       data: null,
+      info: {
+        dbId: null,
+        schemaName: null,
+        tableName: null,
+        createBy: null
+      },
       height: '',
       activeName: 'Entity'
     }
   },
   created() {
     this.height = document.documentElement.clientHeight - 180 + 'px'
-    const schemaName = this.$route.params.schemaName
-    const tableName = this.$route.params.tableName
+    // 根据 router、store 获取页面必要属性
+    this.info.dbId = this.$route.params.dbId
+    this.info.schemaName = this.$route.params.schemaName
+    this.info.tableName = this.$route.params.tableName
+    // console.info('this.$route.params', this.$route.params)
+    if (this.$store.state.user) {
+      if (this.$store.state.user.user) {
+        this.info.createBy = this.$store.state.user.user.username
+      }
+    } else {
+      this.info.createBy = 'admin'
+    }
     codeApi
-      .previewCode({ schemaName, tableName })
+      .previewCode(this.info)
       .then(data => {
         this.data = data
       })

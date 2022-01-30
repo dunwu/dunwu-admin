@@ -34,6 +34,13 @@
           <span style="color: #C0C0C0;margin-left: 10px;">是否开启 Swagger2</span>
         </el-radio-group>
       </el-form-item>
+      <el-form-item label="开启EasyExcel" prop="enableEasyExcel">
+        <el-radio-group v-model="form.enableEasyExcel" size="mini" style="width: 40%">
+          <el-radio-button label="true">是</el-radio-button>
+          <el-radio-button label="false">否</el-radio-button>
+          <span style="color: #C0C0C0;margin-left: 10px;">是否开启 EasyExcel</span>
+        </el-radio-group>
+      </el-form-item>
       <el-form-item label="作者" prop="author">
         <el-input v-model="form.author" style="width: 40%" />
         <span style="color: #C0C0C0;margin-left: 10px;">生成代码 javadoc 中的作者名称</span>
@@ -82,23 +89,35 @@
 
 <script>
 import codeApi from '@/api/code/codeApi'
+
 export default {
   name: 'GlobalConfig',
   components: {},
+  props: {
+    info: {
+      type: Object,
+      required: true,
+      default: () => {
+        return {
+          dbId: null,
+          schemaName: null,
+          tableName: null,
+          createBy: null
+        }
+      }
+    }
+  },
   data() {
     return {
       loading: false,
       configLoading: false,
-      dbId: null,
-      schemaName: '',
-      tableName: '',
-      createBy: '',
       tableHeight: 550,
       form: {
         id: null,
         enablePermission: false,
         enableOverride: false,
         enableSwagger: false,
+        enableEasyExcel: false,
         author: null,
         outputDir: null,
         backendPath: null,
@@ -113,19 +132,6 @@ export default {
   },
   created() {
     this.tableHeight = document.documentElement.clientHeight - 385
-
-    // 根据 router、store 获取页面必要属性
-    this.dbId = this.$route.params.dbId
-    this.tableName = this.$route.params.tableName
-    this.schemaName = this.$route.params.schemaName
-    if (this.$store.state.user) {
-      if (this.$store.state.user.user) {
-        this.createBy = this.$store.state.user.user.username
-      }
-    } else {
-      this.createBy = 'admin'
-    }
-
     this.$nextTick(() => {
       this.queryGlobalConfig()
     })
@@ -135,7 +141,7 @@ export default {
       this.loading = true
 
       codeApi
-        .queryGlobalConfig({ createBy: this.createBy })
+        .queryGlobalConfig({ createBy: this.info.createBy })
         .then(data => {
           this.loading = false
           this.form = data

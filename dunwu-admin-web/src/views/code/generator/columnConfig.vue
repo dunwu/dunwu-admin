@@ -2,7 +2,7 @@
   <el-card class="box-card" shadow="never">
     <div slot="header" class="clearfix">
       <span class="role-span">
-        <el-tag type="info">{{ tableName }}</el-tag>
+        <el-tag type="info">{{ info.tableName }}</el-tag>
         字段级别配置
       </span>
       <el-button
@@ -11,7 +11,14 @@
         style="float: right; padding: 6px 9px; margin-left: 9px;"
         type="primary"
       >
-        <router-link :to="'/tool/code/preview/' + dbId + '/' + schemaName + '/' + tableName">
+        <router-link
+          :to="{
+            name: 'code/generator/preview',
+            params: {
+              ...info
+            }
+          }"
+        >
           预览
         </router-link>
       </el-button>
@@ -52,47 +59,52 @@
           size="mini"
           style="float: right; padding: 6px 9px;"
           type="info"
-          @click="syncTable"
+          @click="syncQueryColumnConfig"
         >
           同步
         </el-button>
       </el-tooltip>
     </div>
     <el-form size="small" label-width="90px">
-      <el-table v-loading="loading" :data="data" stripe style="width: 100%;">
+      <el-table v-loading="loading" :data="data" border stripe style="width: 100%;">
         <el-table-column type="expand">
           <template slot-scope="props">
-            <el-form label-position="left" inline class="generator-table-expand">
-              <el-form-item label="字段名称：">
-                <span>{{ props.row.fieldName }}</span>
-              </el-form-item>
-              <el-form-item label="字段注释：">
-                <span>{{ props.row.comment }}</span>
-              </el-form-item>
-              <el-form-item label="字段数据类型：">
-                <span>{{ props.row.type }}</span>
-              </el-form-item>
-              <el-form-item label="字段 Java 类型：">
-                <span>{{ props.row.javaType }}</span>
-              </el-form-item>
-              <el-form-item label="Not Null：">
-                <span>{{ props.row.notNull }}</span>
-              </el-form-item>
-            </el-form>
+            <el-descriptions title="配置信息" :column="4" size="mini" style="margin: 20px" border>
+              <el-descriptions-item label="属性名">{{ props.row.propertyName }}</el-descriptions-item>
+              <el-descriptions-item label="Label名">{{ props.row.labelName }}</el-descriptions-item>
+              <el-descriptions-item label="数据类型">{{ props.row.type }}</el-descriptions-item>
+              <el-descriptions-item label="KEY类型">{{ props.row.keyType }}</el-descriptions-item>
+              <el-descriptions-item label="是否为空">{{ props.row.notNull }}</el-descriptions-item>
+              <el-descriptions-item label="出现在列表">{{ props.row.enableList }}</el-descriptions-item>
+              <el-descriptions-item label="出现在表单">{{ props.row.enableForm }}</el-descriptions-item>
+              <el-descriptions-item label="出现在查询">{{ props.row.enableQuery }}</el-descriptions-item>
+              <el-descriptions-item label="允许排序">{{ props.row.enableSort }}</el-descriptions-item>
+              <el-descriptions-item label="允许校验">{{ props.row.enableValidate }}</el-descriptions-item>
+              <el-descriptions-item label="列表类型">{{ props.row.listType }}</el-descriptions-item>
+              <el-descriptions-item label="表单类型">{{ props.row.formType }}</el-descriptions-item>
+              <el-descriptions-item label="查询类型">{{ props.row.queryType }}</el-descriptions-item>
+              <el-descriptions-item label="排序类型">{{ props.row.sortType }}</el-descriptions-item>
+              <el-descriptions-item label="校验类型">{{ props.row.validateType }}</el-descriptions-item>
+              <el-descriptions-item label="日期格式">{{ props.row.datePattern }}</el-descriptions-item>
+            </el-descriptions>
           </template>
         </el-table-column>
-        <el-table-column prop="propertyName" label="属性名" width="150px">
+        <el-table-column prop="propertyName" label="属性名" :show-overflow-tooltip="true" width="150px">
           <template slot-scope="scope">
-            <el-input v-model="data[scope.$index].propertyName" size="mini" class="edit-input" disabled />
+            <el-tooltip :content="data[scope.$index].propertyName" placement="bottom">
+              <el-input v-model="data[scope.$index].propertyName" size="mini" class="edit-input" disabled />
+            </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column prop="labelName" label="Label名" width="150px">
+        <el-table-column prop="labelName" label="Label名" :show-overflow-tooltip="true" width="150px">
           <template slot-scope="scope">
-            <el-input v-model="data[scope.$index].labelName" size="mini" class="edit-input" />
+            <el-tooltip :content="data[scope.$index].labelName" placement="bottom">
+              <el-input v-model="data[scope.$index].labelName" size="mini" class="edit-input" />
+            </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column prop="type" label="数据类型" width="100px" />
-        <el-table-column prop="keyType" label="KEY类型">
+        <el-table-column prop="type" label="数据类型" :show-overflow-tooltip="true" width="100px" />
+        <el-table-column prop="keyType" align="center" label="KEY类型">
           <template slot-scope="scope">
             <el-tag v-if="scope.row.keyType === 'PRI'" size="medium" type="success">主键</el-tag>
             <el-tag v-else-if="scope.row.keyType === 'MUL'" size="medium">键</el-tag>
@@ -100,7 +112,7 @@
             <span v-else>{{ scope.row.keyType }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="非空" width="70px">
+        <el-table-column label="非空" align="center" width="70px">
           <template slot-scope="scope">
             <!--所有的键必须不为空-->
             <el-checkbox
@@ -110,28 +122,28 @@
             <el-checkbox v-else v-model="data[scope.$index].notNull" disabled />
           </template>
         </el-table-column>
-        <el-table-column label="出现在列表" width="70px">
+        <el-table-column label="出现在列表" align="center" width="70px">
           <template slot-scope="scope">
             <el-checkbox v-model="data[scope.$index].enableList" />
           </template>
         </el-table-column>
-        <el-table-column label="出现在表单" width="70px">
+        <el-table-column label="出现在表单" align="center" width="70px">
           <template slot-scope="scope">
             <el-checkbox v-if="data[scope.$index].keyType !== 'PRI'" v-model="data[scope.$index].enableForm" />
             <el-checkbox v-else v-model="data[scope.$index].enableForm" disabled />
           </template>
         </el-table-column>
-        <el-table-column label="出现在查询" width="70px">
+        <el-table-column label="出现在查询" align="center" width="70px">
           <template slot-scope="scope">
             <el-checkbox v-model="data[scope.$index].enableQuery" />
           </template>
         </el-table-column>
-        <el-table-column label="允许排序" width="70px">
+        <el-table-column label="允许排序" align="center" width="70px">
           <template slot-scope="scope">
             <el-checkbox v-model="data[scope.$index].enableSort" />
           </template>
         </el-table-column>
-        <el-table-column label="允许校验" width="70px">
+        <el-table-column label="允许校验" align="center" width="70px">
           <template slot-scope="scope">
             <el-checkbox v-model="data[scope.$index].enableValidate" />
           </template>
@@ -163,7 +175,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="表单类型" width="150px">
+        <el-table-column label="表单类型" :show-overflow-tooltip="true" width="150px">
           <template slot-scope="scope">
             <el-select
               v-if="data[scope.$index].enableForm"
@@ -204,8 +216,9 @@
               size="mini"
               placeholder="请选择"
             >
-              <el-option label="普通查询" value="EQUALS" />
-              <el-option label="范围查询" value="BETWEEN" />
+              <el-option label="精确匹配" value="EQUALS" />
+              <el-option label="模糊匹配" value="LIKE" />
+              <el-option label="范围匹配" value="BETWEEN" />
             </el-select>
             <el-select
               v-else
@@ -279,13 +292,15 @@
         </el-table-column>
         <el-table-column label="日期格式" width="150px">
           <template slot-scope="scope">
-            <el-input
-              v-if="data[scope.$index].type === 'datetime'"
-              v-model="data[scope.$index].datePattern"
-              size="mini"
-              class="edit-input"
-            />
-            <el-input v-else v-model="data[scope.$index].datePattern" disabled size="mini" class="edit-input" />
+            <el-tooltip :content="data[scope.$index].datePattern" placement="bottom">
+              <el-input
+                v-if="data[scope.$index].type === 'datetime'"
+                v-model="data[scope.$index].datePattern"
+                size="mini"
+                class="edit-input"
+              />
+              <el-input v-else v-model="data[scope.$index].datePattern" disabled size="mini" class="edit-input" />
+            </el-tooltip>
           </template>
         </el-table-column>
       </el-table>
@@ -296,15 +311,26 @@
 <script>
 import codeApi from '@/api/code/codeApi'
 import { downloadFile } from '@/utils'
+
 export default {
   name: 'ColumnConfig',
   components: {},
+  props: {
+    info: {
+      type: Object,
+      required: true,
+      default: () => {
+        return {
+          dbId: null,
+          schemaName: null,
+          tableName: null,
+          createBy: null
+        }
+      }
+    }
+  },
   data() {
     return {
-      dbId: null,
-      schemaName: '',
-      tableName: '',
-      createBy: '',
       data: [],
       dicts: [],
       loading: false,
@@ -314,21 +340,6 @@ export default {
     }
   },
   created() {
-    this.tableHeight = document.documentElement.clientHeight - 385
-
-    // 根据 router、store 获取页面必要属性
-    this.dbId = this.$route.params.dbId
-    this.tableName = this.$route.params.tableName
-    this.schemaName = this.$route.params.schemaName
-    console.info('this.$store.state.user', this.$store.state.user)
-    if (this.$store.state.user) {
-      if (this.$store.state.user.user) {
-        this.createBy = this.$store.state.user.user.username
-      }
-    } else {
-      this.createBy = 'admin'
-    }
-
     this.$nextTick(() => {
       this.queryColumnConfig()
     })
@@ -337,12 +348,7 @@ export default {
     queryColumnConfig() {
       this.loading = true
       codeApi
-        .queryColumnConfig({
-          dbId: this.dbId,
-          schemaName: this.schemaName,
-          tableName: this.tableName,
-          createBy: this.createBy
-        })
+        .queryColumnConfig(this.info)
         .then(data => {
           this.loading = false
           this.data = data
@@ -356,14 +362,12 @@ export default {
       this.configLoading = true
       codeApi
         .saveColumnConfig({
-          dbId: this.dbId,
-          schemaName: this.schemaName,
-          tableName: this.tableName,
-          createBy: this.createBy,
+          ...this.info,
           columns: this.data
         })
         .then(() => {
-          this.queryColumnConfig()
+          // this.queryColumnConfig()
+          this.$emit('getCodeConfigInfo')
           this.$message({ type: 'success', message: '保存成功' })
           this.configLoading = false
         })
@@ -372,15 +376,10 @@ export default {
           this.configLoading = false
         })
     },
-    syncTable() {
+    syncQueryColumnConfig() {
       this.loading = true
       codeApi
-        .syncTable({
-          dbId: this.dbId,
-          schemaName: this.schemaName,
-          tableName: this.tableName,
-          createBy: this.createBy
-        })
+        .syncQueryColumnConfig(this.info)
         .then(data => {
           this.data = data
           this.$message({ type: 'success', message: '同步成功' })
@@ -391,11 +390,11 @@ export default {
           this.loading = false
         })
     },
-    toGenerate(row) {
+    toGenerate() {
       // 生成代码
       this.genLoading = true
       codeApi
-        .generateCode({ schemaName: this.schemaName, tableName: this.tableName })
+        .generateCode(this.info)
         .then(data => {
           this.$message({ type: 'success', message: '生成成功' })
           this.genLoading = false
@@ -405,13 +404,13 @@ export default {
           this.genLoading = false
         })
     },
-    toDownload(row) {
+    toDownload() {
       // 打包下载
       this.downloadLoading = true
       codeApi
-        .downloadCode({ schemaName: this.schemaName, tableName: this.tableName })
+        .downloadCode(this.info)
         .then(data => {
-          downloadFile(data, this.tableName, 'zip')
+          downloadFile(data, this.info.tableName, 'zip')
           this.$message({ type: 'success', message: '下载成功' })
           this.downloadLoading = false
         })

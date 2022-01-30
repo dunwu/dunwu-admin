@@ -175,8 +175,8 @@ public class DictServiceImpl extends ServiceImpl implements DictService {
 
     @Override
     @OperationLog(bizType = "数据字典", operation = OperationType.EXPORT_EXCEL,
-        success = "分页查询导出数据字典(page={{#pageable.getPageNumber()}}, size={{#pageable.getPageSize()}}, query={{#query.toJsonStr()}})『成功』",
-        fail = "分页查询导出数据字典(page={{#pageable.getPageNumber()}}, size={{#pageable.getPageSize()}}, query={{#query.toJsonStr()}})『失败』"
+        success = "分页查询导出数据字典(page={{#pageable.getPageNumber()}}, size={{#pageable.getPageSize()}}, query={{#query.toString()}})『成功』",
+        fail = "分页查询导出数据字典(page={{#pageable.getPageNumber()}}, size={{#pageable.getPageSize()}}, query={{#query.toString()}})『失败』"
     )
     public void exportPage(Pageable pageable, DictQuery query, HttpServletResponse response) {
         Page<DictDto> page = dictDao.pojoSpringPageByQuery(pageable, query, this::doToDto);

@@ -12,9 +12,13 @@
             style="width: 90%"
             :remote-method="queryDatabase"
             :loading="schemaLoading"
+            @clear="resetQuery"
             @change="selectSchema"
           >
-            <el-option v-for="item in schemaOptions" :key="item.id" :label="item.schemaName" :value="item.id" />
+            <el-option v-for="item in schemaOptions" :key="item.id" :label="item.schemaName" :value="item.id">
+              <span style="float: left">{{ item.schemaName }}</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">{{ item.name }}</span>
+            </el-option>
           </el-select>
         </el-col>
         <el-col :span="6">
@@ -36,13 +40,14 @@
         </el-col>
         <el-col :span="6">
           <span style="width: 90%">
-            <el-button type="primary" icon="el-icon-search" @click="queryTables">
+            <el-button type="primary" icon="el-icon-search" :disabled="!dbId" @click="queryTables">
               查询
             </el-button>
             <el-button type="primary" icon="el-icon-refresh-left" @click="resetQuery">
               重置
             </el-button>
-            <el-button type="info">
+            <el-button type="primary">
+              <svg-icon icon-class="database" />
               <router-link :to="'/tool/code/database/'">
                 配置数据源
               </router-link>
@@ -52,29 +57,78 @@
       </el-row>
     </div>
     <!--表格渲染-->
-    <el-table ref="table" v-loading="loading" stripe :data="tables">
+    <el-table ref="table" v-loading="loading" border stripe size="mini" :data="tables">
       <el-table-column type="selection" width="55" />
       <el-table-column :show-overflow-tooltip="true" prop="tableName" label="Table名称" />
       <el-table-column :show-overflow-tooltip="true" prop="comment" label="Table注释" />
       <el-table-column :show-overflow-tooltip="true" prop="engine" label="数据库引擎" />
       <el-table-column :show-overflow-tooltip="true" prop="coding" label="字符编码集" />
-      <el-table-column prop="createTime" label="创建日期" />
-      <el-table-column label="操作" width="160px" fixed="right">
+      <el-table-column label="配置状态" width="80" align="center">
         <template slot-scope="scope">
-          <el-button size="mini" style="margin-left: -1px; " type="text">
-            <router-link :to="'/tool/code/config/' + dbId + '/' + scope.row.schemaName + '/' + scope.row.tableName">
+          <el-tag
+            v-if="scope.row.isGlobalConfigured && scope.row.isTableConfigured && scope.row.isColumnConfigured"
+            type="success"
+          >
+            已配置
+          </el-tag>
+          <el-tag v-else type="danger">未配置</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="createTime" label="创建日期" />
+      <el-table-column label="操作" fixed="right">
+        <template slot-scope="scope">
+          <el-button size="mini" type="text">
+            <router-link
+              :to="{
+                name: 'code/generator/config',
+                params: {
+                  dbId: dbId,
+                  schemaName: scope.row.schemaName,
+                  tableName: scope.row.tableName,
+                  isGlobalConfigured: scope.row.isGlobalConfigured,
+                  isTableConfigured: scope.row.isTableConfigured,
+                  isColumnConfigured: scope.row.isColumnConfigured
+                }
+              }"
+            >
               配置
             </router-link>
           </el-button>
-          <el-button size="mini" style="margin-left: -1px;" type="text">
-            <router-link :to="'/tool/code/preview/' + dbId + '/' + scope.row.schemaName + '/' + scope.row.tableName">
+          <el-button
+            size="mini"
+            type="text"
+            :disabled="!(scope.row.isGlobalConfigured && scope.row.isTableConfigured && scope.row.isColumnConfigured)"
+          >
+            <router-link
+              :to="{
+                name: 'code/generator/preview',
+                params: {
+                  dbId,
+                  schemaName: scope.row.schemaName,
+                  tableName: scope.row.tableName,
+                  isGlobalConfigured: scope.row.isGlobalConfigured,
+                  isTableConfigured: scope.row.isTableConfigured,
+                  isColumnConfigured: scope.row.isColumnConfigured
+                }
+              }"
+            >
               预览
             </router-link>
           </el-button>
-          <el-button type="text" style="margin-left: -1px; " size="mini" @click="toGenerate(scope.row)">
+          <el-button
+            type="text"
+            size="mini"
+            :disabled="!(scope.row.isGlobalConfigured && scope.row.isTableConfigured && scope.row.isColumnConfigured)"
+            @click="toGenerate(scope.row)"
+          >
             生成
           </el-button>
-          <el-button size="mini" style="margin-left: -1px; " type="text" @click="toDownload(scope.row)">
+          <el-button
+            size="mini"
+            type="text"
+            :disabled="!(scope.row.isGlobalConfigured && scope.row.isTableConfigured && scope.row.isColumnConfigured)"
+            @click="toDownload(scope.row)"
+          >
             下载
           </el-button>
         </template>
@@ -95,7 +149,7 @@
 <script>
 import codeApi from '@/api/code/codeApi'
 import databaseApi from '@/api/code/databaseApi'
-import { downloadFile } from '@/utils/index'
+import { downloadFile } from '@/utils'
 
 export default {
   name: 'GeneratorIndex',
@@ -105,7 +159,7 @@ export default {
       loading: false,
       schemaLoading: false,
       syncLoading: false,
-      dbId: null,
+      dbId: 1,
       schemaName: null,
       tableName: null,
       schemaOptions: [],
@@ -123,15 +177,15 @@ export default {
   methods: {
     toGenerate(row) {
       // 生成代码
-      codeApi.generateCode({ schemaName: row.schemaName, tableName: row.tableName }).then(data => {
-        this.$notify({ title: '生成成功', type: 'success' })
+      codeApi.generateCode({ dbId: this.dbId, schemaName: row.schemaName, tableName: row.tableName }).then(data => {
+        this.$message({ type: 'success', message: '生成成功' })
       })
     },
     toDownload(row) {
       // 打包下载
-      codeApi.downloadCode({ schemaName: row.schemaName, tableName: row.tableName }).then(data => {
+      codeApi.downloadCode({ dbId: this.dbId, schemaName: row.schemaName, tableName: row.tableName }).then(data => {
         downloadFile(data, row.tableName, 'zip')
-        this.$notify({ title: '下载成功', type: 'success' })
+        this.$message({ type: 'success', message: '下载成功' })
       })
     },
     queryDatabase(val) {
@@ -155,7 +209,6 @@ export default {
       }
     },
     selectSchema(val) {
-      console.log('selectSchema', val)
       if (val) {
         this.schemaOptions.forEach(i => {
           if (val === i.id) {
@@ -187,6 +240,7 @@ export default {
         })
     },
     resetQuery() {
+      this.dbId = null
       this.schemaName = null
       this.tableName = null
       this.tables = []

@@ -52,11 +52,13 @@ export const filterAsyncRouter = (routers, isRewrite = false) => {
 }
 
 function filterChildren(childrenMap) {
-  var children = []
+  let children = []
   childrenMap.forEach((el, index) => {
+    // console.info('路由信息', el)
     if (el.children && el.children.length) {
       if (el.component === 'ParentView') {
         el.children.forEach(c => {
+          console.info('filterChildren', c, el)
           c.path = el.path + '/' + c.path
           if (c.children && c.children.length) {
             children = children.concat(filterChildren(c.children, c))

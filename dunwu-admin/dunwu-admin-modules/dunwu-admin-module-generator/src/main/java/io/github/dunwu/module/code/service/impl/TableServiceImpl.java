@@ -2,11 +2,20 @@ package io.github.dunwu.module.code.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbUtil;
-import io.github.dunwu.tool.data.util.PageUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import io.github.dunwu.module.code.dao.CodeColumnConfigDao;
+import io.github.dunwu.module.code.dao.CodeGlobalConfigDao;
+import io.github.dunwu.module.code.dao.CodeTableConfigDao;
+import io.github.dunwu.module.code.entity.CodeColumnConfig;
+import io.github.dunwu.module.code.entity.CodeGlobalConfig;
+import io.github.dunwu.module.code.entity.CodeTableConfig;
 import io.github.dunwu.module.code.entity.dto.CodeDatabaseDto;
 import io.github.dunwu.module.code.entity.dto.TableInfoDto;
+import io.github.dunwu.module.code.entity.query.CodeTableConfigQuery;
 import io.github.dunwu.module.code.service.CodeDatabaseService;
 import io.github.dunwu.module.code.service.TableService;
+import io.github.dunwu.module.security.util.SecurityUtil;
+import io.github.dunwu.tool.data.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.Condition;
@@ -35,6 +44,9 @@ public class TableServiceImpl implements TableService {
 
     private final JdbcTemplate jdbcTemplate;
     private final CodeDatabaseService databaseService;
+    private final CodeGlobalConfigDao globalConfigDao;
+    private final CodeTableConfigDao tableConfigDao;
+    private final CodeColumnConfigDao columnConfigDao;
 
     @Override
     public String getCurrentSchema() {
@@ -84,6 +96,31 @@ public class TableServiceImpl implements TableService {
                                   .where(conditions)
                                   .limit(offset, size.intValue())
                                   .fetchInto(TableInfoDto.class));
+
+            String username = SecurityUtil.getCurrentUsername();
+            // 查找是否存在匹配的全局级配置
+            LambdaQueryWrapper<CodeGlobalConfig> globalQueryWrapper = new LambdaQueryWrapper<>();
+            globalQueryWrapper.eq(CodeGlobalConfig::getCreateBy, username);
+            int globalCount = globalConfigDao.count(globalQueryWrapper);
+            boolean isGlobalConfigured = globalCount > 0;
+
+            list.forEach(i -> {
+                i.setIsGlobalConfigured(isGlobalConfigured);
+
+                LambdaQueryWrapper<CodeTableConfig> tableQueryWrapper = new LambdaQueryWrapper<>();
+                tableQueryWrapper.eq(CodeTableConfig::getDbId, dbId)
+                                 .eq(CodeTableConfig::getSchemaName, i.getTableSchema())
+                                 .eq(CodeTableConfig::getTableName, i.getTableName());
+                int tableCount = tableConfigDao.count(tableQueryWrapper);
+                i.setIsTableConfigured(tableCount > 0);
+
+                LambdaQueryWrapper<CodeColumnConfig> columnQueryWrapper = new LambdaQueryWrapper<>();
+                columnQueryWrapper.eq(CodeColumnConfig::getDbId, dbId)
+                                  .eq(CodeColumnConfig::getSchemaName, i.getTableSchema())
+                                  .eq(CodeColumnConfig::getTableName, i.getTableName());
+                int columnCount = columnConfigDao.count(columnQueryWrapper);
+                i.setIsColumnConfigured(columnCount > 0);
+            });
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -94,6 +131,53 @@ public class TableServiceImpl implements TableService {
 
         // 组装分页展示数据
         return PageUtil.toMap(list, total);
+    }
+
+    @Override
+    public TableInfoDto getCodeConfigInfo(CodeTableConfigQuery query) {
+
+        String username = getCurrentUsername();
+
+        // 查找是否存在匹配的全局级配置
+        LambdaQueryWrapper<CodeGlobalConfig> globalQueryWrapper = new LambdaQueryWrapper<>();
+        globalQueryWrapper.eq(CodeGlobalConfig::getCreateBy, username);
+        int globalCount = globalConfigDao.count(globalQueryWrapper);
+        boolean isGlobalConfigured = globalCount > 0;
+
+        // 查找是否存在匹配的表级配置
+        LambdaQueryWrapper<CodeTableConfig> tableQueryWrapper = new LambdaQueryWrapper<>();
+        tableQueryWrapper.eq(CodeTableConfig::getDbId, query.getDbId())
+                         .eq(CodeTableConfig::getSchemaName, query.getSchemaName())
+                         .eq(CodeTableConfig::getTableName, query.getTableName())
+                         .eq(CodeTableConfig::getCreateBy, username);
+        int tableCount = tableConfigDao.count(tableQueryWrapper);
+        boolean isTableConfigured = tableCount > 0;
+
+        // 查找是否存在匹配的字段级配置
+        LambdaQueryWrapper<CodeColumnConfig> columnQueryWrapper = new LambdaQueryWrapper<>();
+        columnQueryWrapper.eq(CodeColumnConfig::getDbId, query.getDbId())
+                          .eq(CodeColumnConfig::getSchemaName, query.getSchemaName())
+                          .eq(CodeColumnConfig::getTableName, query.getTableName())
+                          .eq(CodeColumnConfig::getCreateBy, username);
+        int columnCount = columnConfigDao.count(columnQueryWrapper);
+        boolean isColumnConfigured = columnCount > 0;
+
+        return TableInfoDto.builder()
+                           .dbId(query.getDbId())
+                           .tableSchema(query.getSchemaName())
+                           .tableName(query.getTableName())
+                           .isGlobalConfigured(isGlobalConfigured)
+                           .isTableConfigured(isTableConfigured)
+                           .isColumnConfigured(isColumnConfigured)
+                           .build();
+    }
+
+    private String getCurrentUsername() {
+        String username = SecurityUtil.getCurrentUsername();
+        if (StrUtil.isBlank(username)) {
+            return "admin";
+        }
+        return username;
     }
 
 }

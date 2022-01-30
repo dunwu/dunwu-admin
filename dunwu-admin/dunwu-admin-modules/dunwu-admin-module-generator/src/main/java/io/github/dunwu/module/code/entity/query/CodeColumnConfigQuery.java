@@ -4,8 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.github.dunwu.tool.data.annotation.QueryField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -19,8 +18,9 @@ import java.util.List;
  * @since 2021-03-02
  */
 @Data
-@Accessors(chain = true)
-@EqualsAndHashCode(callSuper = false)
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @ApiModel(value = "CodeColumnConfigQuery", description = "代码生成-字段级别配置")
 public class CodeColumnConfigQuery implements Serializable {
 
@@ -29,6 +29,10 @@ public class CodeColumnConfigQuery implements Serializable {
     @ApiModelProperty(value = "ID")
     @QueryField
     private Long id;
+
+    @ApiModelProperty(value = "数据库ID")
+    @QueryField
+    private Long dbId;
 
     @ApiModelProperty(value = "所属表的ID")
     @QueryField

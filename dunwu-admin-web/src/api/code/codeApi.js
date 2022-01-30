@@ -8,17 +8,33 @@ export function getAllTableInSchema(params) {
   })
 }
 
-export function syncTable(params) {
+export function queryGlobalConfig(params) {
   return request({
-    url: 'code/table/sync',
+    url: 'code/global/query',
     method: 'get',
     params
   })
 }
 
-export function queryGlobalConfig(params) {
+export function queryTableConfig(params) {
   return request({
-    url: 'code/global/query',
+    url: 'code/table/query',
+    method: 'get',
+    params
+  })
+}
+
+export function queryColumnConfig(params) {
+  return request({
+    url: 'code/column/query',
+    method: 'get',
+    params
+  })
+}
+
+export function syncQueryColumnConfig(params) {
+  return request({
+    url: 'code/column/query/sync',
     method: 'get',
     params
   })
@@ -32,27 +48,11 @@ export function saveGlobalConfig(data) {
   })
 }
 
-export function queryTableConfig(params) {
-  return request({
-    url: 'code/table/query',
-    method: 'get',
-    params
-  })
-}
-
 export function saveTableConfig(data) {
   return request({
     url: 'code/table/save',
     method: 'post',
     data
-  })
-}
-
-export function queryColumnConfig(params) {
-  return request({
-    url: 'code/column/query',
-    method: 'get',
-    params
   })
 }
 
@@ -64,38 +64,50 @@ export function saveColumnConfig(data) {
   })
 }
 
+export function previewCode(params) {
+  return request({
+    url: 'code/preview',
+    method: 'get',
+    params
+  })
+}
+
 export function generateCode(params) {
   return request({
-    url: 'code/generate/' + params.schemaName + '/' + params.tableName,
-    method: 'get'
+    url: 'code/generate',
+    method: 'get',
+    params
   })
 }
 
 export function downloadCode(params) {
   return request({
-    url: 'code/download/' + params.schemaName + '/' + params.tableName,
+    url: 'code/download',
     method: 'get',
+    params,
     responseType: 'blob'
   })
 }
 
-export function previewCode(params) {
+export function getCodeConfigInfo(params) {
   return request({
-    url: 'code/preview/' + params.schemaName + '/' + params.tableName,
-    method: 'get'
+    url: 'code/config/info',
+    method: 'get',
+    params
   })
 }
 
 export default {
   getAllTableInSchema,
-  syncTable,
+  queryGlobalConfig,
+  queryTableConfig,
+  queryColumnConfig,
+  syncQueryColumnConfig,
+  saveGlobalConfig,
+  saveTableConfig,
+  saveColumnConfig,
+  previewCode,
   generateCode,
   downloadCode,
-  previewCode,
-  queryGlobalConfig,
-  saveGlobalConfig,
-  queryTableConfig,
-  saveTableConfig,
-  queryColumnConfig,
-  saveColumnConfig
+  getCodeConfigInfo
 }

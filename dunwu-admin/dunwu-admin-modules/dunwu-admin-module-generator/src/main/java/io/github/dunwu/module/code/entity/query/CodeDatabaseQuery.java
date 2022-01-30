@@ -4,8 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.github.dunwu.tool.data.annotation.QueryField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -18,8 +17,9 @@ import java.time.LocalDateTime;
  * @since 2021-03-17
  */
 @Data
-@Accessors(chain = true)
-@EqualsAndHashCode(callSuper = false)
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @ApiModel(value = "CodeDatabaseQuery", description = "数据库管理")
 public class CodeDatabaseQuery implements Serializable {
 
