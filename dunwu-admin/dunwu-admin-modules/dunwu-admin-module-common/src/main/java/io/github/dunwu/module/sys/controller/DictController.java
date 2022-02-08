@@ -1,7 +1,9 @@
 package io.github.dunwu.module.sys.controller;
 
+import cn.hutool.json.JSONUtil;
 import io.github.dunwu.module.sys.entity.Dict;
 import io.github.dunwu.module.sys.entity.dto.DictDto;
+import io.github.dunwu.module.sys.entity.dto.EnumInfoDto;
 import io.github.dunwu.module.sys.entity.query.DictQuery;
 import io.github.dunwu.module.sys.service.DictService;
 import io.github.dunwu.tool.data.DataListResult;
@@ -12,6 +14,7 @@ import io.github.dunwu.tool.data.validator.annotation.EditCheck;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -28,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
  * @since 2021-10-03
  */
+@Slf4j
 @RestController
 @RequestMapping("/sys/dict")
 @Api(tags = "数据字典 Controller 类")
@@ -125,6 +129,22 @@ public class DictController {
     @GetMapping("/export/page")
     public void exportPage(Pageable pageable, DictQuery query, HttpServletResponse response) {
         service.exportPage(pageable, query, response);
+    }
+
+    @ApiOperation("上传枚举 java 文件并解析")
+    @PreAuthorize("@exp.check('sys:dict:edit')")
+    @PostMapping("/upload/javaenum")
+    public DataResult<EnumInfoDto> parseJavaEnumFile(@RequestBody MultipartFile file) {
+        EnumInfoDto enumInfoDto = service.parseJavaEnumFile(file);
+        log.info("baseDictDto = {}", JSONUtil.toJsonPrettyStr(enumInfoDto));
+        return DataResult.ok(enumInfoDto);
+    }
+
+    @ApiOperation("保存含字典选项的字典")
+    @PreAuthorize("@exp.check('sys:dict:edit')")
+    @PostMapping("/save/dictWithOptions")
+    public DataResult<Boolean> saveDictWithOptions(@RequestBody DictDto dto) {
+        return DataResult.ok(service.saveDictWithOptions(dto));
     }
 
 }

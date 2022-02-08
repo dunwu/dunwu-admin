@@ -2,6 +2,7 @@ package io.github.dunwu.module.sys.service;
 
 import io.github.dunwu.module.sys.entity.Dict;
 import io.github.dunwu.module.sys.entity.dto.DictDto;
+import io.github.dunwu.module.sys.entity.dto.EnumInfoDto;
 import io.github.dunwu.module.sys.entity.query.DictQuery;
 import io.github.dunwu.tool.data.annotation.QueryField;
 import io.github.dunwu.tool.data.mybatis.IService;
@@ -181,5 +182,9 @@ public interface DictService extends IService {
      * @return /
      */
     Dict dtoToDo(DictDto dto);
+
+    EnumInfoDto parseJavaEnumFile(MultipartFile file);
+
+    boolean saveDictWithOptions(DictDto dto);
 
 }

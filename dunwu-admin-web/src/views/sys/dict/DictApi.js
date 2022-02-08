@@ -117,4 +117,17 @@ export function exportPage(params) {
   })
 }
 
-export default { add, edit, del, delBatch, list, page, getById, exportList, exportPage }
+/**
+ * 修改一条记录
+ * @param data
+ * @returns {*}
+ */
+export function saveDictWithOptions(data) {
+  return request({
+    url: 'sys/dict/save/dictWithOptions',
+    method: 'post',
+    data
+  })
+}
+
+export default { add, edit, del, delBatch, list, page, getById, exportList, exportPage, saveDictWithOptions }

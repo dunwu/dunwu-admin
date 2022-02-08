@@ -2,12 +2,22 @@ package io.github.dunwu.module.sys.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.github.javaparser.StaticJavaParser;
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.body.EnumDeclaration;
+import com.github.javaparser.ast.comments.Comment;
+import com.github.javaparser.ast.expr.Expression;
 import io.github.dunwu.module.sys.dao.DictDao;
 import io.github.dunwu.module.sys.dao.DictOptionDao;
 import io.github.dunwu.module.sys.entity.Dict;
 import io.github.dunwu.module.sys.entity.DictOption;
 import io.github.dunwu.module.sys.entity.dto.DictDto;
 import io.github.dunwu.module.sys.entity.dto.DictOptionDto;
+import io.github.dunwu.module.sys.entity.dto.EnumEntryInfoDto;
+import io.github.dunwu.module.sys.entity.dto.EnumInfoDto;
 import io.github.dunwu.module.sys.entity.query.DictQuery;
 import io.github.dunwu.module.sys.service.DictOptionService;
 import io.github.dunwu.module.sys.service.DictService;
@@ -27,10 +37,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
@@ -211,6 +218,111 @@ public class DictServiceImpl extends ServiceImpl implements DictService {
         }
 
         return BeanUtil.toBean(dto, Dict.class);
+    }
+
+    @Override
+    @Transactional(rollbackFor = { Exception.class })
+    public EnumInfoDto parseJavaEnumFile(MultipartFile file) {
+        EnumInfoDto dictDto = new EnumInfoDto();
+        try {
+            CompilationUnit unit = StaticJavaParser.parse(file.getInputStream());
+            unit.findAll(EnumDeclaration.class)
+                .forEach(c -> {
+                    dictDto.setName(c.getNameAsString());
+                    c.getJavadocComment().ifPresent(i -> {
+                        dictDto.setComment(getFilteredCommentString(i));
+                    });
+
+                    List<EnumEntryInfoDto> optionDtoList = new ArrayList<>();
+                    dictDto.setEntries(optionDtoList);
+                    c.getEntries().forEach(e -> {
+                        EnumEntryInfoDto dictOptionDto = new EnumEntryInfoDto();
+                        optionDtoList.add(dictOptionDto);
+                        dictOptionDto.setName(e.getName().getIdentifier());
+                        e.getComment().ifPresent(i -> {
+                            dictOptionDto.setComment(getFilteredCommentString(i));
+                        });
+
+                        NodeList<Expression> expressions = e.getArguments();
+                        List<String> argumentsList = new LinkedList<>();
+                        if (CollectionUtil.isNotEmpty(expressions)) {
+                            int index = 1;
+                            for (Expression expression : expressions) {
+                                if (expression.isStringLiteralExpr()) {
+                                    argumentsList.add(expression.asStringLiteralExpr().getValue());
+                                } else {
+                                    argumentsList.add(expression.toString());
+                                }
+                            }
+                            dictOptionDto.setParams(argumentsList);
+                        }
+                    });
+                });
+            return dictDto;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String getFilteredCommentString(Comment comment) {
+
+        if (comment == null) {
+            return null;
+        }
+
+        List<String> lines = StrUtil.split(comment.getContent(), '\n');
+        if (CollectionUtil.isEmpty(lines)) {
+            return null;
+        }
+
+        String[] finalCommentLines = lines.stream()
+                                          .map(line -> {
+                                              if (StrUtil.isBlank(line)) {
+                                                  return line;
+                                              }
+                                              // 去除所有 html 标签
+                                              line = line.replaceAll("<[^>]*>", "");
+                                              line = line.trim();
+                                              if (line.startsWith("*")) {
+                                                  line = line.substring(1).trim();
+                                              }
+                                              return line;
+                                          })
+                                          .filter(StrUtil::isNotBlank)
+                                          .filter(line -> !line.startsWith("@"))
+                                          .toArray(String[]::new);
+        return StrUtil.concat(false, finalCommentLines);
+    }
+
+    @Override
+    public boolean saveDictWithOptions(DictDto dto) {
+
+        if (CollectionUtil.isEmpty(dto.getOptions())) {
+            String msg = StrUtil.format("code = {} 的 options 不能为空！", dto.getCode());
+            throw new AppException(ResultStatus.DATA_ERROR.getCode(), msg);
+        }
+
+        LambdaQueryWrapper<Dict> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Dict::getCode, dto.getCode());
+        int count = dictDao.count(queryWrapper);
+        if (count > 0) {
+            String msg = StrUtil.format("code = {} 的字典已存在！", dto.getCode());
+            throw new AppException(ResultStatus.DATA_ERROR.getCode(), msg);
+        }
+
+        Dict entity = dtoToDo(dto);
+        dictDao.insert(entity);
+
+        List<DictOptionDto> options = dto.getOptions();
+        List<DictOption> dictOptions = options.stream()
+                                              .map(i -> {
+                                                  DictOption dictOption = dictOptionService.dtoToDo(i);
+                                                  dictOption.setDictId(entity.getId());
+                                                  return dictOption;
+                                              })
+                                              .collect(Collectors.toList());
+        return dictOptionDao.insertBatch(dictOptions);
     }
 
 }

@@ -62,10 +62,15 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!--反射工具-->
         <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
-            <version>0.10.2</version>
+        </dependency>
+        <!--java文件解析工具-->
+        <dependency>
+            <groupId>com.github.javaparser</groupId>
+            <artifactId>javaparser-symbol-solver-core</artifactId>
         </dependency>
     </dependencies>
 </project>

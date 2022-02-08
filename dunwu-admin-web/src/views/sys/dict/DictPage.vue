@@ -42,7 +42,13 @@
           </el-col>
         </el-row>
       </div>
-      <TableOperation :permission="permission" />
+      <TableOperation :permission="permission">
+        <el-button slot="left" class="filter-item" type="info" icon="el-icon-coffee-cup" size="mini">
+          <router-link :to="'/sys/dict/DictImportedByEnumForm'">
+            根据Java枚举导入字典
+          </router-link>
+        </el-button>
+      </TableOperation>
     </div>
     <!--表格渲染-->
     <el-table
