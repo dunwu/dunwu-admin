@@ -99,8 +99,8 @@ public class CodeColumnConfigDto implements Serializable {
     @ApiModelProperty(value = "时间格式")
     private String datePattern;
 
-    @ApiModelProperty(value = "字典名称")
-    private String dictName;
+    @ApiModelProperty(value = "字典编码")
+    private String dictCode;
 
     @ApiModelProperty(value = "@TableField填充属性")
     private String fill;

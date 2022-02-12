@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.github.dunwu.tool.data.annotation.QueryField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
-import lombok.experimental.Accessors;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -126,9 +128,9 @@ public class CodeColumnConfigQuery implements Serializable {
     @QueryField
     private String datePattern;
 
-    @ApiModelProperty(value = "字典名称")
+    @ApiModelProperty(value = "字典编码")
     @QueryField
-    private String dictName;
+    private String dictCode;
 
     @ApiModelProperty(value = "@TableField填充属性")
     @QueryField

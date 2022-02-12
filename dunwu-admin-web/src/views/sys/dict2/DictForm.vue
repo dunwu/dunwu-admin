@@ -1,8 +1,10 @@
 <template>
   <el-dialog
+    v-el-drag-dialog
+    append-to-body
     :close-on-click-modal="false"
     :before-close="crud.cancelCU"
-    :visible.sync="crud.status.cu > 0"
+    :visible="crud.status.cu > 0"
     :title="crud.status.title"
     width="640px"
   >
@@ -14,34 +16,24 @@
         <el-input v-model="form.name" style="width: 90%" placeholder="请输入字典名称" />
       </el-form-item>
       <el-form-item label="备注">
-        <el-input v-model="form.note" style="width: 90%" placeholder="请输入备注" />
+        <el-input
+          v-model="form.note"
+          type="textarea"
+          :autosize="{ minRows: 2, maxRows: 4 }"
+          style="width: 90%"
+          placeholder="请输入备注"
+        />
       </el-form-item>
       <el-form-item label="是否禁用" prop="disabled">
-        <el-input v-model="form.disabled" style="width: 90%" placeholder="请输入是否禁用" />
-      </el-form-item>
-      <el-form-item label="创建者">
-        <el-input v-model="form.createBy" style="width: 90%" placeholder="请输入创建者" />
-      </el-form-item>
-      <el-form-item label="更新者">
-        <el-input v-model="form.updateBy" style="width: 90%" placeholder="请输入更新者" />
-      </el-form-item>
-      <el-form-item label="创建时间">
-        <el-date-picker
-          v-model="form.createTime"
-          type="datetime"
-          style="width: 90%"
-          value-format="yyyy-MM-dd HH:mm:ss"
-          placeholder="请选择创建时间"
-        />
-      </el-form-item>
-      <el-form-item label="更新时间">
-        <el-date-picker
-          v-model="form.updateTime"
-          type="datetime"
-          style="width: 90%"
-          value-format="yyyy-MM-dd HH:mm:ss"
-          placeholder="请选择更新时间"
-        />
+        <el-select v-model="form.disabled" filterable placeholder="请选择是否禁用">
+          <el-option
+            v-for="item in dict.disabled_status.options"
+            :key="item.code"
+            :label="item.name"
+            :value="item.code"
+            :disabled="item.disabled"
+          />
+        </el-select>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -52,31 +44,47 @@
 </template>
 
 <script>
-import { form } from '@crud/crud'
+import CRUD, { crud, form } from '@crud/crud'
+import ElDragDialog from '@/directive/el-drag-dialog'
 
 /**
  * 表单实体默认值
  */
-const defaultForm = {
-  code: null,
-  name: null,
-  note: null,
-  disabled: null,
-  createBy: null,
-  updateBy: null,
-  createTime: null,
-  updateTime: null
-}
+const defaultForm = { code: null, name: null, note: null, disabled: null }
 export default {
   name: 'DictForm',
-  mixins: [form(defaultForm)],
+  directives: { ElDragDialog },
+  mixins: [form(defaultForm), crud()],
+  /**
+   * 数据字典
+   */
+  dicts: ['disabled_status'],
   data() {
     return {
       /**
        * 校验规则
        * @see https://github.com/yiminghe/async-validator
        */
-      rules: {}
+      rules: {
+        code: [
+          { required: true, trigger: 'blur', message: '字典编码不能为空' },
+          { type: 'string', trigger: 'blur', message: '字典编码必须为 string 类型' }
+        ],
+        name: [
+          { required: true, trigger: 'blur', message: '字典名称不能为空' },
+          { type: 'string', trigger: 'blur', message: '字典名称必须为 string 类型' }
+        ],
+        disabled: [
+          { required: true, trigger: 'blur', message: '是否禁用不能为空' },
+          { type: 'string', trigger: 'blur', message: '是否禁用必须为 string 类型' }
+        ]
+      }
+    }
+  },
+  methods: {
+    // 添加与编辑前做的操作
+    [CRUD.HOOK.afterToCU](crud, form) {
+      form.disabled = `${form.disabled}`
     }
   }
 }

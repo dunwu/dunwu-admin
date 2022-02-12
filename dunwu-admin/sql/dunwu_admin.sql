@@ -11,7 +11,7 @@
  Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 30/01/2022 18:39:53
+ Date: 12/02/2022 10:50:53
 */
 
 SET NAMES utf8mb4;
@@ -182,7 +182,7 @@ CREATE TABLE `cas_menu`  (
   UNIQUE INDEX `uk_title`(`name`) USING BTREE,
   UNIQUE INDEX `uk_name`(`code`) USING BTREE,
   INDEX `key_pid`(`pid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 124 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '菜单表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 125 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '菜单表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of cas_menu
@@ -206,7 +206,7 @@ INSERT INTO `cas_menu` VALUES (35, 1, 'Dept', '部门管理', 'cas:dept:view', 1
 INSERT INTO `cas_menu` VALUES (36, 0, 'Tool', '系统工具', NULL, 0, '', 3, 'sys-tools', 'tool', 0, 0, 0, 1, 13, NULL, 0, 1, 1, 'admin', 'admin', '2019-03-29 10:57:35', '2021-10-19 15:26:59');
 INSERT INTO `cas_menu` VALUES (37, 1, 'Job', '岗位管理', 'cas:job:view', 1, 'cas/job', 2, 'Steve-Jobs', 'job', 0, 0, 0, 2, 3, NULL, 0, 1, 1, 'admin', 'admin', '2019-03-29 13:51:18', '2021-10-19 15:02:12');
 INSERT INTO `cas_menu` VALUES (38, 36, 'Swagger', '接口文档', '', 1, 'tool/swagger/index', 36, 'swagger', 'swagger2', 0, 0, 0, 1, 0, NULL, 0, 1, 1, 'admin', 'admin', '2019-03-29 19:57:53', '2021-10-12 20:43:18');
-INSERT INTO `cas_menu` VALUES (39, 121, 'Dict', '数据字典', 'sys:dict:view', 1, 'sys/dict', 2, 'dictionary', 'dict', 0, 0, 0, 2, 3, NULL, 0, 1, 1, 'admin', 'admin', '2019-04-10 11:49:04', '2021-10-20 00:02:17');
+INSERT INTO `cas_menu` VALUES (39, 121, 'Dict', '数据字典', 'sys:dict:view', 1, 'sys/dict', 2, 'dictionary', 'dict', 0, 0, 0, 2, 5, NULL, 0, 1, 1, 'admin', 'admin', '2019-04-10 11:49:04', '2021-10-20 00:02:17');
 INSERT INTO `cas_menu` VALUES (41, 1, 'OnlineUser', '在线用户', 'cas:online:view', 1, 'cas/user/online', 7, 'Steve-Jobs', 'online', 0, 0, 0, 2, 0, NULL, 0, 1, 1, 'admin', 'admin', '2019-10-26 22:08:43', '2021-10-20 00:05:57');
 INSERT INTO `cas_menu` VALUES (44, 2, 'UserAdd', '用户新增', 'cas:user:add', 2, '', 2, '', '', 0, 0, 0, 1, 0, NULL, 0, 1, 1, 'admin', 'admin', '2019-10-29 10:59:46', '2021-10-19 15:05:16');
 INSERT INTO `cas_menu` VALUES (45, 2, 'UserEdit', '用户编辑', 'cas:user:edit', 2, '', 3, '', '', 0, 0, 0, 1, 0, NULL, 0, 1, 1, 'admin', 'admin', '2019-10-29 11:00:08', '2021-10-19 15:05:16');
@@ -253,9 +253,10 @@ INSERT INTO `cas_menu` VALUES (113, 98, NULL, '数据库编辑', 'database:edit'
 INSERT INTO `cas_menu` VALUES (114, 98, NULL, '数据库删除', 'database:del', 2, '', 999, '', '', 0, 0, 0, 1, 0, NULL, 0, 1, 1, 'admin', 'admin', '2019-11-17 11:13:14', '2021-10-12 20:43:18');
 INSERT INTO `cas_menu` VALUES (116, 36, 'Preview', '生成预览', NULL, 1, 'code/generator/preview', 999, 'java', 'code/generator/preview/:dbId/:schemaName/:tableName', 0, 1, 1, 2, 0, NULL, 0, 1, 1, 'admin', 'admin', '2019-11-26 14:54:36', '2021-10-12 20:43:18');
 INSERT INTO `cas_menu` VALUES (119, 121, 'GlobalConfig', '全局配置', 'sys:config:view', 1, 'sys/GlobalConfigList', 1, 'system1', 'config', 0, 0, 0, 2, 0, NULL, 0, 1, 1, 'admin', 'admin', '2021-10-03 19:00:00', '2021-10-20 00:02:17');
-INSERT INTO `cas_menu` VALUES (121, 0, 'Sys', '系统管理', NULL, 1, NULL, 1, 'app', 'sys', 0, 0, 0, 1, 7, NULL, 0, 1, 1, 'admin', 'admin', '2021-10-05 09:15:30', '2021-10-20 00:03:35');
+INSERT INTO `cas_menu` VALUES (121, 0, 'Sys', '系统管理', NULL, 1, NULL, 1, 'app', 'sys', 0, 0, 0, 1, 9, NULL, 0, 1, 1, 'admin', 'admin', '2021-10-05 09:15:30', '2021-10-20 00:03:35');
 INSERT INTO `cas_menu` VALUES (122, 1, 'UserCenter', '用户中心', 'cas:user:view', 1, 'cas/user/center', 6, 'user', 'user/center', 0, 0, 1, 2, 0, NULL, 0, 1, 1, 'admin', 'admin', '2021-10-17 17:48:53', '2021-10-19 15:03:03');
 INSERT INTO `cas_menu` VALUES (123, 121, 'dict2', '数据字典2', 'sys:dict:view', 1, 'sys/dict2', 1, 'dictionary', 'dict2', 0, 0, 0, 2, 0, NULL, 0, 1, 1, 'admin', 'admin', '2019-04-10 11:49:04', '2021-10-20 00:02:17');
+INSERT INTO `cas_menu` VALUES (124, 121, 'DictImportedByEnumForm', '根据Java枚举导入数据字典', 'sys:dict:edit', 1, 'sys/dict/DictImportedByEnumForm', 1, NULL, 'dict/DictImportedByEnumForm', 0, 0, 1, 2, 0, NULL, 0, 1, 1, 'admin', 'admin', '2019-04-10 11:49:04', '2021-10-20 00:02:17');
 
 -- ----------------------------
 -- Table structure for cas_permission
@@ -278,7 +279,7 @@ CREATE TABLE `cas_permission`  (
   `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 152 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '权限表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 153 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '权限表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of cas_permission
@@ -352,6 +353,7 @@ INSERT INTO `cas_permission` VALUES (148, NULL, 119, 'GlobalConfig', '全局配�
 INSERT INTO `cas_permission` VALUES (149, NULL, 121, NULL, '系统管理', 1, NULL, 0, NULL, 1, 1, 'admin', 'admin', '2021-10-05 09:15:30', '2021-10-16 20:22:42');
 INSERT INTO `cas_permission` VALUES (150, NULL, 122, 'UserCenter', '用户中心', 1, 'cas:user:view', 0, NULL, 1, 1, 'admin', 'admin', '2021-10-17 17:48:53', '2021-10-17 22:18:46');
 INSERT INTO `cas_permission` VALUES (151, NULL, 123, 'dict2', '数据字典2', 1, 'sys:dict:view', 0, NULL, 1, 1, 'admin', 'admin', '2019-04-10 11:49:04', '2021-10-20 00:02:17');
+INSERT INTO `cas_permission` VALUES (152, NULL, 124, 'DictImportedByEnumForm', '根据Java枚举导入数据字典', 1, 'sys:dict:edit', 0, NULL, 1, 1, 'admin', 'admin', '2019-04-10 11:49:04', '2021-10-20 00:02:17');
 
 -- ----------------------------
 -- Table structure for cas_role
@@ -510,91 +512,92 @@ CREATE TABLE `cas_role_permission_map`  (
   `permission_id` bigint(20) UNSIGNED NOT NULL COMMENT '权限ID',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uk_role_permission`(`permission_id`, `role_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 375 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色权限关联表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 445 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色权限关联表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of cas_role_permission_map
 -- ----------------------------
-INSERT INTO `cas_role_permission_map` VALUES (306, 1, 76);
-INSERT INTO `cas_role_permission_map` VALUES (307, 1, 77);
-INSERT INTO `cas_role_permission_map` VALUES (308, 1, 78);
-INSERT INTO `cas_role_permission_map` VALUES (309, 1, 79);
-INSERT INTO `cas_role_permission_map` VALUES (310, 1, 80);
-INSERT INTO `cas_role_permission_map` VALUES (311, 1, 81);
-INSERT INTO `cas_role_permission_map` VALUES (312, 1, 82);
-INSERT INTO `cas_role_permission_map` VALUES (313, 1, 83);
+INSERT INTO `cas_role_permission_map` VALUES (375, 1, 76);
+INSERT INTO `cas_role_permission_map` VALUES (376, 1, 77);
+INSERT INTO `cas_role_permission_map` VALUES (377, 1, 78);
+INSERT INTO `cas_role_permission_map` VALUES (378, 1, 79);
+INSERT INTO `cas_role_permission_map` VALUES (379, 1, 80);
+INSERT INTO `cas_role_permission_map` VALUES (380, 1, 81);
+INSERT INTO `cas_role_permission_map` VALUES (381, 1, 82);
+INSERT INTO `cas_role_permission_map` VALUES (382, 1, 83);
 INSERT INTO `cas_role_permission_map` VALUES (226, 2, 83);
-INSERT INTO `cas_role_permission_map` VALUES (314, 1, 84);
+INSERT INTO `cas_role_permission_map` VALUES (383, 1, 84);
 INSERT INTO `cas_role_permission_map` VALUES (227, 2, 84);
-INSERT INTO `cas_role_permission_map` VALUES (315, 1, 85);
-INSERT INTO `cas_role_permission_map` VALUES (316, 1, 86);
+INSERT INTO `cas_role_permission_map` VALUES (384, 1, 85);
+INSERT INTO `cas_role_permission_map` VALUES (385, 1, 86);
 INSERT INTO `cas_role_permission_map` VALUES (228, 2, 86);
-INSERT INTO `cas_role_permission_map` VALUES (317, 1, 87);
+INSERT INTO `cas_role_permission_map` VALUES (386, 1, 87);
 INSERT INTO `cas_role_permission_map` VALUES (229, 2, 88);
 INSERT INTO `cas_role_permission_map` VALUES (230, 2, 89);
 INSERT INTO `cas_role_permission_map` VALUES (231, 2, 90);
 INSERT INTO `cas_role_permission_map` VALUES (232, 2, 91);
 INSERT INTO `cas_role_permission_map` VALUES (233, 2, 92);
-INSERT INTO `cas_role_permission_map` VALUES (318, 1, 93);
-INSERT INTO `cas_role_permission_map` VALUES (319, 1, 94);
+INSERT INTO `cas_role_permission_map` VALUES (387, 1, 93);
+INSERT INTO `cas_role_permission_map` VALUES (388, 1, 94);
 INSERT INTO `cas_role_permission_map` VALUES (234, 2, 94);
-INSERT INTO `cas_role_permission_map` VALUES (320, 1, 95);
+INSERT INTO `cas_role_permission_map` VALUES (389, 1, 95);
 INSERT INTO `cas_role_permission_map` VALUES (235, 2, 95);
-INSERT INTO `cas_role_permission_map` VALUES (321, 1, 96);
-INSERT INTO `cas_role_permission_map` VALUES (322, 1, 97);
-INSERT INTO `cas_role_permission_map` VALUES (323, 1, 98);
-INSERT INTO `cas_role_permission_map` VALUES (324, 1, 99);
-INSERT INTO `cas_role_permission_map` VALUES (325, 1, 100);
-INSERT INTO `cas_role_permission_map` VALUES (326, 1, 101);
-INSERT INTO `cas_role_permission_map` VALUES (327, 1, 102);
-INSERT INTO `cas_role_permission_map` VALUES (328, 1, 103);
-INSERT INTO `cas_role_permission_map` VALUES (329, 1, 104);
-INSERT INTO `cas_role_permission_map` VALUES (330, 1, 105);
-INSERT INTO `cas_role_permission_map` VALUES (331, 1, 106);
-INSERT INTO `cas_role_permission_map` VALUES (332, 1, 107);
-INSERT INTO `cas_role_permission_map` VALUES (333, 1, 108);
-INSERT INTO `cas_role_permission_map` VALUES (334, 1, 109);
-INSERT INTO `cas_role_permission_map` VALUES (335, 1, 110);
-INSERT INTO `cas_role_permission_map` VALUES (336, 1, 111);
-INSERT INTO `cas_role_permission_map` VALUES (337, 1, 112);
-INSERT INTO `cas_role_permission_map` VALUES (338, 1, 113);
-INSERT INTO `cas_role_permission_map` VALUES (339, 1, 114);
-INSERT INTO `cas_role_permission_map` VALUES (340, 1, 115);
-INSERT INTO `cas_role_permission_map` VALUES (341, 1, 116);
-INSERT INTO `cas_role_permission_map` VALUES (342, 1, 117);
-INSERT INTO `cas_role_permission_map` VALUES (343, 1, 118);
-INSERT INTO `cas_role_permission_map` VALUES (344, 1, 119);
-INSERT INTO `cas_role_permission_map` VALUES (345, 1, 120);
-INSERT INTO `cas_role_permission_map` VALUES (346, 1, 121);
-INSERT INTO `cas_role_permission_map` VALUES (347, 1, 122);
-INSERT INTO `cas_role_permission_map` VALUES (348, 1, 123);
-INSERT INTO `cas_role_permission_map` VALUES (349, 1, 124);
-INSERT INTO `cas_role_permission_map` VALUES (350, 1, 125);
+INSERT INTO `cas_role_permission_map` VALUES (390, 1, 96);
+INSERT INTO `cas_role_permission_map` VALUES (391, 1, 97);
+INSERT INTO `cas_role_permission_map` VALUES (392, 1, 98);
+INSERT INTO `cas_role_permission_map` VALUES (393, 1, 99);
+INSERT INTO `cas_role_permission_map` VALUES (394, 1, 100);
+INSERT INTO `cas_role_permission_map` VALUES (395, 1, 101);
+INSERT INTO `cas_role_permission_map` VALUES (396, 1, 102);
+INSERT INTO `cas_role_permission_map` VALUES (397, 1, 103);
+INSERT INTO `cas_role_permission_map` VALUES (398, 1, 104);
+INSERT INTO `cas_role_permission_map` VALUES (399, 1, 105);
+INSERT INTO `cas_role_permission_map` VALUES (400, 1, 106);
+INSERT INTO `cas_role_permission_map` VALUES (401, 1, 107);
+INSERT INTO `cas_role_permission_map` VALUES (402, 1, 108);
+INSERT INTO `cas_role_permission_map` VALUES (403, 1, 109);
+INSERT INTO `cas_role_permission_map` VALUES (404, 1, 110);
+INSERT INTO `cas_role_permission_map` VALUES (405, 1, 111);
+INSERT INTO `cas_role_permission_map` VALUES (406, 1, 112);
+INSERT INTO `cas_role_permission_map` VALUES (407, 1, 113);
+INSERT INTO `cas_role_permission_map` VALUES (408, 1, 114);
+INSERT INTO `cas_role_permission_map` VALUES (409, 1, 115);
+INSERT INTO `cas_role_permission_map` VALUES (410, 1, 116);
+INSERT INTO `cas_role_permission_map` VALUES (411, 1, 117);
+INSERT INTO `cas_role_permission_map` VALUES (412, 1, 118);
+INSERT INTO `cas_role_permission_map` VALUES (413, 1, 119);
+INSERT INTO `cas_role_permission_map` VALUES (414, 1, 120);
+INSERT INTO `cas_role_permission_map` VALUES (415, 1, 121);
+INSERT INTO `cas_role_permission_map` VALUES (416, 1, 122);
+INSERT INTO `cas_role_permission_map` VALUES (417, 1, 123);
+INSERT INTO `cas_role_permission_map` VALUES (418, 1, 124);
+INSERT INTO `cas_role_permission_map` VALUES (419, 1, 125);
 INSERT INTO `cas_role_permission_map` VALUES (236, 2, 125);
-INSERT INTO `cas_role_permission_map` VALUES (351, 1, 126);
-INSERT INTO `cas_role_permission_map` VALUES (352, 1, 127);
-INSERT INTO `cas_role_permission_map` VALUES (353, 1, 128);
-INSERT INTO `cas_role_permission_map` VALUES (354, 1, 129);
-INSERT INTO `cas_role_permission_map` VALUES (355, 1, 130);
-INSERT INTO `cas_role_permission_map` VALUES (356, 1, 131);
-INSERT INTO `cas_role_permission_map` VALUES (357, 1, 132);
-INSERT INTO `cas_role_permission_map` VALUES (358, 1, 133);
-INSERT INTO `cas_role_permission_map` VALUES (359, 1, 134);
-INSERT INTO `cas_role_permission_map` VALUES (360, 1, 135);
-INSERT INTO `cas_role_permission_map` VALUES (361, 1, 136);
-INSERT INTO `cas_role_permission_map` VALUES (362, 1, 137);
-INSERT INTO `cas_role_permission_map` VALUES (363, 1, 138);
-INSERT INTO `cas_role_permission_map` VALUES (364, 1, 139);
-INSERT INTO `cas_role_permission_map` VALUES (365, 1, 140);
-INSERT INTO `cas_role_permission_map` VALUES (366, 1, 141);
-INSERT INTO `cas_role_permission_map` VALUES (367, 1, 142);
-INSERT INTO `cas_role_permission_map` VALUES (368, 1, 143);
-INSERT INTO `cas_role_permission_map` VALUES (369, 1, 144);
-INSERT INTO `cas_role_permission_map` VALUES (370, 1, 145);
-INSERT INTO `cas_role_permission_map` VALUES (371, 1, 148);
-INSERT INTO `cas_role_permission_map` VALUES (372, 1, 149);
-INSERT INTO `cas_role_permission_map` VALUES (373, 1, 150);
-INSERT INTO `cas_role_permission_map` VALUES (374, 1, 151);
+INSERT INTO `cas_role_permission_map` VALUES (420, 1, 126);
+INSERT INTO `cas_role_permission_map` VALUES (421, 1, 127);
+INSERT INTO `cas_role_permission_map` VALUES (422, 1, 128);
+INSERT INTO `cas_role_permission_map` VALUES (423, 1, 129);
+INSERT INTO `cas_role_permission_map` VALUES (424, 1, 130);
+INSERT INTO `cas_role_permission_map` VALUES (425, 1, 131);
+INSERT INTO `cas_role_permission_map` VALUES (426, 1, 132);
+INSERT INTO `cas_role_permission_map` VALUES (427, 1, 133);
+INSERT INTO `cas_role_permission_map` VALUES (428, 1, 134);
+INSERT INTO `cas_role_permission_map` VALUES (429, 1, 135);
+INSERT INTO `cas_role_permission_map` VALUES (430, 1, 136);
+INSERT INTO `cas_role_permission_map` VALUES (431, 1, 137);
+INSERT INTO `cas_role_permission_map` VALUES (432, 1, 138);
+INSERT INTO `cas_role_permission_map` VALUES (433, 1, 139);
+INSERT INTO `cas_role_permission_map` VALUES (434, 1, 140);
+INSERT INTO `cas_role_permission_map` VALUES (435, 1, 141);
+INSERT INTO `cas_role_permission_map` VALUES (436, 1, 142);
+INSERT INTO `cas_role_permission_map` VALUES (437, 1, 143);
+INSERT INTO `cas_role_permission_map` VALUES (438, 1, 144);
+INSERT INTO `cas_role_permission_map` VALUES (439, 1, 145);
+INSERT INTO `cas_role_permission_map` VALUES (440, 1, 148);
+INSERT INTO `cas_role_permission_map` VALUES (441, 1, 149);
+INSERT INTO `cas_role_permission_map` VALUES (442, 1, 150);
+INSERT INTO `cas_role_permission_map` VALUES (443, 1, 151);
+INSERT INTO `cas_role_permission_map` VALUES (444, 1, 152);
 
 -- ----------------------------
 -- Table structure for cas_user
@@ -695,7 +698,7 @@ CREATE TABLE `code_column_config`  (
   `validate_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '校验类型',
   `date_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '时间类型',
   `date_pattern` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '时间格式',
-  `dict_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '字典名称',
+  `dict_code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '字典编码',
   `fill` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '@TableField填充属性',
   `extra` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '扩展属性',
   `create_by` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建者',
@@ -704,11 +707,20 @@ CREATE TABLE `code_column_config`  (
   `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uk_schema_table_field`(`schema_name`, `table_name`, `field_name`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 496 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '代码生成-字段级别配置' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 595 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '代码生成-字段级别配置' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of code_column_config
 -- ----------------------------
+INSERT INTO `code_column_config` VALUES (586, 1, 33, 'dunwu_admin', 'sys_dict', 'id', 'ID', 'bigint(20) unsigned', 'Long', 'PRI', b'1', 'id', 'ID', b'0', b'1', b'1', b'1', b'0', 'Input', 'Text', 'EQUALS', 'asc', 'string', NULL, 'yyyy-MM-dd HH:mm:ss', NULL, NULL, NULL, 'admin', 'admin', '2022-02-11 10:27:20', '2022-02-11 10:27:20');
+INSERT INTO `code_column_config` VALUES (587, 1, 33, 'dunwu_admin', 'sys_dict', 'code', '字典编码', 'varchar(255)', 'String', '', b'1', 'code', '字典编码', b'1', b'1', b'1', b'0', b'1', 'Input', 'Text', 'LIKE', 'asc', 'string', NULL, 'yyyy-MM-dd HH:mm:ss', NULL, NULL, NULL, 'admin', 'admin', '2022-02-11 10:27:20', '2022-02-11 10:27:20');
+INSERT INTO `code_column_config` VALUES (588, 1, 33, 'dunwu_admin', 'sys_dict', 'name', '字典名称', 'varchar(255)', 'String', '', b'1', 'name', '字典名称', b'1', b'1', b'1', b'0', b'1', 'Input', 'Text', 'LIKE', 'asc', 'string', NULL, 'yyyy-MM-dd HH:mm:ss', NULL, NULL, NULL, 'admin', 'admin', '2022-02-11 10:27:20', '2022-02-11 10:27:20');
+INSERT INTO `code_column_config` VALUES (589, 1, 33, 'dunwu_admin', 'sys_dict', 'note', '备注', 'varchar(255)', 'String', '', b'0', 'note', '备注', b'1', b'1', b'1', b'0', b'0', 'Textarea', 'Text', 'EQUALS', 'asc', 'string', NULL, 'yyyy-MM-dd HH:mm:ss', NULL, NULL, NULL, 'admin', 'admin', '2022-02-11 10:27:20', '2022-02-11 10:27:20');
+INSERT INTO `code_column_config` VALUES (590, 1, 33, 'dunwu_admin', 'sys_dict', 'is_disabled', '是否禁用：1 表示禁用；0 表示启用', 'tinyint(1)', 'Boolean', '', b'1', 'isDisabled', '是否禁用', b'1', b'1', b'1', b'0', b'1', 'Dict', 'Text', 'Dict', 'asc', 'string', NULL, 'yyyy-MM-dd HH:mm:ss', 'disabled_status', NULL, NULL, 'admin', 'admin', '2022-02-11 10:27:20', '2022-02-11 10:27:20');
+INSERT INTO `code_column_config` VALUES (591, 1, 33, 'dunwu_admin', 'sys_dict', 'create_by', '创建者', 'varchar(255)', 'String', '', b'0', 'createBy', '创建者', b'0', b'0', b'0', b'0', b'0', 'Input', 'Text', 'EQUALS', 'asc', 'string', NULL, 'yyyy-MM-dd HH:mm:ss', NULL, NULL, NULL, 'admin', 'admin', '2022-02-11 10:27:20', '2022-02-11 10:27:20');
+INSERT INTO `code_column_config` VALUES (592, 1, 33, 'dunwu_admin', 'sys_dict', 'update_by', '更新者', 'varchar(255)', 'String', '', b'0', 'updateBy', '更新者', b'0', b'1', b'0', b'0', b'0', 'Input', 'Text', 'EQUALS', 'asc', 'string', NULL, 'yyyy-MM-dd HH:mm:ss', NULL, NULL, NULL, 'admin', 'admin', '2022-02-11 10:27:20', '2022-02-11 10:27:20');
+INSERT INTO `code_column_config` VALUES (593, 1, 33, 'dunwu_admin', 'sys_dict', 'create_time', '创建时间', 'datetime', 'LocalDateTime', '', b'0', 'createTime', '创建时间', b'0', b'0', b'0', b'0', b'0', 'DateTimePicker', 'Date', 'EQUALS', 'asc', 'string', NULL, 'yyyy-MM-dd HH:mm:ss', NULL, NULL, NULL, 'admin', 'admin', '2022-02-11 10:27:20', '2022-02-11 10:27:20');
+INSERT INTO `code_column_config` VALUES (594, 1, 33, 'dunwu_admin', 'sys_dict', 'update_time', '更新时间', 'datetime', 'LocalDateTime', '', b'0', 'updateTime', '更新时间', b'0', b'1', b'0', b'0', b'0', 'DateTimePicker', 'Date', 'EQUALS', 'asc', 'string', NULL, 'yyyy-MM-dd HH:mm:ss', NULL, NULL, NULL, 'admin', 'admin', '2022-02-11 10:27:20', '2022-02-11 10:27:20');
 
 -- ----------------------------
 -- Table structure for code_database
@@ -955,12 +967,12 @@ CREATE TABLE `sys_dict`  (
   `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '数据字典' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 23 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '数据字典' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of sys_dict
 -- ----------------------------
-INSERT INTO `sys_dict` VALUES (1, 'disabled_status', '是否禁用状态', '是否禁用状态', 0, 'admin', 'admin', '2019-10-27 20:31:36', '2021-10-10 12:11:37');
+INSERT INTO `sys_dict` VALUES (1, 'disabled_status', '是否启用', '是否启用状态', 0, 'admin', 'admin', '2019-10-27 20:31:36', '2021-10-10 12:11:37');
 INSERT INTO `sys_dict` VALUES (2, 'job_type', '职务类型', NULL, 0, 'admin', 'admin', '2021-10-10 12:24:55', '2021-10-10 12:27:02');
 INSERT INTO `sys_dict` VALUES (3, 'job_profession_level', '职级', NULL, 0, 'admin', 'admin', '2021-10-10 14:10:57', '2021-10-10 14:10:57');
 
@@ -981,7 +993,7 @@ CREATE TABLE `sys_dict_option`  (
   `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `key_dict_id`(`dict_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 26 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '数据字典选项' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 106 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '数据字典选项' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of sys_dict_option
@@ -996,6 +1008,15 @@ INSERT INTO `sys_dict_option` VALUES (7, 3, '3', '高级', NULL, 0, 'admin', 'ad
 INSERT INTO `sys_dict_option` VALUES (8, 3, '4', '专家', NULL, 0, 'admin', 'admin', '2021-10-10 14:14:32', '2022-01-22 21:13:25');
 INSERT INTO `sys_dict_option` VALUES (9, 3, '5', '高级专家', NULL, 0, 'admin', 'admin', '2021-10-10 14:14:45', '2022-01-22 21:13:25');
 INSERT INTO `sys_dict_option` VALUES (10, 3, '6', '资深专家', NULL, 0, 'admin', 'admin', '2021-10-10 14:15:02', '2022-01-22 21:13:25');
+INSERT INTO `sys_dict_option` VALUES (34, 18, 'phone_reset_email_code_', '通过手机号码重置邮箱', '通过手机号码重置邮箱', 0, NULL, NULL, '2022-02-08 19:33:09', '2022-02-08 19:33:09');
+INSERT INTO `sys_dict_option` VALUES (35, 18, 'email_reset_email_code_', '通过旧邮箱重置邮箱', '通过旧邮箱重置邮箱', 0, NULL, NULL, '2022-02-08 19:33:09', '2022-02-08 19:33:09');
+INSERT INTO `sys_dict_option` VALUES (36, 18, 'phone_reset_pwd_code_', '通过手机号码重置密码', '通过手机号码重置密码', 0, NULL, NULL, '2022-02-08 19:33:09', '2022-02-08 19:33:09');
+INSERT INTO `sys_dict_option` VALUES (37, 18, 'email_reset_pwd_code_', '通过邮箱重置密码', '通过邮箱重置密码', 0, NULL, NULL, '2022-02-08 19:33:09', '2022-02-08 19:33:09');
+INSERT INTO `sys_dict_option` VALUES (38, 19, 'ARITHMETIC', '1', '算数', 0, NULL, NULL, '2022-02-08 19:40:06', '2022-02-08 19:40:06');
+INSERT INTO `sys_dict_option` VALUES (39, 19, 'CHINESE', '2', '中文', 0, NULL, NULL, '2022-02-08 19:40:06', '2022-02-08 19:40:06');
+INSERT INTO `sys_dict_option` VALUES (40, 19, 'CHINESE_GIF', '3', '中文闪图', 0, NULL, NULL, '2022-02-08 19:40:06', '2022-02-08 19:40:06');
+INSERT INTO `sys_dict_option` VALUES (41, 19, 'GIF', '4', '闪图', 0, NULL, NULL, '2022-02-08 19:40:06', '2022-02-08 19:40:06');
+INSERT INTO `sys_dict_option` VALUES (42, 19, 'SPEC', '5', '数字大写字母', 0, NULL, NULL, '2022-02-08 19:40:06', '2022-02-08 19:40:06');
 
 -- ----------------------------
 -- Table structure for sys_global_config
@@ -1055,7 +1076,7 @@ CREATE TABLE `sys_operation_log`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_biz`(`biz_no`, `biz_type`) USING BTREE,
   INDEX `idx_create_time`(`create_time`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 103 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '操作日志表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 116 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '操作日志表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of sys_operation_log
@@ -1074,6 +1095,19 @@ INSERT INTO `sys_operation_log` VALUES (99, 'dunwu', '', '数据字典选项', 1
 INSERT INTO `sys_operation_log` VALUES (100, 'dunwu', '', '数据字典选项', 1, '分页查询导出数据字典选项(page=0, size=10, query={\"dictId\":3})『成功』', '分页查询导出数据字典选项(page=0, size=10, query={\"dictId\":3})『成功』——请求参数：{\"DictOptionQuery\":{\"dictId\":3},\"PageRequest\":{\"sort\":[{\"nullHandling\":\"NATIVE\",\"ignoreCase\":false,\"property\":\"id\",\"direction\":\"ASC\"}]},\"StatHttpServletResponseWrapper\":{\"response\":{\"response\":{\"response\":{}}},\"status\":200}}；响应结果：null', '', 'io.github.dunwu.module.sys.service.impl.DictOptionServiceImpl', 'exportPage', '{\"DictOptionQuery\":{\"dictId\":3},\"PageRequest\":{\"sort\":[{\"nullHandling\":\"NATIVE\",\"ignoreCase\":false,\"property\":\"id\",\"direction\":\"ASC\"}]},\"StatHttpServletResponseWrapper\":{\"response\":{\"response\":{\"response\":{}}},\"status\":200}}', 'EXPORT_PAGE', 1, 'admin', '192.168.1.8', '127.0.0.1', '本机地址', 'Chrome 96', 63, '2022-01-23 22:14:58');
 INSERT INTO `sys_operation_log` VALUES (101, 'dunwu', '1', '数据字典', 1, '更新数据字典(id = 1)『成功』', '更新数据字典(id = 1)『成功』——请求参数：{\"Dict\":{\"note\":\"是否禁用状态\",\"code\":\"disabled_status\",\"updateTime\":1633839097000,\"createBy\":\"admin\",\"updateBy\":\"admin\",\"createTime\":1572179496000,\"name\":\"是否禁用状态\",\"disabled\":false,\"id\":1}}；响应结果：true', '', 'io.github.dunwu.module.sys.service.impl.DictServiceImpl', 'updateById', '{\"Dict\":{\"note\":\"是否禁用状态\",\"code\":\"disabled_status\",\"updateTime\":1633839097000,\"createBy\":\"admin\",\"updateBy\":\"admin\",\"createTime\":1572179496000,\"name\":\"是否禁用状态\",\"disabled\":false,\"id\":1}}', 'EDIT', 1, 'admin', '192.168.1.3', '127.0.0.1', '本机地址', 'Chrome 96', 10, '2022-01-25 22:17:58');
 INSERT INTO `sys_operation_log` VALUES (102, 'dunwu', '', '数据字典', 1, '分页查询导出数据字典(page=0, size=10, query=DictQuery(id=null, code=null, name=null, disabled=null))『成功』', '分页查询导出数据字典(page=0, size=10, query=DictQuery(id=null, code=null, name=null, disabled=null))『成功』——请求参数：{\"DictQuery\":{},\"PageRequest\":{\"sort\":[{\"nullHandling\":\"NATIVE\",\"ignoreCase\":false,\"property\":\"id\",\"direction\":\"DESC\"}]},\"StatHttpServletResponseWrapper\":{\"response\":{\"response\":{\"response\":{}}},\"status\":200}}；响应结果：null', '', 'io.github.dunwu.module.sys.service.impl.DictServiceImpl', 'exportPage', '{\"DictQuery\":{},\"PageRequest\":{\"sort\":[{\"nullHandling\":\"NATIVE\",\"ignoreCase\":false,\"property\":\"id\",\"direction\":\"DESC\"}]},\"StatHttpServletResponseWrapper\":{\"response\":{\"response\":{\"response\":{}}},\"status\":200}}', 'EXPORT_EXCEL', 1, 'admin', '172.22.211.75', '127.0.0.1', '本机地址', 'Chrome 91', 764, '2022-01-27 19:01:44');
+INSERT INTO `sys_operation_log` VALUES (103, 'dunwu', '16', '数据字典', 1, '删除数据字典(id = 16)『成功』', '删除数据字典(id = 16)『成功』——请求参数：{\"String\":\"16\"}；响应结果：true', '', 'io.github.dunwu.module.sys.service.impl.DictServiceImpl', 'deleteById', '{\"String\":\"16\"}', 'DEL', 1, 'admin', '172.22.211.75', '127.0.0.1', '本机地址', 'Chrome 91', 51, '2022-02-08 19:28:08');
+INSERT INTO `sys_operation_log` VALUES (104, 'dunwu', '17', '数据字典', 1, '删除数据字典(id = 17)『成功』', '删除数据字典(id = 17)『成功』——请求参数：{\"String\":\"17\"}；响应结果：true', '', 'io.github.dunwu.module.sys.service.impl.DictServiceImpl', 'deleteById', '{\"String\":\"17\"}', 'DEL', 1, 'admin', '172.22.211.75', '127.0.0.1', '本机地址', 'Chrome 91', 31, '2022-02-08 19:32:18');
+INSERT INTO `sys_operation_log` VALUES (105, 'dunwu', '[19, 18]', '数据字典', 1, '批量删除数据字典(id = [19, 18])『成功』', '批量删除数据字典(id = [19, 18])『成功』——请求参数：{\"ArrayList\":[19,18]}；响应结果：true', '', 'io.github.dunwu.module.sys.service.impl.DictServiceImpl', 'deleteBatchByIds', '{\"ArrayList\":[19,18]}', 'BATCH_DEL', 1, 'admin', '172.22.211.75', '127.0.0.1', '本机地址', 'Chrome 91', 17, '2022-02-08 19:40:57');
+INSERT INTO `sys_operation_log` VALUES (106, 'dunwu', '21', '数据字典', 1, '删除数据字典(id = 21)『成功』', '删除数据字典(id = 21)『成功』——请求参数：{\"String\":\"21\"}；响应结果：true', '', 'io.github.dunwu.module.sys.service.impl.DictServiceImpl', 'deleteById', '{\"String\":\"21\"}', 'DEL', 1, 'admin', '172.22.211.75', '127.0.0.1', '本机地址', 'Chrome 91', 54, '2022-02-09 16:04:23');
+INSERT INTO `sys_operation_log` VALUES (107, 'dunwu', '20', '数据字典', 1, '删除数据字典(id = 20)『成功』', '删除数据字典(id = 20)『成功』——请求参数：{\"String\":\"20\"}；响应结果：true', '', 'io.github.dunwu.module.sys.service.impl.DictServiceImpl', 'deleteById', '{\"String\":\"20\"}', 'DEL', 1, 'admin', '172.22.211.75', '127.0.0.1', '本机地址', 'Chrome 91', 74, '2022-02-09 16:04:27');
+INSERT INTO `sys_operation_log` VALUES (108, 'dunwu', '22', '数据字典', 1, '更新数据字典(id = 22)『成功』', '更新数据字典(id = 22)『成功』——请求参数：{\"Dict\":{\"note\":\"验证码类型枚举\",\"code\":\"CaptchaTypeEnum\",\"updateTime\":1644549290000,\"createBy\":\"admin\",\"updateBy\":\"admin\",\"createTime\":1644549290000,\"name\":\"CaptchaTypeEnum\",\"disabled\":true,\"id\":22}}；响应结果：true', '', 'io.github.dunwu.module.sys.service.impl.DictServiceImpl', 'updateById', '{\"Dict\":{\"note\":\"验证码类型枚举\",\"code\":\"CaptchaTypeEnum\",\"updateTime\":1644549290000,\"createBy\":\"admin\",\"updateBy\":\"admin\",\"createTime\":1644549290000,\"name\":\"CaptchaTypeEnum\",\"disabled\":true,\"id\":22}}', 'EDIT', 1, 'admin', '172.22.211.75', '127.0.0.1', '本机地址', 'Chrome 91', 21, '2022-02-11 14:19:35');
+INSERT INTO `sys_operation_log` VALUES (109, 'dunwu', '1', '数据字典', 1, '更新数据字典(id = 1)『成功』', '更新数据字典(id = 1)『成功』——请求参数：{\"Dict\":{\"note\":\"是否启用状态\",\"code\":\"disabled_status\",\"updateTime\":1633839097000,\"createBy\":\"admin\",\"updateBy\":\"admin\",\"createTime\":1572179496000,\"name\":\"是否启用\",\"disabled\":false,\"id\":1}}；响应结果：true', '', 'io.github.dunwu.module.sys.service.impl.DictServiceImpl', 'updateById', '{\"Dict\":{\"note\":\"是否启用状态\",\"code\":\"disabled_status\",\"updateTime\":1633839097000,\"createBy\":\"admin\",\"updateBy\":\"admin\",\"createTime\":1572179496000,\"name\":\"是否启用\",\"disabled\":false,\"id\":1}}', 'EDIT', 1, 'admin', '172.22.211.75', '127.0.0.1', '本机地址', 'Chrome 91', 11, '2022-02-11 15:43:22');
+INSERT INTO `sys_operation_log` VALUES (110, 'dunwu', '22', '数据字典', 1, '更新数据字典(id = 22)『成功』', '更新数据字典(id = 22)『成功』——请求参数：{\"Dict\":{\"note\":\"验证码类型枚举\",\"code\":\"CaptchaTypeEnum\",\"updateTime\":1644549290000,\"createBy\":\"admin\",\"updateBy\":\"admin\",\"createTime\":1644549290000,\"name\":\"CaptchaTypeEnum\",\"disabled\":false,\"id\":22}}；响应结果：true', '', 'io.github.dunwu.module.sys.service.impl.DictServiceImpl', 'updateById', '{\"Dict\":{\"note\":\"验证码类型枚举\",\"code\":\"CaptchaTypeEnum\",\"updateTime\":1644549290000,\"createBy\":\"admin\",\"updateBy\":\"admin\",\"createTime\":1644549290000,\"name\":\"CaptchaTypeEnum\",\"disabled\":false,\"id\":22}}', 'EDIT', 1, 'admin', '172.22.211.75', '127.0.0.1', '本机地址', 'Chrome 91', 12, '2022-02-11 15:46:34');
+INSERT INTO `sys_operation_log` VALUES (111, 'dunwu', '22', '数据字典', 1, '更新数据字典(id = 22)『成功』', '更新数据字典(id = 22)『成功』——请求参数：{\"Dict\":{\"note\":\"验证码类型枚举\",\"code\":\"CaptchaTypeEnum\",\"updateTime\":1644549290000,\"createBy\":\"admin\",\"updateBy\":\"admin\",\"createTime\":1644549290000,\"name\":\"CaptchaTypeEnum\",\"disabled\":true,\"id\":22}}；响应结果：true', '', 'io.github.dunwu.module.sys.service.impl.DictServiceImpl', 'updateById', '{\"Dict\":{\"note\":\"验证码类型枚举\",\"code\":\"CaptchaTypeEnum\",\"updateTime\":1644549290000,\"createBy\":\"admin\",\"updateBy\":\"admin\",\"createTime\":1644549290000,\"name\":\"CaptchaTypeEnum\",\"disabled\":true,\"id\":22}}', 'EDIT', 1, 'admin', '172.22.211.75', '127.0.0.1', '本机地址', 'Chrome 91', 17, '2022-02-11 16:51:16');
+INSERT INTO `sys_operation_log` VALUES (112, 'dunwu', '1', '数据字典', 1, '更新数据字典(id = 1)『成功』', '更新数据字典(id = 1)『成功』——请求参数：{\"Dict\":{\"note\":\"是否启用状态\",\"code\":\"disabled_status\",\"updateTime\":1633839097000,\"createBy\":\"admin\",\"updateBy\":\"admin\",\"createTime\":1572179496000,\"name\":\"是否启用\",\"disabled\":false,\"id\":1}}；响应结果：true', '', 'io.github.dunwu.module.sys.service.impl.DictServiceImpl', 'updateById', '{\"Dict\":{\"note\":\"是否启用状态\",\"code\":\"disabled_status\",\"updateTime\":1633839097000,\"createBy\":\"admin\",\"updateBy\":\"admin\",\"createTime\":1572179496000,\"name\":\"是否启用\",\"disabled\":false,\"id\":1}}', 'EDIT', 1, 'admin', '172.22.211.75', '127.0.0.1', '本机地址', 'Chrome 91', 38, '2022-02-11 20:17:24');
+INSERT INTO `sys_operation_log` VALUES (113, 'dunwu', '1', '数据字典', 1, '更新数据字典(id = 1)『成功』', '更新数据字典(id = 1)『成功』——请求参数：{\"Dict\":{\"note\":\"是否启用状态\",\"code\":\"disabled_status\",\"updateTime\":1633839097000,\"createBy\":\"admin\",\"updateBy\":\"admin\",\"createTime\":1572179496000,\"name\":\"是否启用\",\"disabled\":true,\"id\":1}}；响应结果：true', '', 'io.github.dunwu.module.sys.service.impl.DictServiceImpl', 'updateById', '{\"Dict\":{\"note\":\"是否启用状态\",\"code\":\"disabled_status\",\"updateTime\":1633839097000,\"createBy\":\"admin\",\"updateBy\":\"admin\",\"createTime\":1572179496000,\"name\":\"是否启用\",\"disabled\":true,\"id\":1}}', 'EDIT', 1, 'admin', '172.22.211.75', '127.0.0.1', '本机地址', 'Chrome 91', 45, '2022-02-11 20:25:55');
+INSERT INTO `sys_operation_log` VALUES (114, 'dunwu', '1', '数据字典', 1, '更新数据字典(id = 1)『成功』', '更新数据字典(id = 1)『成功』——请求参数：{\"Dict\":{\"note\":\"是否启用状态\",\"code\":\"disabled_status\",\"updateTime\":1633839097000,\"createBy\":\"admin\",\"updateBy\":\"admin\",\"createTime\":1572179496000,\"name\":\"是否启用\",\"disabled\":false,\"id\":1}}；响应结果：true', '', 'io.github.dunwu.module.sys.service.impl.DictServiceImpl', 'updateById', '{\"Dict\":{\"note\":\"是否启用状态\",\"code\":\"disabled_status\",\"updateTime\":1633839097000,\"createBy\":\"admin\",\"updateBy\":\"admin\",\"createTime\":1572179496000,\"name\":\"是否启用\",\"disabled\":false,\"id\":1}}', 'EDIT', 1, 'admin', '172.22.211.75', '127.0.0.1', '本机地址', 'Chrome 91', 21, '2022-02-11 20:59:24');
+INSERT INTO `sys_operation_log` VALUES (115, 'dunwu', '22', '数据字典', 1, '删除数据字典(id = 22)『成功』', '删除数据字典(id = 22)『成功』——请求参数：{\"String\":\"22\"}；响应结果：true', '', 'io.github.dunwu.module.sys.service.impl.DictServiceImpl', 'deleteById', '{\"String\":\"22\"}', 'DEL', 1, 'admin', '172.22.211.75', '127.0.0.1', '本机地址', 'Chrome 91', 39, '2022-02-11 20:59:58');
 
 -- ----------------------------
 -- Table structure for sys_quartz_job

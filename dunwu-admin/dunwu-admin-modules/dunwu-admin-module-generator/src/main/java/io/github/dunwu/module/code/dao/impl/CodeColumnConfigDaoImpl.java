@@ -51,7 +51,7 @@ public class CodeColumnConfigDaoImpl extends BaseExtDaoImpl<CodeColumnConfigMapp
             map.put("校验类型", item.getValidateType());
             map.put("时间类型", item.getDateType());
             map.put("时间格式", item.getDatePattern());
-            map.put("字典名称", item.getDictName());
+            map.put("字典编码", item.getDictCode());
             map.put("@TableField填充属性", item.getFill());
             map.put("扩展属性", item.getExtra());
             map.put("创建者", item.getCreateBy());

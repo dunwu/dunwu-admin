@@ -15,15 +15,16 @@
       <el-form-item label="名称" prop="name">
         <el-input v-model="form.name" style="width: 370px;" />
       </el-form-item>
-      <el-form-item label="是否启用" prop="disabled">
-        <el-radio
-          v-for="item in dict['disabled_status'].options"
-          :key="item.id"
-          v-model="form.disabled"
-          :label="item.code"
-        >
-          {{ item.name }}
-        </el-radio>
+      <el-form-item :label="dict['disabled_status'].name" prop="disabled">
+        <el-select v-model="form.disabled" filterable placeholder="请选择">
+          <el-option
+            v-for="item in dict['disabled_status'].options"
+            :key="item.code"
+            :label="item.name"
+            :value="item.code"
+            :disabled="item.disabled"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="备注">
         <el-input
@@ -76,8 +77,6 @@ export default {
     [CRUD.HOOK.afterToCU](crud, form) {
       form.disabled = `${form.disabled}`
       form.dictId = this.dictId
-      // form.type = `${form.type}`
-      // form.level = `${form.level}`
     }
   }
 }

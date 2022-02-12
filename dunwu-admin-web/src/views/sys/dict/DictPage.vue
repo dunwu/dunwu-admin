@@ -26,27 +26,56 @@
               @keyup.enter.native="crud.toQuery"
             />
           </el-col>
-          <el-col :span="6">
-            <el-input
-              v-model="query.name"
-              clearable
-              size="small"
-              placeholder="输入字典类型名称查询"
-              class="filter-item"
-              style="width: 90%"
-              @keyup.enter.native="crud.toQuery"
-            />
-          </el-col>
+          <template v-if="crud.showExtendSearch">
+            <el-col :span="6">
+              <el-input
+                v-model="query.name"
+                clearable
+                size="small"
+                placeholder="输入字典类型名称查询"
+                class="filter-item"
+                style="width: 90%"
+                @keyup.enter.native="crud.toQuery"
+              />
+            </el-col>
+          </template>
+          <template v-if="crud.showExtendSearch">
+            <el-col :span="6">
+              <el-select
+                v-model="query.disabled"
+                clearable
+                size="small"
+                :placeholder="'请选择' + dict['disabled_status'].name"
+                class="filter-item"
+                style="width: 90%"
+                @keyup.enter.native="crud.toQuery"
+              >
+                <el-option
+                  v-for="item in dict['disabled_status'].options"
+                  :key="item.code"
+                  :label="item.name"
+                  :value="item.code"
+                  :disabled="item.disabled"
+                />
+              </el-select>
+            </el-col>
+          </template>
           <el-col :span="6">
             <TableQueryOperation />
+            <el-button v-if="crud.showExtendSearch" type="text" @click="crud.toggleExtendSearch">
+              折叠
+              <i class="el-icon-arrow-up el-icon--right" />
+            </el-button>
+            <el-button v-else type="text" @click="crud.toggleExtendSearch">
+              展开
+              <i class="el-icon-arrow-down el-icon--right" />
+            </el-button>
           </el-col>
         </el-row>
       </div>
       <TableOperation :permission="permission">
         <el-button slot="left" class="filter-item" type="info" icon="el-icon-coffee-cup" size="mini">
-          <router-link :to="'/sys/dict/DictImportedByEnumForm'">
-            根据Java枚举导入字典
-          </router-link>
+          <router-link :to="'/sys/dict/DictImportedByEnumForm'">根据Java枚举导入字典</router-link>
         </el-button>
       </TableOperation>
     </div>
@@ -57,7 +86,7 @@
       :data="crud.data"
       border
       highlight-current-row
-      style="width: 100%;"
+      style="width: 100%"
       @selection-change="crud.selectionChangeHandler"
     >
       <el-table-column type="selection" width="50" />
@@ -93,7 +122,7 @@
     <!--分页组件-->
     <Pagination />
     <!--表单组件-->
-    <Form :dict="dict" />
+    <Form />
 
     <DictOptionPage ref="dictOption" :display.sync="showDictOptionPage" :permission="permission" />
   </div>

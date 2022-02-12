@@ -37,13 +37,26 @@
           <template v-if="crud.showExtendSearch">
             <el-col :span="6">
               <el-input
-                v-model="query.disabled"
+                v-model="query.note"
                 clearable
-                placeholder="请输入是否禁用"
+                placeholder="请输入备注"
                 style="width: 90%;"
                 class="filter-item"
                 @keyup.enter.native="crud.toQuery"
               />
+            </el-col>
+          </template>
+          <template v-if="crud.showExtendSearch">
+            <el-col :span="6">
+              <el-select v-model="query.disabled" filterable placeholder="请选择是否禁用">
+                <el-option
+                  v-for="item in dict.disabled_status.options"
+                  :key="item.code"
+                  :label="item.name"
+                  :value="item.code"
+                  :disabled="item.disabled"
+                />
+              </el-select>
             </el-col>
           </template>
           <el-col :span="6">
@@ -71,15 +84,17 @@
       @selection-change="crud.selectionChangeHandler"
     >
       <el-table-column type="selection" width="55" />
-      <el-table-column prop="id" label="ID" :sortable="'custom'" />
-      <el-table-column prop="code" label="字典编码" />
-      <el-table-column prop="name" label="字典名称" />
-      <el-table-column prop="note" label="备注" />
-      <el-table-column prop="disabled" label="是否禁用" />
-      <el-table-column prop="createBy" label="创建者" />
-      <el-table-column prop="updateBy" label="更新者" />
-      <el-table-column prop="createTime" label="创建时间" />
-      <el-table-column prop="updateTime" label="更新时间" />
+      <el-table-column prop="id" label="ID" :sortable="'custom'" :show-overflow-tooltip="true" />
+      <el-table-column prop="code" label="字典编码" :show-overflow-tooltip="true" />
+      <el-table-column prop="name" label="字典名称" :show-overflow-tooltip="true" />
+      <el-table-column prop="note" label="备注" :show-overflow-tooltip="true" />
+      <el-table-column prop="disabled" label="是否禁用" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+          {{ dict.label.disabled_status[scope.row.disabled] }}
+        </template>
+      </el-table-column>
+      <el-table-column prop="updateBy" label="更新者" :show-overflow-tooltip="true" />
+      <el-table-column prop="updateTime" label="更新时间" :show-overflow-tooltip="true" />
       <el-table-column v-if="checkPer(['admin', 'sys:dict:edit', 'sys:dict:del'])" label="操作" width="150px">
         <template slot-scope="scope">
           <TableColumnOperation :data="scope.row" :permission="permission" />
@@ -116,6 +131,10 @@ export default {
       crudMethod: { ...DictApi }
     })
   },
+  /**
+   * 数据字典
+   */
+  dicts: ['disabled_status'],
   data() {
     return {
       permission: {
