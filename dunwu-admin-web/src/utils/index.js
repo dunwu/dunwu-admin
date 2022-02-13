@@ -365,8 +365,8 @@ export function regMobile(mobile) {
 }
 
 // 下载文件
-export function downloadFile(obj, name, suffix, withDate = true) {
-  const url = window.URL.createObjectURL(new Blob([obj]))
+export function downloadFile(result, name, suffix, withDate = true) {
+  const url = window.URL.createObjectURL(new Blob([result.data]))
   const link = document.createElement('a')
   link.style.display = 'none'
   link.href = url
@@ -377,6 +377,22 @@ export function downloadFile(obj, name, suffix, withDate = true) {
     const fileName = name + '.' + suffix
     link.setAttribute('download', fileName)
   }
+
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+}
+
+export function downloadFileWithActualName(result) {
+  const url = window.URL.createObjectURL(new Blob([result.data]))
+  const link = document.createElement('a')
+  link.style.display = 'none'
+  link.href = url
+
+  const header = result.headers['content-disposition']
+  const fileName = header.split('attachment;fileName=')[1]
+  console.info('downloadFileWithActualName', fileName)
+  link.setAttribute('download', fileName)
 
   document.body.appendChild(link)
   link.click()

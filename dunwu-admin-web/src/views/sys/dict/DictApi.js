@@ -130,4 +130,29 @@ export function saveDictWithOptions(data) {
   })
 }
 
-export default { add, edit, del, delBatch, list, page, getById, exportList, exportPage, saveDictWithOptions }
+/**
+ * 根据指定 id 列表，导出相应数据
+ * @param ids
+ * @returns {*}
+ */
+export function generateEnumById(id) {
+  return request({
+    url: 'sys/dict/generate/enum/' + id,
+    method: 'get',
+    responseType: 'blob'
+  })
+}
+
+export default {
+  add,
+  edit,
+  del,
+  delBatch,
+  list,
+  page,
+  getById,
+  exportList,
+  exportPage,
+  saveDictWithOptions,
+  generateEnumById
+}

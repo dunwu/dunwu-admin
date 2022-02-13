@@ -386,8 +386,8 @@ export default {
       // 打包下载
       this.downloadLoading = true
       CodeApi.downloadCode(this.info)
-        .then(data => {
-          downloadFile(data, this.info.tableName, 'zip')
+        .then(result => {
+          downloadFile(result, this.info.tableName, 'zip')
           this.$message({ type: 'success', message: '下载成功' })
           this.downloadLoading = false
         })

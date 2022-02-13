@@ -114,6 +114,10 @@
               <el-button slot="reference" size="mini" type="text" @click="handleCurrentChange(scope.row)">
                 配置字典
               </el-button>
+              <el-divider direction="vertical" />
+              <el-button slot="reference" size="mini" type="text" @click="doGenerateEnum(scope.row)">
+                生成枚举
+              </el-button>
             </template>
           </TableColumnOperation>
         </template>
@@ -139,6 +143,7 @@ import DictOptionPage from './DictOptionPage'
 import Form from './DictForm'
 import DictApi from './DictApi'
 import { getToken } from '@/utils/auth'
+import { downloadFileWithActualName } from '@/utils'
 
 export default {
   name: 'DictPage',
@@ -198,6 +203,17 @@ export default {
         this.$refs['dictOption'].crud.toQuery()
         this.showDictOptionPage = true
       }
+    },
+    doGenerateEnum(val) {
+      DictApi.generateEnumById(val.id)
+        .then(data => {
+          downloadFileWithActualName(data, val.code, 'java')
+          this.$message({ type: 'success', message: '下载成功' })
+        })
+        .catch(err => {
+          console.error('下载失败', err)
+          this.$message({ type: 'error', message: '下载失败' })
+        })
     },
     /**
      * 切换禁用状态

@@ -11,7 +11,7 @@
  Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 12/02/2022 10:50:53
+ Date: 13/02/2022 21:39:20
 */
 
 SET NAMES utf8mb4;
@@ -144,7 +144,7 @@ CREATE TABLE `cas_job_role_map`  (
   `role_id` bigint(20) UNSIGNED NOT NULL COMMENT '角色ID',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uk_job_role`(`job_id`, `role_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '职务角色关联表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '职务角色关联表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of cas_job_role_map
@@ -644,7 +644,7 @@ CREATE TABLE `cas_user_dept_map`  (
   `dept_id` bigint(20) UNSIGNED NOT NULL COMMENT '部门ID',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uk_user_dept`(`user_id`, `dept_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户部门关联表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户部门关联表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of cas_user_dept_map
@@ -901,7 +901,7 @@ CREATE TABLE `mnt_deploy_history`  (
   `deploy_user` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '部署用户',
   `ip` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '服务器IP',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '部署历史表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '部署历史表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of mnt_deploy_history
@@ -974,7 +974,7 @@ CREATE TABLE `sys_dict`  (
 -- ----------------------------
 INSERT INTO `sys_dict` VALUES (1, 'disabled_status', '是否启用', '是否启用状态', 0, 'admin', 'admin', '2019-10-27 20:31:36', '2021-10-10 12:11:37');
 INSERT INTO `sys_dict` VALUES (2, 'job_type', '职务类型', NULL, 0, 'admin', 'admin', '2021-10-10 12:24:55', '2021-10-10 12:27:02');
-INSERT INTO `sys_dict` VALUES (3, 'job_profession_level', '职级', NULL, 0, 'admin', 'admin', '2021-10-10 14:10:57', '2021-10-10 14:10:57');
+INSERT INTO `sys_dict` VALUES (3, 'job_profession_level', '职级', '职级', 0, 'admin', 'admin', '2021-10-10 14:10:57', '2021-10-10 14:10:57');
 
 -- ----------------------------
 -- Table structure for sys_dict_option
@@ -998,8 +998,8 @@ CREATE TABLE `sys_dict_option`  (
 -- ----------------------------
 -- Records of sys_dict_option
 -- ----------------------------
-INSERT INTO `sys_dict_option` VALUES (1, 1, 'false', '启用', NULL, 0, 'admin', 'admin', '2019-10-27 20:31:36', '2022-01-22 21:13:25');
-INSERT INTO `sys_dict_option` VALUES (2, 1, 'true', '禁用', NULL, 0, 'admin', 'admin', '2019-10-27 20:31:36', '2022-01-22 21:13:25');
+INSERT INTO `sys_dict_option` VALUES (1, 1, 'false', '启用', '否', 0, 'admin', 'admin', '2019-10-27 20:31:36', '2022-01-22 21:13:25');
+INSERT INTO `sys_dict_option` VALUES (2, 1, 'true', '禁用', '是', 0, 'admin', 'admin', '2019-10-27 20:31:36', '2022-01-22 21:13:25');
 INSERT INTO `sys_dict_option` VALUES (3, 2, '1', '专业岗位', NULL, 0, 'admin', 'admin', '2021-10-10 12:25:46', '2022-01-22 21:13:25');
 INSERT INTO `sys_dict_option` VALUES (4, 2, '2', '管理岗位', NULL, 0, 'admin', 'admin', '2021-10-10 12:34:36', '2022-01-22 21:13:25');
 INSERT INTO `sys_dict_option` VALUES (5, 3, '1', '初级', NULL, 0, 'admin', 'admin', '2021-10-10 14:14:12', '2022-01-22 21:13:25');
@@ -1042,7 +1042,7 @@ CREATE TABLE `sys_global_config`  (
   UNIQUE INDEX `uk_composite`(`code`, `namespace`, `module_code`, `app_code`) USING BTREE,
   INDEX `idx_update_time`(`update_time`) USING BTREE,
   INDEX `idx_is_disabled`(`is_disabled`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '系统全局配置表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '系统全局配置表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of sys_global_config
@@ -1076,7 +1076,7 @@ CREATE TABLE `sys_operation_log`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_biz`(`biz_no`, `biz_type`) USING BTREE,
   INDEX `idx_create_time`(`create_time`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 116 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '操作日志表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 123 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '操作日志表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of sys_operation_log
@@ -1108,6 +1108,13 @@ INSERT INTO `sys_operation_log` VALUES (112, 'dunwu', '1', '数据字典', 1, '�
 INSERT INTO `sys_operation_log` VALUES (113, 'dunwu', '1', '数据字典', 1, '更新数据字典(id = 1)『成功』', '更新数据字典(id = 1)『成功』——请求参数：{\"Dict\":{\"note\":\"是否启用状态\",\"code\":\"disabled_status\",\"updateTime\":1633839097000,\"createBy\":\"admin\",\"updateBy\":\"admin\",\"createTime\":1572179496000,\"name\":\"是否启用\",\"disabled\":true,\"id\":1}}；响应结果：true', '', 'io.github.dunwu.module.sys.service.impl.DictServiceImpl', 'updateById', '{\"Dict\":{\"note\":\"是否启用状态\",\"code\":\"disabled_status\",\"updateTime\":1633839097000,\"createBy\":\"admin\",\"updateBy\":\"admin\",\"createTime\":1572179496000,\"name\":\"是否启用\",\"disabled\":true,\"id\":1}}', 'EDIT', 1, 'admin', '172.22.211.75', '127.0.0.1', '本机地址', 'Chrome 91', 45, '2022-02-11 20:25:55');
 INSERT INTO `sys_operation_log` VALUES (114, 'dunwu', '1', '数据字典', 1, '更新数据字典(id = 1)『成功』', '更新数据字典(id = 1)『成功』——请求参数：{\"Dict\":{\"note\":\"是否启用状态\",\"code\":\"disabled_status\",\"updateTime\":1633839097000,\"createBy\":\"admin\",\"updateBy\":\"admin\",\"createTime\":1572179496000,\"name\":\"是否启用\",\"disabled\":false,\"id\":1}}；响应结果：true', '', 'io.github.dunwu.module.sys.service.impl.DictServiceImpl', 'updateById', '{\"Dict\":{\"note\":\"是否启用状态\",\"code\":\"disabled_status\",\"updateTime\":1633839097000,\"createBy\":\"admin\",\"updateBy\":\"admin\",\"createTime\":1572179496000,\"name\":\"是否启用\",\"disabled\":false,\"id\":1}}', 'EDIT', 1, 'admin', '172.22.211.75', '127.0.0.1', '本机地址', 'Chrome 91', 21, '2022-02-11 20:59:24');
 INSERT INTO `sys_operation_log` VALUES (115, 'dunwu', '22', '数据字典', 1, '删除数据字典(id = 22)『成功』', '删除数据字典(id = 22)『成功』——请求参数：{\"String\":\"22\"}；响应结果：true', '', 'io.github.dunwu.module.sys.service.impl.DictServiceImpl', 'deleteById', '{\"String\":\"22\"}', 'DEL', 1, 'admin', '172.22.211.75', '127.0.0.1', '本机地址', 'Chrome 91', 39, '2022-02-11 20:59:58');
+INSERT INTO `sys_operation_log` VALUES (116, 'dunwu', '', '数据字典', 1, '分页查询导出数据字典(page=0, size=10, query=DictQuery(id=null, code=null, name=null, disabled=null))『成功』', '分页查询导出数据字典(page=0, size=10, query=DictQuery(id=null, code=null, name=null, disabled=null))『成功』——请求参数：{\"DictQuery\":{},\"PageRequest\":{\"sort\":[{\"nullHandling\":\"NATIVE\",\"ignoreCase\":false,\"property\":\"id\",\"direction\":\"DESC\"}]},\"StatHttpServletResponseWrapper\":{\"response\":{\"response\":{\"response\":{}}},\"status\":200}}；响应结果：null', '', 'io.github.dunwu.module.sys.service.impl.DictServiceImpl', 'exportPage', '{\"DictQuery\":{},\"PageRequest\":{\"sort\":[{\"nullHandling\":\"NATIVE\",\"ignoreCase\":false,\"property\":\"id\",\"direction\":\"DESC\"}]},\"StatHttpServletResponseWrapper\":{\"response\":{\"response\":{\"response\":{}}},\"status\":200}}', 'EXPORT_EXCEL', 1, 'admin', '192.168.1.3', '127.0.0.1', '本机地址', 'Chrome 98', 996, '2022-02-13 20:47:37');
+INSERT INTO `sys_operation_log` VALUES (117, 'dunwu', '', '数据字典', 1, '分页查询导出数据字典(page=0, size=10, query=DictQuery(id=null, code=null, name=null, disabled=null))『成功』', '分页查询导出数据字典(page=0, size=10, query=DictQuery(id=null, code=null, name=null, disabled=null))『成功』——请求参数：{\"DictQuery\":{},\"PageRequest\":{\"sort\":[{\"nullHandling\":\"NATIVE\",\"ignoreCase\":false,\"property\":\"id\",\"direction\":\"DESC\"}]},\"StatHttpServletResponseWrapper\":{\"response\":{\"response\":{\"response\":{}}},\"status\":200}}；响应结果：null', '', 'io.github.dunwu.module.sys.service.impl.DictServiceImpl', 'exportPage', '{\"DictQuery\":{},\"PageRequest\":{\"sort\":[{\"nullHandling\":\"NATIVE\",\"ignoreCase\":false,\"property\":\"id\",\"direction\":\"DESC\"}]},\"StatHttpServletResponseWrapper\":{\"response\":{\"response\":{\"response\":{}}},\"status\":200}}', 'EXPORT_EXCEL', 1, 'admin', '192.168.1.3', '127.0.0.1', '本机地址', 'Chrome 98', 59, '2022-02-13 20:49:24');
+INSERT INTO `sys_operation_log` VALUES (118, 'dunwu', '', '数据字典', 1, '分页查询导出数据字典(page=0, size=10, query=DictQuery(id=null, code=null, name=null, disabled=null))『成功』', '分页查询导出数据字典(page=0, size=10, query=DictQuery(id=null, code=null, name=null, disabled=null))『成功』——请求参数：{\"DictQuery\":{},\"PageRequest\":{\"sort\":[{\"nullHandling\":\"NATIVE\",\"ignoreCase\":false,\"property\":\"id\",\"direction\":\"DESC\"}]},\"StatHttpServletResponseWrapper\":{\"response\":{\"response\":{\"response\":{}}},\"status\":200}}；响应结果：null', '', 'io.github.dunwu.module.sys.service.impl.DictServiceImpl', 'exportPage', '{\"DictQuery\":{},\"PageRequest\":{\"sort\":[{\"nullHandling\":\"NATIVE\",\"ignoreCase\":false,\"property\":\"id\",\"direction\":\"DESC\"}]},\"StatHttpServletResponseWrapper\":{\"response\":{\"response\":{\"response\":{}}},\"status\":200}}', 'EXPORT_EXCEL', 1, 'admin', '192.168.1.3', '127.0.0.1', '本机地址', 'Chrome 98', 54, '2022-02-13 20:51:23');
+INSERT INTO `sys_operation_log` VALUES (119, 'dunwu', '', '数据字典', 1, '分页查询导出数据字典(page=0, size=10, query=DictQuery(id=null, code=null, name=null, disabled=null))『成功』', '分页查询导出数据字典(page=0, size=10, query=DictQuery(id=null, code=null, name=null, disabled=null))『成功』——请求参数：{\"DictQuery\":{},\"PageRequest\":{\"sort\":[{\"nullHandling\":\"NATIVE\",\"ignoreCase\":false,\"property\":\"id\",\"direction\":\"DESC\"}]},\"StatHttpServletResponseWrapper\":{\"response\":{\"response\":{\"response\":{}}},\"status\":200}}；响应结果：null', '', 'io.github.dunwu.module.sys.service.impl.DictServiceImpl', 'exportPage', '{\"DictQuery\":{},\"PageRequest\":{\"sort\":[{\"nullHandling\":\"NATIVE\",\"ignoreCase\":false,\"property\":\"id\",\"direction\":\"DESC\"}]},\"StatHttpServletResponseWrapper\":{\"response\":{\"response\":{\"response\":{}}},\"status\":200}}', 'EXPORT_EXCEL', 1, 'admin', '192.168.1.3', '127.0.0.1', '本机地址', 'Chrome 98', 743, '2022-02-13 21:14:09');
+INSERT INTO `sys_operation_log` VALUES (120, 'dunwu', '3', '数据字典', 1, '更新数据字典(id = 3)『成功』', '更新数据字典(id = 3)『成功』——请求参数：{\"Dict\":{\"note\":\"职级\",\"code\":\"job_profession_level\",\"updateTime\":1633846257000,\"createBy\":\"admin\",\"updateBy\":\"admin\",\"createTime\":1633846257000,\"name\":\"职级\",\"disabled\":false,\"id\":3}}；响应结果：true', '', 'io.github.dunwu.module.sys.service.impl.DictServiceImpl', 'updateById', '{\"Dict\":{\"note\":\"职级\",\"code\":\"job_profession_level\",\"updateTime\":1633846257000,\"createBy\":\"admin\",\"updateBy\":\"admin\",\"createTime\":1633846257000,\"name\":\"职级\",\"disabled\":false,\"id\":3}}', 'EDIT', 1, 'admin', '192.168.1.3', '127.0.0.1', '本机地址', 'Chrome 98', 27, '2022-02-13 21:32:03');
+INSERT INTO `sys_operation_log` VALUES (121, 'dunwu', '1', '数据字典选项', 1, '更新数据字典选项(id = 1)『成功』', '更新数据字典选项(id = 1)『成功』——请求参数：{\"DictOption\":{\"note\":\"否\",\"code\":\"false\",\"updateTime\":1642857205000,\"dictId\":1,\"createBy\":\"admin\",\"updateBy\":\"admin\",\"createTime\":1572179496000,\"name\":\"启用\",\"disabled\":false,\"id\":1}}；响应结果：true', '', 'io.github.dunwu.module.sys.service.impl.DictOptionServiceImpl', 'updateById', '{\"DictOption\":{\"note\":\"否\",\"code\":\"false\",\"updateTime\":1642857205000,\"dictId\":1,\"createBy\":\"admin\",\"updateBy\":\"admin\",\"createTime\":1572179496000,\"name\":\"启用\",\"disabled\":false,\"id\":1}}', 'EDIT', 1, 'admin', '192.168.1.3', '127.0.0.1', '本机地址', 'Chrome 98', 61, '2022-02-13 21:36:47');
+INSERT INTO `sys_operation_log` VALUES (122, 'dunwu', '2', '数据字典选项', 1, '更新数据字典选项(id = 2)『成功』', '更新数据字典选项(id = 2)『成功』——请求参数：{\"DictOption\":{\"note\":\"是\",\"code\":\"true\",\"updateTime\":1642857205000,\"dictId\":1,\"createBy\":\"admin\",\"updateBy\":\"admin\",\"createTime\":1572179496000,\"name\":\"禁用\",\"disabled\":false,\"id\":2}}；响应结果：true', '', 'io.github.dunwu.module.sys.service.impl.DictOptionServiceImpl', 'updateById', '{\"DictOption\":{\"note\":\"是\",\"code\":\"true\",\"updateTime\":1642857205000,\"dictId\":1,\"createBy\":\"admin\",\"updateBy\":\"admin\",\"createTime\":1572179496000,\"name\":\"禁用\",\"disabled\":false,\"id\":2}}', 'EDIT', 1, 'admin', '192.168.1.3', '127.0.0.1', '本机地址', 'Chrome 98', 21, '2022-02-13 21:36:52');
 
 -- ----------------------------
 -- Table structure for sys_quartz_job
@@ -1158,7 +1165,7 @@ CREATE TABLE `sys_quartz_log`  (
   `params` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `time` bigint(20) UNSIGNED NULL DEFAULT NULL,
   PRIMARY KEY (`log_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '定时任务日志' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '定时任务日志' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of sys_quartz_log
@@ -1200,7 +1207,7 @@ CREATE TABLE `tool_email_config`  (
   `port` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '端口',
   `user` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '发件者用户名',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '邮箱配置' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '邮箱配置' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of tool_email_config
@@ -1222,7 +1229,7 @@ CREATE TABLE `tool_file_content`  (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uk_file_name`(`file_name`) USING BTREE,
   UNIQUE INDEX `uk_store_url`(`store_url`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '文件内容表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '文件内容表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of tool_file_content
@@ -1252,7 +1259,7 @@ CREATE TABLE `tool_file_info`  (
   UNIQUE INDEX `uk_file_name`(`file_name`) USING BTREE,
   UNIQUE INDEX `uk_access_url`(`access_url`) USING BTREE,
   UNIQUE INDEX `uk_keys`(`origin_name`, `tag`, `namespace`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '文件信息表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '文件信息表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of tool_file_info
@@ -1275,7 +1282,7 @@ CREATE TABLE `tool_local_storage`  (
   `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '本地存储' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '本地存储' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of tool_local_storage
@@ -1294,7 +1301,7 @@ CREATE TABLE `tool_qiniu_config`  (
   `type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '空间类型',
   `zone` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '机房',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '七牛云配置' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '七牛云配置' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of tool_qiniu_config
@@ -1315,7 +1322,7 @@ CREATE TABLE `tool_qiniu_content`  (
   `update_time` datetime NULL DEFAULT NULL COMMENT '上传或同步的时间',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uk_name`(`name`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '七牛云文件存储' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '七牛云文件存储' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of tool_qiniu_content

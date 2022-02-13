@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -186,5 +187,7 @@ public interface DictService extends IService {
     EnumInfoDto parseJavaEnumFile(MultipartFile file);
 
     boolean saveDictWithOptions(DictDto dto);
+
+    void downloadDictEnum(Serializable id, HttpServletRequest request, HttpServletResponse response);
 
 }

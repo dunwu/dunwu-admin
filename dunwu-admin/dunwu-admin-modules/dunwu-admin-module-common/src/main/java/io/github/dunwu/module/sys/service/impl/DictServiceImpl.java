@@ -25,6 +25,10 @@ import io.github.dunwu.tool.core.constant.enums.ResultStatus;
 import io.github.dunwu.tool.core.exception.AppException;
 import io.github.dunwu.tool.data.excel.ExcelUtil;
 import io.github.dunwu.tool.data.mybatis.ServiceImpl;
+import io.github.dunwu.tool.generator.CodeGeneratorExt;
+import io.github.dunwu.tool.generator.config.po.DictInfo;
+import io.github.dunwu.tool.generator.config.po.DictOptionInfo;
+import io.github.dunwu.tool.web.ServletUtil;
 import io.github.dunwu.tool.web.log.annotation.OperationLog;
 import io.github.dunwu.tool.web.log.constant.OperationType;
 import lombok.RequiredArgsConstructor;
@@ -35,10 +39,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -96,7 +102,7 @@ public class DictServiceImpl extends ServiceImpl implements DictService {
     @OperationLog(bizType = "数据字典", operation = OperationType.DEL, bizNo = "{{#id}}")
     public boolean deleteById(Serializable id) {
         Dict dict = dictDao.getById(id);
-        if (dict == null) { return true; }
+        if (dict == null) {return true;}
 
         // 删除字典记录
         dictDao.deleteById(id);
@@ -323,6 +329,23 @@ public class DictServiceImpl extends ServiceImpl implements DictService {
                                               })
                                               .collect(Collectors.toList());
         return dictOptionDao.insertBatch(dictOptions);
+    }
+
+    @Override
+    public void downloadDictEnum(Serializable id, HttpServletRequest request, HttpServletResponse response) {
+        DictDto dictDto = pojoById(id);
+        DictInfo dictInfo = BeanUtil.toBean(dictDto, DictInfo.class);
+        if (CollectionUtil.isNotEmpty(dictDto.getOptions())) {
+            List<DictOptionInfo> options = dictDto.getOptions().stream()
+                                                  .map(i -> BeanUtil.toBean(i, DictOptionInfo.class))
+                                                  .collect(Collectors.toList());
+            dictInfo.setOptions(options);
+        }
+
+        String tempPath = System.getProperty("java.io.tmpdir") + dictInfo.getFormatCode() + ".java";
+        CodeGeneratorExt.generateDict(dictInfo, tempPath);
+        File file = new File(tempPath);
+        ServletUtil.downloadFile(request, response, file, true);
     }
 
 }

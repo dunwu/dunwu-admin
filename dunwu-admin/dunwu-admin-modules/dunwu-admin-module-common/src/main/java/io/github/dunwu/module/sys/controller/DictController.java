@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 import java.util.Collection;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -145,6 +146,12 @@ public class DictController {
     @PostMapping("/save/dictWithOptions")
     public DataResult<Boolean> saveDictWithOptions(@RequestBody DictDto dto) {
         return DataResult.ok(service.saveDictWithOptions(dto));
+    }
+
+    @ApiOperation("保存含字典选项的字典")
+    @GetMapping("/generate/enum/{id}")
+    public void generateEnum(@PathVariable Serializable id, HttpServletRequest request, HttpServletResponse response) {
+        service.downloadDictEnum(id, request, response);
     }
 
 }

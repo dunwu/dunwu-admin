@@ -64,7 +64,7 @@ service.interceptors.response.use(
           return true
         }
       } else {
-        return response.data
+        return response
       }
     }
   },

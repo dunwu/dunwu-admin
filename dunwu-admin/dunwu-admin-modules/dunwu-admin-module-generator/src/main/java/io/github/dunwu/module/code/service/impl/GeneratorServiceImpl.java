@@ -362,7 +362,7 @@ public class GeneratorServiceImpl implements GeneratorService {
         checkTableChanged(tableConfigDto, builder);
 
         CodeGenerator codeGenerator = new CodeGenerator(builder);
-        codeGenerator.generate();
+        codeGenerator.generateAll();
         return builder;
     }
 
@@ -394,7 +394,7 @@ public class GeneratorServiceImpl implements GeneratorService {
         checkTableChanged(tableConfigDto, builder);
 
         CodeGenerator codeGenerator = new CodeGenerator(builder);
-        codeGenerator.generate();
+        codeGenerator.generateAll();
         String zipFilePath = tmpSchemaPath + File.separator + "codes.zip";
         File zip = ZipUtil.zip(tmpTablePath, zipFilePath);
         ServletUtil.downloadFile(request, response, zip, true);
