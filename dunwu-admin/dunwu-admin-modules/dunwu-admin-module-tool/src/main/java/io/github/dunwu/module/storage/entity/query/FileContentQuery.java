@@ -7,8 +7,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
-import java.sql.Blob;
 import java.io.Serializable;
+import java.sql.Blob;
 
 /**
  * 文件内容表 Query 类

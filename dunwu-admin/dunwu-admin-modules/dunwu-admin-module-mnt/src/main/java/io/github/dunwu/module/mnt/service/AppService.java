@@ -151,7 +151,8 @@ public interface AppService extends IService {
 
     /**
      * 根据 {@link AppQuery} 和 {@link Pageable} 分页查询 {@link AppDto} 列表，并导出 excel 表单
-     *  @param pageable 分页查询条件
+     *
+     * @param pageable 分页查询条件
      * @param query    查询条件，根据 {@link AppQuery} 中的 {@link QueryField} 注解自动组装查询条件
      * @param response {@link HttpServletResponse} 实体
      */

@@ -102,7 +102,7 @@ public class DictServiceImpl extends ServiceImpl implements DictService {
     @OperationLog(bizType = "数据字典", operation = OperationType.DEL, bizNo = "{{#id}}")
     public boolean deleteById(Serializable id) {
         Dict dict = dictDao.getById(id);
-        if (dict == null) {return true;}
+        if (dict == null) { return true; }
 
         // 删除字典记录
         dictDao.deleteById(id);

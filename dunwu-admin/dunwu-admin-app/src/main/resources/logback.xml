@@ -13,9 +13,9 @@
     <property name="LOG_MAX_QUEUE_SIZE" value="256" />
     <property name="LOG_CHARSET" value="utf8" />
     <property name="LOG_PATTERN"
-              value="[%contextName] %d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%thread] %c#%M - %m%n" />
+        value="[%contextName] %d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%thread] %c#%M - %m%n" />
     <property name="LOG_COLOR_PATTERN"
-              value="%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) [%boldYellow(%thread)] %cyan(%c{30}#%M) - %boldBlue(%m%n)" />
+        value="%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) [%boldYellow(%thread)] %cyan(%c{30}#%M) - %boldBlue(%m%n)" />
 
     <!-- ==========================================================================
          appender

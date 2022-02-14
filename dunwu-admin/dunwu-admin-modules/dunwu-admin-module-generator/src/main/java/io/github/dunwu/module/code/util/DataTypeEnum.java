@@ -18,13 +18,14 @@
  */
 
 package io.github.dunwu.module.code.util;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author /
  */
 @Slf4j
-@SuppressWarnings({"unchecked","all"})
+@SuppressWarnings({ "unchecked", "all" })
 public enum DataTypeEnum {
 
     /** mysql */
@@ -82,7 +83,8 @@ public enum DataTypeEnum {
 
     private static final String JDBC_URL_PREFIX = "jdbc:";
 
-    DataTypeEnum(String feature, String desc, String driver, String keywordPrefix, String keywordSuffix, String aliasPrefix, String aliasSuffix) {
+    DataTypeEnum(String feature, String desc, String driver, String keywordPrefix, String keywordSuffix,
+        String aliasPrefix, String aliasSuffix) {
         this.feature = feature;
         this.desc = desc;
         this.driver = driver;

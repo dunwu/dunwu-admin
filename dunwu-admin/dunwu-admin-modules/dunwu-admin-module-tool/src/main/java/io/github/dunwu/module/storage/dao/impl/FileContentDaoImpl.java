@@ -1,8 +1,8 @@
 package io.github.dunwu.module.storage.dao.impl;
 
 import io.github.dunwu.module.storage.dao.FileContentDao;
-import io.github.dunwu.module.storage.entity.FileContent;
 import io.github.dunwu.module.storage.dao.mapper.FileContentMapper;
+import io.github.dunwu.module.storage.entity.FileContent;
 import io.github.dunwu.tool.data.annotation.Dao;
 import io.github.dunwu.tool.data.mybatis.BaseExtDaoImpl;
 

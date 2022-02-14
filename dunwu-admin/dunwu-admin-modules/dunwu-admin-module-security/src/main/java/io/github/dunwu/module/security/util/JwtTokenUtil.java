@@ -59,10 +59,10 @@ public class JwtTokenUtil implements InitializingBean {
         byte[] keyBytes = Decoders.BASE64.decode(properties.getToken().getBase64Secret());
         Key key = Keys.hmacShaKeyFor(keyBytes);
         jwtParser = Jwts.parserBuilder()
-            .setSigningKey(key)
-            .build();
+                        .setSigningKey(key)
+                        .build();
         jwtBuilder = Jwts.builder()
-            .signWith(key, SignatureAlgorithm.HS512);
+                         .signWith(key, SignatureAlgorithm.HS512);
     }
 
     /**

@@ -8,7 +8,6 @@ import io.github.dunwu.module.mnt.entity.Server;
 import io.github.dunwu.tool.data.annotation.Dao;
 import io.github.dunwu.tool.data.mybatis.BaseExtDaoImpl;
 
-import java.util.Collection;
 import java.util.List;
 
 /**

@@ -62,7 +62,7 @@ public class DunwuStorageProperties implements Serializable {
     @ToString
     @Accessors(chain = true)
     @EqualsAndHashCode(callSuper = true)
-    public static class Db extends BaseFileProperties {}
+    public static class Db extends BaseFileProperties { }
 
     /**
      * 本地型文件服务配置

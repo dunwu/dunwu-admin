@@ -40,7 +40,7 @@ public class UserRoleMap implements Serializable {
     @TableField("`role_id`")
     private Long roleId;
 
-    public UserRoleMap() {}
+    public UserRoleMap() { }
 
     public UserRoleMap(Long userId, Long roleId) {
         this.userId = userId;

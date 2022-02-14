@@ -1,10 +1,10 @@
 package io.github.dunwu.module.mnt.dao.impl;
 
-import io.github.dunwu.tool.data.annotation.Dao;
-import io.github.dunwu.tool.data.mybatis.BaseExtDaoImpl;
 import io.github.dunwu.module.mnt.dao.AppDao;
 import io.github.dunwu.module.mnt.dao.mapper.AppMapper;
 import io.github.dunwu.module.mnt.entity.App;
+import io.github.dunwu.tool.data.annotation.Dao;
+import io.github.dunwu.tool.data.mybatis.BaseExtDaoImpl;
 
 /**
  * 应用配置 Dao 类

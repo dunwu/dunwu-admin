@@ -1,7 +1,7 @@
 package io.github.dunwu.module.mnt.dao;
 
-import io.github.dunwu.tool.data.mybatis.IExtDao;
 import io.github.dunwu.module.mnt.entity.App;
+import io.github.dunwu.tool.data.mybatis.IExtDao;
 
 /**
  * 应用配置 Dao 接口

@@ -2,12 +2,12 @@ package io.github.dunwu.module.code.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import io.github.dunwu.tool.data.mybatis.ServiceImpl;
+import io.github.dunwu.module.code.dao.CodeColumnConfigDao;
 import io.github.dunwu.module.code.entity.CodeColumnConfig;
 import io.github.dunwu.module.code.entity.dto.CodeColumnConfigDto;
 import io.github.dunwu.module.code.entity.query.CodeColumnConfigQuery;
 import io.github.dunwu.module.code.service.CodeColumnConfigService;
-import io.github.dunwu.module.code.dao.CodeColumnConfigDao;
+import io.github.dunwu.tool.data.mybatis.ServiceImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

@@ -1,10 +1,10 @@
 package io.github.dunwu.module.cas.dao.impl;
 
-import io.github.dunwu.tool.data.annotation.Dao;
-import io.github.dunwu.tool.data.mybatis.BaseExtDaoImpl;
 import io.github.dunwu.module.cas.dao.UserDao;
 import io.github.dunwu.module.cas.dao.mapper.UserMapper;
 import io.github.dunwu.module.cas.entity.User;
+import io.github.dunwu.tool.data.annotation.Dao;
+import io.github.dunwu.tool.data.mybatis.BaseExtDaoImpl;
 
 /**
  * 用户表 Dao 类

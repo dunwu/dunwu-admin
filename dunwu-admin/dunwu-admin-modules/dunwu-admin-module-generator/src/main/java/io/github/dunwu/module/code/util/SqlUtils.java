@@ -90,7 +90,7 @@ public class SqlUtils {
         Connection connection = null;
         try {
             connection = dataSource.getConnection();
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) { }
         try {
             int timeOut = 5;
             if (null == connection || connection.isClosed() || !connection.isValid(timeOut)) {

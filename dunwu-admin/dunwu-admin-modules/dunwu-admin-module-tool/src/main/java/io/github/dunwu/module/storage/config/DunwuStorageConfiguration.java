@@ -12,4 +12,4 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @EnableConfigurationProperties({ DunwuStorageProperties.class })
-public class DunwuStorageConfiguration {}
+public class DunwuStorageConfiguration { }

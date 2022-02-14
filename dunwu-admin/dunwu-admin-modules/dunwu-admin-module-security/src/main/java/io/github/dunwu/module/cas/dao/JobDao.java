@@ -1,7 +1,7 @@
 package io.github.dunwu.module.cas.dao;
 
-import io.github.dunwu.tool.data.mybatis.IExtDao;
 import io.github.dunwu.module.cas.entity.Job;
+import io.github.dunwu.tool.data.mybatis.IExtDao;
 
 /**
  * 职务表 Dao 接口

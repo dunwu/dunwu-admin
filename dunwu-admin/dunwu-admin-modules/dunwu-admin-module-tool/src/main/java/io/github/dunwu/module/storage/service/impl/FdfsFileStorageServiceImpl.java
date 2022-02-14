@@ -4,11 +4,11 @@ import com.github.tobato.fastdfs.domain.fdfs.StorePath;
 import com.github.tobato.fastdfs.domain.proto.storage.DownloadByteArray;
 import com.github.tobato.fastdfs.service.FastFileStorageClient;
 import io.github.dunwu.module.storage.config.DunwuStorageProperties;
+import io.github.dunwu.module.storage.constant.StorageConstant;
 import io.github.dunwu.module.storage.entity.dto.FileContentDto;
 import io.github.dunwu.module.storage.entity.dto.FileInfoDto;
 import io.github.dunwu.module.storage.entity.dto.UploadFileDto;
 import io.github.dunwu.module.storage.service.FileStorageService;
-import io.github.dunwu.module.storage.constant.StorageConstant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

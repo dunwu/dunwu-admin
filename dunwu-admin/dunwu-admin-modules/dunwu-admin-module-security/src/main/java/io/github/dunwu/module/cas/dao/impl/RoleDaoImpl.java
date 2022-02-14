@@ -1,10 +1,10 @@
 package io.github.dunwu.module.cas.dao.impl;
 
-import io.github.dunwu.tool.data.annotation.Dao;
-import io.github.dunwu.tool.data.mybatis.BaseExtDaoImpl;
 import io.github.dunwu.module.cas.dao.RoleDao;
 import io.github.dunwu.module.cas.dao.mapper.RoleMapper;
 import io.github.dunwu.module.cas.entity.Role;
+import io.github.dunwu.tool.data.annotation.Dao;
+import io.github.dunwu.tool.data.mybatis.BaseExtDaoImpl;
 
 /**
  * 角色表 Dao 类

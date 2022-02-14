@@ -1,8 +1,8 @@
 package io.github.dunwu.module.code.dao;
 
-import io.github.dunwu.tool.data.mybatis.IExtDao;
 import io.github.dunwu.module.code.entity.CodeColumnConfig;
 import io.github.dunwu.module.code.entity.dto.CodeColumnConfigDto;
+import io.github.dunwu.tool.data.mybatis.IExtDao;
 
 import java.io.IOException;
 import java.util.Collection;

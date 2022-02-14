@@ -1,63 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>io.github.dunwu</groupId>
-    <artifactId>dunwu-admin</artifactId>
-    <version>1.0.1</version>
-  </parent>
+    <parent>
+        <groupId>io.github.dunwu</groupId>
+        <artifactId>dunwu-admin</artifactId>
+        <version>1.0.1</version>
+    </parent>
 
-  <artifactId>dunwu-admin-modules</artifactId>
-  <packaging>pom</packaging>
+    <artifactId>dunwu-admin-modules</artifactId>
+    <packaging>pom</packaging>
 
-  <properties>
-    <dunwu-admin-common.version>1.0.1</dunwu-admin-common.version>
-    <dunwu-admin-modules.version>1.0.1</dunwu-admin-modules.version>
-  </properties>
+    <properties>
+        <dunwu-admin-common.version>1.0.1</dunwu-admin-common.version>
+        <dunwu-admin-modules.version>1.0.1</dunwu-admin-modules.version>
+    </properties>
 
-  <modules>
-    <module>dunwu-admin-module-security</module>
-    <module>dunwu-admin-module-common</module>
-    <module>dunwu-admin-module-mnt</module>
-    <module>dunwu-admin-module-generator</module>
-    <module>dunwu-admin-module-tool</module>
-  </modules>
+    <modules>
+        <module>dunwu-admin-module-security</module>
+        <module>dunwu-admin-module-common</module>
+        <module>dunwu-admin-module-mnt</module>
+        <module>dunwu-admin-module-generator</module>
+        <module>dunwu-admin-module-tool</module>
+    </modules>
 
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>io.github.dunwu</groupId>
-        <artifactId>dunwu-admin-common</artifactId>
-        <version>${dunwu-admin-common.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.github.dunwu</groupId>
-        <artifactId>dunwu-admin-module-security</artifactId>
-        <version>${dunwu-admin-modules.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.github.dunwu</groupId>
-        <artifactId>dunwu-admin-module-common</artifactId>
-        <version>${dunwu-admin-modules.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.github.dunwu</groupId>
-        <artifactId>dunwu-admin-module-mnt</artifactId>
-        <version>${dunwu-admin-modules.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.github.dunwu</groupId>
-        <artifactId>dunwu-admin-module-generator</artifactId>
-        <version>${dunwu-admin-modules.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.github.dunwu</groupId>
-        <artifactId>dunwu-admin-module-tool</artifactId>
-        <version>${dunwu-admin-modules.version}</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.github.dunwu</groupId>
+                <artifactId>dunwu-admin-common</artifactId>
+                <version>${dunwu-admin-common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.dunwu</groupId>
+                <artifactId>dunwu-admin-module-security</artifactId>
+                <version>${dunwu-admin-modules.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.dunwu</groupId>
+                <artifactId>dunwu-admin-module-common</artifactId>
+                <version>${dunwu-admin-modules.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.dunwu</groupId>
+                <artifactId>dunwu-admin-module-mnt</artifactId>
+                <version>${dunwu-admin-modules.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.dunwu</groupId>
+                <artifactId>dunwu-admin-module-generator</artifactId>
+                <version>${dunwu-admin-modules.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.dunwu</groupId>
+                <artifactId>dunwu-admin-module-tool</artifactId>
+                <version>${dunwu-admin-modules.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>

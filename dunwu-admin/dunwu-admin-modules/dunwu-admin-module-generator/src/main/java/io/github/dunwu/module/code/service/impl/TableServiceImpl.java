@@ -97,8 +97,8 @@ public class TableServiceImpl implements TableService {
                                   .limit(offset, size.intValue())
                                   .fetchInto(TableInfoDto.class));
 
-            String username = SecurityUtil.getCurrentUsername();
             // 查找是否存在匹配的全局级配置
+            String username = SecurityUtil.getCurrentUsername();
             LambdaQueryWrapper<CodeGlobalConfig> globalQueryWrapper = new LambdaQueryWrapper<>();
             globalQueryWrapper.eq(CodeGlobalConfig::getCreateBy, username);
             int globalCount = globalConfigDao.count(globalQueryWrapper);

@@ -1,7 +1,7 @@
 package io.github.dunwu.module.storage.service;
 
-import io.github.dunwu.module.storage.entity.dto.FileInfoDto;
 import io.github.dunwu.module.storage.entity.FileInfo;
+import io.github.dunwu.module.storage.entity.dto.FileInfoDto;
 import io.github.dunwu.module.storage.entity.query.FileInfoQuery;
 import io.github.dunwu.tool.data.annotation.QueryField;
 import io.github.dunwu.tool.data.mybatis.IService;
@@ -151,7 +151,8 @@ public interface FileInfoService extends IService {
 
     /**
      * 根据 {@link FileInfoQuery} 和 {@link Pageable} 分页查询 {@link FileInfoDto} 列表，并导出 excel 表单
-     *  @param pageable 分页查询条件
+     *
+     * @param pageable 分页查询条件
      * @param query    查询条件，根据 {@link FileInfoQuery} 中的 {@link QueryField} 注解自动组装查询条件
      * @param response {@link HttpServletResponse} 实体
      */

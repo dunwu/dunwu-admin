@@ -42,7 +42,7 @@ public class JobRoleMap implements Serializable {
     @TableField("role_id")
     private Long roleId;
 
-    public JobRoleMap() {}
+    public JobRoleMap() { }
 
     public JobRoleMap(Long jobId, Long roleId) {
         this.jobId = jobId;

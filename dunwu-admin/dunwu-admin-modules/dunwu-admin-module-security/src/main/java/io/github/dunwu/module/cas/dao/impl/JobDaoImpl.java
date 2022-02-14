@@ -1,10 +1,10 @@
 package io.github.dunwu.module.cas.dao.impl;
 
-import io.github.dunwu.tool.data.annotation.Dao;
-import io.github.dunwu.tool.data.mybatis.BaseExtDaoImpl;
 import io.github.dunwu.module.cas.dao.JobDao;
 import io.github.dunwu.module.cas.dao.mapper.JobMapper;
 import io.github.dunwu.module.cas.entity.Job;
+import io.github.dunwu.tool.data.annotation.Dao;
+import io.github.dunwu.tool.data.mybatis.BaseExtDaoImpl;
 
 /**
  * 职务表 Dao 类

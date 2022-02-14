@@ -60,7 +60,7 @@ public class CodeGlobalConfigDto implements Serializable {
     @ApiModelProperty(value = "时间类型")
     private String dateType;
 
-    @ApiModelProperty(value = "时间格式化")
+    @ApiModelProperty(value = "时间格式")
     private String datePattern;
 
     @ApiModelProperty(value = "创建者")

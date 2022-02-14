@@ -1,7 +1,7 @@
 package io.github.dunwu.module.mnt.dao;
 
-import io.github.dunwu.tool.data.mybatis.IExtDao;
 import io.github.dunwu.module.mnt.entity.DeployHistory;
+import io.github.dunwu.tool.data.mybatis.IExtDao;
 
 /**
  * 部署历史管理 Dao 接口

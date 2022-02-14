@@ -63,7 +63,7 @@ public class SecurityUtil {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             return userDetails.getUsername();
         }
-        throw new AuthenticationCredentialsNotFoundException("找不到当前登录的信息") {};
+        throw new AuthenticationCredentialsNotFoundException("找不到当前登录的信息") { };
     }
 
     /**

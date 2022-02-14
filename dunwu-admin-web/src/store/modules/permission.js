@@ -58,7 +58,6 @@ function filterChildren(childrenMap) {
     if (el.children && el.children.length) {
       if (el.component === 'ParentView') {
         el.children.forEach(c => {
-          console.info('filterChildren', c, el)
           c.path = el.path + '/' + c.path
           if (c.children && c.children.length) {
             children = children.concat(filterChildren(c.children, c))

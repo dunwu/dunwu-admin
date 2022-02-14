@@ -1,6 +1,9 @@
 package io.github.dunwu.module.cas.entity;
 
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.github.dunwu.common.entity.BaseConfigEntity;
 import io.github.dunwu.tool.data.validator.annotation.EditCheck;
