@@ -24,10 +24,7 @@ import io.github.dunwu.tool.generator.config.*;
 import io.github.dunwu.tool.generator.config.builder.ConfigBuilder;
 import io.github.dunwu.tool.generator.config.po.TableField;
 import io.github.dunwu.tool.generator.config.po.TableInfo;
-import io.github.dunwu.tool.generator.config.rules.FormType;
-import io.github.dunwu.tool.generator.config.rules.JavaColumnType;
-import io.github.dunwu.tool.generator.config.rules.ListType;
-import io.github.dunwu.tool.generator.config.rules.ValidateType;
+import io.github.dunwu.tool.generator.config.rules.*;
 import io.github.dunwu.tool.generator.engine.CodeGenerateContentDto;
 import io.github.dunwu.tool.web.ServletUtil;
 import lombok.RequiredArgsConstructor;
@@ -135,6 +132,10 @@ public class GeneratorServiceImpl implements GeneratorService {
                       .setTableName(query.getTableName())
                       .setCreateBy(username);
 
+        // 将全局配置属性填充到 CodeTableConfigDto
+        CopyOptions globalCopyOptions = CopyOptions.create().setIgnoreProperties("id");
+        BeanUtil.copyProperties(globalConfigDto, tableConfigDto, globalCopyOptions);
+
         // 查询该表的实际属性，并填充到 CodeTableConfigDto
         ConfigBuilder configBuilder = createConfigBuilder(tableConfigDto);
         List<TableInfo> tableInfos = configBuilder.queryTableInfoList();
@@ -147,11 +148,7 @@ public class GeneratorServiceImpl implements GeneratorService {
         // 将 TableInfo 的属性填充到 CodeTableConfigDto
         CopyOptions tableCopyOptions = CopyOptions.create();
         BeanUtil.copyProperties(tableInfo, tableConfigDto, tableCopyOptions);
-
-        // 将全局配置属性填充到 CodeTableConfigDto
-        CopyOptions globalCopyOptions = CopyOptions.create().setIgnoreProperties("id");
         BeanUtil.copyProperties(globalConfigDto, tableConfigDto, globalCopyOptions);
-
         return tableConfigDto;
     }
 
@@ -560,9 +557,10 @@ public class GeneratorServiceImpl implements GeneratorService {
 
         GlobalConfig globalConfig = new GlobalConfig();
         globalConfig.setAuthor(tableConfigDto.getAuthor())
-                    .setOutputDir(tableConfigDto.getOutputDir())
-                    .setBackendDir(tableConfigDto.getBackendPath())
-                    .setFrontendDir(tableConfigDto.getFrontendPath());
+            .setOutputDir(tableConfigDto.getOutputDir())
+            .setBackendDir(tableConfigDto.getBackendPath())
+            .setFrontendDir(tableConfigDto.getFrontendPath())
+            .setDateType(DateType.valueOf(tableConfigDto.getDateType()));
 
         PackageConfig packageConfig = new PackageConfig(tableConfigDto.getPackagePath(),
             tableConfigDto.getModuleName());

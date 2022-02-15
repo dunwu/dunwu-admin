@@ -259,7 +259,7 @@ export default {
     if (this.crud.importUrl) {
       this.importUrl = this.baseApi + '/' + this.crud.importUrl
     } else {
-      console.error(this.crud.title + ' 页面没有配置 importUrl，不能使用导入功能')
+      // console.error(this.crud.title + ' 页面没有配置 importUrl，不能使用导入功能')
     }
 
     this.enableAdd = this.getEnableStatus(this.crud.optShow.add)

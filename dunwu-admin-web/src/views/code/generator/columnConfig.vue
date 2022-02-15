@@ -178,7 +178,6 @@
               <el-option label="单选框" value="Radio" />
               <el-option label="选择器" value="Select" />
               <el-option label="日期时间选择器" value="DateTimePicker" />
-              <el-option label="字典" value="Dict" />
             </el-select>
           </template>
         </el-table-column>
@@ -195,7 +194,6 @@
               <el-option label="精确匹配" value="EQUALS" />
               <el-option label="模糊匹配" value="LIKE" />
               <el-option label="范围匹配" value="BETWEEN" />
-              <el-option label="字典" value="Dict" />
             </el-select>
           </template>
         </el-table-column>
@@ -239,7 +237,6 @@
           <template slot-scope="scope">
             <el-select
               v-model="data[scope.$index].dictCode"
-              :disabled="data[scope.$index].formType !== 'Dict'"
               filterable
               class="edit-input"
               size="mini"
