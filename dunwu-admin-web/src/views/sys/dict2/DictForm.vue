@@ -50,7 +50,7 @@ import ElDragDialog from '@/directive/el-drag-dialog'
 /**
  * 表单实体默认值
  */
-const defaultForm = { code: null, name: null, note: null, disabled: null }
+const defaultForm = { code: null, name: null, note: null, disabled: false }
 export default {
   name: 'DictForm',
   directives: { ElDragDialog },

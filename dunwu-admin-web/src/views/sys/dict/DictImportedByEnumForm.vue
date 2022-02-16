@@ -77,12 +77,7 @@
                   placeholder="请选择字典选项编码"
                   @change="changeDictOptionCodeKey"
                 >
-                  <el-option
-                    v-for="item in paramOptions"
-                    :key="item.code"
-                    :label="item.name"
-                    :value="item.code"
-                  />
+                  <el-option v-for="item in paramOptions" :key="item.code" :label="item.name" :value="item.code" />
                 </el-select>
               </el-form-item>
               <el-form-item label="字典选项名称">
@@ -91,12 +86,16 @@
                   placeholder="请选择字典选项名称"
                   @change="changeDictOptionNameKey"
                 >
-                  <el-option
-                    v-for="item in paramOptions"
-                    :key="item.code"
-                    :label="item.name"
-                    :value="item.code"
-                  />
+                  <el-option v-for="item in paramOptions" :key="item.code" :label="item.name" :value="item.code" />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="字典选项备注">
+                <el-select
+                  v-model="dictOptionNoteKey"
+                  placeholder="请选择字典选项备注"
+                  @change="changeDictOptionNoteKey"
+                >
+                  <el-option v-for="item in paramOptions" :key="item.code" :label="item.name" :value="item.code" />
                 </el-select>
               </el-form-item>
             </el-form>
@@ -196,6 +195,7 @@ export default {
       paramOptions: [{ code: 'name', name: '枚举项名称' }, { code: 'comment', name: '枚举项注释' }],
       dictOptionCodeKey: 'name',
       dictOptionNameKey: 'name',
+      dictOptionNoteKey: 'comment',
       saveLoading: false
     }
   },
@@ -258,6 +258,9 @@ export default {
     changeDictOptionNameKey() {
       this.refreshDictOptions()
     },
+    changeDictOptionNoteKey() {
+      this.refreshDictOptions()
+    },
     refreshDictOptions() {
       this.options = []
       if (this.enumEntries && this.enumEntries.length > 0) {
@@ -284,8 +287,18 @@ export default {
             option.name = item.params[index]
           }
 
+          // 根据选择，获取字典选项备注
+          if (this.dictOptionNoteKey === 'name') {
+            option.note = item.name
+          } else if (this.dictOptionNoteKey === 'comment') {
+            option.note = item.comment
+          } else {
+            const index = Number.parseInt(this.dictOptionNoteKey)
+            option.note = item.params[index]
+          }
+
           // 获取字典选项备注
-          option.note = item.comment
+          // option.note = item.comment
           this.options.push(option)
           this.form.options = this.options
         })

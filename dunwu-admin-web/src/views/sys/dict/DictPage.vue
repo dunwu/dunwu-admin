@@ -26,19 +26,17 @@
               @keyup.enter.native="crud.toQuery"
             />
           </el-col>
-          <template v-if="crud.showExtendSearch">
-            <el-col :span="6">
-              <el-input
-                v-model="query.name"
-                clearable
-                size="small"
-                placeholder="输入字典类型名称查询"
-                class="filter-item"
-                style="width: 90%"
-                @keyup.enter.native="crud.toQuery"
-              />
-            </el-col>
-          </template>
+          <el-col :span="6">
+            <el-input
+              v-model="query.name"
+              clearable
+              size="small"
+              placeholder="输入字典类型名称查询"
+              class="filter-item"
+              style="width: 90%"
+              @keyup.enter.native="crud.toQuery"
+            />
+          </el-col>
           <template v-if="crud.showExtendSearch">
             <el-col :span="6">
               <el-select
@@ -89,7 +87,22 @@
       style="width: 100%"
       @selection-change="crud.selectionChangeHandler"
     >
-      <el-table-column type="selection" width="50" />
+      <el-table-column type="expand">
+        <template slot-scope="scope">
+          <div style="width: 70%; margin:0 auto;">
+            <div slot="header" class="clearfix" style="margin: 20px;">
+              <span style="font-size: 14px; font-weight: 700; color: #586f76;">字典选项</span>
+            </div>
+            <el-table ref="dictOptionTable" border size="mini" :data="scope.row.options" style="margin-bottom: 20px">
+              <el-table-column prop="id" label="ID" width="50" />
+              <el-table-column prop="code" label="字典选项编码" :show-overflow-tooltip="true" />
+              <el-table-column prop="name" label="字典选项名称" :show-overflow-tooltip="true" />
+              <el-table-column prop="note" label="字典选项备注" :show-overflow-tooltip="true" />
+            </el-table>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column type="selection" width="50" :selectable="checkSelectable" />
       <el-table-column prop="id" label="ID" width="50" />
       <el-table-column prop="code" label="字典编码" :show-overflow-tooltip="true" />
       <el-table-column prop="name" label="字典名称" :show-overflow-tooltip="true" />
@@ -102,16 +115,28 @@
             inactive-color="#F56C6C"
             :active-value="false"
             :inactive-value="true"
+            :disabled="scope.row.code === 'disabled_status'"
             @change="changeStatus(scope.row, scope.row.disabled)"
           />
         </template>
       </el-table-column>
       <el-table-column v-if="checkPer(['admin', 'sys:dict:edit', 'sys:dict:del'])" label="操作">
         <template slot-scope="scope">
-          <TableColumnOperation :data="scope.row" :permission="permission">
+          <TableColumnOperation
+            :data="scope.row"
+            :permission="permission"
+            :disabled-edit="scope.row.code === 'disabled_status'"
+            :disabled-dle="scope.row.code === 'disabled_status'"
+          >
             <template slot="right">
               <el-divider direction="vertical" />
-              <el-button slot="reference" size="mini" type="text" @click="handleCurrentChange(scope.row)">
+              <el-button
+                slot="reference"
+                size="mini"
+                type="text"
+                :disabled="scope.row.code === 'disabled_status'"
+                @click="handleCurrentChange(scope.row)"
+              >
                 配置字典
               </el-button>
               <el-divider direction="vertical" />
@@ -237,6 +262,12 @@ export default {
         .catch(() => {
           data.disabled = !data.disabled
         })
+    },
+    checkSelectable(row, index) {
+      if (row.code === 'disabled_status') {
+        return false
+      }
+      return true
     }
   }
 }

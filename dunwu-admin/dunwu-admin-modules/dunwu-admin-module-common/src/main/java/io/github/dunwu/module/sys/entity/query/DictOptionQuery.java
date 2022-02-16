@@ -27,7 +27,7 @@ public class DictOptionQuery implements Serializable {
     private Long id;
 
     @ApiModelProperty(value = "字典id")
-    @QueryField(value = "`dict_id`")
+    @QueryField(value = "`dict_id`", type = QueryField.QueryType.EQUALS)
     private Long dictId;
 
     @ApiModelProperty(value = "字典选项编码")
@@ -39,7 +39,7 @@ public class DictOptionQuery implements Serializable {
     private String name;
 
     @ApiModelProperty(value = "是否禁用：1 表示禁用；0 表示启用")
-    @QueryField(value = "`is_disabled`")
+    @QueryField(value = "`is_disabled`", type = QueryField.QueryType.EQUALS)
     private Boolean disabled;
 
     public String toJsonStr() {

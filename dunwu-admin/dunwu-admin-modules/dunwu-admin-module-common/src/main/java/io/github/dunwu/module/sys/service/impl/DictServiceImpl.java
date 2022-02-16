@@ -342,7 +342,7 @@ public class DictServiceImpl extends ServiceImpl implements DictService {
             dictInfo.setOptions(options);
         }
 
-        String tempPath = System.getProperty("java.io.tmpdir") + dictInfo.getFormatCode() + ".java";
+        String tempPath = System.getProperty("java.io.tmpdir") + File.separator + dictInfo.getFormatCode() + ".java";
         CodeGeneratorExt.generateDict(dictInfo, tempPath);
         File file = new File(tempPath);
         ServletUtil.downloadFile(request, response, file, true);

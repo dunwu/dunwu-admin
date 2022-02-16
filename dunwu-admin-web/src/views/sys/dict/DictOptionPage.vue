@@ -82,6 +82,7 @@
           <el-table-column prop="id" label="ID" width="50" />
           <el-table-column prop="code" label="字典选项编码" :show-overflow-tooltip="true" />
           <el-table-column prop="name" label="字典选项名称" :show-overflow-tooltip="true" />
+          <el-table-column prop="note" label="字典选项备注" :show-overflow-tooltip="true" />
           <el-table-column prop="disabled" label="是否启用" width="100">
             <template slot-scope="scope">
               <el-switch

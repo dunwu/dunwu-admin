@@ -25,7 +25,7 @@
         size="mini"
         type="primary"
         icon="el-icon-edit"
-        :disabled="crud.selections.length !== 1"
+        :disabled="disabledEdit || crud.selections.length !== 1"
         @click="crud.toEdit(crud.selections[0])"
       >
         编辑
@@ -93,7 +93,7 @@
         size="mini"
         type="primary"
         icon="el-icon-edit"
-        :disabled="crud.selections.length !== 1"
+        :disabled="disabledEdit || crud.selections.length !== 1"
         @click="crud.toEdit(crud.selections[0])"
       >
         编辑
@@ -210,6 +210,18 @@ export default {
       default: () => {
         return []
       }
+    },
+    disabledAdd: {
+      type: Boolean,
+      default: false
+    },
+    disabledEdit: {
+      type: Boolean,
+      default: false
+    },
+    disabledDle: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
