@@ -66,7 +66,7 @@
       </el-tooltip>
     </div>
     <el-form size="mini" label-width="90px">
-      <el-table v-loading="loading" :data="data" border stripe style="width: 100%;">
+      <el-table v-loading="loading" :data="data" height="700" style="width: 100%;">
         <el-table-column type="expand">
           <template slot-scope="scope">
             <el-descriptions title="配置信息" :column="4" size="mini" style="margin: 20px" border>
@@ -237,6 +237,7 @@
           <template slot-scope="scope">
             <el-select
               v-model="data[scope.$index].dictCode"
+              :disabled="(data[scope.$index].formType !== 'Select') && (data[scope.$index].formType !== 'Radio')"
               filterable
               class="edit-input"
               size="mini"

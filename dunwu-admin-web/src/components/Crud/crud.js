@@ -564,8 +564,8 @@ function CRUD(options) {
     resetDataStatus() {
       const dataStatus = {}
 
-      function resetStatus(datas) {
-        datas.forEach(e => {
+      function resetStatus(data) {
+        data.forEach(e => {
           dataStatus[crud.getDataId(e)] = {
             delete: 0,
             edit: 0

@@ -302,6 +302,7 @@ public class DictServiceImpl extends ServiceImpl implements DictService {
     }
 
     @Override
+    @Transactional(rollbackFor = { Exception.class })
     public boolean saveDictWithOptions(DictDto dto) {
 
         if (CollectionUtil.isEmpty(dto.getOptions())) {
