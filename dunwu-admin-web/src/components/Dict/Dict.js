@@ -19,7 +19,7 @@ export default class Dict {
           const expectDict = data[0]
           this.dict[code] = expectDict
           expectDict.options.forEach(o => {
-            Vue.set(this.dict.label[code], o.code, o.name)
+            Vue.set(this.dict.label[code], o.value, o.name)
           })
         })
       )

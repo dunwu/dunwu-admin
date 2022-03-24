@@ -985,6 +985,7 @@ CREATE TABLE `sys_dict_option`  (
   `dict_id` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '字典id',
   `code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '字典选项编码',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '字典选项名称',
+  `value` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '字典选项值',
   `note` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
   `is_disabled` tinyint(1) NULL DEFAULT NULL COMMENT '是否禁用：1 表示禁用；0 表示启用',
   `create_by` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建者',
@@ -992,31 +993,25 @@ CREATE TABLE `sys_dict_option`  (
   `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `key_dict_id`(`dict_id`) USING BTREE
+  UNIQUE KEY `uniq_dict_option`(`dict_id`, `code`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 106 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '数据字典选项' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of sys_dict_option
 -- ----------------------------
-INSERT INTO `sys_dict_option` VALUES (1, 1, 'false', '启用', '否', 0, 'admin', 'admin', '2019-10-27 20:31:36', '2022-01-22 21:13:25');
-INSERT INTO `sys_dict_option` VALUES (2, 1, 'true', '禁用', '是', 0, 'admin', 'admin', '2019-10-27 20:31:36', '2022-01-22 21:13:25');
-INSERT INTO `sys_dict_option` VALUES (3, 2, '1', '专业岗位', NULL, 0, 'admin', 'admin', '2021-10-10 12:25:46', '2022-01-22 21:13:25');
-INSERT INTO `sys_dict_option` VALUES (4, 2, '2', '管理岗位', NULL, 0, 'admin', 'admin', '2021-10-10 12:34:36', '2022-01-22 21:13:25');
-INSERT INTO `sys_dict_option` VALUES (5, 3, '1', '初级', NULL, 0, 'admin', 'admin', '2021-10-10 14:14:12', '2022-01-22 21:13:25');
-INSERT INTO `sys_dict_option` VALUES (6, 3, '2', '中级', NULL, 0, 'admin', 'admin', '2021-10-10 14:14:19', '2022-01-22 21:13:25');
-INSERT INTO `sys_dict_option` VALUES (7, 3, '3', '高级', NULL, 0, 'admin', 'admin', '2021-10-10 14:14:25', '2022-01-22 21:13:25');
-INSERT INTO `sys_dict_option` VALUES (8, 3, '4', '专家', NULL, 0, 'admin', 'admin', '2021-10-10 14:14:32', '2022-01-22 21:13:25');
-INSERT INTO `sys_dict_option` VALUES (9, 3, '5', '高级专家', NULL, 0, 'admin', 'admin', '2021-10-10 14:14:45', '2022-01-22 21:13:25');
-INSERT INTO `sys_dict_option` VALUES (10, 3, '6', '资深专家', NULL, 0, 'admin', 'admin', '2021-10-10 14:15:02', '2022-01-22 21:13:25');
-INSERT INTO `sys_dict_option` VALUES (34, 18, 'phone_reset_email_code_', '通过手机号码重置邮箱', '通过手机号码重置邮箱', 0, NULL, NULL, '2022-02-08 19:33:09', '2022-02-08 19:33:09');
-INSERT INTO `sys_dict_option` VALUES (35, 18, 'email_reset_email_code_', '通过旧邮箱重置邮箱', '通过旧邮箱重置邮箱', 0, NULL, NULL, '2022-02-08 19:33:09', '2022-02-08 19:33:09');
-INSERT INTO `sys_dict_option` VALUES (36, 18, 'phone_reset_pwd_code_', '通过手机号码重置密码', '通过手机号码重置密码', 0, NULL, NULL, '2022-02-08 19:33:09', '2022-02-08 19:33:09');
-INSERT INTO `sys_dict_option` VALUES (37, 18, 'email_reset_pwd_code_', '通过邮箱重置密码', '通过邮箱重置密码', 0, NULL, NULL, '2022-02-08 19:33:09', '2022-02-08 19:33:09');
-INSERT INTO `sys_dict_option` VALUES (38, 19, 'ARITHMETIC', '1', '算数', 0, NULL, NULL, '2022-02-08 19:40:06', '2022-02-08 19:40:06');
-INSERT INTO `sys_dict_option` VALUES (39, 19, 'CHINESE', '2', '中文', 0, NULL, NULL, '2022-02-08 19:40:06', '2022-02-08 19:40:06');
-INSERT INTO `sys_dict_option` VALUES (40, 19, 'CHINESE_GIF', '3', '中文闪图', 0, NULL, NULL, '2022-02-08 19:40:06', '2022-02-08 19:40:06');
-INSERT INTO `sys_dict_option` VALUES (41, 19, 'GIF', '4', '闪图', 0, NULL, NULL, '2022-02-08 19:40:06', '2022-02-08 19:40:06');
-INSERT INTO `sys_dict_option` VALUES (42, 19, 'SPEC', '5', '数字大写字母', 0, NULL, NULL, '2022-02-08 19:40:06', '2022-02-08 19:40:06');
+INSERT INTO `sys_dict_option` VALUES (1, 1, 'ENABLE', '启用', 'false', '否', 0, 'admin', 'admin', '2019-10-27 20:31:36', '2022-01-22 21:13:25');
+INSERT INTO `sys_dict_option` VALUES (2, 1, 'DISABLE', '禁用', 'true', '是', 0, 'admin', 'admin', '2019-10-27 20:31:36', '2022-01-22 21:13:25');
+INSERT INTO `sys_dict_option` VALUES (3, 2, 'PROFESSION', '专业岗位', '1', NULL, 0, 'admin', 'admin', '2021-10-10 12:25:46', '2022-01-22 21:13:25');
+INSERT INTO `sys_dict_option` VALUES (4, 2, 'MANAGEMENT', '管理岗位', '2', NULL, 0, 'admin', 'admin', '2021-10-10 12:34:36',                   '2022-01-22 21:13:25');
+INSERT INTO `sys_dict_option` VALUES (5, 3, 'LOW', '初级', '1', NULL, 0, 'admin', 'admin', '2021-10-10 14:14:12',
+                                      '2022-01-22 21:13:25');
+INSERT INTO `sys_dict_option` VALUES (6, 3, 'MEDIUM', '中级', '2', NULL, 0, 'admin', 'admin', '2021-10-10 14:14:19',                               '2022-01-22 21:13:25');
+INSERT INTO `sys_dict_option` VALUES (7, 3, 'HIGH', '高级', '3', NULL, 0, 'admin', 'admin', '2021-10-10 14:14:25',
+                                      '2022-01-22 21:13:25');
+INSERT INTO `sys_dict_option` VALUES (8, 3, 'EXPERT', '专家', '4', NULL, 0, 'admin', 'admin', '2021-10-10 14:14:32',     '2022-01-22 21:13:25');
+INSERT INTO `sys_dict_option` VALUES (9, 3, 'ADVANCED_EXPERT', '高级专家', '5', NULL, 0, 'admin', 'admin', '2021-10-10
+14:14:45', '2022-01-22 21:13:25');
+INSERT INTO `sys_dict_option` VALUES (10, 3, 'SENIOR_EXPERT', '资深专家', '6', NULL, 0, 'admin', 'admin', '2021-10-10 14:15:02','2022-01-22 21:13:25');
 
 -- ----------------------------
 -- Table structure for sys_global_config

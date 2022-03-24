@@ -49,6 +49,11 @@ public class DictOption implements Serializable {
     @TableField("`name`")
     private String name;
 
+    @ApiModelProperty(value = "字典选项值")
+    @NotBlank(groups = { AddCheck.class, EditCheck.class })
+    @TableField("`value`")
+    private String value;
+
     @ApiModelProperty(value = "备注")
     @TableField("`note`")
     private String note;

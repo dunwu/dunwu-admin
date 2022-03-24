@@ -15,13 +15,16 @@
       <el-form-item label="名称" prop="name">
         <el-input v-model="form.name" style="width: 370px;" />
       </el-form-item>
+      <el-form-item label="值" prop="value">
+        <el-input v-model="form.value" style="width: 370px;" />
+      </el-form-item>
       <el-form-item :label="dict['disabled_status'].name" prop="disabled">
         <el-select v-model="form.disabled" style="width: 370px" filterable placeholder="请选择">
           <el-option
             v-for="item in dict['disabled_status'].options"
             :key="item.code"
             :label="item.name"
-            :value="item.code"
+            :value="item.value"
             :disabled="item.disabled"
           />
         </el-select>
@@ -50,7 +53,7 @@ import ElDragDialog from '@/directive/el-drag-dialog'
 /**
  * 表单默认值
  */
-const defaultForm = { id: null, dictId: null, code: null, name: null, note: null, disabled: false }
+const defaultForm = { id: null, dictId: null, code: null, name: null, value: null, note: null, disabled: false }
 export default {
   name: 'DictOptionForm',
   directives: { ElDragDialog },
@@ -68,6 +71,7 @@ export default {
       rules: {
         code: [{ required: true, message: '请输入字典选项编码', trigger: 'blur' }],
         name: [{ required: true, message: '请输入字典选项名称', trigger: 'blur' }],
+        value: [{ required: true, message: '请输入字典选项值', trigger: 'blur' }],
         disabled: [{ required: true, message: '请选择是否启用', trigger: 'blur' }]
       }
     }

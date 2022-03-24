@@ -49,7 +49,7 @@
                       v-for="item in dict['disabled_status'].options"
                       :key="item.code"
                       :label="item.name"
-                      :value="item.code"
+                      :value="item.value"
                     />
                   </el-select>
                 </el-col>
@@ -79,9 +79,9 @@
           @selection-change="crud.selectionChangeHandler"
         >
           <el-table-column type="selection" width="50" />
-          <el-table-column prop="id" label="ID" width="50" />
           <el-table-column prop="code" label="字典选项编码" :show-overflow-tooltip="true" />
           <el-table-column prop="name" label="字典选项名称" :show-overflow-tooltip="true" />
+          <el-table-column prop="value" label="字典选项值" :show-overflow-tooltip="true" />
           <el-table-column prop="note" label="字典选项备注" :show-overflow-tooltip="true" />
           <el-table-column prop="disabled" label="是否启用" width="100">
             <template slot-scope="scope">

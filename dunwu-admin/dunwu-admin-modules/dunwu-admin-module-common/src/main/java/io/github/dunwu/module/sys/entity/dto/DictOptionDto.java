@@ -41,6 +41,10 @@ public class DictOptionDto implements Serializable {
     @ApiModelProperty(value = "字典选项名称")
     private String name;
 
+    @ExcelProperty("字典选项值")
+    @ApiModelProperty(value = "字典选项值")
+    private String value;
+
     @ExcelProperty("备注")
     @ApiModelProperty(value = "备注")
     private String note;

@@ -13,7 +13,7 @@
         <el-input v-model="form.name" style="width: 370px;" placeholder="请输入职务名称" />
       </el-form-item>
       <el-form-item label="职务类型" prop="type">
-        <el-radio v-for="item in dict['job_type'].options" :key="item.id" v-model="form.type" :label="item.code">
+        <el-radio v-for="item in dict['job_type'].options" :key="item.id" v-model="form.type" :label="item.value">
           {{ item.name }}
         </el-radio>
       </el-form-item>
@@ -24,7 +24,7 @@
             v-for="item in dict['job_profession_level'].options"
             :key="item.code"
             :label="item.name"
-            :value="item.code"
+            :value="item.value"
           />
         </el-select>
       </el-form-item>

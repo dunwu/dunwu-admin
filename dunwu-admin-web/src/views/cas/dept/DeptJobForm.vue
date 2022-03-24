@@ -63,7 +63,7 @@
                     v-for="item in dict['disabled_status'].options"
                     :key="item.code"
                     :label="item.name"
-                    :value="item.code"
+                    :value="item.value"
                   />
                 </el-select>
               </el-col>
@@ -83,7 +83,7 @@
                     v-for="item in dict['job_type'].options"
                     :key="item.code"
                     :label="item.name"
-                    :value="item.code"
+                    :value="item.value"
                   />
                 </el-select>
               </el-col>
@@ -103,7 +103,7 @@
                     v-for="item in dict['job_profession_level'].options"
                     :key="item.code"
                     :label="item.name"
-                    :value="item.code"
+                    :value="item.value"
                   />
                 </el-select>
               </el-col>

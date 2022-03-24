@@ -21,7 +21,7 @@
             v-for="item in dict['disabled_status'].options"
             :key="item.code"
             :label="item.name"
-            :value="item.code"
+            :value="item.value"
             :disabled="item.disabled"
           />
         </el-select>

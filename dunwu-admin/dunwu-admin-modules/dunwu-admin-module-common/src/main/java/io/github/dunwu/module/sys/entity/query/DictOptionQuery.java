@@ -1,6 +1,7 @@
 package io.github.dunwu.module.sys.entity.query;
 
 import cn.hutool.json.JSONUtil;
+import com.alibaba.excel.annotation.ExcelProperty;
 import io.github.dunwu.tool.data.annotation.QueryField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -33,6 +34,10 @@ public class DictOptionQuery implements Serializable {
     @ApiModelProperty(value = "字典选项编码")
     @QueryField(value = "`code`", type = QueryField.QueryType.LIKE)
     private String code;
+
+    @ApiModelProperty(value = "字典选项值")
+    @QueryField(value = "`value`", type = QueryField.QueryType.LIKE)
+    private String value;
 
     @ApiModelProperty(value = "字典选项名称")
     @QueryField(value = "`name`", type = QueryField.QueryType.LIKE)

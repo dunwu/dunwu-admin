@@ -58,7 +58,7 @@
                   v-for="item in dict['disabled_status'].options"
                   :key="item.id"
                   v-model="form.disabled"
-                  :label="item.code"
+                  :label="item.value"
                 >
                   {{ item.name }}
                 </el-radio>
@@ -72,29 +72,22 @@
                 />
               </el-form-item>
               <el-form-item label="字典选项编码">
-                <el-select
-                  v-model="dictOptionCodeKey"
-                  placeholder="请选择字典选项编码"
-                  @change="changeDictOptionCodeKey"
-                >
+                <el-select v-model="dictOptionCodeKey" placeholder="请选择字典选项编码" @change="refreshDictOptions">
                   <el-option v-for="item in paramOptions" :key="item.code" :label="item.name" :value="item.code" />
                 </el-select>
               </el-form-item>
               <el-form-item label="字典选项名称">
-                <el-select
-                  v-model="dictOptionNameKey"
-                  placeholder="请选择字典选项名称"
-                  @change="changeDictOptionNameKey"
-                >
+                <el-select v-model="dictOptionNameKey" placeholder="请选择字典选项名称" @change="refreshDictOptions">
+                  <el-option v-for="item in paramOptions" :key="item.code" :label="item.name" :value="item.code" />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="字典选项值">
+                <el-select v-model="dictOptionValueKey" placeholder="请选择字典选项值" @change="refreshDictOptions">
                   <el-option v-for="item in paramOptions" :key="item.code" :label="item.name" :value="item.code" />
                 </el-select>
               </el-form-item>
               <el-form-item label="字典选项备注">
-                <el-select
-                  v-model="dictOptionNoteKey"
-                  placeholder="请选择字典选项备注"
-                  @change="changeDictOptionNoteKey"
-                >
+                <el-select v-model="dictOptionNoteKey" placeholder="请选择字典选项备注" @change="refreshDictOptions">
                   <el-option v-for="item in paramOptions" :key="item.code" :label="item.name" :value="item.code" />
                 </el-select>
               </el-form-item>
@@ -107,6 +100,7 @@
             <el-table ref="table" :data="options" border stripe max-height="600" style="width: 100%;">
               <el-table-column prop="code" label="字典选项编码" :show-overflow-tooltip="true" />
               <el-table-column prop="name" label="字典选项名称" :show-overflow-tooltip="true" />
+              <el-table-column prop="value" label="字典选项值" :show-overflow-tooltip="true" />
               <el-table-column prop="note" label="字典选项备注" :show-overflow-tooltip="true" />
             </el-table>
           </el-col>
@@ -195,6 +189,7 @@ export default {
       paramOptions: [{ code: 'name', name: '枚举项名称' }, { code: 'comment', name: '枚举项注释' }],
       dictOptionCodeKey: 'name',
       dictOptionNameKey: 'name',
+      dictOptionValueKey: 'name',
       dictOptionNoteKey: 'comment',
       saveLoading: false
     }
@@ -227,6 +222,7 @@ export default {
           this.enumInfo = response.data
           this.form.code = this.enumInfo.name
           this.form.name = this.enumInfo.name
+          this.form.value = this.enumInfo.name
           this.form.note = this.enumInfo.comment
           this.enumEntries = this.enumInfo.entries
           if (this.enumEntries && this.enumEntries.length > 0) {
@@ -252,15 +248,6 @@ export default {
       console.error('上传失败', err)
       this.$message({ type: 'error', message: '上传失败' })
     },
-    changeDictOptionCodeKey() {
-      this.refreshDictOptions()
-    },
-    changeDictOptionNameKey() {
-      this.refreshDictOptions()
-    },
-    changeDictOptionNoteKey() {
-      this.refreshDictOptions()
-    },
     refreshDictOptions() {
       this.options = []
       if (this.enumEntries && this.enumEntries.length > 0) {
@@ -285,6 +272,16 @@ export default {
           } else {
             const index = Number.parseInt(this.dictOptionNameKey)
             option.name = item.params[index]
+          }
+
+          // 根据选择，获取字典选项值
+          if (this.dictOptionValueKey === 'name') {
+            option.value = item.name
+          } else if (this.dictOptionValueKey === 'comment') {
+            option.value = item.comment
+          } else {
+            const index = Number.parseInt(this.dictOptionValueKey)
+            option.value = item.params[index]
           }
 
           // 根据选择，获取字典选项备注

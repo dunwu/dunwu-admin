@@ -1,12 +1,16 @@
 package io.github.dunwu.module.sys.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import io.github.dunwu.module.sys.dao.DictOptionDao;
 import io.github.dunwu.module.sys.entity.DictOption;
 import io.github.dunwu.module.sys.entity.dto.DictOptionDto;
 import io.github.dunwu.module.sys.entity.query.DictOptionQuery;
 import io.github.dunwu.module.sys.service.DictOptionService;
+import io.github.dunwu.tool.core.constant.enums.ResultStatus;
+import io.github.dunwu.tool.core.exception.AppException;
 import io.github.dunwu.tool.data.excel.ExcelUtil;
 import io.github.dunwu.tool.data.mybatis.ServiceImpl;
 import io.github.dunwu.tool.web.log.annotation.OperationLog;
@@ -18,11 +22,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
-import javax.servlet.http.HttpServletResponse;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 数据字典选项 Service 类
@@ -40,36 +46,42 @@ public class DictOptionServiceImpl extends ServiceImpl implements DictOptionServ
     @Override
     @OperationLog(bizType = "数据字典选项", operation = OperationType.ADD)
     public boolean insert(DictOption entity) {
+        checkEntity(entity);
         return dao.insert(entity);
     }
 
     @Override
     @OperationLog(bizType = "数据字典选项", operation = OperationType.BATCH_ADD)
     public boolean insertBatch(Collection<DictOption> list) {
+        checkEntityList(list);
         return dao.insertBatch(list);
     }
 
     @Override
     @OperationLog(bizType = "数据字典选项", operation = OperationType.EDIT, bizNo = "{{#entity.id}}")
     public boolean updateById(DictOption entity) {
+        checkEntity(entity);
         return dao.updateById(entity);
     }
 
     @Override
     @OperationLog(bizType = "数据字典选项", operation = OperationType.BATCH_EDIT)
     public boolean updateBatchById(Collection<DictOption> list) {
+        checkEntityList(list);
         return dao.updateBatchById(list);
     }
 
     @Override
     @OperationLog(bizType = "数据字典选项", operation = OperationType.SAVE, bizNo = "{{#entity.id}}")
     public boolean save(DictOption entity) {
+        checkEntity(entity);
         return dao.save(entity);
     }
 
     @Override
     @OperationLog(bizType = "数据字典选项", operation = OperationType.BATCH_SAVE)
     public boolean saveBatch(Collection<DictOption> list) {
+        checkEntityList(list);
         return dao.saveBatch(list);
     }
 
@@ -121,10 +133,8 @@ public class DictOptionServiceImpl extends ServiceImpl implements DictOptionServ
     }
 
     @Override
-    @OperationLog(bizType = "数据字典选项", operation = OperationType.IMPORT_EXCEL,
-        success = "导入数据字典选项(Excel文件：{{#file.getOriginalFilename()}})『成功』",
-        fail = "导入数据字典选项(Excel文件：{{#file.getOriginalFilename()}})『失败』"
-    )
+    @OperationLog(bizType = "数据字典选项", operation = OperationType.IMPORT_EXCEL, success = "导入数据字典选项(Excel文件：{{#file"
+        + ".getOriginalFilename()}})『成功』", fail = "导入数据字典选项(Excel文件：{{#file.getOriginalFilename()}})『失败』")
     public void importList(MultipartFile file) {
         try {
             ExcelUtil.saveExcelData(file.getInputStream(), DictOption.class, dao);
@@ -145,10 +155,11 @@ public class DictOptionServiceImpl extends ServiceImpl implements DictOptionServ
     }
 
     @Override
-    @OperationLog(bizType = "数据字典选项", operation = OperationType.EXPORT_EXCEL,
-        success = "分页查询导出数据字典选项(page={{#pageable.getPageNumber()}}, size={{#pageable.getPageSize()}}, query={{#query.toJsonStr()}})『成功』",
-        fail = "分页查询导出数据字典选项(page={{#pageable.getPageNumber()}}, size={{#pageable.getPageSize()}}, query={{#query.toJsonStr()}})『失败』"
-    )
+    @OperationLog(bizType = "数据字典选项", operation = OperationType.EXPORT_EXCEL, success = "分页查询导出数据字典选项"
+        + "(page={{#pageable.getPageNumber()}}, size={{#pageable.getPageSize()}}, query={{#query.toJsonStr()}})『成功』",
+        fail =
+        "分页查询导出数据字典选项(page={{#pageable.getPageNumber()}}, size={{#pageable.getPageSize()}}, query={{#query"
+            + ".toJsonStr()}})『失败』")
     public void exportPage(Pageable pageable, DictOptionQuery query, HttpServletResponse response) {
         Page<DictOptionDto> page = dao.pojoSpringPageByQuery(pageable, query, this::doToDto);
         try {
@@ -178,10 +189,64 @@ public class DictOptionServiceImpl extends ServiceImpl implements DictOptionServ
 
     @Override
     public List<DictOptionDto> pojoListByDictId(Long dictId) {
-        DictOption dictOption = new DictOption();
-        dictOption.setDictId(dictId);
-        QueryWrapper<DictOption> wrapper = new QueryWrapper<>(dictOption);
+        LambdaQueryWrapper<DictOption> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(DictOption::getDictId, dictId).orderByAsc(DictOption::getValue);
         return dao.pojoList(wrapper, this::doToDto);
+    }
+
+    private void checkEntityList(Collection<DictOption> list) {
+        if (CollectionUtil.isEmpty(list)) {
+            throw new AppException(ResultStatus.DATA_ERROR.getCode(), "【数据字典选项】保存的列表不能为空！");
+        }
+
+        Set<String> codes = list.stream().map(DictOption::getCode).collect(Collectors.toSet());
+        if (codes.size() != list.size()) {
+            throw new AppException(ResultStatus.DATA_ERROR.getCode(), "【数据字典选项】保存的数据字典项 code 不能重复！");
+        }
+
+        Set<String> values = list.stream().map(DictOption::getValue).collect(Collectors.toSet());
+        if (values.size() != list.size()) {
+            throw new AppException(ResultStatus.DATA_ERROR.getCode(), "【数据字典选项】保存的数据字典项 value 不能重复！");
+        }
+
+        list.forEach(this::checkEntity);
+    }
+
+    private void checkEntity(DictOption entity) {
+        if (entity.getDictId() != null && StrUtil.isNotBlank(entity.getCode())) {
+            LambdaQueryWrapper<DictOption> wrapper = new LambdaQueryWrapper<>();
+            wrapper.eq(DictOption::getDictId, entity.getDictId());
+            List<DictOption> list = dao.list(wrapper);
+            if (CollectionUtil.isEmpty(list)) {
+                return;
+            }
+
+            // if (entity.getId() == null) {
+            //     // 添加操作
+            //     String msg = StrUtil.format("【数据字典选项】dictId = {}, code = {} 存在重复记录",
+            //                                 entity.getDictId(), entity.getCode());
+            //     throw new AppException(ResultStatus.DATA_ERROR.getCode(), msg);
+            // } else {
+            //     // 更新操作
+            //
+            // }
+
+            for (DictOption item : list) {
+                if (entity.getId() != null && entity.getId().equals(item.getId())) {
+                    continue;
+                }
+                if (item.getCode().equals(entity.getCode())) {
+                    String msg = StrUtil.format("【数据字典选项】dictId = {}, code = {} 存在重复记录",
+                                                entity.getDictId(), entity.getCode());
+                    throw new AppException(ResultStatus.DATA_ERROR.getCode(), msg);
+                }
+                if (item.getValue().equals(entity.getValue())) {
+                    String msg = StrUtil.format("【数据字典选项】dictId = {}, value = {} 存在重复记录",
+                                                entity.getDictId(), entity.getValue());
+                    throw new AppException(ResultStatus.DATA_ERROR.getCode(), msg);
+                }
+            }
+        }
     }
 
 }

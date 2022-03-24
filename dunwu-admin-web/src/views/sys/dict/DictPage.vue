@@ -52,7 +52,7 @@
                   v-for="item in dict['disabled_status'].options"
                   :key="item.code"
                   :label="item.name"
-                  :value="item.code"
+                  :value="item.value"
                   :disabled="item.disabled"
                 />
               </el-select>
@@ -93,17 +93,24 @@
             <div slot="header" class="clearfix" style="margin: 20px;">
               <span style="font-size: 14px; font-weight: 700; color: #586f76;">字典选项</span>
             </div>
-            <el-table ref="dictOptionTable" border size="mini" :data="scope.row.options" style="margin-bottom: 20px">
+            <el-table
+              ref="dictOptionTable"
+              border
+              size="mini"
+              :data="scope.row.options"
+              :default-sort="{ prop: 'value', order: 'ascending' }"
+              style="margin-bottom: 20px"
+            >
               <el-table-column prop="id" label="ID" width="50" />
               <el-table-column prop="code" label="字典选项编码" :show-overflow-tooltip="true" />
               <el-table-column prop="name" label="字典选项名称" :show-overflow-tooltip="true" />
+              <el-table-column prop="value" label="字典选项值" :show-overflow-tooltip="true" />
               <el-table-column prop="note" label="字典选项备注" :show-overflow-tooltip="true" />
             </el-table>
           </div>
         </template>
       </el-table-column>
       <el-table-column type="selection" width="50" :selectable="checkSelectable" />
-      <el-table-column prop="id" label="ID" width="50" />
       <el-table-column prop="code" label="字典编码" :show-overflow-tooltip="true" />
       <el-table-column prop="name" label="字典名称" :show-overflow-tooltip="true" />
       <el-table-column prop="note" label="字典描述" :show-overflow-tooltip="true" />

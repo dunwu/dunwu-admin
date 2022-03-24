@@ -391,7 +391,6 @@ export function downloadFileWithActualName(result) {
 
   const header = result.headers['content-disposition']
   const fileName = header.split('attachment;fileName=')[1]
-  console.info('downloadFileWithActualName', fileName)
   link.setAttribute('download', fileName)
 
   document.body.appendChild(link)
