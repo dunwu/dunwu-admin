@@ -221,16 +221,6 @@ public class DictOptionServiceImpl extends ServiceImpl implements DictOptionServ
                 return;
             }
 
-            // if (entity.getId() == null) {
-            //     // 添加操作
-            //     String msg = StrUtil.format("【数据字典选项】dictId = {}, code = {} 存在重复记录",
-            //                                 entity.getDictId(), entity.getCode());
-            //     throw new AppException(ResultStatus.DATA_ERROR.getCode(), msg);
-            // } else {
-            //     // 更新操作
-            //
-            // }
-
             for (DictOption item : list) {
                 if (entity.getId() != null && entity.getId().equals(item.getId())) {
                     continue;
