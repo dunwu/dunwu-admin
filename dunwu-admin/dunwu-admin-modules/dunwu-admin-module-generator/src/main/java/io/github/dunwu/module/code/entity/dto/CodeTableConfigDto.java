@@ -52,6 +52,9 @@ public class CodeTableConfigDto implements Serializable {
     @ApiModelProperty(value = "开启EasyExcel")
     private Boolean enableEasyExcel;
 
+    @ApiModelProperty(value = "开启操作日志")
+    private Boolean enableLog;
+
     @ApiModelProperty(value = "作者")
     private String author;
 

@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -133,8 +134,11 @@ public class DictOptionServiceImpl extends ServiceImpl implements DictOptionServ
     }
 
     @Override
-    @OperationLog(bizType = "数据字典选项", operation = OperationType.IMPORT_EXCEL, success = "导入数据字典选项(Excel文件：{{#file"
-        + ".getOriginalFilename()}})『成功』", fail = "导入数据字典选项(Excel文件：{{#file.getOriginalFilename()}})『失败』")
+    @Transactional(rollbackFor = { Exception.class })
+    @OperationLog(bizType = "数据字典选项", operation = OperationType.IMPORT_EXCEL,
+        success = "导入数据字典选项(Excel文件：{{#file.getOriginalFilename()}})『成功』",
+        fail = "导入数据字典选项(Excel文件：{{#file.getOriginalFilename()}})『失败』"
+    )
     public void importList(MultipartFile file) {
         try {
             ExcelUtil.saveExcelData(file.getInputStream(), DictOption.class, dao);
@@ -155,11 +159,10 @@ public class DictOptionServiceImpl extends ServiceImpl implements DictOptionServ
     }
 
     @Override
-    @OperationLog(bizType = "数据字典选项", operation = OperationType.EXPORT_EXCEL, success = "分页查询导出数据字典选项"
-        + "(page={{#pageable.getPageNumber()}}, size={{#pageable.getPageSize()}}, query={{#query.toJsonStr()}})『成功』",
-        fail =
-        "分页查询导出数据字典选项(page={{#pageable.getPageNumber()}}, size={{#pageable.getPageSize()}}, query={{#query"
-            + ".toJsonStr()}})『失败』")
+    @OperationLog(bizType = "数据字典选项", operation = OperationType.EXPORT_EXCEL,
+        success = "分页查询导出数据字典选项(page={{#pageable.getPageNumber()}}, size={{#pageable.getPageSize()}}, query={{#query.toJsonStr()}})『成功』",
+        fail = "分页查询导出数据字典选项(page={{#pageable.getPageNumber()}}, size={{#pageable.getPageSize()}}, query={{#query.toJsonStr()}})『失败』"
+    )
     public void exportPage(Pageable pageable, DictOptionQuery query, HttpServletResponse response) {
         Page<DictOptionDto> page = dao.pojoSpringPageByQuery(pageable, query, this::doToDto);
         try {

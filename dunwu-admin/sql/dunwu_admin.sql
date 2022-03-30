@@ -758,6 +758,7 @@ CREATE TABLE `code_global_config`  (
   `enable_override` tinyint(1) NULL DEFAULT NULL COMMENT '开启文件覆盖模式',
   `enable_swagger` tinyint(1) NULL DEFAULT NULL COMMENT '开启Swagger',
   `enable_easy_excel` tinyint(1) NULL DEFAULT NULL COMMENT '开启EasyExcel',
+  `enable_log` tinyint(1) NULL DEFAULT NULL COMMENT '开启操作日志',
   `author` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '作者',
   `output_dir` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '输出路径',
   `backend_path` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '后端代码路径',
@@ -776,7 +777,6 @@ CREATE TABLE `code_global_config`  (
 -- ----------------------------
 -- Records of code_global_config
 -- ----------------------------
-INSERT INTO `code_global_config` VALUES (1, 1, 1, 1, 1, '<a href=\"mailto:forbreak@163.com\">Zhang Peng</a>', 'D:\\Codes\\zp\\zproject\\dunwu-boot-admin\\dunwu-admin\\dunwu-admin-modules\\dunwu-admin-module-common', 'D:\\Codes\\zp\\zproject\\dunwu-boot-admin\\dunwu-admin\\dunwu-admin-modules\\dunwu-admin-module-common', 'D:\\Codes\\zp\\zproject\\dunwu-boot-admin\\dunwu-admin\\dunwu-admin-modules\\dunwu-admin-module-common', 'io.github.dunwu.module', 'AUTO', 'TIME_PACK', 'yyyy-MM-dd HH:mm:ss', 'admin', 'admin', '2021-09-17 20:44:16', '2022-01-28 10:06:32');
 
 -- ----------------------------
 -- Table structure for code_table_config
@@ -792,6 +792,7 @@ CREATE TABLE `code_table_config`  (
   `enable_override` tinyint(1) NULL DEFAULT NULL COMMENT '开启文件覆盖模式',
   `enable_swagger` tinyint(1) NULL DEFAULT NULL COMMENT '开启Swagger2',
   `enable_easy_excel` tinyint(1) NULL DEFAULT NULL COMMENT '开启EasyExcel',
+  `enable_log` tinyint(1) NULL DEFAULT NULL COMMENT '开启操作日志',
   `author` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '作者',
   `output_dir` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '输出路径',
   `backend_path` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '后端代码路径',
@@ -819,8 +820,6 @@ CREATE TABLE `code_table_config`  (
 -- ----------------------------
 -- Records of code_table_config
 -- ----------------------------
-INSERT INTO `code_table_config` VALUES (33, 1, 'dunwu_admin', 'sys_dict', '数据字典', 1, 1, 1, 1, '<a href=\"mailto:forbreak@163.com\">Zhang Peng</a>', 'D:\\Codes\\zp\\zproject\\dunwu-boot-admin\\dunwu-admin\\dunwu-admin-modules\\dunwu-admin-module-common', 'D:\\Codes\\zp\\zproject\\dunwu-boot-admin\\dunwu-admin\\dunwu-admin-modules\\dunwu-admin-module-common', 'D:\\Codes\\zp\\zproject\\dunwu-boot-admin\\dunwu-admin\\dunwu-admin-modules\\dunwu-admin-module-common', 'io.github.dunwu.module', 'AUTO', 'TIME_PACK', 'yyyy-MM-dd HH:mm:ss', 1, 1, 1, 1, 1, 'sys', 'sys_', 'dict', 'admin', 'admin', '2021-09-17 20:44:16', '2021-09-17 20:44:16');
-INSERT INTO `code_table_config` VALUES (35, 1, 'dunwu_admin', 'sys_dict_option', '数据字典选项', 1, 1, 1, 1, '<a href=\"mailto:forbreak@163.com\">Zhang Peng</a>', 'D:\\Codes\\zp\\zproject\\dunwu-boot-admin\\dunwu-admin\\dunwu-admin-modules\\dunwu-admin-module-common', 'D:\\Codes\\zp\\zproject\\dunwu-boot-admin\\dunwu-admin\\dunwu-admin-modules\\dunwu-admin-module-common', 'D:\\Codes\\zp\\zproject\\dunwu-boot-admin\\dunwu-admin\\dunwu-admin-modules\\dunwu-admin-module-common', 'io.github.dunwu.module', 'AUTO', 'TIME_PACK', 'yyyy-MM-dd HH:mm:ss', 1, 1, 1, 1, 1, 'sys', 'sys', 'dict/option', 'admin', 'admin', '2021-09-17 20:44:16', '2022-01-28 10:06:32');
 
 -- ----------------------------
 -- Table structure for hello

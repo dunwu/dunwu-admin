@@ -44,6 +44,13 @@
           <span style="color: #C0C0C0;margin-left: 10px;">是否开启 EasyExcel</span>
         </el-radio-group>
       </el-form-item>
+      <el-form-item label="开启操作日志" prop="enableLog">
+        <el-radio-group v-model="form.enableLog" size="mini" style="width: 40%">
+          <el-radio-button label="true">是</el-radio-button>
+          <el-radio-button label="false">否</el-radio-button>
+          <span style="color: #C0C0C0;margin-left: 10px;">开启操作日志</span>
+        </el-radio-group>
+      </el-form-item>
       <el-form-item label="作者" prop="author">
         <el-input v-model="form.author" style="width: 40%" />
         <span style="color: #C0C0C0;margin-left: 10px;">生成代码 javadoc 中的作者名称</span>
@@ -165,6 +172,8 @@ export default {
         enablePermission: false,
         enableOverride: false,
         enableSwagger: false,
+        enableEasyExcel: false,
+        enableLog: false,
         author: null,
         outputDir: null,
         backendPath: null,

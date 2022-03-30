@@ -1,7 +1,6 @@
 package io.github.dunwu.module.sys.entity.query;
 
 import cn.hutool.json.JSONUtil;
-import com.alibaba.excel.annotation.ExcelProperty;
 import io.github.dunwu.tool.data.annotation.QueryField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
