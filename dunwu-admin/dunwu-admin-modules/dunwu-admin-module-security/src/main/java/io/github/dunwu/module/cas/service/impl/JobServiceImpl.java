@@ -11,12 +11,12 @@ import io.github.dunwu.module.cas.entity.dto.RoleDto;
 import io.github.dunwu.module.cas.entity.query.JobQuery;
 import io.github.dunwu.module.cas.service.JobService;
 import io.github.dunwu.module.cas.service.RoleService;
-import io.github.dunwu.tool.data.Pagination;
 import io.github.dunwu.tool.data.excel.ExcelUtil;
 import io.github.dunwu.tool.data.exception.DataException;
 import io.github.dunwu.tool.data.mybatis.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -124,7 +124,7 @@ public class JobServiceImpl extends ServiceImpl implements JobService {
             if (CollectionUtil.isNotEmpty(jobIds)) {
                 query.setIds(jobIds);
             } else {
-                return new Pagination<>(Collections.emptyList(), pageable, 0L);
+                return new PageImpl<>(Collections.emptyList(), pageable, 0L);
             }
         }
         return jobDao.pojoSpringPageByQuery(pageable, query, this::doToDto);

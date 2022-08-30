@@ -10,7 +10,7 @@ import io.github.dunwu.module.sys.entity.dto.DictOptionDto;
 import io.github.dunwu.module.sys.entity.query.DictOptionQuery;
 import io.github.dunwu.module.sys.service.DictOptionService;
 import io.github.dunwu.tool.core.constant.enums.ResultStatus;
-import io.github.dunwu.tool.core.exception.AppException;
+import io.github.dunwu.tool.core.exception.DefaultException;
 import io.github.dunwu.tool.data.excel.ExcelUtil;
 import io.github.dunwu.tool.data.mybatis.ServiceImpl;
 import io.github.dunwu.tool.web.log.annotation.OperationLog;
@@ -199,17 +199,17 @@ public class DictOptionServiceImpl extends ServiceImpl implements DictOptionServ
 
     private void checkEntityList(Collection<DictOption> list) {
         if (CollectionUtil.isEmpty(list)) {
-            throw new AppException(ResultStatus.DATA_ERROR.getCode(), "【数据字典选项】保存的列表不能为空！");
+            throw new DefaultException(ResultStatus.DATA_ERROR.getCode(), "【数据字典选项】保存的列表不能为空！");
         }
 
         Set<String> codes = list.stream().map(DictOption::getCode).collect(Collectors.toSet());
         if (codes.size() != list.size()) {
-            throw new AppException(ResultStatus.DATA_ERROR.getCode(), "【数据字典选项】保存的数据字典项 code 不能重复！");
+            throw new DefaultException(ResultStatus.DATA_ERROR.getCode(), "【数据字典选项】保存的数据字典项 code 不能重复！");
         }
 
         Set<String> values = list.stream().map(DictOption::getValue).collect(Collectors.toSet());
         if (values.size() != list.size()) {
-            throw new AppException(ResultStatus.DATA_ERROR.getCode(), "【数据字典选项】保存的数据字典项 value 不能重复！");
+            throw new DefaultException(ResultStatus.DATA_ERROR.getCode(), "【数据字典选项】保存的数据字典项 value 不能重复！");
         }
 
         list.forEach(this::checkEntity);
@@ -231,12 +231,12 @@ public class DictOptionServiceImpl extends ServiceImpl implements DictOptionServ
                 if (item.getCode().equals(entity.getCode())) {
                     String msg = StrUtil.format("【数据字典选项】dictId = {}, code = {} 存在重复记录",
                                                 entity.getDictId(), entity.getCode());
-                    throw new AppException(ResultStatus.DATA_ERROR.getCode(), msg);
+                    throw new DefaultException(ResultStatus.DATA_ERROR.getCode(), msg);
                 }
                 if (item.getValue().equals(entity.getValue())) {
                     String msg = StrUtil.format("【数据字典选项】dictId = {}, value = {} 存在重复记录",
                                                 entity.getDictId(), entity.getValue());
-                    throw new AppException(ResultStatus.DATA_ERROR.getCode(), msg);
+                    throw new DefaultException(ResultStatus.DATA_ERROR.getCode(), msg);
                 }
             }
         }

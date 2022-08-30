@@ -2,7 +2,9 @@ package io.github.dunwu;
 
 import cn.hutool.core.util.StrUtil;
 import io.github.dunwu.tool.core.constant.enums.ResultStatus;
+import io.github.dunwu.tool.core.exception.CodeMsgException;
 import io.github.dunwu.tool.data.DataResult;
+import io.github.dunwu.tool.data.Result;
 import io.github.dunwu.tool.data.exception.DataException;
 import io.github.dunwu.tool.web.constant.WebConstant;
 import org.slf4j.Logger;
@@ -57,7 +59,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({ ConstraintViolationException.class })
-    public DataResult<?> handleConstraintViolationException(final ConstraintViolationException e) {
+    public Result handleConstraintViolationException(final ConstraintViolationException e) {
         log.error("ConstraintViolationException", e);
         StringBuilder sb = new StringBuilder();
         Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
@@ -67,25 +69,32 @@ public class GlobalExceptionHandler {
             sb.append(pathArr[1]).append(violation.getMessage()).append(",");
         }
         sb = new StringBuilder(sb.substring(0, sb.length() - 1));
-        return DataResult.fail(ResultStatus.HTTP_BAD_REQUEST.getCode(), sb.toString());
+        return Result.fail(ResultStatus.HTTP_BAD_REQUEST.getCode(), sb.toString());
     }
 
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({ HttpClientErrorException.class })
-    public DataResult<?> handleBadRequestException(final HttpClientErrorException e) {
+    public Result handleBadRequestException(final HttpClientErrorException e) {
         log.error("HttpClientErrorException", e);
-        return DataResult.fail(ResultStatus.HTTP_BAD_REQUEST.getCode(), e.getLocalizedMessage());
+        return Result.fail(ResultStatus.HTTP_BAD_REQUEST.getCode(), e.getLocalizedMessage());
     }
 
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({ DataException.class })
-    public DataResult<?> handleDataException(final DataException e) {
+    public Result handleDataException(final DataException e) {
         log.error("DataException", e);
-        return DataResult.fail(ResultStatus.DATA_ERROR.getCode(), e.getLocalizedMessage());
+        return Result.fail(ResultStatus.DATA_ERROR.getCode(), e.getLocalizedMessage());
     }
 
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({ CodeMsgException.class })
+    public Result handleCodeMsgException(final CodeMsgException e) {
+        log.error("DataException", e);
+        return Result.fail(ResultStatus.DATA_ERROR.getCode(), e.getLocalizedMessage());
+    }
     // ------------------------------------------------------------------------------
     // 认证、授权异常
     // ------------------------------------------------------------------------------
@@ -99,9 +108,9 @@ public class GlobalExceptionHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(AuthenticationException.class)
-    public DataResult<?> handleAuthException(final AuthenticationException e) {
+    public Result handleAuthException(final AuthenticationException e) {
         log.error("认证失败，方法: {}, message: {}", e.getClass().getCanonicalName(), e.getLocalizedMessage());
-        return DataResult.fail(ResultStatus.HTTP_UNAUTHORIZED.getCode(), e.getLocalizedMessage());
+        return Result.fail(ResultStatus.HTTP_UNAUTHORIZED.getCode(), e.getLocalizedMessage());
     }
 
     /**
@@ -113,17 +122,17 @@ public class GlobalExceptionHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(AuthException.class)
-    public DataResult<?> handleAuthException(final AuthException e) {
+    public Result handleAuthException(final AuthException e) {
         log.error("认证失败，方法: {}, message: {}", e.getClass().getCanonicalName(), e.getLocalizedMessage());
-        return DataResult.fail(ResultStatus.HTTP_UNAUTHORIZED.getCode(), e.getLocalizedMessage());
+        return Result.fail(ResultStatus.HTTP_UNAUTHORIZED.getCode(), e.getLocalizedMessage());
     }
 
     @ResponseBody
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(AccessDeniedException.class)
-    public DataResult<?> handleAccessDeniedException(final AccessDeniedException e) {
+    public Result handleAccessDeniedException(final AccessDeniedException e) {
         log.error("权限不足，方法: {}, message: {}", e.getClass().getCanonicalName(), e.getLocalizedMessage());
-        return DataResult.fail(ResultStatus.HTTP_UNAUTHORIZED.getCode(), e.getLocalizedMessage());
+        return Result.fail(ResultStatus.HTTP_UNAUTHORIZED.getCode(), e.getLocalizedMessage());
     }
 
     /**
@@ -132,9 +141,9 @@ public class GlobalExceptionHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Throwable.class)
-    public DataResult<?> handleException(Throwable e) {
+    public Result handleException(Throwable e) {
         log.error("未知异常", e);
-        return DataResult.fail(ResultStatus.HTTP_SERVER_ERROR.getCode(), e.getMessage());
+        return Result.fail(ResultStatus.HTTP_SERVER_ERROR.getCode(), e.getMessage());
     }
 
     /**
@@ -146,7 +155,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({ MethodArgumentNotValidException.class })
-    private DataResult<?> handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
+    private Result handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
         log.error("MethodArgumentNotValidException", e);
         StringBuilder sb = new StringBuilder();
         sb.append("参数错误：\n");
@@ -155,7 +164,7 @@ public class GlobalExceptionHandler {
             sb.append(error.getDefaultMessage());
             sb.append("\n");
         }
-        return DataResult.fail(ResultStatus.SYSTEM_ERROR_PARAM.getCode(), sb.toString());
+        return Result.fail(ResultStatus.REQUEST_ERROR.getCode(), sb.toString());
     }
 
     private WebConstant.ResponseType getResponseMode(HttpServletRequest request) {

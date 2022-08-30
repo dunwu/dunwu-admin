@@ -14,7 +14,6 @@ import io.github.dunwu.module.cas.service.PermissionService;
 import io.github.dunwu.module.cas.service.RoleService;
 import io.github.dunwu.tool.bean.BeanUtil;
 import io.github.dunwu.tool.core.exception.AuthException;
-import io.github.dunwu.tool.data.Pagination;
 import io.github.dunwu.tool.data.excel.ExcelUtil;
 import io.github.dunwu.tool.data.mybatis.ServiceImpl;
 import io.github.dunwu.tool.web.security.SecurityService;
@@ -23,6 +22,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -133,7 +133,7 @@ public class RoleServiceImpl extends ServiceImpl implements RoleService {
             if (CollectionUtil.isNotEmpty(roleIds)) {
                 query.setIds(roleIds);
             } else {
-                return new Pagination<>(Collections.emptyList(), pageable, 0L);
+                return new PageImpl<>(Collections.emptyList(), pageable, 0L);
             }
         }
         return roleDao.pojoSpringPageByQuery(pageable, query, this::doToDto);
