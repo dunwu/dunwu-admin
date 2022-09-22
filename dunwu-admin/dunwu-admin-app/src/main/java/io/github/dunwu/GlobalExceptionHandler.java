@@ -69,7 +69,7 @@ public class GlobalExceptionHandler {
             sb.append(pathArr[1]).append(violation.getMessage()).append(",");
         }
         sb = new StringBuilder(sb.substring(0, sb.length() - 1));
-        return Result.fail(ResultStatus.HTTP_BAD_REQUEST.getCode(), sb.toString());
+        return new Result(ResultStatus.HTTP_BAD_REQUEST.getCode(), sb.toString());
     }
 
     @ResponseBody
@@ -77,7 +77,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({ HttpClientErrorException.class })
     public Result handleBadRequestException(final HttpClientErrorException e) {
         log.error("HttpClientErrorException", e);
-        return Result.fail(ResultStatus.HTTP_BAD_REQUEST.getCode(), e.getLocalizedMessage());
+        return new Result(ResultStatus.HTTP_BAD_REQUEST.getCode(), e.getLocalizedMessage());
     }
 
     @ResponseBody
@@ -85,7 +85,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({ DataException.class })
     public Result handleDataException(final DataException e) {
         log.error("DataException", e);
-        return Result.fail(ResultStatus.DATA_ERROR.getCode(), e.getLocalizedMessage());
+        return new Result(ResultStatus.DATA_ERROR.getCode(), e.getLocalizedMessage());
     }
 
     @ResponseBody
@@ -93,7 +93,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({ CodeMsgException.class })
     public Result handleCodeMsgException(final CodeMsgException e) {
         log.error("DataException", e);
-        return Result.fail(ResultStatus.DATA_ERROR.getCode(), e.getLocalizedMessage());
+        return new Result(ResultStatus.DATA_ERROR.getCode(), e.getLocalizedMessage());
     }
     // ------------------------------------------------------------------------------
     // 认证、授权异常
@@ -110,7 +110,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AuthenticationException.class)
     public Result handleAuthException(final AuthenticationException e) {
         log.error("认证失败，方法: {}, message: {}", e.getClass().getCanonicalName(), e.getLocalizedMessage());
-        return Result.fail(ResultStatus.HTTP_UNAUTHORIZED.getCode(), e.getLocalizedMessage());
+        return new Result(ResultStatus.HTTP_UNAUTHORIZED.getCode(), e.getLocalizedMessage());
     }
 
     /**
@@ -124,7 +124,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AuthException.class)
     public Result handleAuthException(final AuthException e) {
         log.error("认证失败，方法: {}, message: {}", e.getClass().getCanonicalName(), e.getLocalizedMessage());
-        return Result.fail(ResultStatus.HTTP_UNAUTHORIZED.getCode(), e.getLocalizedMessage());
+        return new Result(ResultStatus.HTTP_UNAUTHORIZED.getCode(), e.getLocalizedMessage());
     }
 
     @ResponseBody
@@ -132,7 +132,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public Result handleAccessDeniedException(final AccessDeniedException e) {
         log.error("权限不足，方法: {}, message: {}", e.getClass().getCanonicalName(), e.getLocalizedMessage());
-        return Result.fail(ResultStatus.HTTP_UNAUTHORIZED.getCode(), e.getLocalizedMessage());
+        return new Result(ResultStatus.HTTP_UNAUTHORIZED.getCode(), e.getLocalizedMessage());
     }
 
     /**
@@ -143,7 +143,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Throwable.class)
     public Result handleException(Throwable e) {
         log.error("未知异常", e);
-        return Result.fail(ResultStatus.HTTP_SERVER_ERROR.getCode(), e.getMessage());
+        return new Result(ResultStatus.HTTP_SERVER_ERROR.getCode(), e.getMessage());
     }
 
     /**
@@ -164,7 +164,7 @@ public class GlobalExceptionHandler {
             sb.append(error.getDefaultMessage());
             sb.append("\n");
         }
-        return Result.fail(ResultStatus.REQUEST_ERROR.getCode(), sb.toString());
+        return new Result(ResultStatus.REQUEST_ERROR.getCode(), sb.toString());
     }
 
     private WebConstant.ResponseType getResponseMode(HttpServletRequest request) {
