@@ -17,7 +17,11 @@ import org.springframework.util.MimeTypeUtils;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.nio.file.AccessDeniedException;
@@ -65,7 +69,7 @@ public class GlobalExceptionHandler {
         Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
         for (ConstraintViolation<?> violation : violations) {
             Path path = violation.getPropertyPath();
-            String[] pathArr = StrUtil.split(path.toString(), ".");
+            String[] pathArr = StrUtil.splitToArray(path.toString(), ".");
             sb.append(pathArr[1]).append(violation.getMessage()).append(",");
         }
         sb = new StringBuilder(sb.substring(0, sb.length() - 1));
