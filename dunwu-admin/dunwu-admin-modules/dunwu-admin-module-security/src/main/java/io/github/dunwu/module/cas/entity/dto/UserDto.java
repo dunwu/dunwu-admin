@@ -2,6 +2,8 @@ package io.github.dunwu.module.cas.entity.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.github.dunwu.common.entity.dto.BaseConfigDto;
+import io.github.dunwu.tool.data.desensitized.annotation.Desensitized;
+import io.github.dunwu.tool.data.desensitized.constant.SensitiveTypeEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -43,15 +45,18 @@ public class UserDto extends BaseConfigDto {
     @ApiModelProperty(value = "性别")
     private String gender;
 
+    @Desensitized(type = SensitiveTypeEnum.MOBILE_PHONE)
     @ApiModelProperty(value = "手机号码")
     private String phone;
 
+    @Desensitized(type = SensitiveTypeEnum.EMAIL)
     @ApiModelProperty(value = "邮箱")
     private String email;
 
     @ApiModelProperty(value = "头像地址")
     private String avatar;
 
+    @Desensitized(type = SensitiveTypeEnum.PASSWORD)
     @ApiModelProperty(value = "密码")
     private String password;
 

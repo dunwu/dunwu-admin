@@ -3,7 +3,11 @@ package io.github.dunwu.module.cas.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import io.github.dunwu.module.cas.dao.*;
+import io.github.dunwu.module.cas.dao.DeptDao;
+import io.github.dunwu.module.cas.dao.JobDao;
+import io.github.dunwu.module.cas.dao.RoleDao;
+import io.github.dunwu.module.cas.dao.UserDao;
+import io.github.dunwu.module.cas.dao.UserRoleMapDao;
 import io.github.dunwu.module.cas.entity.User;
 import io.github.dunwu.module.cas.entity.dto.DeptDto;
 import io.github.dunwu.module.cas.entity.dto.JobDto;
@@ -15,6 +19,7 @@ import io.github.dunwu.module.cas.service.UserService;
 import io.github.dunwu.tool.data.excel.ExcelUtil;
 import io.github.dunwu.tool.data.exception.DataException;
 import io.github.dunwu.tool.data.mybatis.ServiceImpl;
+import io.github.dunwu.tool.data.util.SwaggerUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -24,7 +29,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
@@ -153,30 +162,10 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
      * @param response {@link HttpServletResponse} 实体
      */
     private void exportDtoList(Collection<UserDto> list, HttpServletResponse response) {
-        List<Map<String, Object>> mapList = new ArrayList<>();
-        for (UserDto item : list) {
-            Map<String, Object> map = new LinkedHashMap<>();
-            map.put("ID", item.getId());
-            map.put("部门ID", item.getDeptId());
-            map.put("岗位ID", item.getJobId());
-            map.put("用户名", item.getUsername());
-            map.put("昵称", item.getNickname());
-            map.put("性别", item.getGender());
-            map.put("手机号码", item.getPhone());
-            map.put("邮箱", item.getEmail());
-            map.put("头像地址", item.getAvatar());
-            map.put("密码", item.getPassword());
-            map.put("修改密码的时间", item.getPwdResetTime());
-            map.put("是否禁用：1 表示禁用；0 表示启用", item.getDisabled());
-            map.put("创建者ID", item.getCreatorId());
-            map.put("更新者ID", item.getUpdaterId());
-            map.put("创建者名称", item.getCreatorName());
-            map.put("更新者名称", item.getUpdaterName());
-            map.put("创建时间", item.getCreateTime());
-            map.put("更新时间", item.getUpdateTime());
-            mapList.add(map);
+        List<Map<String, Object>> mapList = SwaggerUtil.getFieldsMapList(list, UserDto.class);
+        if (CollectionUtil.isNotEmpty(mapList)) {
+            ExcelUtil.downloadExcel(response, mapList);
         }
-        ExcelUtil.downloadExcel(response, mapList);
     }
 
     @Override
