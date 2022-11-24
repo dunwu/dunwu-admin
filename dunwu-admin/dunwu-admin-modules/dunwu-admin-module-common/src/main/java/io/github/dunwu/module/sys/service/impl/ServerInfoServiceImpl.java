@@ -4,7 +4,7 @@ import cn.hutool.core.date.BetweenFormatter;
 import cn.hutool.core.date.DateUtil;
 import io.github.dunwu.module.sys.service.ServerInfoService;
 import io.github.dunwu.tool.io.FileUtil;
-import io.github.dunwu.tool.net.IpUtil;
+import io.github.dunwu.tool.net.ip.IpUtil;
 import org.springframework.stereotype.Service;
 import oshi.SystemInfo;
 import oshi.hardware.CentralProcessor;
