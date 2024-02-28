@@ -16,11 +16,15 @@
 package io.github.dunwu.module.security.util;
 
 import cn.hutool.core.date.DateField;
+import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import io.github.dunwu.module.security.config.DunwuWebSecurityProperties;
 import io.github.dunwu.tool.data.redis.RedisHelper;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtParser;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +51,7 @@ public class JwtTokenUtil implements InitializingBean {
     private final DunwuWebSecurityProperties properties;
     private final RedisHelper redisHelper;
     private JwtParser jwtParser;
-    private JwtBuilder jwtBuilder;
+    private Key key;
 
     public JwtTokenUtil(DunwuWebSecurityProperties properties, RedisHelper redisHelper) {
         this.properties = properties;
@@ -57,12 +61,8 @@ public class JwtTokenUtil implements InitializingBean {
     @Override
     public void afterPropertiesSet() {
         byte[] keyBytes = Decoders.BASE64.decode(properties.getToken().getBase64Secret());
-        Key key = Keys.hmacShaKeyFor(keyBytes);
-        jwtParser = Jwts.parserBuilder()
-                        .setSigningKey(key)
-                        .build();
-        jwtBuilder = Jwts.builder()
-                         .signWith(key, SignatureAlgorithm.HS512);
+        key = Keys.hmacShaKeyFor(keyBytes);
+        jwtParser = Jwts.parserBuilder().setSigningKey(key).build();
     }
 
     /**
@@ -71,13 +71,24 @@ public class JwtTokenUtil implements InitializingBean {
      * @param authentication /
      * @return /
      */
-    public String createToken(Authentication authentication) {
-        return jwtBuilder
-            // 加入ID确保生成的 Token 都不一致
-            .setId(IdUtil.simpleUUID())
-            .claim(AUTHORITIES_KEY, authentication.getName())
-            .setSubject(authentication.getName())
-            .compact();
+    public String createToken(Authentication authentication, Integer expireSeconds) {
+        if (expireSeconds == null) {
+            return Jwts.builder().signWith(key, SignatureAlgorithm.HS512)
+                       // 加入ID确保生成的 Token 都不一致
+                       .setId(IdUtil.simpleUUID())
+                       .claim(AUTHORITIES_KEY, authentication.getName())
+                       .setSubject(authentication.getName())
+                       .compact();
+        } else {
+            DateTime expireDate = DateUtil.offsetSecond(new Date(), 10);
+            return Jwts.builder().signWith(key, SignatureAlgorithm.HS512)
+                       // 加入ID确保生成的 Token 都不一致
+                       .setId(IdUtil.simpleUUID())
+                       .claim(AUTHORITIES_KEY, authentication.getName())
+                       .setSubject(authentication.getName())
+                       .setExpiration(expireDate)
+                       .compact();
+        }
     }
 
     /**

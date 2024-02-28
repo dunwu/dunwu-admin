@@ -50,7 +50,7 @@ public class CodeColumnConfigQuery implements Serializable {
 
     @ApiModelProperty(value = "字段名称")
     @QueryField
-    private String fieldName;
+    private String columnName;
 
     @ApiModelProperty(value = "字段注释")
     @QueryField

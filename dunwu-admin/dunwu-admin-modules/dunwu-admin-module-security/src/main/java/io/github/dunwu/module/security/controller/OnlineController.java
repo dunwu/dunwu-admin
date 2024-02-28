@@ -2,14 +2,18 @@ package io.github.dunwu.module.security.controller;
 
 import io.github.dunwu.module.security.entity.dto.OnlineUserDto;
 import io.github.dunwu.module.security.service.AuthService;
-import io.github.dunwu.tool.data.DataResult;
-import io.github.dunwu.tool.data.PageResult;
+import io.github.dunwu.tool.data.response.DataResult;
+import io.github.dunwu.tool.data.response.PageResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
@@ -23,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("auth/online")
-@Api(tags = "【权限管理】在线用户管理接口")
+@Api(tags = "【权限】在线用户管理")
 public class OnlineController {
 
     private final AuthService authService;

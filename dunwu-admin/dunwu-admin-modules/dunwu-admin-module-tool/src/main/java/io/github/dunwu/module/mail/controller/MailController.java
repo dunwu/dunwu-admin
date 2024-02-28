@@ -2,7 +2,7 @@ package io.github.dunwu.module.mail.controller;
 
 import io.github.dunwu.module.mail.entity.dto.MailDto;
 import io.github.dunwu.module.mail.service.MailService;
-import io.github.dunwu.tool.data.DataResult;
+import io.github.dunwu.tool.data.response.DataResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.PostMapping;

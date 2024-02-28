@@ -12,19 +12,35 @@ import io.github.dunwu.module.code.dao.CodeGlobalConfigDao;
 import io.github.dunwu.module.code.entity.CodeColumnConfig;
 import io.github.dunwu.module.code.entity.CodeGlobalConfig;
 import io.github.dunwu.module.code.entity.CodeTableConfig;
-import io.github.dunwu.module.code.entity.dto.*;
+import io.github.dunwu.module.code.entity.dto.CodeColumnConfigDto;
+import io.github.dunwu.module.code.entity.dto.CodeDatabaseDto;
+import io.github.dunwu.module.code.entity.dto.CodeGlobalConfigDto;
+import io.github.dunwu.module.code.entity.dto.CodeTableConfigDto;
+import io.github.dunwu.module.code.entity.dto.TableColumnInfoDto;
 import io.github.dunwu.module.code.entity.query.CodeColumnConfigQuery;
 import io.github.dunwu.module.code.entity.query.CodeGlobalConfigQuery;
 import io.github.dunwu.module.code.entity.query.CodeTableConfigQuery;
-import io.github.dunwu.module.code.service.*;
+import io.github.dunwu.module.code.service.CodeColumnConfigService;
+import io.github.dunwu.module.code.service.CodeDatabaseService;
+import io.github.dunwu.module.code.service.CodeGlobalConfigService;
+import io.github.dunwu.module.code.service.CodeTableConfigService;
+import io.github.dunwu.module.code.service.GeneratorService;
 import io.github.dunwu.module.security.util.SecurityUtil;
 import io.github.dunwu.tool.data.exception.DataException;
 import io.github.dunwu.tool.generator.CodeGenerator;
-import io.github.dunwu.tool.generator.config.*;
+import io.github.dunwu.tool.generator.config.DataSourceConfig;
+import io.github.dunwu.tool.generator.config.GlobalConfig;
+import io.github.dunwu.tool.generator.config.PackageConfig;
+import io.github.dunwu.tool.generator.config.StrategyConfig;
+import io.github.dunwu.tool.generator.config.TemplateConfig;
 import io.github.dunwu.tool.generator.config.builder.ConfigBuilder;
 import io.github.dunwu.tool.generator.config.po.TableField;
 import io.github.dunwu.tool.generator.config.po.TableInfo;
-import io.github.dunwu.tool.generator.config.rules.*;
+import io.github.dunwu.tool.generator.config.rules.DateType;
+import io.github.dunwu.tool.generator.config.rules.FormType;
+import io.github.dunwu.tool.generator.config.rules.JavaColumnType;
+import io.github.dunwu.tool.generator.config.rules.ListType;
+import io.github.dunwu.tool.generator.config.rules.ValidateType;
 import io.github.dunwu.tool.generator.engine.CodeGenerateContentDto;
 import io.github.dunwu.tool.web.ServletUtil;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +51,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
@@ -222,7 +243,7 @@ public class GeneratorServiceImpl implements GeneratorService {
         Map<String, CodeColumnConfigDto> map;
         if (CollectionUtil.isNotEmpty(oldColumns)) {
             map = oldColumns.stream()
-                            .collect(Collectors.toMap(CodeColumnConfigDto::getFieldName, Function.identity()));
+                            .collect(Collectors.toMap(CodeColumnConfigDto::getColumnName, Function.identity()));
         } else {
             map = new HashMap<>(fields.size());
         }
@@ -467,7 +488,7 @@ public class GeneratorServiceImpl implements GeneratorService {
         }
 
         Map<String, CodeColumnConfigDto> map = columns.stream().collect(
-            Collectors.toMap(CodeColumnConfigDto::getFieldName, Function.identity()));
+            Collectors.toMap(CodeColumnConfigDto::getColumnName, Function.identity()));
         for (TableField field : fields) {
             // columns 不包含 fields 中的字段，说明表中已添加新字段
             if (!map.containsKey(field.getFieldName())) {

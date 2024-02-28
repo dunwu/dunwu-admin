@@ -1,14 +1,14 @@
 package io.github.dunwu.module.mail.service.impl;
 
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
-import io.github.dunwu.autoconfigure.mail.DunwuMailProperties;
 import io.github.dunwu.module.mail.entity.dto.MailDto;
 import io.github.dunwu.module.mail.service.MailService;
 import io.github.dunwu.tool.bean.BeanUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -32,9 +32,8 @@ import javax.mail.internet.MimeMessage;
 public class MailServiceImpl implements MailService {
 
     private final JavaMailSender javaMailSender;
-    @Qualifier("mailExecutorService")
-    private final ExecutorService mailExecutorService;
-    private final DunwuMailProperties mailExtProperties;
+    private final ExecutorService mailExecutorService = ThreadUtil.newFixedExecutor(2, "邮件", true);
+    private final MailProperties mailProperties;
 
     @Override
     public void send(MailDto mailDTO) {
@@ -57,7 +56,7 @@ public class MailServiceImpl implements MailService {
     private void sendSimpleMessage(MailDto mailDTO) {
         SimpleMailMessage simpleMailMessage = BeanUtil.toBean(mailDTO, SimpleMailMessage.class);
         if (StrUtil.isBlank(mailDTO.getFrom())) {
-            simpleMailMessage.setFrom(mailExtProperties.getFrom());
+            simpleMailMessage.setFrom(mailProperties.getHost());
         }
 
         try {
@@ -78,7 +77,7 @@ public class MailServiceImpl implements MailService {
         List<SimpleMailMessage> simpleMailMessages = BeanUtil.toBeanList(list, SimpleMailMessage.class);
         for (SimpleMailMessage simpleMailMessage : simpleMailMessages) {
             if (StrUtil.isBlank(simpleMailMessage.getFrom())) {
-                simpleMailMessage.setFrom(mailExtProperties.getFrom());
+                simpleMailMessage.setFrom(mailProperties.getHost());
             }
         }
 
@@ -127,7 +126,7 @@ public class MailServiceImpl implements MailService {
         MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true, "utf-8");
 
         if (StrUtil.isBlank(mailDTO.getFrom())) {
-            messageHelper.setFrom(mailExtProperties.getFrom());
+            messageHelper.setFrom(mailProperties.getHost());
         } else {
             messageHelper.setFrom(mailDTO.getFrom());
         }

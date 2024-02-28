@@ -1,5 +1,7 @@
 package io.github.dunwu.module.code.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -15,12 +17,13 @@ import io.github.dunwu.module.code.entity.query.CodeTableConfigQuery;
 import io.github.dunwu.module.code.service.CodeDatabaseService;
 import io.github.dunwu.module.code.service.TableService;
 import io.github.dunwu.module.security.util.SecurityUtil;
-import io.github.dunwu.tool.data.util.PageUtil;
+import io.github.dunwu.tool.core.constant.enums.ResultStatus;
+import io.github.dunwu.tool.data.entity.TableInfo;
+import io.github.dunwu.tool.data.response.PageImpl;
+import io.github.dunwu.tool.data.response.PageResult;
+import io.github.dunwu.tool.data.util.DatabaseUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jooq.Condition;
-import org.jooq.DSLContext;
-import org.jooq.impl.DSL;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -31,7 +34,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author peng.zhang
@@ -54,19 +57,14 @@ public class TableServiceImpl implements TableService {
     }
 
     @Override
-    public Map<String, Object> getTables(Long dbId, String tableName, Integer page, Integer size) {
+    public PageResult<TableInfoDto> getTables(Long dbId, String tableName, Integer page, Integer size) {
 
         // 查询数据库记录
         CodeDatabaseDto codeDatabaseDto = databaseService.pojoById(dbId);
         if (codeDatabaseDto == null) {
-            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, StrUtil.format("找不到 dbId = {} 的数据库记录", dbId));
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST,
+                StrUtil.format("找不到 dbId = {} 的数据库记录", dbId));
         }
-
-        // 计算分页偏移量
-        int offset = (page - 1) * size;
-
-        int total = 0;
-        List<TableInfoDto> list = new ArrayList<>();
 
         // 获取 JDBC 链接
         Connection connection = null;
@@ -75,27 +73,8 @@ public class TableServiceImpl implements TableService {
                 codeDatabaseDto.getUsername(),
                 codeDatabaseDto.getPassword());
 
-            DSLContext dslContext = DSL.using(connection);
-
-            // 查询条件
-            List<Condition> conditions = new ArrayList<>();
-            conditions.add(DSL.field("TABLE_SCHEMA").eq(codeDatabaseDto.getSchemaName()));
-            if (StrUtil.isNotBlank(tableName)) {
-                conditions.add(DSL.field("TABLE_NAME").likeIgnoreCase(StrUtil.format("%{}%", tableName)));
-            }
-
-            // 查询所有匹配记录数
-            total = dslContext.selectCount()
-                              .from("information_schema.tables")
-                              .where(conditions)
-                              .fetchOne(0, int.class);
-
-            // 分页查询匹配记录
-            list.addAll(dslContext.select()
-                                  .from("information_schema.tables")
-                                  .where(conditions)
-                                  .limit(offset, size.intValue())
-                                  .fetchInto(TableInfoDto.class));
+            PageImpl<TableInfo> pageImpl =
+                DatabaseUtil.getTables(connection, codeDatabaseDto.getSchemaName(), tableName, page, size);
 
             // 查找是否存在匹配的全局级配置
             String username = SecurityUtil.getCurrentUsername();
@@ -104,33 +83,39 @@ public class TableServiceImpl implements TableService {
             int globalCount = globalConfigDao.count(globalQueryWrapper);
             boolean isGlobalConfigured = globalCount > 0;
 
-            list.forEach(i -> {
-                i.setIsGlobalConfigured(isGlobalConfigured);
+            long total = 0L;
+            List<TableInfoDto> list = new ArrayList<>();
+            if (CollectionUtil.isNotEmpty(pageImpl.getContent())) {
+                total = pageImpl.getTotal();
+                list = pageImpl.getContent().stream().map(baseTableInfoDto -> {
+                    TableInfoDto tableInfoDto = BeanUtil.toBean(baseTableInfoDto, TableInfoDto.class);
+                    tableInfoDto.setIsGlobalConfigured(isGlobalConfigured);
 
-                LambdaQueryWrapper<CodeTableConfig> tableQueryWrapper = new LambdaQueryWrapper<>();
-                tableQueryWrapper.eq(CodeTableConfig::getDbId, dbId)
-                                 .eq(CodeTableConfig::getSchemaName, i.getTableSchema())
-                                 .eq(CodeTableConfig::getTableName, i.getTableName());
-                int tableCount = tableConfigDao.count(tableQueryWrapper);
-                i.setIsTableConfigured(tableCount > 0);
+                    LambdaQueryWrapper<CodeTableConfig> tableQueryWrapper = new LambdaQueryWrapper<>();
+                    tableQueryWrapper.eq(CodeTableConfig::getDbId, dbId)
+                                     .eq(CodeTableConfig::getSchemaName, tableInfoDto.getTableSchema())
+                                     .eq(CodeTableConfig::getTableName, tableInfoDto.getTableName());
+                    int tableCount = tableConfigDao.count(tableQueryWrapper);
+                    tableInfoDto.setIsTableConfigured(tableCount > 0);
 
-                LambdaQueryWrapper<CodeColumnConfig> columnQueryWrapper = new LambdaQueryWrapper<>();
-                columnQueryWrapper.eq(CodeColumnConfig::getDbId, dbId)
-                                  .eq(CodeColumnConfig::getSchemaName, i.getTableSchema())
-                                  .eq(CodeColumnConfig::getTableName, i.getTableName());
-                int columnCount = columnConfigDao.count(columnQueryWrapper);
-                i.setIsColumnConfigured(columnCount > 0);
-            });
+                    LambdaQueryWrapper<CodeColumnConfig> columnQueryWrapper = new LambdaQueryWrapper<>();
+                    columnQueryWrapper.eq(CodeColumnConfig::getDbId, dbId)
+                                      .eq(CodeColumnConfig::getSchemaName, tableInfoDto.getTableSchema())
+                                      .eq(CodeColumnConfig::getTableName, tableInfoDto.getTableName());
+                    int columnCount = columnConfigDao.count(columnQueryWrapper);
+                    tableInfoDto.setIsColumnConfigured(columnCount > 0);
+                    return tableInfoDto;
+                }).collect(Collectors.toList());
+            }
+            return PageResult.ok(new PageImpl<>(list, page, size, total));
         } catch (SQLException e) {
             e.printStackTrace();
+            return PageResult.fail(ResultStatus.DATA_ERROR);
         } finally {
             if (connection != null) {
                 DbUtil.close(connection);
             }
         }
-
-        // 组装分页展示数据
-        return PageUtil.toMap(list, total);
     }
 
     @Override
@@ -162,14 +147,15 @@ public class TableServiceImpl implements TableService {
         int columnCount = columnConfigDao.count(columnQueryWrapper);
         boolean isColumnConfigured = columnCount > 0;
 
-        return TableInfoDto.builder()
-                           .dbId(query.getDbId())
-                           .tableSchema(query.getSchemaName())
-                           .tableName(query.getTableName())
-                           .isGlobalConfigured(isGlobalConfigured)
-                           .isTableConfigured(isTableConfigured)
-                           .isColumnConfigured(isColumnConfigured)
-                           .build();
+        TableInfoDto tableInfoDto = TableInfoDto.builder()
+                                                .dbId(query.getDbId())
+                                                .isGlobalConfigured(isGlobalConfigured)
+                                                .isTableConfigured(isTableConfigured)
+                                                .isColumnConfigured(isColumnConfigured)
+                                                .build();
+        tableInfoDto.setTableSchema(query.getSchemaName());
+        tableInfoDto.setTableName(query.getTableName());
+        return tableInfoDto;
     }
 
     private String getCurrentUsername() {

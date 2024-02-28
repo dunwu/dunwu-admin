@@ -6,9 +6,9 @@ import io.github.dunwu.module.sys.entity.dto.DictDto;
 import io.github.dunwu.module.sys.entity.dto.EnumInfoDto;
 import io.github.dunwu.module.sys.entity.query.DictQuery;
 import io.github.dunwu.module.sys.service.DictService;
-import io.github.dunwu.tool.data.DataListResult;
-import io.github.dunwu.tool.data.DataResult;
-import io.github.dunwu.tool.data.PageResult;
+import io.github.dunwu.tool.data.response.DataListResult;
+import io.github.dunwu.tool.data.response.DataResult;
+import io.github.dunwu.tool.data.response.PageResult;
 import io.github.dunwu.tool.data.validator.annotation.AddCheck;
 import io.github.dunwu.tool.data.validator.annotation.EditCheck;
 import io.swagger.annotations.Api;
@@ -18,7 +18,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
@@ -35,7 +40,7 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 @RestController
 @RequestMapping("/sys/dict")
-@Api(tags = "数据字典 Controller 类")
+@Api(tags = "【系统】数据字典")
 @RequiredArgsConstructor
 public class DictController {
 

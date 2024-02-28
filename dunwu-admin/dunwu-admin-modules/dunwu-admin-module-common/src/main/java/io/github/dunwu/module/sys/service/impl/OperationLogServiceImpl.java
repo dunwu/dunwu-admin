@@ -8,14 +8,17 @@ import io.github.dunwu.module.sys.entity.query.OperationLogQuery;
 import io.github.dunwu.module.sys.service.OperationLogService;
 import io.github.dunwu.tool.data.excel.ExcelUtil;
 import io.github.dunwu.tool.data.mybatis.ServiceImpl;
-import io.github.dunwu.tool.web.log.entity.LogRecord;
-import io.github.dunwu.tool.web.log.service.LogRecordService;
+import io.github.dunwu.tool.web.log.entity.OperationLogRecord;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -25,7 +28,8 @@ import javax.servlet.http.HttpServletResponse;
  * @since 2021-12-31
  */
 @Service
-public class OperationLogServiceImpl extends ServiceImpl implements OperationLogService, LogRecordService {
+public class OperationLogServiceImpl extends ServiceImpl implements OperationLogService,
+    io.github.dunwu.tool.web.log.service.OperationLogService {
 
     private final OperationLogDao dao;
 
@@ -174,7 +178,7 @@ public class OperationLogServiceImpl extends ServiceImpl implements OperationLog
     }
 
     @Override
-    public boolean store(LogRecord record) {
+    public boolean store(OperationLogRecord record) {
         if (record == null) {
             return false;
         }

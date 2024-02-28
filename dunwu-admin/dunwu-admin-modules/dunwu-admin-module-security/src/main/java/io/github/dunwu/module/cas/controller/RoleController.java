@@ -5,9 +5,9 @@ import io.github.dunwu.module.cas.entity.Role;
 import io.github.dunwu.module.cas.entity.dto.RoleDto;
 import io.github.dunwu.module.cas.entity.query.RoleQuery;
 import io.github.dunwu.module.cas.service.RoleService;
-import io.github.dunwu.tool.data.DataListResult;
-import io.github.dunwu.tool.data.DataResult;
-import io.github.dunwu.tool.data.PageResult;
+import io.github.dunwu.tool.data.response.DataListResult;
+import io.github.dunwu.tool.data.response.DataResult;
+import io.github.dunwu.tool.data.response.PageResult;
 import io.github.dunwu.tool.data.validator.annotation.AddCheck;
 import io.github.dunwu.tool.data.validator.annotation.EditCheck;
 import io.swagger.annotations.Api;
@@ -16,7 +16,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -30,7 +36,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @RestController
 @RequestMapping("/cas/role")
-@Api(tags = "角色 Controller 类")
+@Api(tags = "【权限】角色管理")
 @RequiredArgsConstructor
 public class RoleController {
 

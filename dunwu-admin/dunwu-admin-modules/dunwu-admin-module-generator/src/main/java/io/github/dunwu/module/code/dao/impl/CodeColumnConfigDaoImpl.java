@@ -9,7 +9,11 @@ import io.github.dunwu.tool.data.excel.ExcelUtil;
 import io.github.dunwu.tool.data.mybatis.BaseExtDaoImpl;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -31,7 +35,7 @@ public class CodeColumnConfigDaoImpl extends BaseExtDaoImpl<CodeColumnConfigMapp
             map.put("所属表的ID", item.getTableId());
             map.put("Schema名称", item.getSchemaName());
             map.put("Table名称", item.getTableName());
-            map.put("字段名称", item.getFieldName());
+            map.put("字段名称", item.getColumnName());
             map.put("字段注释", item.getComment());
             map.put("字段数据类型", item.getType());
             map.put("字段Java类型", item.getJavaType());

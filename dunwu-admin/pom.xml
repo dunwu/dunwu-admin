@@ -7,7 +7,7 @@
     <parent>
         <groupId>io.github.dunwu</groupId>
         <artifactId>dunwu-parent</artifactId>
-        <version>1.1.1-RC1-SNAPSHOT</version>
+        <version>1.1.2</version>
     </parent>
 
     <artifactId>dunwu-admin</artifactId>
@@ -25,8 +25,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <dunwu-tool.version>1.1.1-RC1-SNAPSHOT</dunwu-tool.version>
-        <dunwu-boot.version>1.1.1-RC1-SNAPSHOT</dunwu-boot.version>
+        <dunwu-tool.version>1.1.2</dunwu-tool.version>
         <dunwu-admin.version>1.0.1</dunwu-admin.version>
 
         <fastjson.version>1.2.70</fastjson.version>
@@ -38,7 +37,6 @@
     </properties>
 
     <dependencies>
-
         <!-- Swagger UI 相关 -->
         <dependency>
             <groupId>io.springfox</groupId>
@@ -67,12 +65,13 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>io.github.dunwu.boot</groupId>
-                <artifactId>dunwu-boot</artifactId>
-                <version>${dunwu-boot.version}</version>
+                <groupId>io.github.dunwu.tool</groupId>
+                <artifactId>dunwu-tool</artifactId>
+                <version>${dunwu-tool.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
             <dependency>
                 <groupId>net.java.dev.jna</groupId>
                 <artifactId>jna</artifactId>

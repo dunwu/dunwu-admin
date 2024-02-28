@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.github.dunwu.module.sys.constant.enums.WebSocketMsgType;
 import io.github.dunwu.module.sys.websocket.WebSocketEndpoint;
 import io.github.dunwu.module.sys.websocket.WebSocketMsg;
-import io.github.dunwu.tool.data.DataResult;
+import io.github.dunwu.tool.data.response.DataResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

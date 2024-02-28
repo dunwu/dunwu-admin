@@ -23,19 +23,49 @@
         </dependency>
 
         <!--dunwu 自封装 Boot 框架-->
+<!--        <dependency>-->
+<!--            <groupId>io.github.dunwu.boot</groupId>-->
+<!--            <artifactId>dunwu-starter-web</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>io.github.dunwu.boot</groupId>-->
+<!--            <artifactId>dunwu-starter-mybatis</artifactId>-->
+<!--        </dependency>-->
         <dependency>
-            <groupId>io.github.dunwu.boot</groupId>
-            <artifactId>dunwu-starter-web</artifactId>
+            <groupId>io.github.dunwu.tool</groupId>
+            <artifactId>dunwu-tool-web</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.github.dunwu.boot</groupId>
-            <artifactId>dunwu-starter-mybatis</artifactId>
+            <groupId>io.github.dunwu.tool</groupId>
+            <artifactId>dunwu-tool-data</artifactId>
         </dependency>
 
         <!--Spring boot 安全框架-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-json</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+        </dependency>
+
+        <!--SQL 监控-->
+        <dependency>
+            <groupId>p6spy</groupId>
+            <artifactId>p6spy</artifactId>
         </dependency>
 
         <!-- jwt -->

@@ -2,8 +2,7 @@ package io.github.dunwu.module.code.service;
 
 import io.github.dunwu.module.code.entity.dto.TableInfoDto;
 import io.github.dunwu.module.code.entity.query.CodeTableConfigQuery;
-
-import java.util.Map;
+import io.github.dunwu.tool.data.response.PageResult;
 
 /**
  * @author peng.zhang
@@ -22,7 +21,7 @@ public interface TableService {
      * @param size      每页记录数
      * @return /
      */
-    Map<String, Object> getTables(Long dbId, String tableName, Integer page, Integer size);
+    PageResult<TableInfoDto> getTables(Long dbId, String tableName, Integer page, Integer size);
 
     /**
      * 查询代码生成配置信息

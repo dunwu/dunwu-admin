@@ -2,7 +2,6 @@ package io.github.dunwu.config;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
-import io.github.dunwu.autoconfigure.web.DunwuWebMvcConfiguration;
 import io.github.dunwu.module.security.config.DunwuWebSecurityConfiguration;
 import io.github.dunwu.module.security.config.DunwuWebSecurityProperties;
 import lombok.AllArgsConstructor;
@@ -22,7 +21,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
-import springfox.documentation.builders.*;
+import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.ParameterBuilder;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.builders.ResponseMessageBuilder;
 import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
@@ -34,7 +37,11 @@ import springfox.documentation.swagger.web.UiConfiguration;
 import springfox.documentation.swagger.web.UiConfigurationBuilder;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -48,16 +55,16 @@ import static com.google.common.collect.Lists.newArrayList;
 @ConditionalOnProperty(name = "dunwu.swagger.enabled", havingValue = "true")
 @EnableSwagger2
 @AllArgsConstructor
-@EnableConfigurationProperties({ DunwuSwaggerProperties.class })
-@Import({ DunwuSwaggerDataConfiguration.class })
-@AutoConfigureAfter({ DunwuWebMvcConfiguration.class, DunwuWebSecurityConfiguration.class })
-public class DunwuSwaggerConfiguration implements BeanFactoryAware {
+@EnableConfigurationProperties({ SwaggerProperties.class })
+@Import({ SwaggerDataConfiguration.class })
+@AutoConfigureAfter({ WebMvcConfiguration.class, DunwuWebSecurityConfiguration.class })
+public class SwaggerConfiguration implements BeanFactoryAware {
 
-    private final DunwuSwaggerProperties swaggerProperties;
+    private final SwaggerProperties swaggerProperties;
     private DunwuWebSecurityProperties webSecurityProperties;
 
     @Autowired(required = false)
-    public DunwuSwaggerConfiguration setWebSecurityProperties(
+    public SwaggerConfiguration setWebSecurityProperties(
         DunwuWebSecurityProperties webSecurityProperties) {
         this.webSecurityProperties = webSecurityProperties;
         return this;
@@ -67,8 +74,8 @@ public class DunwuSwaggerConfiguration implements BeanFactoryAware {
 
     @Bean
     @ConditionalOnMissingBean
-    public DunwuSwaggerProperties swaggerProperties() {
-        return new DunwuSwaggerProperties();
+    public SwaggerProperties swaggerProperties() {
+        return new SwaggerProperties();
     }
 
     @Bean
@@ -175,7 +182,7 @@ public class DunwuSwaggerConfiguration implements BeanFactoryAware {
 
         // 分组创建
         for (String groupName : swaggerProperties.getDocket().keySet()) {
-            DunwuSwaggerProperties.DocketInfo docketInfo = swaggerProperties.getDocket().get(groupName);
+            SwaggerProperties.DocketInfo docketInfo = swaggerProperties.getDocket().get(groupName);
 
             ApiInfo apiInfo = new ApiInfoBuilder()
                 .title(docketInfo.getTitle().isEmpty() ? swaggerProperties.getTitle() : docketInfo.getTitle())
@@ -257,13 +264,13 @@ public class DunwuSwaggerConfiguration implements BeanFactoryAware {
     }
 
     private List<Parameter> buildGlobalOperationParametersFromSwaggerProperties(
-        List<DunwuSwaggerProperties.GlobalOperationParameter> globalOperationParameters) {
+        List<SwaggerProperties.GlobalOperationParameter> globalOperationParameters) {
         List<Parameter> parameters = newArrayList();
 
         if (Objects.isNull(globalOperationParameters)) {
             return parameters;
         }
-        for (DunwuSwaggerProperties.GlobalOperationParameter globalOperationParameter : globalOperationParameters) {
+        for (SwaggerProperties.GlobalOperationParameter globalOperationParameter : globalOperationParameters) {
             parameters.add(new ParameterBuilder()
                 .name(globalOperationParameter.getName())
                 .description(globalOperationParameter.getDescription())
@@ -283,8 +290,8 @@ public class DunwuSwaggerConfiguration implements BeanFactoryAware {
      * @return /
      */
     private List<Parameter> assemblyGlobalOperationParameters(
-        List<DunwuSwaggerProperties.GlobalOperationParameter> globalOperationParameters,
-        List<DunwuSwaggerProperties.GlobalOperationParameter> docketOperationParameters) {
+        List<SwaggerProperties.GlobalOperationParameter> globalOperationParameters,
+        List<SwaggerProperties.GlobalOperationParameter> docketOperationParameters) {
 
         if (Objects.isNull(docketOperationParameters) || docketOperationParameters.isEmpty()) {
             return buildGlobalOperationParametersFromSwaggerProperties(globalOperationParameters);
@@ -292,13 +299,13 @@ public class DunwuSwaggerConfiguration implements BeanFactoryAware {
 
         Set<String> docketNames = docketOperationParameters.stream()
                                                            .map(
-                                                               DunwuSwaggerProperties.GlobalOperationParameter::getName)
+                                                               SwaggerProperties.GlobalOperationParameter::getName)
                                                            .collect(Collectors.toSet());
 
-        List<DunwuSwaggerProperties.GlobalOperationParameter> resultOperationParameters = newArrayList();
+        List<SwaggerProperties.GlobalOperationParameter> resultOperationParameters = newArrayList();
 
         if (Objects.nonNull(globalOperationParameters)) {
-            for (DunwuSwaggerProperties.GlobalOperationParameter parameter : globalOperationParameters) {
+            for (SwaggerProperties.GlobalOperationParameter parameter : globalOperationParameters) {
                 if (!docketNames.contains(parameter.getName())) {
                     resultOperationParameters.add(parameter);
                 }
@@ -312,13 +319,13 @@ public class DunwuSwaggerConfiguration implements BeanFactoryAware {
     /**
      * 设置全局响应消息
      *
-     * @param dunwuSwaggerProperties swaggerProperties 支持 POST,GET,PUT,PATCH,DELETE,HEAD,OPTIONS,TRACE
+     * @param swaggerProperties swaggerProperties 支持 POST,GET,PUT,PATCH,DELETE,HEAD,OPTIONS,TRACE
      * @param docketForBuilder       swagger docket builder
      */
-    private void buildGlobalResponseMessage(DunwuSwaggerProperties dunwuSwaggerProperties, Docket docketForBuilder) {
+    private void buildGlobalResponseMessage(SwaggerProperties swaggerProperties, Docket docketForBuilder) {
 
-        DunwuSwaggerProperties.GlobalResponseMessage globalResponseMessages =
-            dunwuSwaggerProperties.getGlobalResponseMessage();
+        SwaggerProperties.GlobalResponseMessage globalResponseMessages =
+            swaggerProperties.getGlobalResponseMessage();
 
         /* POST,GET,PUT,PATCH,DELETE,HEAD,OPTIONS,TRACE 响应消息体 **/
         List<ResponseMessage> postResponseMessages = getResponseMessageList(globalResponseMessages.getPost());
@@ -330,7 +337,7 @@ public class DunwuSwaggerConfiguration implements BeanFactoryAware {
         List<ResponseMessage> optionsResponseMessages = getResponseMessageList(globalResponseMessages.getOptions());
         List<ResponseMessage> trackResponseMessages = getResponseMessageList(globalResponseMessages.getTrace());
 
-        docketForBuilder.useDefaultResponseMessages(dunwuSwaggerProperties.getApplyDefaultResponseMessages())
+        docketForBuilder.useDefaultResponseMessages(swaggerProperties.getApplyDefaultResponseMessages())
                         .globalResponseMessage(RequestMethod.POST, postResponseMessages)
                         .globalResponseMessage(RequestMethod.GET, getResponseMessages)
                         .globalResponseMessage(RequestMethod.PUT, putResponseMessages)
@@ -348,9 +355,9 @@ public class DunwuSwaggerConfiguration implements BeanFactoryAware {
      * @return /
      */
     private List<ResponseMessage> getResponseMessageList
-    (List<DunwuSwaggerProperties.GlobalResponseMessageBody> globalResponseMessageBodyList) {
+    (List<SwaggerProperties.GlobalResponseMessageBody> globalResponseMessageBodyList) {
         List<ResponseMessage> responseMessages = new ArrayList<>();
-        for (DunwuSwaggerProperties.GlobalResponseMessageBody globalResponseMessageBody : globalResponseMessageBodyList) {
+        for (SwaggerProperties.GlobalResponseMessageBody globalResponseMessageBody : globalResponseMessageBodyList) {
             ResponseMessageBuilder responseMessageBuilder = new ResponseMessageBuilder();
             responseMessageBuilder.code(globalResponseMessageBody.getCode())
                                   .message(globalResponseMessageBody.getMessage());

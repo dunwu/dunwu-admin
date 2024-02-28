@@ -29,6 +29,7 @@ import io.github.dunwu.tool.generator.CodeGeneratorExt;
 import io.github.dunwu.tool.generator.config.po.DictInfo;
 import io.github.dunwu.tool.generator.config.po.DictOptionInfo;
 import io.github.dunwu.tool.web.ServletUtil;
+import io.github.dunwu.tool.web.log.annotation.DataLockLog;
 import io.github.dunwu.tool.web.log.annotation.OperationLog;
 import io.github.dunwu.tool.web.log.constant.OperationType;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +43,12 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -76,12 +82,16 @@ public class DictServiceImpl extends ServiceImpl implements DictService {
 
     @Override
     @OperationLog(bizType = "数据字典", operation = OperationType.EDIT, bizNo = "{{#entity.id}}")
+    @DataLockLog(tableName = "sys_dict", operation = OperationType.EDIT, entity = "{{#entity}}",
+        queryMethod = "io.github.dunwu.module.sys.dao.impl.DictDaoImpl#listByIds")
     public boolean updateById(Dict entity) {
         return dictDao.updateById(entity);
     }
 
     @Override
     @OperationLog(bizType = "数据字典", operation = OperationType.BATCH_EDIT)
+    @DataLockLog(tableName = "sys_dict", operation = OperationType.EDIT, entity = "{{#list}}",
+        queryMethod = "io.github.dunwu.module.sys.dao.impl.DictDaoImpl#listByIds")
     public boolean updateBatchById(Collection<Dict> list) {
         return dictDao.updateBatchById(list);
     }

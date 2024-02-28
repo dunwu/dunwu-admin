@@ -1,83 +1,114 @@
-// package io.github.dunwu.module.sys.config;
-//
-// import io.github.dunwu.tool.web.log.annotation.EnableOperationLog;
-// import io.github.dunwu.tool.web.log.aspect.OperationLogAspect;
-// import io.github.dunwu.tool.web.log.service.FunctionService;
-// import io.github.dunwu.tool.web.log.service.LogRecordService;
-// import io.github.dunwu.tool.web.log.service.ParseFunction;
-// import io.github.dunwu.tool.web.log.service.impl.DefaultFunctionServiceImpl;
-// import io.github.dunwu.tool.web.log.service.impl.DefaultLogRecordServiceImpl;
-// import io.github.dunwu.tool.web.log.service.impl.DefaultParseFunction;
-// import io.github.dunwu.tool.web.log.service.impl.ParseFunctionFactory;
-// import io.github.dunwu.tool.web.log.support.parse.SpElValueParser;
-// import io.github.dunwu.tool.web.security.SecurityService;
-// import lombok.extern.slf4j.Slf4j;
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.beans.factory.config.BeanDefinition;
-// import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-// import org.springframework.context.annotation.Bean;
-// import org.springframework.context.annotation.Configuration;
-// import org.springframework.context.annotation.ImportAware;
-// import org.springframework.context.annotation.Role;
-// import org.springframework.core.annotation.AnnotationAttributes;
-// import org.springframework.core.type.AnnotationMetadata;
-//
-// import java.util.List;
-//
-// /**
-//  * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
-//  * @since 2021-09-29
-//  */
-// @Slf4j
-// @Configuration
-// public class LogConfiguration implements ImportAware {
-//
-//     private AnnotationAttributes enableLogRecord;
-//
-//     @Bean
-//     public OperationLogAspect operationLogAspect(LogRecordService logStorage, SecurityService securityService,
-//         SpElValueParser spElValueParser) {
-//         return new OperationLogAspect(enableLogRecord.getString("appName"),
-//             logStorage, securityService, spElValueParser);
-//     }
-//
-//     @Bean
-//     @ConditionalOnMissingBean(FunctionService.class)
-//     public FunctionService functionService(ParseFunctionFactory parseFunctionFactory) {
-//         return new DefaultFunctionServiceImpl(parseFunctionFactory);
-//     }
-//
-//     @Bean
-//     public ParseFunctionFactory parseFunctionFactory(@Autowired List<ParseFunction> parseFunctions) {
-//         return new ParseFunctionFactory(parseFunctions);
-//     }
-//
-//     @Bean
-//     @ConditionalOnMissingBean(ParseFunction.class)
-//     public DefaultParseFunction parseFunction() {
-//         return new DefaultParseFunction();
-//     }
-//
-//     @Bean
-//     @ConditionalOnMissingBean(LogRecordService.class)
-//     @Role(BeanDefinition.ROLE_APPLICATION)
-//     public LogRecordService recordService() {
-//         return new DefaultLogRecordServiceImpl();
-//     }
-//
-//     @Override
-//     public void setImportMetadata(AnnotationMetadata importMetadata) {
-//         this.enableLogRecord = AnnotationAttributes.fromMap(
-//             importMetadata.getAnnotationAttributes(EnableOperationLog.class.getName(), false));
-//         if (this.enableLogRecord == null) {
-//             log.info("@EnableCaching is not present on importing class");
-//         }
-//     }
-//
-//     @Bean
-//     @ConditionalOnMissingBean(SpElValueParser.class)
-//     public SpElValueParser spElValueParser(FunctionService functionService) {
-//         return new SpElValueParser(functionService);
-//     }
-//
-// }
+package io.github.dunwu.module.sys.config;
+
+import io.github.dunwu.module.sys.dao.TableColumnConfigDao;
+import io.github.dunwu.module.sys.service.TableColumnLockLogService;
+import io.github.dunwu.module.sys.service.impl.DataLockLogServiceImpl;
+import io.github.dunwu.module.sys.service.impl.TableColumnConfigServiceImpl;
+import io.github.dunwu.tool.web.log.aop.DataLockLogAop;
+import io.github.dunwu.tool.web.log.aop.OperationLogAop;
+import io.github.dunwu.tool.web.log.service.DataLockLogService;
+import io.github.dunwu.tool.web.log.service.FunctionService;
+import io.github.dunwu.tool.web.log.service.OperationLogService;
+import io.github.dunwu.tool.web.log.service.ParseFunction;
+import io.github.dunwu.tool.web.log.service.TableColumnConfigService;
+import io.github.dunwu.tool.web.log.service.impl.DefaultDataLockLogServiceImpl;
+import io.github.dunwu.tool.web.log.service.impl.DefaultFunctionServiceImpl;
+import io.github.dunwu.tool.web.log.service.impl.DefaultOperationLogServiceImpl;
+import io.github.dunwu.tool.web.log.service.impl.DefaultParseFunction;
+import io.github.dunwu.tool.web.log.service.impl.DefaultTableColumnConfigServiceImpl;
+import io.github.dunwu.tool.web.log.support.ParseFunctionFactory;
+import io.github.dunwu.tool.web.log.support.SpElValueParser;
+import io.github.dunwu.tool.web.security.SecurityService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Role;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import java.util.List;
+
+/**
+ * 日志配置类
+ *
+ * @author <a href="mailto:forbreak@163.com">Zhang Peng</a>
+ * @since 2021-12-30
+ */
+@Slf4j
+@ConditionalOnClass({ OperationLogAop.class, DataLockLogAop.class })
+@EnableConfigurationProperties(LogProperties.class)
+public class LogConfiguration {
+
+    @Bean
+    @Role(BeanDefinition.ROLE_APPLICATION)
+    public TableColumnConfigService tableColumnConfigService(JdbcTemplate jdbcTemplate, TableColumnConfigDao dao) {
+        return new TableColumnConfigServiceImpl(jdbcTemplate, dao);
+    }
+
+    @Bean
+    @Role(BeanDefinition.ROLE_APPLICATION)
+    public DataLockLogService dataLockLogService(TableColumnLockLogService tableColumnLockLogService) {
+        return new DataLockLogServiceImpl(tableColumnLockLogService);
+    }
+
+    @Bean
+    @ConditionalOnProperty(value = "dunwu.log.operation.enabled", havingValue = "true")
+    public OperationLogAop operationLogAspect(OperationLogService operationLogService, SecurityService securityService,
+        SpElValueParser spElValueParser, LogProperties properties) {
+        return new OperationLogAop(properties.getAppName(), operationLogService, securityService, spElValueParser);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(OperationLogService.class)
+    @Role(BeanDefinition.ROLE_APPLICATION)
+    public OperationLogService logRecordService() {
+        return new DefaultOperationLogServiceImpl();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(DataLockLogService.class)
+    public DataLockLogService dataLockLogService() {
+        return new DefaultDataLockLogServiceImpl();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(TableColumnConfigService.class)
+    public TableColumnConfigService tableColumnConfigService() {
+        return new DefaultTableColumnConfigServiceImpl();
+    }
+
+    @Bean
+    @ConditionalOnProperty(value = "dunwu.log.lock.enabled", havingValue = "true")
+    public DataLockLogAop dataLockLogAop(DataLockLogService dataLockLogService,
+        TableColumnConfigService tableColumnConfigService, SecurityService securityService,
+        SpElValueParser spElValueParser) {
+        return new DataLockLogAop(dataLockLogService, tableColumnConfigService, securityService, spElValueParser);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(ParseFunction.class)
+    public ParseFunction parseFunction() {
+        return new DefaultParseFunction();
+    }
+
+    @Bean
+    public ParseFunctionFactory parseFunctionFactory(List<ParseFunction> parseFunctions) {
+        return new ParseFunctionFactory(parseFunctions);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(FunctionService.class)
+    public FunctionService functionService(ParseFunctionFactory parseFunctionFactory) {
+        return new DefaultFunctionServiceImpl(parseFunctionFactory);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(SpElValueParser.class)
+    public SpElValueParser spElValueParser(FunctionService functionService) {
+        return new SpElValueParser(functionService);
+    }
+
+}

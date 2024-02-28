@@ -1,7 +1,7 @@
 package io.github.dunwu.module.sys.controller;
 
 import io.github.dunwu.module.sys.service.ServerInfoService;
-import io.github.dunwu.tool.data.DataResult;
+import io.github.dunwu.tool.data.response.DataResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequiredArgsConstructor
-@Api(tags = "系统-服务监控管理")
+@Api(tags = "【系统】系统监控")
 @RequestMapping("monitor/server")
 public class ServerInfoController {
 

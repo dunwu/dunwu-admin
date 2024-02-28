@@ -1,7 +1,6 @@
 package io.github.dunwu.module.code.entity.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,28 +18,10 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TableInfoDto {
+public class TableInfoDto extends BaseTableInfoDto {
 
     /** 数据库ID */
     private Long dbId;
-
-    /** Schema 名称 */
-    @JsonProperty("schemaName")
-    private String tableSchema;
-
-    /** 表名称 */
-    private String tableName;
-
-    /** 数据库引擎 */
-    private String engine;
-
-    /** 编码集 */
-    @JsonProperty("coding")
-    private String tableCollation;
-
-    /** 注释 */
-    @JsonProperty("comment")
-    private String tableComment;
 
     /** 全局配置是否已配置 */
     private Boolean isGlobalConfigured;

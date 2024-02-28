@@ -25,4 +25,6 @@ public class LoginDto {
 
     private String uuid = "";
 
+    private boolean rememberMe;
+
 }

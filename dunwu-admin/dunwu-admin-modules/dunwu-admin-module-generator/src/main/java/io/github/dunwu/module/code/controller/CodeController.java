@@ -2,15 +2,19 @@ package io.github.dunwu.module.code.controller;
 
 import io.github.dunwu.module.code.entity.CodeGlobalConfig;
 import io.github.dunwu.module.code.entity.CodeTableConfig;
-import io.github.dunwu.module.code.entity.dto.*;
+import io.github.dunwu.module.code.entity.dto.CodeColumnConfigDto;
+import io.github.dunwu.module.code.entity.dto.CodeGlobalConfigDto;
+import io.github.dunwu.module.code.entity.dto.CodeTableConfigDto;
+import io.github.dunwu.module.code.entity.dto.TableColumnInfoDto;
+import io.github.dunwu.module.code.entity.dto.TableInfoDto;
 import io.github.dunwu.module.code.entity.query.CodeColumnConfigQuery;
 import io.github.dunwu.module.code.entity.query.CodeGlobalConfigQuery;
 import io.github.dunwu.module.code.entity.query.CodeTableConfigQuery;
 import io.github.dunwu.module.code.service.GeneratorService;
 import io.github.dunwu.module.code.service.TableService;
-import io.github.dunwu.tool.data.DataListResult;
-import io.github.dunwu.tool.data.DataResult;
-import io.github.dunwu.tool.data.MapResult;
+import io.github.dunwu.tool.data.response.DataListResult;
+import io.github.dunwu.tool.data.response.DataResult;
+import io.github.dunwu.tool.data.response.PageResult;
 import io.github.dunwu.tool.generator.engine.CodeGenerateContentDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -18,7 +22,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
@@ -115,11 +124,11 @@ public class CodeController {
 
     @ApiOperation("查询数据库数据")
     @GetMapping("table/all/page")
-    public MapResult<String, Object> queryAllTables(@RequestParam Long dbId,
+    public PageResult<TableInfoDto> queryAllTables(@RequestParam Long dbId,
         @RequestParam(defaultValue = "") String tableName,
         @RequestParam(defaultValue = "0") Integer page,
         @RequestParam(defaultValue = "10") Integer size) {
-        return MapResult.ok(tableService.getTables(dbId, tableName, page, size));
+        return tableService.getTables(dbId, tableName, page, size);
     }
 
     @ApiOperation("查询代码生成配置信息")

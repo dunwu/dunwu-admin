@@ -29,7 +29,7 @@ import static springfox.documentation.schema.AlternateTypeRules.newRule;
 @Configuration
 @ConditionalOnClass({ ApiInfo.class, Docket.class })
 @ConditionalOnProperty(name = "dunwu.web.swagger.enabled", havingValue = "true")
-public class DunwuSwaggerDataConfiguration {
+public class SwaggerDataConfiguration {
 
     @Bean
     public AlternateTypeRuleConvention pageableConvention(final TypeResolver resolver) {

@@ -3,10 +3,11 @@ package io.github.dunwu;
 import cn.hutool.core.util.StrUtil;
 import io.github.dunwu.tool.core.constant.enums.ResultStatus;
 import io.github.dunwu.tool.core.exception.CodeMsgException;
-import io.github.dunwu.tool.data.DataResult;
-import io.github.dunwu.tool.data.Result;
 import io.github.dunwu.tool.data.exception.DataException;
+import io.github.dunwu.tool.data.response.DataResult;
+import io.github.dunwu.tool.data.response.Result;
 import io.github.dunwu.tool.web.constant.WebConstant;
+import io.jsonwebtoken.JwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -136,6 +137,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public Result handleAccessDeniedException(final AccessDeniedException e) {
         log.error("权限不足，方法: {}, message: {}", e.getClass().getCanonicalName(), e.getLocalizedMessage());
+        return new Result(ResultStatus.HTTP_UNAUTHORIZED.getCode(), e.getLocalizedMessage());
+    }
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(JwtException.class)
+    public Result handleJwtException(final JwtException e) {
+        log.error("令牌失效，方法: {}, message: {}", e.getClass().getCanonicalName(), e.getLocalizedMessage());
         return new Result(ResultStatus.HTTP_UNAUTHORIZED.getCode(), e.getLocalizedMessage());
     }
 

@@ -5,6 +5,7 @@ import io.github.dunwu.module.security.config.DunwuWebSecurityProperties;
 import io.github.dunwu.module.security.entity.dto.OnlineUserDto;
 import io.github.dunwu.module.security.service.AuthService;
 import io.github.dunwu.module.security.util.JwtTokenUtil;
+import io.github.dunwu.tool.data.redis.RedisHelper;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -30,19 +31,21 @@ import javax.servlet.http.HttpServletRequest;
 public class AuthenticationFilter extends GenericFilterBean {
 
     private final JwtTokenUtil jwtTokenUtil;
-    private final DunwuWebSecurityProperties properties;
+    private final DunwuWebSecurityProperties securityProperties;
     private final AuthService authService;
+    private final RedisHelper redisHelper;
 
     /**
      * @param jwtTokenUtil Token
-     * @param properties   JWT
+     * @param securityProperties   JWT
      * @param authService  用户在线
      */
     public AuthenticationFilter(JwtTokenUtil jwtTokenUtil,
-        DunwuWebSecurityProperties properties, AuthService authService) {
+        DunwuWebSecurityProperties securityProperties, AuthService authService, RedisHelper redisHelper) {
         this.jwtTokenUtil = jwtTokenUtil;
-        this.properties = properties;
+        this.securityProperties = securityProperties;
         this.authService = authService;
+        this.redisHelper = redisHelper;
     }
 
     @Override
@@ -55,22 +58,22 @@ public class AuthenticationFilter extends GenericFilterBean {
             OnlineUserDto onlineUserDto = null;
             boolean cleanUserCache = false;
             try {
-                onlineUserDto = authService.getOne(properties.getToken().getOnlinePrefix() + token);
+                onlineUserDto = authService.getOne(securityProperties.getToken().getOnlinePrefix() + token);
+                if (onlineUserDto != null && StringUtils.hasText(token)) {
+                    Authentication authentication = jwtTokenUtil.getAuthentication(token);
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    // Token 续期
+                    jwtTokenUtil.checkRenewal(token);
+                }
             } catch (ExpiredJwtException e) {
                 log.error(e.getMessage());
                 cleanUserCache = true;
             } finally {
                 if (cleanUserCache || Objects.isNull(onlineUserDto)) {
-                    authService.cleanUserCache(
-                        String.valueOf(jwtTokenUtil.getClaims(token).get(JwtTokenUtil.AUTHORITIES_KEY)));
+                    redisHelper.del(securityProperties.getToken().getOnlinePrefix() + token);
                 }
             }
-            if (onlineUserDto != null && StringUtils.hasText(token)) {
-                Authentication authentication = jwtTokenUtil.getAuthentication(token);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                // Token 续期
-                jwtTokenUtil.checkRenewal(token);
-            }
+
         }
         filterChain.doFilter(servletRequest, servletResponse);
     }
@@ -82,10 +85,10 @@ public class AuthenticationFilter extends GenericFilterBean {
      * @return /
      */
     private String resolveToken(HttpServletRequest request) {
-        String token = request.getHeader(properties.getToken().getTokenHeader());
-        if (StringUtils.hasText(token) && token.startsWith(properties.getToken().getTokenPrefix())) {
+        String token = request.getHeader(securityProperties.getToken().getTokenHeader());
+        if (StringUtils.hasText(token) && token.startsWith(securityProperties.getToken().getTokenPrefix())) {
             // 去掉令牌前缀
-            return token.replace(properties.getToken().getTokenPrefix(), "");
+            return token.replace(securityProperties.getToken().getTokenPrefix(), "");
         } else {
             log.debug("非法Token：{}", token);
         }

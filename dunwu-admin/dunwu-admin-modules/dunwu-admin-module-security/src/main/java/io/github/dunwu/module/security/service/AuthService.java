@@ -54,7 +54,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -142,7 +149,13 @@ public class AuthService implements UserDetailsService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // 生成令牌
-        String token = jwtTokenUtil.createToken(authentication);
+        String token;
+        if (loginDto.isRememberMe()) {
+            token = jwtTokenUtil.createToken(authentication, null);
+        } else {
+            token = jwtTokenUtil.createToken(authentication, 3600);
+        }
+
         final UserVo userVo = (UserVo) authentication.getPrincipal();
         // 保存在线信息
         saveLoginUserInfo(userVo, token, request);

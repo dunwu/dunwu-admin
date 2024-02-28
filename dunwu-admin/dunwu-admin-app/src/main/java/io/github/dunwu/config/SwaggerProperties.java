@@ -24,7 +24,7 @@ import java.util.Map;
 @Data
 @Accessors(chain = true)
 @ConfigurationProperties("dunwu.swagger")
-public class DunwuSwaggerProperties {
+public class SwaggerProperties {
 
     /**
      * 是否开启swagger

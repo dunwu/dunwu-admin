@@ -37,7 +37,7 @@ public abstract class BaseFileStorageService implements FileStorageService {
     public FileInfoDto getFileInfo(UploadFileDto uploadFileDto) throws IOException {
         MultipartFile file = uploadFileDto.getFile();
 
-        String extension = FileUtil.getExtensionName(file.getOriginalFilename());
+        String extension = FileUtil.getExtension(file.getOriginalFilename());
         if (extension != null) {
             extension = extension.toLowerCase();
         }

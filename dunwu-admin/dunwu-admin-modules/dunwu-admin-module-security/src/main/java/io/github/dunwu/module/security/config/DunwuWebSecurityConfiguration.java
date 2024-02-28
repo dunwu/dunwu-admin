@@ -7,6 +7,7 @@ import io.github.dunwu.module.security.handler.JwtAccessDeniedHandler;
 import io.github.dunwu.module.security.handler.JwtAuthenticationEntryPoint;
 import io.github.dunwu.module.security.service.AuthService;
 import io.github.dunwu.module.security.util.JwtTokenUtil;
+import io.github.dunwu.tool.data.redis.RedisHelper;
 import io.github.dunwu.tool.web.filter.XssFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -31,7 +32,13 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author Zheng Jie
@@ -49,6 +56,7 @@ public class DunwuWebSecurityConfiguration extends WebSecurityConfigurerAdapter 
     private final ApplicationContext applicationContext;
     private final DunwuWebSecurityProperties securityProperties;
     private final AuthService authService;
+    private final RedisHelper redisHelper;
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
@@ -160,7 +168,7 @@ public class DunwuWebSecurityConfiguration extends WebSecurityConfigurerAdapter 
 
     @Bean
     public AuthenticationFilter authenticationFilter() {
-        return new AuthenticationFilter(tokenUtil, securityProperties, authService);
+        return new AuthenticationFilter(tokenUtil, securityProperties, authService, redisHelper);
     }
 
     private Map<String, Set<String>> getAnonymousUrl(Map<RequestMappingInfo, HandlerMethod> handlerMethodMap) {

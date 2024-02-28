@@ -91,6 +91,7 @@ service.interceptors.response.use(
         if (code === 401) {
           store.dispatch('LogOut').then(() => {
             // 用户登录界面提示
+            console.info('LogOut')
             Cookies.set('point', 401)
             location.reload()
           })
