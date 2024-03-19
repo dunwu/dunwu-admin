@@ -6,7 +6,7 @@ import io.github.dunwu.module.sys.entity.TableColumnLockLog;
 import io.github.dunwu.module.sys.entity.dto.TableColumnLockLogDto;
 import io.github.dunwu.module.sys.entity.query.TableColumnLockLogQuery;
 import io.github.dunwu.module.sys.service.TableColumnLockLogService;
-import io.github.dunwu.tool.core.constant.enums.ResultStatus;
+import io.github.dunwu.tool.core.constant.enums.ResultCode;
 import io.github.dunwu.tool.core.exception.DefaultException;
 import io.github.dunwu.tool.data.excel.ExcelUtil;
 import io.github.dunwu.tool.data.mybatis.ServiceImpl;
@@ -141,7 +141,7 @@ public class TableColumnLockLogServiceImpl extends ServiceImpl implements TableC
             ExcelUtil.saveExcelData(file.getInputStream(), TableColumnLockLog.class, dao);
         } catch (IOException e) {
             log.error("【表字段锁定记录表】【导入失败】", e);
-            throw new DefaultException(ResultStatus.IO_ERROR.getCode(), "【表字段锁定记录表】【导入失败】");
+            throw new DefaultException(ResultCode.IO_ERROR.getCode(), "【表字段锁定记录表】【导入失败】");
         }
     }
 
@@ -153,7 +153,7 @@ public class TableColumnLockLogServiceImpl extends ServiceImpl implements TableC
             ExcelUtil.downloadEasyExcel(response, list, TableColumnLockLogDto.class);
         } catch (IOException e) {
             log.error("【表字段锁定记录表】【导出失败】", e);
-            throw new DefaultException(ResultStatus.IO_ERROR.getCode(), "【表字段锁定记录表】【导出失败】");
+            throw new DefaultException(ResultCode.IO_ERROR.getCode(), "【表字段锁定记录表】【导出失败】");
         }
     }
 
@@ -168,7 +168,7 @@ public class TableColumnLockLogServiceImpl extends ServiceImpl implements TableC
             ExcelUtil.downloadEasyExcel(response, page.getContent(), TableColumnLockLogDto.class);
         } catch (IOException e) {
             log.error("【表字段锁定记录表】【导出失败】", e);
-            throw new DefaultException(ResultStatus.IO_ERROR.getCode(), "【表字段锁定记录表】【导出失败】");
+            throw new DefaultException(ResultCode.IO_ERROR.getCode(), "【表字段锁定记录表】【导出失败】");
         }
     }
 
@@ -183,7 +183,7 @@ public class TableColumnLockLogServiceImpl extends ServiceImpl implements TableC
             ExcelUtil.downloadEasyExcel(response, page.getContent(), TableColumnLockLogDto.class);
         } catch (IOException e) {
             log.error("【表字段锁定记录表】【导出失败】", e);
-            throw new DefaultException(ResultStatus.IO_ERROR.getCode(), "【表字段锁定记录表】【导出失败】");
+            throw new DefaultException(ResultCode.IO_ERROR.getCode(), "【表字段锁定记录表】【导出失败】");
         }
     }
 

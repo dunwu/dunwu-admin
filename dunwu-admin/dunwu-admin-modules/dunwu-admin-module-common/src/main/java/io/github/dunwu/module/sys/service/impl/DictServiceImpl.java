@@ -21,7 +21,7 @@ import io.github.dunwu.module.sys.entity.dto.EnumInfoDto;
 import io.github.dunwu.module.sys.entity.query.DictQuery;
 import io.github.dunwu.module.sys.service.DictOptionService;
 import io.github.dunwu.module.sys.service.DictService;
-import io.github.dunwu.tool.core.constant.enums.ResultStatus;
+import io.github.dunwu.tool.core.constant.enums.ResultCode;
 import io.github.dunwu.tool.core.exception.DefaultException;
 import io.github.dunwu.tool.data.excel.ExcelUtil;
 import io.github.dunwu.tool.data.mybatis.ServiceImpl;
@@ -180,7 +180,7 @@ public class DictServiceImpl extends ServiceImpl implements DictService {
             ExcelUtil.saveExcelData(file.getInputStream(), Dict.class, dictDao);
         } catch (IOException e) {
             log.error("【数据字典】【导入失败】", e);
-            throw new DefaultException(ResultStatus.IO_ERROR.getCode(), "【数据字典】【导入失败】");
+            throw new DefaultException(ResultCode.IO_ERROR.getCode(), "【数据字典】【导入失败】");
         }
     }
 
@@ -192,7 +192,7 @@ public class DictServiceImpl extends ServiceImpl implements DictService {
             ExcelUtil.downloadEasyExcel(response, list, DictDto.class);
         } catch (IOException e) {
             log.error("【数据字典】【导出失败】", e);
-            throw new DefaultException(ResultStatus.IO_ERROR.getCode(), "【数据字典】【导出失败】");
+            throw new DefaultException(ResultCode.IO_ERROR.getCode(), "【数据字典】【导出失败】");
         }
     }
 
@@ -207,7 +207,7 @@ public class DictServiceImpl extends ServiceImpl implements DictService {
             ExcelUtil.downloadEasyExcel(response, page.getContent(), DictDto.class);
         } catch (IOException e) {
             log.error("【数据字典】【导出失败】", e);
-            throw new DefaultException(ResultStatus.IO_ERROR.getCode(), "【数据字典】【导出失败】");
+            throw new DefaultException(ResultCode.IO_ERROR.getCode(), "【数据字典】【导出失败】");
         }
     }
 
@@ -317,7 +317,7 @@ public class DictServiceImpl extends ServiceImpl implements DictService {
 
         if (CollectionUtil.isEmpty(dto.getOptions())) {
             String msg = StrUtil.format("code = {} 的 options 不能为空！", dto.getCode());
-            throw new DefaultException(ResultStatus.DATA_ERROR.getCode(), msg);
+            throw new DefaultException(ResultCode.DATA_ERROR.getCode(), msg);
         }
 
         LambdaQueryWrapper<Dict> queryWrapper = new LambdaQueryWrapper<>();
@@ -325,7 +325,7 @@ public class DictServiceImpl extends ServiceImpl implements DictService {
         int count = dictDao.count(queryWrapper);
         if (count > 0) {
             String msg = StrUtil.format("code = {} 的字典已存在！", dto.getCode());
-            throw new DefaultException(ResultStatus.DATA_ERROR.getCode(), msg);
+            throw new DefaultException(ResultCode.DATA_ERROR.getCode(), msg);
         }
 
         Dict entity = dtoToDo(dto);

@@ -17,7 +17,7 @@ import io.github.dunwu.module.code.entity.query.CodeTableConfigQuery;
 import io.github.dunwu.module.code.service.CodeDatabaseService;
 import io.github.dunwu.module.code.service.TableService;
 import io.github.dunwu.module.security.util.SecurityUtil;
-import io.github.dunwu.tool.core.constant.enums.ResultStatus;
+import io.github.dunwu.tool.core.constant.enums.ResultCode;
 import io.github.dunwu.tool.data.entity.TableInfo;
 import io.github.dunwu.tool.data.response.PageImpl;
 import io.github.dunwu.tool.data.response.PageResult;
@@ -110,7 +110,7 @@ public class TableServiceImpl implements TableService {
             return PageResult.ok(new PageImpl<>(list, page, size, total));
         } catch (SQLException e) {
             e.printStackTrace();
-            return PageResult.fail(ResultStatus.DATA_ERROR);
+            return PageResult.build(ResultCode.DATA_ERROR);
         } finally {
             if (connection != null) {
                 DbUtil.close(connection);

@@ -4,7 +4,7 @@ import io.github.dunwu.module.storage.entity.dto.FileInfoDto;
 import io.github.dunwu.module.storage.entity.dto.UploadFileDto;
 import io.github.dunwu.module.storage.entity.query.FileInfoQuery;
 import io.github.dunwu.module.storage.service.StorageService;
-import io.github.dunwu.tool.core.constant.enums.ResultStatus;
+import io.github.dunwu.tool.core.constant.enums.ResultCode;
 import io.github.dunwu.tool.data.response.DataResult;
 import io.github.dunwu.tool.data.response.PageResult;
 import io.github.dunwu.tool.web.ServletUtil;
@@ -48,7 +48,7 @@ public class StorageController {
         String ip = ServletUtil.getRealRemoteAddr(request);
         boolean isOk = storageService.allowAccess(ip);
         if (!isOk) {
-            return DataResult.fail(ResultStatus.IO_ERROR.getCode(), "上传请求过于频繁，请稍后再尝试");
+            return DataResult.build(ResultCode.IO_ERROR.getCode(), "上传请求过于频繁，请稍后再尝试");
         }
 
         if (fileDto == null) {

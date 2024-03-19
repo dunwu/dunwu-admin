@@ -11,7 +11,7 @@ import io.github.dunwu.module.sys.entity.dto.TableColumnConfigDto;
 import io.github.dunwu.module.sys.entity.dto.TableConfigDto;
 import io.github.dunwu.module.sys.entity.query.TableColumnConfigQuery;
 import io.github.dunwu.module.sys.service.TableColumnConfigService;
-import io.github.dunwu.tool.core.constant.enums.ResultStatus;
+import io.github.dunwu.tool.core.constant.enums.ResultCode;
 import io.github.dunwu.tool.core.exception.DefaultException;
 import io.github.dunwu.tool.data.entity.TableColumnInfo;
 import io.github.dunwu.tool.data.entity.TableInfo;
@@ -155,7 +155,7 @@ public class TableColumnConfigServiceImpl extends ServiceImpl
             ExcelUtil.saveExcelData(file.getInputStream(), TableColumnConfig.class, dao);
         } catch (IOException e) {
             log.error("【表字段配置表】【导入失败】", e);
-            throw new DefaultException(ResultStatus.IO_ERROR.getCode(), "【表字段配置表】【导入失败】");
+            throw new DefaultException(ResultCode.IO_ERROR.getCode(), "【表字段配置表】【导入失败】");
         }
     }
 
@@ -167,7 +167,7 @@ public class TableColumnConfigServiceImpl extends ServiceImpl
             ExcelUtil.downloadEasyExcel(response, list, TableColumnConfigDto.class);
         } catch (IOException e) {
             log.error("【表字段配置表】【导出失败】", e);
-            throw new DefaultException(ResultStatus.IO_ERROR.getCode(), "【表字段配置表】【导出失败】");
+            throw new DefaultException(ResultCode.IO_ERROR.getCode(), "【表字段配置表】【导出失败】");
         }
     }
 
@@ -179,7 +179,7 @@ public class TableColumnConfigServiceImpl extends ServiceImpl
             ExcelUtil.downloadEasyExcel(response, page.getContent(), TableColumnConfigDto.class);
         } catch (IOException e) {
             log.error("【表字段配置表】【导出失败】", e);
-            throw new DefaultException(ResultStatus.IO_ERROR.getCode(), "【表字段配置表】【导出失败】");
+            throw new DefaultException(ResultCode.IO_ERROR.getCode(), "【表字段配置表】【导出失败】");
         }
     }
 
@@ -191,7 +191,7 @@ public class TableColumnConfigServiceImpl extends ServiceImpl
             ExcelUtil.downloadEasyExcel(response, page.getContent(), TableColumnConfigDto.class);
         } catch (IOException e) {
             log.error("【表字段配置表】【导出失败】", e);
-            throw new DefaultException(ResultStatus.IO_ERROR.getCode(), "【表字段配置表】【导出失败】");
+            throw new DefaultException(ResultCode.IO_ERROR.getCode(), "【表字段配置表】【导出失败】");
         }
     }
 
@@ -239,7 +239,7 @@ public class TableColumnConfigServiceImpl extends ServiceImpl
             DatabaseUtil.getColumnMap(connection, query.getSchemaName(), query.getTableName());
         if (MapUtil.isEmpty(columnMap)) {
             String msg = StrUtil.format("schema: {}, table: {} 未找到！", query.getSchemaName(), query.getTableName());
-            throw new DefaultException(ResultStatus.DATA_ERROR, msg);
+            throw new DefaultException(ResultCode.DATA_ERROR, msg);
         }
 
         TableConfigDto tableConfigDto = new TableConfigDto();
@@ -283,7 +283,7 @@ public class TableColumnConfigServiceImpl extends ServiceImpl
     @Transactional(rollbackFor = Exception.class)
     public boolean saveTableConfig(TableConfigDto dto) {
         if (dto == null) {
-            throw new DefaultException(ResultStatus.PARAMS_ERROR, "请求参数不能为空！");
+            throw new DefaultException(ResultCode.PARAMS_ERROR, "请求参数不能为空！");
         }
 
         TableColumnConfigQuery query = new TableColumnConfigQuery();
